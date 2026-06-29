@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Насколько вы богаты? - Калькулятор зарплат</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Analytics 4 (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXX');
+    </script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .progress-bar-fill { transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        select { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen font-sans antialiased flex flex-col">
+
+    <!-- Единая шапка сайта -->
+    <header class="bg-gradient-to-r from-brand-800 to-slate-900 text-white shadow-md">
+        <div class="max-w-4xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex items-center space-x-3">
+            <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <div>
+                <h1 class="text-2xl font-black tracking-tight">Рентген Доходов</h1>
+                <p class="text-xs text-brand-200">Сравните свою зарплату с доходами жителей РФ</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center p-4 sm:p-8">
+        <div class="max-w-4xl w-full bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-slate-100">
+            
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-black text-slate-900 mb-2">Насколько вы богаты?</h2>
+                <p class="text-slate-500 text-sm">Официальная оценка на основе данных 2026 года</p>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200 p-4 mb-8 rounded-xl flex gap-3 items-start">
+                <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <p class="text-xs text-amber-800 font-medium leading-relaxed">
+                    Учтите: расчет идет <b>ДО ВЫЧЕТА НАЛОГОВ</b> (грязными). Указывайте свой полный оклад по договору, чтобы сравнение с официальной статистикой было точным.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Ваша зарплата (Оклад полностью)</label>
+                    <div class="relative">
+                        <input type="number" id="grossSalary" placeholder="Например: 100000" class="w-full pl-4 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
+                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Регион</label>
+                    <div class="relative">
+                        <select id="regionSelect" class="w-full pl-4 pr-10 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
+                            <option value="RU">Вся Россия</option>
+                            <option value="MSK">Москва</option>
+                            <option value="SPB">Санкт-Петербург</option>
+                            <option value="TAT">Татарстан</option>
+                            <option value="BASH">Башкортостан</option>
+                            <option value="CHUV">Чувашская Республика</option>
+                            <option value="UDM">Удмуртия</option>
+                            <option value="DAG">Дагестан</option>
+                            <option value="CHE">Чечня</option>
+                            <option value="YAK">Якутия</option>
+                            <option value="CRI">Крым</option>
+                            <option value="EKB">Свердловская область (Екб)</option>
+                            <option value="KRD">Краснодарский край</option>
+                            <option value="NVS">Новосибирская область</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="calculateWealth()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-4 rounded-xl transition-all shadow-md hover:shadow-lg text-lg mb-8 active:scale-[0.98]">
+                Узнать правду
+            </button>
+
+            <!-- Блок результатов -->
+            <div id="resultsDashboard" class="hidden opacity-0 transition-opacity duration-700 space-y-6">
+                
+                <div class="bg-gradient-to-br from-brand-900 to-emerald-850 rounded-2xl p-6 md:p-8 text-white shadow-lg relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 opacity-10">
+                        <svg class="w-48 h-48" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"></path></svg>
+                    </div>
+                    <div class="relative z-10">
+                        <h2 class="text-sm uppercase tracking-wide font-black text-brand-200 mb-2">Ваше место среди работающих:</h2>
+                        <div class="flex flex-wrap items-baseline gap-3 mb-4">
+                            <span class="text-5xl md:text-6xl font-black text-white" id="percentileLabor">0%</span>
+                            <span class="text-sm text-brand-100 font-medium">людей получают меньше вас</span>
+                        </div>
+                        <div class="w-full bg-brand-950/50 rounded-full h-2.5 mb-4 overflow-hidden">
+                            <div id="progressBarLabor" class="bg-brand-400 h-2.5 rounded-full progress-bar-fill" style="width: 0%"></div>
+                        </div>
+                        <p class="text-xs text-brand-100 border-t border-brand-700/50 pt-3" id="populationComparison">
+                            А если взять вообще всех жителей (включая детей и пенсионеров), то вы богаче 0% населения.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Медиана</span>
+                            <p class="text-[11px] text-slate-500 mt-1 mb-3 leading-snug">Половина людей в регионе получает меньше этой суммы, а половина — больше.</p>
+                            <p class="text-xl font-black text-slate-900" id="medianRatio">в 0 раз больше</p>
+                        </div>
+                        <p class="text-xs font-semibold text-slate-400 mt-4 border-t border-slate-200 pt-3" id="medianText">Сама медиана: 0 руб.</p>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Официальная средняя</span>
+                            <p class="text-[11px] text-slate-500 mt-1 mb-3 leading-snug">Завышена, так как включает гигантские доходы топ-менеджеров.</p>
+                            <p class="text-xl font-black text-slate-900" id="avgDiff">на 0 руб. меньше</p>
+                        </div>
+                        <p class="text-xs font-semibold text-slate-400 mt-4 border-t border-slate-200 pt-3" id="avgText">Средняя ЗП: 0 руб.</p>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Ваш доход в МРОТ</span>
+                            <p class="text-[11px] text-slate-500 mt-1 mb-3 leading-snug">Сколько "минималок" (минимальный размер оплаты труда) вмещается в ваш оклад.</p>
+                            <p class="text-xl font-black text-slate-900" id="mrotRatio">0 МРОТ</p>
+                        </div>
+                        <p class="text-xs font-semibold text-slate-400 mt-4 border-t border-slate-200 pt-3" id="mrotText">1 МРОТ = 0 руб.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="max-w-4xl mx-auto px-4 pb-8 text-center text-xs text-slate-400">
+        <p>© 2026 Рентген Доходов. Все расчеты носят ознакомительный характер.</p>
+    </footer>
+
+    <script>
+        const statsData = {
+            "RU":   { name: "Вся Россия", median: 75000, avg: 100000, p90: 180000, mrot: 24000, popOffset: 12 },
+            "MSK":  { name: "Москва", median: 125000, avg: 175000, p90: 350000, mrot: 29389, popOffset: 8 },
+            "SPB":  { name: "Санкт-Петербург", median: 95000, avg: 130000, p90: 250000, mrot: 28500, popOffset: 10 },
+            "TAT":  { name: "Татарстан", median: 70000, avg: 95000, p90: 170000, mrot: 24000, popOffset: 11 },
+            "BASH": { name: "Башкортостан", median: 65000, avg: 85000, p90: 150000, mrot: 24000, popOffset: 11 },
+            "CHUV": { name: "Чувашская Республика", median: 55000, avg: 70000, p90: 120000, mrot: 24000, popOffset: 12 },
+            "UDM":  { name: "Удмуртия", median: 60000, avg: 80000, p90: 140000, mrot: 24000, popOffset: 12 },
+            "DAG":  { name: "Дагестан", median: 45000, avg: 55000, p90: 100000, mrot: 24000, popOffset: 15 },
+            "CHE":  { name: "Чечня", median: 45000, avg: 55000, p90: 100000, mrot: 24000, popOffset: 15 },
+            "YAK":  { name: "Якутия", median: 100000, avg: 130000, p90: 250000, mrot: 24000, popOffset: 9 },
+            "CRI":  { name: "Крым", median: 55000, avg: 70000, p90: 120000, mrot: 24000, popOffset: 13 },
+            "EKB":  { name: "Свердловская область", median: 75000, avg: 100000, p90: 185000, mrot: 24000, popOffset: 11 },
+            "KRD":  { name: "Краснодарский край", median: 62000, avg: 80000, p90: 145000, mrot: 24000, popOffset: 13 },
+            "NVS":  { name: "Новосибирская область", median: 68000, avg: 90000, p90: 160000, mrot: 24000, popOffset: 12 }
+        };
+
+        function erf(x) {
+            let sign = (x >= 0) ? 1 : -1;
+            x = Math.abs(x);
+            let a1 =  0.254829592, a2 = -0.284496736, a3 =  1.421413741, a4 = -1.453152027, a5 =  1.061405429, p  =  0.3275911;
+            let t = 1.0 / (1.0 + p * x);
+            let y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+            return sign * y;
+        }
+
+        function getPercentile(salary, median, p90) {
+            let mu = Math.log(median);
+            let sigma = (Math.log(p90) - mu) / 1.28155;
+            let logX = Math.log(salary);
+            let z = (logX - mu) / (sigma * Math.SQRT2);
+            let cdf = 0.5 * (1 + erf(z));
+            return Math.min(Math.max(cdf * 100, 0), 99.9);
+        }
+
+        function formatMoney(amount) {
+            return Math.round(amount).toLocaleString('ru-RU') + ' ₽';
+        }
+
+        function calculateWealth() {
+            const inputVal = document.getElementById('grossSalary').value;
+            const region = document.getElementById('regionSelect').value;
+            
+            if (!inputVal || inputVal <= 0) return;
+
+            const grossSalary = parseFloat(inputVal);
+            const stats = statsData[region];
+
+            const laborPercentile = getPercentile(grossSalary, stats.median, stats.p90);
+            const popPercentile = Math.min(laborPercentile + stats.popOffset, 99.99);
+
+            const medianRatio = (grossSalary / stats.median).toFixed(1);
+            const avgDiff = grossSalary - stats.avg;
+            const mrotRatio = (grossSalary / stats.mrot).toFixed(1);
+
+            document.getElementById('progressBarLabor').style.width = '0%';
+            
+            setTimeout(() => {
+                document.getElementById('percentileLabor').innerText = laborPercentile.toFixed(1) + '%';
+                document.getElementById('progressBarLabor').style.width = laborPercentile + '%';
+            }, 100);
+            
+            document.getElementById('populationComparison').innerHTML = 
+                `А если взять вообще всех жителей, то вы богаче <b>${popPercentile.toFixed(1)}%</b> населения.`;
+
+            const medianEl = document.getElementById('medianRatio');
+            if (medianRatio >= 1) {
+                medianEl.innerText = `Больше в ${medianRatio} раз`;
+                medianEl.className = "text-xl font-black text-brand-600";
+            } else {
+                medianEl.innerText = `Меньше нормы`;
+                medianEl.className = "text-xl font-black text-rose-600";
+            }
+            document.getElementById('medianText').innerText = `Сама медиана: ${formatMoney(stats.median)}`;
+
+            const avgEl = document.getElementById('avgDiff');
+            if (avgDiff >= 0) {
+                avgEl.innerText = `Больше на ${formatMoney(avgDiff)}`;
+                avgEl.className = "text-xl font-black text-emerald-600";
+            } else {
+                avgEl.innerText = `Меньше на ${formatMoney(Math.abs(avgDiff))}`;
+                avgEl.className = "text-xl font-black text-amber-600";
+            }
+            document.getElementById('avgText').innerText = `Средняя ЗП: ${formatMoney(stats.avg)}`;
+
+            document.getElementById('mrotRatio').innerText = `${mrotRatio} МРОТ`;
+            document.getElementById('mrotText').innerText = `1 МРОТ в регионе = ${formatMoney(stats.mrot)}`;
+
+            const dashboard = document.getElementById('resultsDashboard');
+            dashboard.classList.remove('hidden');
+            setTimeout(() => dashboard.classList.remove('opacity-0'), 50);
+        }
+        
+        document.getElementById('grossSalary').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') calculateWealth();
+        });
+    </script>
+</body>
+</html>
