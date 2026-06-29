@@ -38,6 +38,38 @@
         input[type=number] {
             -moz-appearance: textfield;
         }
+
+        /* Тултипы */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 8px;
+            position: absolute;
+            z-index: 50;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 1.4;
+            pointer-events: none;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen font-sans antialiased">
@@ -45,7 +77,13 @@
     <!-- Шапка приложения -->
     <header class="bg-gradient-to-r from-brand-800 to-slate-900 text-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
+                    <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">На главную</span>
+                </a>
+                <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
+                <div class="flex items-center space-x-3">
                 <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner">
                     <svg class="w-8 h-8 text-white animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
@@ -340,12 +378,19 @@
                     </div>
                 </div>
 
+                <!-- Кнопка Поделиться -->
+                <button onclick="shareCalculation()" class="w-full flex items-center justify-center gap-2 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-2xl border border-slate-200 transition-all shadow-sm active:scale-[0.98]">
+                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
+                    Поделиться расчетом
+                </button>
+
             </div>
 
             <!-- ПРАВАЯ КОЛОНКА: Основные показатели и графики -->
-            <div class="lg:col-span-7 flex flex-col justify-between space-y-6">
+            <div class="lg:col-span-7 flex flex-col space-y-6">
 
                 <!-- Панель основных результатов -->
+                <div class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.1)] lg:sticky lg:top-6 lg:z-30 lg:p-0 lg:bg-transparent lg:backdrop-blur-none lg:border-t-0 lg:shadow-none space-y-6">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between">
                         <span class="text-xs font-bold text-slate-400 block mb-1" id="label-amount">Сумма кредита</span>
@@ -391,6 +436,7 @@
                         </div>
                     </div>
                 </div>
+                </div>
 
                 <!-- График Chart.js -->
                 <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex-1 min-h-[300px] flex flex-col justify-between">
@@ -430,8 +476,18 @@
                     <div class="col-span-2">Период</div>
                     <div class="col-span-2 text-right">Основной платёж</div>
                     <div class="col-span-2 text-right">Начисленные проценты</div>
-                    <div class="col-span-2 text-right">Выплата тела долга</div>
-                    <div class="col-span-2 text-center text-brand-700">Досрочное погашение</div>
+                    <div class="col-span-2 text-right flex items-center justify-end gap-1">
+                        Выплата тела долга
+                        <span class="tooltip text-[10px] bg-slate-200 text-slate-500 w-3.5 h-3.5 flex items-center justify-center rounded-full">?
+                            <span class="tooltiptext uppercase tracking-normal">Часть платежа, которая идет на уменьшение суммы самого кредита, а не на проценты.</span>
+                        </span>
+                    </div>
+                    <div class="col-span-2 text-center text-brand-700 flex items-center justify-center gap-1">
+                        Досрочное погашение
+                        <span class="tooltip text-[10px] bg-brand-100 text-brand-600 w-3.5 h-3.5 flex items-center justify-center rounded-full">?
+                            <span class="tooltiptext text-slate-900 font-bold uppercase tracking-normal">Дополнительные взносы, которые максимально эффективно уменьшают итоговую переплату.</span>
+                        </span>
+                    </div>
                     <div class="col-span-2 text-right">Остаток долга</div>
                 </div>
 
@@ -1575,6 +1631,15 @@
         window.formatTableInputVisual = formatTableInputVisual;
         window.handleTablePrepaymentCommit = handleTablePrepaymentCommit;
         window.calcTheoreticalBalance = calcTheoreticalBalance;
+
+        window.shareCalculation = function() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                showToast("Ссылка скопирована!");
+            }).catch(err => {
+                console.error('Ошибка копирования: ', err);
+            });
+        };
 
         // Инициализация при первой загрузке
         window.onload = function() {
