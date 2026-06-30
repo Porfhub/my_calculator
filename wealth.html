@@ -6,6 +6,8 @@
     <title>Насколько вы богаты? - Калькулятор зарплат</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2canvas CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Google Analytics 4 (GA4) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
     <script>
@@ -113,9 +115,10 @@
                 <div class="space-y-2">
                     <label class="block text-sm font-semibold text-slate-700">Ваша зарплата (Оклад полностью)</label>
                     <div class="relative">
-                        <input type="number" id="grossSalary" placeholder="Например: 100000" class="w-full pl-4 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
+                        <input type="text" id="grossSalary" placeholder="Например: 100 000" oninput="handleSalaryInput(this)" class="w-full pl-4 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
                         <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                     </div>
+                    <div id="netSalaryDisplay" class="text-xs font-bold text-slate-400 ml-1 hidden">На руки: <span id="netSalaryValue" class="text-brand-600">0 ₽</span></div>
                 </div>
                 
                 <div class="space-y-2">
@@ -195,10 +198,16 @@
                 </div>
 
                 <!-- Кнопка Поделиться -->
-                <button onclick="shareCalculation()" class="w-full mt-6 flex items-center justify-center gap-2 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-2xl border border-slate-200 transition-all shadow-sm active:scale-[0.98]">
-                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
-                    Поделиться расчетом
-                </button>
+                <div class="grid grid-cols-2 gap-4 mt-6">
+                    <button onclick="shareCalculation()" class="flex items-center justify-center gap-2 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-2xl border border-slate-200 transition-all shadow-sm active:scale-[0.98]">
+                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
+                        Ссылка
+                    </button>
+                    <button onclick="takeScreenshot()" class="flex items-center justify-center gap-2 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition-all shadow-sm active:scale-[0.98]">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Скриншот
+                    </button>
+                </div>
                 </div>
             </div>
         </div>
@@ -232,6 +241,41 @@
                 showToast("Ссылка скопирована!");
             }).catch(err => {
                 console.error('Ошибка копирования: ', err);
+            });
+        };
+
+        window.takeScreenshot = function() {
+            const element = document.getElementById('resultsDashboard');
+            if (!element) return;
+
+            showToast("Подготовка к отправке...");
+
+            html2canvas(element, {
+                backgroundColor: '#f8fafc',
+                scale: 2,
+                logging: false,
+                useCORS: true
+            }).then(canvas => {
+                canvas.toBlob((blob) => {
+                    const file = new File([blob], "wealth-calculation.png", { type: "image/png" });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        navigator.share({
+                            files: [file],
+                            title: 'Мое место в экономике РФ',
+                            text: 'Посмотри на результаты моего "Рентгена Доходов"!'
+                        }).then(() => showToast("Успешно отправлено!"))
+                          .catch((err) => console.log('User cancelled share', err));
+                    } else {
+                        const link = document.createElement('a');
+                        link.download = 'wealth-calculation.png';
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                        showToast("Скриншот скачан!");
+                    }
+                }, 'image/png');
+            }).catch(err => {
+                console.error('Ошибка скриншота:', err);
+                showToast("Ошибка при создании скриншота");
             });
         };
 
@@ -281,6 +325,28 @@
             return Math.round(amount).toLocaleString('ru-RU') + ' ₽';
         }
 
+        function handleSalaryInput(input) {
+            let cursorPosition = input.selectionStart;
+            let originalLength = input.value.length;
+            let cleanVal = input.value.replace(/\s+/g, '').replace(/\D/g, '');
+            if (cleanVal === '') {
+                input.value = '';
+                document.getElementById('netSalaryDisplay').classList.add('hidden');
+                return;
+            }
+            let parsed = parseInt(cleanVal, 10);
+            let formatted = new Intl.NumberFormat('ru-RU').format(parsed);
+            input.value = formatted;
+
+            let newLength = formatted.length;
+            let diff = newLength - originalLength;
+            input.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
+
+            const net = calculateNetSalary(parsed);
+            document.getElementById('netSalaryValue').innerText = formatMoney(net);
+            document.getElementById('netSalaryDisplay').classList.remove('hidden');
+        }
+
         function calculateNetSalary(gross) {
             const annualGross = gross * 12;
             let totalTax = 0;
@@ -301,7 +367,7 @@
         }
 
         function calculateWealth() {
-            const inputVal = document.getElementById('grossSalary').value;
+            const inputVal = document.getElementById('grossSalary').value.replace(/\s+/g, '');
             const region = document.getElementById('regionSelect').value;
             
             if (!inputVal || inputVal <= 0) return;
@@ -310,13 +376,19 @@
             const netSalary = calculateNetSalary(grossSalary);
             const stats = statsData[region];
 
+            // Очищаем статистику от налогов (считаем, что в базе Gross)
+            const netMedian = calculateNetSalary(stats.median);
+            const netAvg = calculateNetSalary(stats.avg);
+            const netP90 = calculateNetSalary(stats.p90);
+            const netMrot = calculateNetSalary(stats.mrot);
+
             // Сравнение идет по чистой зарплате (Net)
-            const laborPercentile = getPercentile(netSalary, stats.median, stats.p90);
+            const laborPercentile = getPercentile(netSalary, netMedian, netP90);
             const popPercentile = Math.min(laborPercentile + stats.popOffset, 99.99);
 
-            const medianRatio = (netSalary / stats.median).toFixed(1);
-            const avgDiff = netSalary - stats.avg;
-            const mrotRatio = (netSalary / stats.mrot).toFixed(1);
+            const medianRatio = (netSalary / netMedian).toFixed(1);
+            const avgDiff = netSalary - netAvg;
+            const mrotRatio = (netSalary / netMrot).toFixed(1);
 
             document.getElementById('progressBarLabor').style.width = '0%';
             
@@ -336,7 +408,7 @@
                 medianEl.innerText = `Меньше нормы`;
                 medianEl.className = "text-xl font-black text-rose-600";
             }
-            document.getElementById('medianText').innerText = `Сама медиана: ${formatMoney(stats.median)}`;
+            document.getElementById('medianText').innerText = `Чистая медиана: ${formatMoney(netMedian)}`;
 
             const avgEl = document.getElementById('avgDiff');
             if (avgDiff >= 0) {
@@ -346,10 +418,10 @@
                 avgEl.innerText = `Меньше на ${formatMoney(Math.abs(avgDiff))}`;
                 avgEl.className = "text-xl font-black text-amber-600";
             }
-            document.getElementById('avgText').innerText = `Средняя ЗП: ${formatMoney(stats.avg)}`;
+            document.getElementById('avgText').innerText = `Чистая средняя: ${formatMoney(netAvg)}`;
 
             document.getElementById('mrotRatio').innerText = `${mrotRatio} МРОТ`;
-            document.getElementById('mrotText').innerText = `1 МРОТ в регионе = ${formatMoney(stats.mrot)}`;
+            document.getElementById('mrotText').innerText = `1 чистый МРОТ = ${formatMoney(netMrot)}`;
 
             const dashboard = document.getElementById('resultsDashboard');
             dashboard.classList.remove('hidden');

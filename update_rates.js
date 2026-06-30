@@ -8,7 +8,9 @@ async function fetchRates() {
     }
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
     
-    const promptText = `Найди актуальную официальную ключевую ставку ЦБ РФ на сегодняшний день и средние базовые ставки по коммерческой ипотеке в банках: Сбербанк, ВТБ, Альфа-Банк, Т-Банк, Совкомбанк.
+    // Промпт теперь более жестко требует независимые ставки и поиск на cbr.ru
+    const promptText = `Найди актуальную официальную ключевую ставку ЦБ РФ на сегодняшний день (зайди на www.cbr.ru) и средние базовые ставки по коммерческой ипотеке в банках: Сбербанк, ВТБ, Альфа-Банк, Т-Банк, Совкомбанк.
+    ВАЖНО: Ключевая ставка ЦБ должна быть строго из официальных источников. Ставки банков должны быть реальными рыночными значениями, НЕ рассчитывай их математически от ставки ЦБ.
     Верни СТРОГО JSON без лишнего текста:
     {
         "cb_rate": 0.0,
@@ -38,14 +40,8 @@ async function fetchRates() {
         }
 
         const dataText = result.candidates[0].content.parts[0].text;
-        
-        // Проверяем валидность JSON
         const parsedData = JSON.parse(dataText);
-        if (parsedData.cb_rate === undefined) {
-            throw new Error('В ответе отсутствует cb_rate');
-        }
 
-        // Записываем результат в файл rates.json
         fs.writeFileSync('rates.json', JSON.stringify(parsedData, null, 2));
         console.log('Ставки успешно обновлены в rates.json!');
         console.log('Данные:', dataText);
