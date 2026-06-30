@@ -181,7 +181,7 @@
                 <!-- Совкомбанк -->
                 <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col justify-between space-y-2 hover:border-slate-200 transition">
                     <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 rounded-full bg-blue-850 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">СК</div>
+                        <div class="w-6 h-6 rounded-full bg-blue-700 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">СК</div>
                         <span class="text-xs font-bold text-slate-700">Совкомбанк</span>
                     </div>
                     <div class="flex items-baseline justify-between">
@@ -456,7 +456,7 @@
                 </div>
 
                 <!-- График Chart.js -->
-                <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex-1 min-h-[300px] flex flex-col justify-between">
+                <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex flex-col justify-between">
                     <div class="flex justify-between items-center mb-2">
                         <h3 class="text-sm font-bold text-slate-800" id="chart-title">Динамика остатка долга во времени</h3>
                         <div class="flex space-x-2">
@@ -1662,7 +1662,7 @@
             const element = document.getElementById('savings-card');
             if (!element) return;
 
-            showToast("Создаем скриншот...");
+            showToast("Подготовка к отправке...");
 
             html2canvas(element, {
                 backgroundColor: null,
@@ -1670,11 +1670,23 @@
                 logging: false,
                 useCORS: true
             }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'mortgage-pro-calculation.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                showToast("Скриншот готов!");
+                canvas.toBlob((blob) => {
+                    const file = new File([blob], "mortgage-calculation.png", { type: "image/png" });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        navigator.share({
+                            files: [file],
+                            title: 'Мой расчет ипотеки',
+                            text: 'Посмотри, какую экономию я рассчитал в ИпотекаПро!'
+                        }).then(() => showToast("Успешно отправлено!"))
+                          .catch((err) => console.log('User cancelled share', err));
+                    } else {
+                        const link = document.createElement('a');
+                        link.download = 'mortgage-pro-calculation.png';
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                        showToast("Скриншот скачан!");
+                    }
+                }, 'image/png');
             }).catch(err => {
                 console.error('Ошибка скриншота:', err);
                 showToast("Ошибка при создании скриншота");
