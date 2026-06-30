@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2canvas CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -119,7 +121,7 @@
                         </h3>
                         <!-- Виджет динамической ставки ЦБ -->
                         <span class="inline-flex items-center gap-1 text-[11px] font-bold bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-full border border-slate-200">
-                            Ключевая ставка ЦБ: <strong id="cb-rate-display" class="text-slate-900">14.5%</strong>
+                            Ключевая ставка ЦБ: <strong id="cb-rate-display" class="text-slate-900">...</strong>
                         </span>
                     </div>
                     <p class="text-[11px] text-slate-400">Ключевая ставка и проценты банков автоматически парсятся ИИ через поиск Google при входе на сайт. Нажмите «Применить» для подстановки ставки.</p>
@@ -353,7 +355,16 @@
                     <!-- Тумблер стратегии досрочных выплат -->
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm font-bold text-slate-700">Будущая стратегия досрочных</span>
+                            <div class="flex items-center gap-1.5 group relative">
+                                <span class="text-sm font-bold text-slate-700">Будущая стратегия досрочных</span>
+                                <div class="cursor-help text-slate-400 hover:text-slate-600 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                                <!-- Тултип на чистом CSS -->
+                                <div class="absolute bottom-full left-0 mb-2 w-64 p-2 bg-slate-800 text-white text-[11px] rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 shadow-xl pointer-events-none">
+                                    Выберите, что будет уменьшаться при внесении досрочных платежей: общее время ипотеки (срок) или сумма, которую вы платите каждый месяц (платеж).
+                                </div>
+                            </div>
                             <span id="strategy-badge" class="text-[10px] uppercase font-black px-2 py-0.5 rounded-full bg-brand-100 text-brand-800">Срок кредита</span>
                         </div>
                         <div class="flex items-center justify-between p-3.5 bg-slate-50 rounded-xl border border-slate-150">
@@ -378,11 +389,17 @@
                     </div>
                 </div>
 
-                <!-- Кнопка Поделиться -->
-                <button onclick="shareCalculation()" class="w-full flex items-center justify-center gap-2 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-2xl border border-slate-200 transition-all shadow-sm active:scale-[0.98]">
-                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
-                    Поделиться расчетом
-                </button>
+                <!-- Кнопки Поделиться -->
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="shareLink()" class="flex items-center justify-center gap-2 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-2xl border border-slate-200 transition-all shadow-sm active:scale-[0.98]">
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
+                        Ссылка
+                    </button>
+                    <button onclick="takeScreenshot()" class="flex items-center justify-center gap-2 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition-all shadow-sm active:scale-[0.98]">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Скриншот
+                    </button>
+                </div>
 
             </div>
 
@@ -390,7 +407,7 @@
             <div class="lg:col-span-7 flex flex-col space-y-6">
 
                 <!-- Панель основных результатов -->
-                <div class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.1)] lg:sticky lg:top-6 lg:z-30 lg:p-0 lg:bg-transparent lg:backdrop-blur-none lg:border-t-0 lg:shadow-none space-y-6">
+                <div class="space-y-6">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between">
                         <span class="text-xs font-bold text-slate-400 block mb-1" id="label-amount">Сумма кредита</span>
@@ -573,7 +590,7 @@
         };
 
         let chartInstance = null;
-        let currentCBRate = 14.5;
+        let currentCBRate = 21.0; // Значение по умолчанию, будет обновлено из JSON
 
         let db = null;
         let auth = null;
@@ -1245,7 +1262,7 @@
                     yearTotalPrepaid += m.prepayment;
                 });
 
-                const isOpened = year === '1';
+                const isOpened = false; // Закрыто по умолчанию
 
                 const accordionHeader = `
                     <div class="bg-slate-50 border border-slate-150 hover:bg-slate-100 rounded-xl transition cursor-pointer p-4 flex flex-col lg:grid lg:grid-cols-12 gap-3 items-start lg:items-center" onclick="toggleYearAccordion('${yearId}')">
@@ -1632,12 +1649,35 @@
         window.handleTablePrepaymentCommit = handleTablePrepaymentCommit;
         window.calcTheoreticalBalance = calcTheoreticalBalance;
 
-        window.shareCalculation = function() {
+        window.shareLink = function() {
             const url = window.location.href;
             navigator.clipboard.writeText(url).then(() => {
                 showToast("Ссылка скопирована!");
             }).catch(err => {
                 console.error('Ошибка копирования: ', err);
+            });
+        };
+
+        window.takeScreenshot = function() {
+            const element = document.getElementById('savings-card');
+            if (!element) return;
+
+            showToast("Создаем скриншот...");
+
+            html2canvas(element, {
+                backgroundColor: null,
+                scale: 2,
+                logging: false,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'mortgage-pro-calculation.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                showToast("Скриншот готов!");
+            }).catch(err => {
+                console.error('Ошибка скриншота:', err);
+                showToast("Ошибка при создании скриншота");
             });
         };
 
@@ -1647,8 +1687,21 @@
             updateInputsDOM();
             switchMainTab('new');
 
-            // Запуск фонового ИИ-парсинга ставок
-            fetchLiveRates();
+            // Загрузка ставок из файла
+            fetch('rates.json')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.cb_rate) {
+                        currentCBRate = data.cb_rate;
+                        document.getElementById('cb-rate-display').innerText = currentCBRate.toFixed(1) + '%';
+                    }
+                    if (data.sberbank) updateBankRateDisplay('sber', data.sberbank);
+                    if (data.vtb) updateBankRateDisplay('vtb', data.vtb);
+                    if (data.alfa) updateBankRateDisplay('alfa', data.alfa);
+                    if (data.tbank) updateBankRateDisplay('tbank', data.tbank);
+                    if (data.sovcom) updateBankRateDisplay('sovcom', data.sovcom);
+                })
+                .catch(err => console.error('Ошибка загрузки rates.json:', err));
 
             // Запуск счетчика просмотров в Firestore
             if (firebaseActive) {

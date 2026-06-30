@@ -122,20 +122,7 @@
                     <label class="block text-sm font-semibold text-slate-700">Регион</label>
                     <div class="relative">
                         <select id="regionSelect" class="w-full pl-4 pr-10 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
-                            <option value="RU">Вся Россия</option>
-                            <option value="MSK">Москва</option>
-                            <option value="SPB">Санкт-Петербург</option>
-                            <option value="TAT">Татарстан</option>
-                            <option value="BASH">Башкортостан</option>
-                            <option value="CHUV">Чувашская Республика</option>
-                            <option value="UDM">Удмуртия</option>
-                            <option value="DAG">Дагестан</option>
-                            <option value="CHE">Чечня</option>
-                            <option value="YAK">Якутия</option>
-                            <option value="CRI">Крым</option>
-                            <option value="EKB">Свердловская область (Екб)</option>
-                            <option value="KRD">Краснодарский край</option>
-                            <option value="NVS">Новосибирская область</option>
+                            <option value="">Загрузка регионов...</option>
                         </select>
                         <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-400">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -151,21 +138,18 @@
             <!-- Блок результатов -->
             <div id="resultsDashboard" class="hidden opacity-0 transition-opacity duration-700 space-y-6">
                 
-                <div class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.1)] lg:sticky lg:top-6 lg:z-30 lg:p-0 lg:bg-transparent lg:backdrop-blur-none lg:border-t-0 lg:shadow-none lg:space-y-6">
-                <div class="bg-gradient-to-br from-brand-900 to-emerald-850 rounded-2xl p-6 md:p-8 text-white shadow-lg relative overflow-hidden">
-                    <div class="absolute -right-10 -bottom-10 opacity-10">
-                        <svg class="w-48 h-48" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"></path></svg>
-                    </div>
+                <div class="space-y-6">
+                <div class="bg-white rounded-3xl p-6 md:p-8 border border-brand-100 shadow-xl relative overflow-hidden">
                     <div class="relative z-10">
-                        <h2 class="text-sm uppercase tracking-wide font-black text-brand-200 mb-2">Ваше место среди работающих:</h2>
+                        <h2 class="text-sm uppercase tracking-wide font-black text-slate-400 mb-2">Ваше место среди работающих:</h2>
                         <div class="flex flex-wrap items-baseline gap-3 mb-4">
-                            <span class="text-5xl md:text-6xl font-black text-white" id="percentileLabor">0%</span>
-                            <span class="text-sm text-brand-100 font-medium">людей получают меньше вас</span>
+                            <span class="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-brand-900" id="percentileLabor">0%</span>
+                            <span class="text-sm text-slate-600 font-medium">людей получают меньше вас</span>
                         </div>
-                        <div class="w-full bg-brand-950/50 rounded-full h-2.5 mb-4 overflow-hidden">
-                            <div id="progressBarLabor" class="bg-brand-400 h-2.5 rounded-full progress-bar-fill" style="width: 0%"></div>
+                        <div class="w-full bg-slate-100 rounded-full h-2.5 mb-4 overflow-hidden">
+                            <div id="progressBarLabor" class="bg-brand-500 h-2.5 rounded-full progress-bar-fill" style="width: 0%"></div>
                         </div>
-                        <p class="text-xs text-brand-100 border-t border-brand-700/50 pt-3" id="populationComparison">
+                        <p class="text-xs text-slate-500 border-t border-slate-100 pt-4" id="populationComparison">
                             А если взять вообще всех жителей (включая детей и пенсионеров), то вы богаче 0% населения.
                         </p>
                     </div>
@@ -251,22 +235,29 @@
             });
         };
 
-        const statsData = {
-            "RU":   { name: "Вся Россия", median: 75000, avg: 100000, p90: 180000, mrot: 24000, popOffset: 12 },
-            "MSK":  { name: "Москва", median: 125000, avg: 175000, p90: 350000, mrot: 29389, popOffset: 8 },
-            "SPB":  { name: "Санкт-Петербург", median: 95000, avg: 130000, p90: 250000, mrot: 28500, popOffset: 10 },
-            "TAT":  { name: "Татарстан", median: 70000, avg: 95000, p90: 170000, mrot: 24000, popOffset: 11 },
-            "BASH": { name: "Башкортостан", median: 65000, avg: 85000, p90: 150000, mrot: 24000, popOffset: 11 },
-            "CHUV": { name: "Чувашская Республика", median: 55000, avg: 70000, p90: 120000, mrot: 24000, popOffset: 12 },
-            "UDM":  { name: "Удмуртия", median: 60000, avg: 80000, p90: 140000, mrot: 24000, popOffset: 12 },
-            "DAG":  { name: "Дагестан", median: 45000, avg: 55000, p90: 100000, mrot: 24000, popOffset: 15 },
-            "CHE":  { name: "Чечня", median: 45000, avg: 55000, p90: 100000, mrot: 24000, popOffset: 15 },
-            "YAK":  { name: "Якутия", median: 100000, avg: 130000, p90: 250000, mrot: 24000, popOffset: 9 },
-            "CRI":  { name: "Крым", median: 55000, avg: 70000, p90: 120000, mrot: 24000, popOffset: 13 },
-            "EKB":  { name: "Свердловская область", median: 75000, avg: 100000, p90: 185000, mrot: 24000, popOffset: 11 },
-            "KRD":  { name: "Краснодарский край", median: 62000, avg: 80000, p90: 145000, mrot: 24000, popOffset: 13 },
-            "NVS":  { name: "Новосибирская область", median: 68000, avg: 90000, p90: 160000, mrot: 24000, popOffset: 12 }
-        };
+        let statsData = {};
+
+        async function loadRegions() {
+            try {
+                const response = await fetch('regions.json');
+                const data = await response.json();
+                const select = document.getElementById('regionSelect');
+                select.innerHTML = '';
+
+                data.forEach(region => {
+                    statsData[region.id] = region;
+                    const option = document.createElement('option');
+                    option.value = region.id;
+                    option.textContent = region.name;
+                    select.appendChild(option);
+                });
+            } catch (err) {
+                console.error('Ошибка загрузки регионов:', err);
+                document.getElementById('regionSelect').innerHTML = '<option value="">Ошибка загрузки</option>';
+            }
+        }
+
+        loadRegions();
 
         function erf(x) {
             let sign = (x >= 0) ? 1 : -1;
@@ -290,6 +281,25 @@
             return Math.round(amount).toLocaleString('ru-RU') + ' ₽';
         }
 
+        function calculateNetSalary(gross) {
+            const annualGross = gross * 12;
+            let totalTax = 0;
+
+            if (annualGross <= 2400000) {
+                totalTax = annualGross * 0.13;
+            } else if (annualGross <= 5000000) {
+                totalTax = (2400000 * 0.13) + (annualGross - 2400000) * 0.15;
+            } else if (annualGross <= 20000000) {
+                totalTax = (2400000 * 0.13) + (2600000 * 0.15) + (annualGross - 5000000) * 0.18;
+            } else if (annualGross <= 50000000) {
+                totalTax = (2400000 * 0.13) + (2600000 * 0.15) + (15000000 * 0.18) + (annualGross - 20000000) * 0.20;
+            } else {
+                totalTax = (2400000 * 0.13) + (2600000 * 0.15) + (15000000 * 0.18) + (30000000 * 0.20) + (annualGross - 50000000) * 0.22;
+            }
+
+            return (annualGross - totalTax) / 12;
+        }
+
         function calculateWealth() {
             const inputVal = document.getElementById('grossSalary').value;
             const region = document.getElementById('regionSelect').value;
@@ -297,14 +307,16 @@
             if (!inputVal || inputVal <= 0) return;
 
             const grossSalary = parseFloat(inputVal);
+            const netSalary = calculateNetSalary(grossSalary);
             const stats = statsData[region];
 
-            const laborPercentile = getPercentile(grossSalary, stats.median, stats.p90);
+            // Сравнение идет по чистой зарплате (Net)
+            const laborPercentile = getPercentile(netSalary, stats.median, stats.p90);
             const popPercentile = Math.min(laborPercentile + stats.popOffset, 99.99);
 
-            const medianRatio = (grossSalary / stats.median).toFixed(1);
-            const avgDiff = grossSalary - stats.avg;
-            const mrotRatio = (grossSalary / stats.mrot).toFixed(1);
+            const medianRatio = (netSalary / stats.median).toFixed(1);
+            const avgDiff = netSalary - stats.avg;
+            const mrotRatio = (netSalary / stats.mrot).toFixed(1);
 
             document.getElementById('progressBarLabor').style.width = '0%';
             
