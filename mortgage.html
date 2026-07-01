@@ -453,15 +453,16 @@
 
                     <!-- График Chart.js -->
                     <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex flex-col justify-between">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="text-sm font-bold text-slate-800" id="chart-title">Динамика остатка долга во времени</h3>
-                        <div class="flex space-x-2">
-                            <span class="inline-flex items-center text-xs text-slate-400"><span class="w-2.5 h-2.5 rounded-full bg-brand-500 mr-1.5"></span>С досрочными</span>
-                            <span class="inline-flex items-center text-xs text-slate-400"><span class="w-2.5 h-2.5 rounded-full bg-slate-300 mr-1.5"></span>Без досрочных</span>
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-sm font-bold text-slate-800" id="chart-title">Динамика остатка долга во времени</h3>
+                            <div class="flex space-x-2">
+                                <span class="inline-flex items-center text-xs text-slate-400"><span class="w-2.5 h-2.5 rounded-full bg-brand-500 mr-1.5"></span>С досрочными</span>
+                                <span class="inline-flex items-center text-xs text-slate-400"><span class="w-2.5 h-2.5 rounded-full bg-slate-300 mr-1.5"></span>Без досрочных</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="relative flex-1" style="max-height: 280px;">
-                        <canvas id="balanceChart" class="w-full h-full"></canvas>
+                        <div class="relative flex-1" style="max-height: 280px;">
+                            <canvas id="balanceChart" class="w-full h-full"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1028,7 +1029,7 @@
                 if (monthlyRate === 0) {
                     currentMonthlyPayment = balance / originalPlannedMonths;
                 } else {
-                    currentMonthlyPayment = balance * (monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
+                    currentMonthlyPayment = balance * (monthlyRate * Math.pow(1 + monthlyRate, originalPlannedMonths)) / (Math.pow(1 + monthlyRate, originalPlannedMonths) - 1);
                 }
             }
 
@@ -1590,12 +1591,7 @@
             if (el) el.innerText = val.toFixed(1) + '%';
         }
 
-        // Инициализация при первой загрузке
-        window.onload = function() {
-            calcTheoreticalBalance();
-            updateInputsDOM();
-            switchMainTab('new');
-
+        function loadLiveRates() {
             // Загрузка ставок из файла
             fetch('rates.json')
                 .then(response => response.json())
@@ -1610,7 +1606,18 @@
                     if (data.tbank) updateBankRateDisplay('tbank', data.tbank);
                     if (data.sovcom) updateBankRateDisplay('sovcom', data.sovcom);
                 })
-                .catch(err => console.error('Ошибка загрузки rates.json:', err));
+                .catch(err => {
+                    console.error('Ошибка загрузки rates.json:', err);
+                    document.getElementById('cb-rate-display').innerText = 'Ошибка';
+                });
+        }
+
+        // Инициализация при первой загрузке
+        window.onload = function() {
+            calcTheoreticalBalance();
+            updateInputsDOM();
+            switchMainTab('new');
+            loadLiveRates();
 
             // Запуск счетчика просмотров в Firestore
             if (firebaseActive) {
