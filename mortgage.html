@@ -518,41 +518,10 @@
         <p>Ипотечный калькулятор — предназначен для предварительного финансового планирования. Физические банковские условия могут незначительно отличаться.</p>
         <p>© 2026 ИпотекаПро. Все расчеты производятся в реальном времени.</p>
 
-        <!-- Счётчик заходов во весь экран -->
-        <div class="inline-flex items-center space-x-2 bg-slate-100 hover:bg-slate-200/70 border border-slate-200 px-3.5 py-1.5 rounded-full transition duration-300">
-            <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
-            </span>
-            <span class="text-[11px] font-semibold text-slate-500">Просмотров сайта: <strong id="global-visits-counter" class="text-slate-800 font-extrabold ml-1">Загрузка...</strong></span>
-        </div>
     </footer>
 
-    <!-- Основной скрипт калькулятора (модульный импорт Firebase SDK) -->
-    <script type="module">
-        // Импортируем Firebase SDK с официального CDN Google
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
-        import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
-        import { getFirestore, doc, runTransaction, onSnapshot } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
-
-        // =========================================================================
-        // 🚨 НАСТРОЙКИ (ВСТАВЬТЕ ВАШИ КЛЮЧИ СЮДА ПЕРЕД ЗАГРУЗКОЙ НА GITHUB)
-        // =========================================================================
-
-        // 1. ВСТАВЬТЕ СЮДА ПАСПОРТ ВАШЕЙ БАЗЫ ДАННЫХ ИЗ FIREBASE:
-        const firebaseConfig = {
-            apiKey: "PLACEHOLDER_API_KEY",
-            authDomain: "PLACEHOLDER_AUTH_DOMAIN",
-            projectId: "PLACEHOLDER_PROJECT_ID",
-            storageBucket: "PLACEHOLDER_STORAGE_BUCKET",
-            messagingSenderId: "PLACEHOLDER_SENDER_ID",
-            appId: "PLACEHOLDER_APP_ID",
-            measurementId: "PLACEHOLDER_MEASUREMENT_ID"
-        };
-
-        // Идентификатор приложения для базы данных
-        const appId = 'mortgage-pro-app';
-
+    <!-- Основной скрипт калькулятора -->
+    <script>
         // =========================================================================
         // ЛОГИКА КАЛЬКУЛЯТОРА И СОСТОЯНИЯ
         // =========================================================================
@@ -584,27 +553,6 @@
 
         let chartInstance = null;
         let currentCBRate = 21.0; // Значение по умолчанию, будет обновлено из JSON
-
-        let db = null;
-        let auth = null;
-        let firebaseActive = false;
-
-        // Запуск Firebase (если ключи вставлены)
-        const isFirebaseConfigured = firebaseConfig && firebaseConfig.apiKey && firebaseConfig.apiKey !== "PLACEHOLDER_API_KEY";
-
-        if (isFirebaseConfigured) {
-            try {
-                const app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-                firebaseActive = true;
-            } catch (e) {
-                console.error("Ошибка инициализации Firebase:", e);
-                document.getElementById('global-visits-counter').innerText = "Ошибка БД";
-            }
-        } else {
-            document.getElementById('global-visits-counter').innerText = "В режиме превью (без БД)";
-        }
 
         // Помощник: форматирование валюты
         function formatMoney(amount) {
@@ -1451,55 +1399,6 @@
             return yearsStr || monthsStr;
         }
 
-        // ==========================================
-        // РАБОТА С FIREBASE FIRESTORE (СЧЁТЧИК ВИЗИТОВ)
-        // ==========================================
-        async function runVisitorCounter() {
-            if (!firebaseActive) return;
-
-            try {
-                // Анонимный вход
-                const userCredential = await signInAnonymously(auth);
-                const user = userCredential.user;
-
-                if (!user) return;
-
-                // Путь к документу статистики
-                const visitsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'analytics', 'visits');
-
-                // Проверяем sessionStorage, чтобы не засчитывать F5 (обновления страницы)
-                const hasVisitedThisSession = sessionStorage.getItem('visited_mortgage_pro_session');
-
-                if (!hasVisitedThisSession) {
-                    await runTransaction(db, async (transaction) => {
-                        const visitsDoc = await transaction.get(visitsDocRef);
-                        if (!visitsDoc.exists()) {
-                            transaction.set(visitsDocRef, { count: 1 });
-                        } else {
-                            const newCount = (visitsDoc.data().count || 0) + 1;
-                            transaction.update(visitsDocRef, { count: newCount });
-                        }
-                    });
-                    sessionStorage.setItem('visited_mortgage_pro_session', 'true');
-                }
-
-                // Живая подписка на обновления счетчика
-                onSnapshot(visitsDocRef, (snapshot) => {
-                    if (snapshot.exists()) {
-                        const totalVisits = snapshot.data().count || 0;
-                        document.getElementById('global-visits-counter').innerText = totalVisits.toLocaleString('ru-RU');
-                    }
-                }, (error) => {
-                    console.error("Ошибка обновления счетчика:", error);
-                    document.getElementById('global-visits-counter').innerText = "Ошибка чтения БД";
-                });
-
-            } catch (err) {
-                console.error("Firebase Visitor Counter Error:", err);
-                document.getElementById('global-visits-counter').innerText = "Не подключено";
-            }
-        }
-
         window.switchMainTab = switchMainTab;
         window.recalcAndSyncBalance = recalcAndSyncBalance;
         window.syncActiveBalanceRange = syncActiveBalanceRange;
@@ -1618,11 +1517,6 @@
             updateInputsDOM();
             switchMainTab('new');
             loadLiveRates();
-
-            // Запуск счетчика просмотров в Firestore
-            if (firebaseActive) {
-                runVisitorCounter();
-            }
         };
     </script>
 </body>
