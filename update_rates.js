@@ -7,18 +7,19 @@ async function fetchRates() {
         process.exit(1);
     }
     
-    // Используем стабильную конечную точку для работы со свободным текстом
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
     
-    const promptText = `Используй Google Поиск! Найди текущую ключевую ставку ЦБ РФ и средние базовые ставки по коммерческой ипотеке в банках: Сбербанк, ВТБ, Альфа-Банк, Т-Банк, Совкомбанк.
-    Напиши ответ СТРОГО в формате JSON-объекта (используй только числа):
+    // Формируем жесткий промпт БЕЗ цифр-примеров, заставляя ИИ включить поиск
+    const promptText = `Today is July 2026. Use your Google Search tool right now to find the current official key interest rate of the Central Bank of the Russian Federation (cbr.ru). Also, search for the latest average mortgage interest rates for commercial loans in the following Russian banks: Sberbank, VTB, Alfa-Bank, T-Bank, Sovcombank. 
+    You must extract the real numbers from the search results. Return ONLY a valid JSON object. Do not include any markdown, text or code block formatting.
+    The JSON structure must strictly be:
     {
-        "cb_rate": 14.5,
-        "sberbank": 16.8,
-        "vtb": 16.9,
-        "alfa": 17.1,
-        "tbank": 16.5,
-        "sovcom": 17.2
+        "cb_rate": [put searched number here],
+        "sberbank": [put searched number here],
+        "vtb": [put searched number here],
+        "alfa": [put searched number here],
+        "tbank": [put searched number here],
+        "sovcom": [put searched number here]
     }`;
 
     const payload = {
@@ -26,11 +27,10 @@ async function fetchRates() {
         tools: [{ "google_search": {} }]
     };
 
-    // Дефолтный конфиг-страховка на случай сбоев сети
     const fallback = { "cb_rate": 14.5, "sberbank": 16.8, "vtb": 16.9, "alfa": 17.1, "tbank": 16.5, "sovcom": 17.2 };
 
     try {
-        console.log('Отправляем запрос к Google Gemini...');
+        console.log('Запускаем реальный поиск ставок через Gemini...');
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -39,33 +39,37 @@ async function fetchRates() {
         
         const result = await response.json();
         
-        // Переводим весь объект в строку, чтобы не зависеть от структуры кандидатов
-        const responseString = JSON.stringify(result);
-        console.log('Вывод ответа для отладки:', responseString);
+        if (!result.candidates || !result.candidates[0]?.content?.parts[0]?.text) {
+            throw new Error('ИИ вернул пустой ответ или заблокировал запрос.');
+        }
 
-        // Ищем регулярным выражением JSON-блок внутри ответа
-        const jsonMatch = responseString.match(/\{"cb_rate"[\s\S]*?\}/);
-        
+        const rawText = result.candidates[0].content.parts[0].text;
+        console.log('Реальный ответ от ИИ:', rawText);
+
+        // Извлекаем JSON
+        const jsonMatch = rawText.match(/\{[\s\S]*?\}/);
         if (jsonMatch) {
             const parsedData = JSON.parse(jsonMatch[0]);
+            
+            // Проверяем, что ИИ прислал реальные новые числа, а не пустые строки
             const finalData = {
-                cb_rate: parsedData.cb_rate || fallback.cb_rate,
-                sberbank: parsedData.sberbank || fallback.sberbank,
-                vtb: parsedData.vtb || fallback.vtb,
-                alfa: parsedData.alfa || fallback.alfa,
-                tbank: parsedData.tbank || fallback.tbank,
-                sovcom: parsedData.sovcom || fallback.sovcom
+                cb_rate: Number(parsedData.cb_rate) || fallback.cb_rate,
+                sberbank: Number(parsedData.sberbank) || fallback.sberbank,
+                vtb: Number(parsedData.vtb) || fallback.vtb,
+                alfa: Number(parsedData.alfa) || fallback.alfa,
+                tbank: Number(parsedData.tbank) || fallback.tbank,
+                sovcom: Number(parsedData.sovcom) || fallback.sovcom
             };
+            
             fs.writeFileSync('rates.json', JSON.stringify(finalData, null, 2));
-            console.log('Ставки успешно обновлены и записаны в rates.json!');
+            console.log('Успех! В rates.json записаны свежие данные поиска:', finalData);
             return;
         }
 
-        console.warn('ИИ ответил не по шаблону. Применяем подстраховку.');
-        fs.writeFileSync('rates.json', JSON.stringify(fallback, null, 2));
+        throw new Error('В ответе ИИ не найден валидный JSON.');
 
     } catch (error) {
-        console.error('Произошла ошибка при парсинге, пишем дефолтные ставки:', error.message);
+        console.error('Ошибка парсинга реальных ставок, пишем безопасный конфиг:', error.message);
         fs.writeFileSync('rates.json', JSON.stringify(fallback, null, 2));
     }
 }
