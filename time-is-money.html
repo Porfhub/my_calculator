@@ -351,14 +351,21 @@
             document.getElementById('monthly-overtime-hours').innerText = Math.round(monthlyOvertimeHours) + ' ч.';
         }
 
-        function shareLink() {
-            const url = window.location.href;
-            navigator.clipboard.writeText(url).then(() => {
-                showToast("Ссылка скопирована!");
-            }).catch(err => {
-                console.error('Ошибка копирования: ', err);
-            });
-        }
+        window.shareLink = function() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Сколько стоит час твоей жизни',
+                    text: 'Узнал свою реальную стоимость часа в Финансовом Хабе!',
+                    url: window.location.href
+                }).catch(err => console.log('Error sharing', err));
+            } else {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    showToast("Ссылка скопирована!");
+                }).catch(err => {
+                    console.error('Ошибка копирования: ', err);
+                });
+            }
+        };
 
         function showToast(message) {
             const toast = document.getElementById('toast');
@@ -371,7 +378,7 @@
             }, 2500);
         }
 
-        function takeScreenshot() {
+        window.takeScreenshot = function() {
             const element = document.getElementById('results-card');
             if (!element) return;
 
