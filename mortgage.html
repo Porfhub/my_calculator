@@ -545,17 +545,17 @@
         // 1. ВСТАВЬТЕ СЮДА ПАСПОРТ ВАШЕЙ БАЗЫ ДАННЫХ ИЗ FIREBASE:
         // (Скопируйте его из консоли Firebase, замените блок ниже)
         const firebaseConfig = {
-  apiKey: "AIzaSyAhJbAnF6SiP3aRs-7KoKUDDo2Q8LTQiZ0",
-  authDomain: "first-project-69a90.firebaseapp.com",
-  projectId: "first-project-69a90",
-  storageBucket: "first-project-69a90.firebasestorage.app",
-  messagingSenderId: "593338667309",
-  appId: "1:593338667309:web:ff13958de356f3db0203a4",
-  measurementId: "G-ZR1L92SLDP"
-};
+            apiKey: "YOUR_FIREBASE_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID",
+            measurementId: "YOUR_MEASUREMENT_ID"
+        };
 
         // 2. ВСТАВЬТЕ СЮДА ВАШ API-КЛЮЧ GEMINI ИЗ GOOGLE AI STUDIO (для поиска ставок):
-        const apiKey = "AQ.Ab8RN6IIiut1C9kBCxctgpMpx8Duu5d_M95QIRqvN3Nvd2kNMw";
+        const apiKey = "";
 
         // Идентификатор приложения для базы данных
         const appId = 'mortgage-pro-app';
@@ -990,7 +990,7 @@
             syncIcon.classList.add('animate-spin');
             syncText.innerText = 'Загрузка ставок...';
 
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
             const currentDate = new Date().toLocaleString('ru-RU', { month: 'long', year: 'numeric' });
 
@@ -1665,7 +1665,7 @@
             showToast("Подготовка к отправке...");
 
             html2canvas(element, {
-                backgroundColor: null,
+                backgroundColor: '#f8fafc',
                 scale: 2,
                 logging: false,
                 useCORS: true
