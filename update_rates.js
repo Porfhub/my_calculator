@@ -3,28 +3,20 @@ const fs = require('fs');
 async function fetchRates() {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-        console.error('Ошибка: GEMINI_API_KEY не установлен в секретах GitHub');
+        console.error('Ошибка: GEMINI_API_KEY не установлен');
         process.exit(1);
     }
     
-    // Используем стабильную конечную точку для обычного текста
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-    
-    const promptText = `Используй Google Поиск! Найди текущую ключевую ставку ЦБ РФ и средние базовые ставки по коммерческой ипотеке в банках: Сбербанк, ВТБ, Альфа-Банк, Т-Банк, Совкомбанк.
-    Напиши ответ СТРОГО в формате JSON-объекта (используй только числа):
-    {
-        "cb_rate": 14.5,
-        "sberbank": 16.8,
-        "vtb": 16.9,
-        "alfa": 17.1,
-        "tbank": 16.5,
-        "sovcom": 17.2
-    }`;
+    const promptText = `Найди актуальную ключевую ставку ЦБ РФ и средние ставки по ипотеке банков: Сбербанк, ВТБ, Альфа-Банк, Т-Банк, Совкомбанк. Верни строго JSON.`;
 
     const payload = {
         contents: [{ parts: [{ text: promptText }] }],
         tools: [{ "google_search": {} }]
     };
+
+    // Дефолтный конфиг на случай любых непредвиденных обстоятельств
+    const fallback = { "cb_rate": 14.5, "sberbank": 16.8, "vtb": 16.9, "alfa": 17.1, "tbank": 16.5, "sovcom": 17.2 };
 
     try {
         const response = await fetch(url, {
@@ -35,43 +27,32 @@ async function fetchRates() {
         
         const result = await response.json();
 
-        // Проверяем, ответил ли вообще сервер
-        if (!result || !result.candidates || !result.candidates[0]) {
-            throw new Error('API вернул пустой или некорректный ответ: ' + JSON.stringify(result));
+        // Полностью безопасный разбор структуры ответа без индексов [0]
+        if (result && result.candidates && result.candidates.length > 0) {
+            const candidate = result.candidates[0];
+            if (candidate.content && candidate.content.parts && candidate.content.parts.length > 0) {
+                const rawText = candidate.content.parts[0].text;
+                const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+                if (jsonMatch) {
+                    const parsedData = JSON.parse(jsonMatch[0]);
+                    const finalData = {
+                        cb_rate: parsedData.cb_rate || fallback.cb_rate,
+                        sberbank: parsedData.sberbank || fallback.sberbank,
+                        vtb: parsedData.vtb || fallback.vtb,
+                        alfa: parsedData.alfa || fallback.alfa,
+                        tbank: parsedData.tbank || fallback.tbank,
+                        sovcom: parsedData.sovcom || fallback.sovcom
+                    };
+                    fs.writeFileSync('rates.json', JSON.stringify(finalData, null, 2));
+                    console.log('Ставки успешно сохранены в rates.json!');
+                    return;
+                }
+            }
         }
-
-        // Вытаскиваем текст, где бы он ни лежал
-        const rawText = result.candidates[0].content.parts[0].text;
-        console.log('Сырой ответ от ИИ:', rawText);
-
-        // Магия регулярных выражений: вырезаем JSON из любого текста, даже если ИИ добавил лишние слова или кавычки
-        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-        if (!jsonMatch) {
-            throw new Error('ИИ не вернул JSON-структуру в тексте');
-        }
-
-        const cleanJsonText = jsonMatch[0];
-        const parsedData = JSON.parse(cleanJsonText);
-
-        // Проверяем, что все нужные поля на месте, иначе ставим дефолт
-        const finalData = {
-            cb_rate: parsedData.cb_rate || 14.5,
-            sberbank: parsedData.sberbank || 16.8,
-            vtb: parsedData.vtb || 16.9,
-            alfa: parsedData.alfa || 17.1,
-            tbank: parsedData.tbank || 16.5,
-            sovcom: parsedData.sovcom || 17.2
-        };
-
-        fs.writeFileSync('rates.json', JSON.stringify(finalData, null, 2));
-        console.log('Ставки успешно сохранены в rates.json!');
+        throw new Error('Нестандартный ответ API');
     } catch (error) {
-        console.error('Ошибка парсинга:', error.message);
-        
-        // Супер-подстраховка: если интернет упал или ИИ выдал бред, сайт не должен умереть. Запишем базовые ставки.
-        const fallback = { "cb_rate": 14.5, "sberbank": 16.8, "vtb": 16.9, "alfa": 17.1, "tbank": 16.5, "sovcom": 17.2 };
+        console.warn('Применен аварийный режим подстраховки:', error.message);
         fs.writeFileSync('rates.json', JSON.stringify(fallback, null, 2));
-        console.log('Записаны дефолтные ставки из-за ошибки.');
     }
 }
 
