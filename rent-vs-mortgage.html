@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Купить или Снимать? - Калькулятор сравнения</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        .tooltip { position: relative; display: inline-block; cursor: help; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #1e293b; color: #fff; text-align: center; border-radius: 8px; padding: 10px; position: absolute; z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; font-size: 11px; line-height: 1.4; pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen font-sans antialiased flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-brand-800 to-slate-900 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex items-center space-x-4">
+            <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
+                <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">На главную</span>
+            </a>
+            <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
+            <div class="flex items-center space-x-3">
+                <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-tight">Рент-vs-Ипотека</h1>
+                    <p class="text-xs text-brand-200">Честный математический поединок: владение против аренды</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- Parameters Panel -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-6">
+                    <h2 class="text-lg font-bold text-slate-900 border-b pb-3">Настройки сценария</h2>
+
+                    <!-- Real Estate Section -->
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-2 text-slate-400 font-bold text-[10px] uppercase tracking-wider">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                            Недвижимость
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <label class="text-sm font-semibold text-slate-700">Стоимость квартиры</label>
+                                <span class="text-sm font-bold text-slate-900" id="cost-display">0 ₽</span>
+                            </div>
+                            <input type="range" id="cost-range" min="1000000" max="50000000" step="100000" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer">
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <label class="text-sm font-semibold text-slate-700">Ипотечная ставка</label>
+                                <span class="text-sm font-bold text-brand-700" id="rate-display">0%</span>
+                            </div>
+                            <input type="range" id="rate-range" min="1" max="30" step="0.1" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer">
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <label class="text-sm font-semibold text-slate-700">Первоначальный взнос</label>
+                                <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold" id="dp-percent">0%</span>
+                            </div>
+                            <input type="range" id="dp-range" min="0" max="1" step="0.01" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer">
+                        </div>
+                    </div>
+
+                    <!-- Rent & Investment Section -->
+                    <div class="space-y-4 pt-4 border-t border-slate-50">
+                        <div class="flex items-center gap-2 text-slate-400 font-bold text-[10px] uppercase tracking-wider">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Аренда и Инвестиции
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <label class="text-sm font-semibold text-slate-700">Стоимость аренды (в мес.)</label>
+                                <span class="text-sm font-bold text-slate-900" id="rent-display">0 ₽</span>
+                            </div>
+                            <input type="range" id="rent-range" min="10000" max="300000" step="1000" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer">
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-1.5">
+                                    <label class="text-sm font-semibold text-slate-700">Доходность инвестиций</label>
+                                    <span class="tooltip text-[10px] bg-slate-200 text-slate-500 w-3.5 h-3.5 flex items-center justify-center rounded-full">?
+                                        <span class="tooltiptext">Годовой процент, под который вы будете вкладывать сэкономленные деньги (депозиты, акции).</span>
+                                    </span>
+                                </div>
+                                <span class="text-sm font-bold text-brand-700" id="invest-display">0%</span>
+                            </div>
+                            <input type="range" id="invest-range" min="1" max="25" step="0.5" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer">
+                        </div>
+                    </div>
+
+                    <!-- Macro Section -->
+                    <div class="space-y-4 pt-4 border-t border-slate-50">
+                        <div class="flex items-center gap-2 text-slate-400 font-bold text-[10px] uppercase tracking-wider">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                            Инфляция и Рост (в год)
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-bold text-slate-500 uppercase">Рост цен на жилье</label>
+                                <div class="relative">
+                                    <input type="number" id="growth-re" value="5" class="w-full pl-3 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-1 focus:ring-brand-500 outline-none text-xs font-bold">
+                                    <span class="absolute right-3 top-2 text-[10px] text-slate-400">%</span>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-bold text-slate-500 uppercase">Рост аренды</label>
+                                <div class="relative">
+                                    <input type="number" id="growth-rent" value="4" class="w-full pl-3 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-1 focus:ring-brand-500 outline-none text-xs font-bold">
+                                    <span class="absolute right-3 top-2 text-[10px] text-slate-400">%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-2 pt-2">
+                            <div class="flex justify-between items-center">
+                                <label class="text-sm font-semibold text-slate-700">Горизонт планирования</label>
+                                <span class="text-sm font-bold text-slate-900" id="years-display">20 лет</span>
+                            </div>
+                            <input type="range" id="years-range" min="1" max="30" step="1" value="20" class="w-full accent-slate-800 h-1.5 bg-slate-100 rounded-lg cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Panel -->
+            <div class="lg:col-span-7 space-y-6">
+                <!-- Verdict Card -->
+                <div id="verdict-card" class="bg-white rounded-3xl p-8 border border-slate-100 shadow-xl relative overflow-hidden transition-all duration-500">
+                    <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
+                        <div class="w-24 h-24 rounded-full border-8 border-brand-500 flex items-center justify-center flex-shrink-0" id="verdict-circle">
+                            <span class="text-2xl font-black" id="verdict-percent">8%</span>
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-black text-slate-900 mb-2" id="verdict-title">Ипотека выгоднее</h2>
+                            <p class="text-slate-500 text-sm leading-relaxed" id="verdict-desc">
+                                Через 20 лет ваш капитал при покупке квартиры в ипотеку будет на 4.2 млн ₽ больше, чем если бы вы снимали жилье и инвестировали разницу.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">Капитал через 20 лет (Ипотека)</span>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-black text-slate-900" id="final-buy">0 ₽</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2">Стоимость жилья минус долг</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">Капитал через 20 лет (Аренда)</span>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-black text-slate-900" id="final-rent">0 ₽</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2">Накопления в инвестициях</p>
+                    </div>
+                </div>
+
+                <!-- Chart -->
+                <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm h-[400px]">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-slate-800">Сравнение чистого капитала (Net Worth)</h3>
+                        <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider">
+                            <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-brand-500 rounded-full"></span> Ипотека</span>
+                            <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-slate-300 rounded-full"></span> Аренда</span>
+                        </div>
+                    </div>
+                    <div class="h-[300px]">
+                        <canvas id="comparisonChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-400 border-t border-slate-100 mt-12">
+        <p>© 2026 Рент-vs-Ипотека. Математическая модель учитывает сложные проценты и инфляцию.</p>
+    </footer>
+
+    <script>
+        const state = {
+            cost: 10000000,
+            rate: 16.0,
+            dpPercent: 0.2,
+            rent: 50000,
+            investRate: 15,
+            growthRE: 5,
+            growthRent: 4,
+            years: 20
+        };
+
+        let chart = null;
+
+        function formatMoney(val) {
+            return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(val);
+        }
+
+        function calculate() {
+            const loanAmount = state.cost * (1 - state.dpPercent);
+            const monthlyRate = state.rate / 12 / 100;
+            const months = state.years * 12;
+
+            // Mortgage Payment
+            let mortgagePayment = 0;
+            if (monthlyRate > 0) {
+                mortgagePayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+            } else {
+                mortgagePayment = loanAmount / months;
+            }
+
+            const dataBuy = [];
+            const dataRent = [];
+            const labels = [];
+
+            let currentLoanBalance = loanAmount;
+            let currentPropertyValue = state.cost;
+            let currentRent = state.rent;
+            let investPot = state.cost * state.dpPercent; // Initial capital for renter
+
+            const monthlyInvestRate = state.investRate / 12 / 100;
+            const monthlyGrowthRE = state.growthRE / 12 / 100;
+            const monthlyGrowthRent = state.growthRent / 12 / 100;
+
+            // Initial month (0)
+            dataBuy.push(currentPropertyValue - currentLoanBalance);
+            dataRent.push(investPot);
+            labels.push('Старт');
+
+            for (let m = 1; m <= months; m++) {
+                // Buy logic
+                let interest = currentLoanBalance * monthlyRate;
+                let principal = mortgagePayment - interest;
+                currentLoanBalance -= principal;
+                if (currentLoanBalance < 0) currentLoanBalance = 0;
+                currentPropertyValue *= (1 + monthlyGrowthRE);
+
+                // Rent logic
+                // Difference between (Mortgage + Maintenance) and Rent
+                const maintenance = (state.cost * 0.001) / 12; // 0.1% of cost per year for maintenance/tax
+                const totalBuyOutflow = mortgagePayment + maintenance;
+
+                const savings = totalBuyOutflow - currentRent;
+                investPot = investPot * (1 + monthlyInvestRate) + savings;
+
+                currentRent *= (1 + monthlyGrowthRent);
+
+                if (m % 12 === 0) {
+                    dataBuy.push(Math.round(currentPropertyValue - currentLoanBalance));
+                    dataRent.push(Math.round(investPot));
+                    labels.push(m / 12 + ' г.');
+                }
+            }
+
+            updateUI(dataBuy[dataBuy.length-1], dataRent[dataRent.length-1]);
+            updateChart(labels, dataBuy, dataRent);
+        }
+
+        function updateUI(buyFinal, rentFinal) {
+            document.getElementById('cost-display').innerText = formatMoney(state.cost);
+            document.getElementById('rate-display').innerText = state.rate.toFixed(1) + '%';
+            document.getElementById('dp-percent').innerText = Math.round(state.dpPercent * 100) + '%';
+            document.getElementById('rent-display').innerText = formatMoney(state.rent);
+            document.getElementById('invest-display').innerText = state.investRate.toFixed(1) + '%';
+            document.getElementById('years-display').innerText = state.years + ' лет';
+
+            document.getElementById('final-buy').innerText = formatMoney(buyFinal);
+            document.getElementById('final-rent').innerText = formatMoney(rentFinal);
+
+            const card = document.getElementById('verdict-card');
+            const title = document.getElementById('verdict-title');
+            const desc = document.getElementById('verdict-desc');
+            const circle = document.getElementById('verdict-circle');
+            const percent = document.getElementById('verdict-percent');
+
+            const diff = Math.abs(buyFinal - rentFinal);
+            const winner = buyFinal > rentFinal ? 'Ипотека' : 'Аренда';
+            const winnerPercent = Math.round((Math.max(buyFinal, rentFinal) / Math.min(buyFinal, rentFinal) - 1) * 100);
+
+            title.innerText = `${winner} выгоднее`;
+            percent.innerText = winnerPercent + '%';
+            desc.innerText = `Через ${state.years} лет ваш капитал при выборе ${winner === 'Ипотека' ? 'покупки' : 'аренды'} будет на ${formatMoney(diff)} больше.`;
+
+            if (winner === 'Ипотека') {
+                card.className = "bg-gradient-to-br from-brand-50 to-white rounded-3xl p-8 border border-brand-200 shadow-xl relative overflow-hidden transition-all duration-500";
+                circle.className = "w-24 h-24 rounded-full border-8 border-brand-500 flex items-center justify-center flex-shrink-0 bg-white";
+            } else {
+                card.className = "bg-gradient-to-br from-slate-50 to-white rounded-3xl p-8 border border-slate-200 shadow-xl relative overflow-hidden transition-all duration-500";
+                circle.className = "w-24 h-24 rounded-full border-8 border-slate-400 flex items-center justify-center flex-shrink-0 bg-white";
+            }
+        }
+
+        function updateChart(labels, buy, rent) {
+            const ctx = document.getElementById('comparisonChart').getContext('2d');
+            if (chart) chart.destroy();
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Ипотека (Жилье)',
+                            data: buy,
+                            borderColor: '#16a34a',
+                            backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Аренда (Инвестиции)',
+                            data: rent,
+                            borderColor: '#94a3b8',
+                            backgroundColor: 'rgba(148, 163, 184, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            ticks: { callback: (v) => (v / 1000000).toFixed(0) + 'М' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Event Listeners
+        document.getElementById('cost-range').addEventListener('input', (e) => { state.cost = parseInt(e.target.value); calculate(); });
+        document.getElementById('rate-range').addEventListener('input', (e) => { state.rate = parseFloat(e.target.value); calculate(); });
+        document.getElementById('dp-range').addEventListener('input', (e) => { state.dpPercent = parseFloat(e.target.value); calculate(); });
+        document.getElementById('rent-range').addEventListener('input', (e) => { state.rent = parseInt(e.target.value); calculate(); });
+        document.getElementById('invest-range').addEventListener('input', (e) => { state.investRate = parseFloat(e.target.value); calculate(); });
+        document.getElementById('years-range').addEventListener('input', (e) => { state.years = parseInt(e.target.value); calculate(); });
+        document.getElementById('growth-re').addEventListener('input', (e) => { state.growthRE = parseFloat(e.target.value); calculate(); });
+        document.getElementById('growth-rent').addEventListener('input', (e) => { state.growthRent = parseFloat(e.target.value); calculate(); });
+
+        // Init
+        document.getElementById('cost-range').value = state.cost;
+        document.getElementById('rate-range').value = state.rate;
+        document.getElementById('dp-range').value = state.dpPercent;
+        document.getElementById('rent-range').value = state.rent;
+        document.getElementById('invest-range').value = state.investRate;
+        document.getElementById('years-range').value = state.years;
+
+        calculate();
+    </script>
+</body>
+</html>
