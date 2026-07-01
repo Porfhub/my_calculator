@@ -14,7 +14,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
+
           node-version: '24'
+
 
       - name: Run script to fetch rates
         env:
