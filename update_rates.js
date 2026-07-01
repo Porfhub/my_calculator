@@ -1,5 +1,17 @@
 const fs = require('fs');
 
+// Функция-очиститель: убирает проценты, буквы и меняет запятые на точки
+function cleanNum(val, fallbackVal) {
+    if (val === undefined || val === null) return fallbackVal;
+    
+    // Превращаем в строку, меняем запятую на точку, удаляем всё кроме цифр и точки
+    const strVal = String(val).replace(',', '.').replace(/[^0-9.]/g, '');
+    const num = Number(strVal);
+    
+    // Если после очистки получилось не число или 0 — берем дефолт
+    return (isNaN(num) || num === 0) ? fallbackVal : num;
+}
+
 async function fetchRates() {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
@@ -9,17 +21,18 @@ async function fetchRates() {
     
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
     
-    // Формируем жесткий промпт БЕЗ цифр-примеров, заставляя ИИ включить поиск
-    const promptText = `Today is July 2026. Use your Google Search tool right now to find the current official key interest rate of the Central Bank of the Russian Federation (cbr.ru). Also, search for the latest average mortgage interest rates for commercial loans in the following Russian banks: Sberbank, VTB, Alfa-Bank, T-Bank, Sovcombank. 
-    You must extract the real numbers from the search results. Return ONLY a valid JSON object. Do not include any markdown, text or code block formatting.
+    // Промпт с жестким указанием формата чисел
+    const promptText = `Today is July 2026. Use your Google Search tool to find the current official key interest rate of the Central Bank of the Russian Federation. Also, search for the current average mortgage interest rates for commercial loans in: Sberbank, VTB, Alfa-Bank, T-Bank, Sovcombank. 
+    CRITICAL: You must return ONLY float numbers using a dot as a decimal separator (e.g., 18.5). DO NOT use strings, percentage signs (%), or commas (,).
+    Return ONLY a valid JSON object. Do not include any markdown, text or code block formatting.
     The JSON structure must strictly be:
     {
-        "cb_rate": [put searched number here],
-        "sberbank": [put searched number here],
-        "vtb": [put searched number here],
-        "alfa": [put searched number here],
-        "tbank": [put searched number here],
-        "sovcom": [put searched number here]
+        "cb_rate": [insert float number here],
+        "sberbank": [insert float number here],
+        "vtb": [insert float number here],
+        "alfa": [insert float number here],
+        "tbank": [insert float number here],
+        "sovcom": [insert float number here]
     }`;
 
     const payload = {
@@ -51,18 +64,18 @@ async function fetchRates() {
         if (jsonMatch) {
             const parsedData = JSON.parse(jsonMatch[0]);
             
-            // Проверяем, что ИИ прислал реальные новые числа, а не пустые строки
+            // Пропускаем все данные через нашу функцию-очиститель
             const finalData = {
-                cb_rate: Number(parsedData.cb_rate) || fallback.cb_rate,
-                sberbank: Number(parsedData.sberbank) || fallback.sberbank,
-                vtb: Number(parsedData.vtb) || fallback.vtb,
-                alfa: Number(parsedData.alfa) || fallback.alfa,
-                tbank: Number(parsedData.tbank) || fallback.tbank,
-                sovcom: Number(parsedData.sovcom) || fallback.sovcom
+                cb_rate: cleanNum(parsedData.cb_rate, fallback.cb_rate),
+                sberbank: cleanNum(parsedData.sberbank, fallback.sberbank),
+                vtb: cleanNum(parsedData.vtb, fallback.vtb),
+                alfa: cleanNum(parsedData.alfa, fallback.alfa),
+                tbank: cleanNum(parsedData.tbank, fallback.tbank),
+                sovcom: cleanNum(parsedData.sovcom, fallback.sovcom)
             };
             
             fs.writeFileSync('rates.json', JSON.stringify(finalData, null, 2));
-            console.log('Успех! В rates.json записаны свежие данные поиска:', finalData);
+            console.log('Успех! В rates.json записаны чистые свежие данные:', finalData);
             return;
         }
 
