@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Машина или Такси? - Финансовый калькулятор</title>
+    <title>Машина или Такси - Финансовый Хаб</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- html2canvas CDN -->
@@ -37,459 +37,419 @@
         input[type=number] {
             -moz-appearance: textfield;
         }
-
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            cursor: help;
-        }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 200px;
-            background-color: #1e293b;
-            color: #fff;
-            text-align: center;
-            border-radius: 8px;
-            padding: 8px;
-            position: absolute;
-            z-index: 50;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -100px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 11px;
-            font-weight: 500;
-            line-height: 1.4;
-            pointer-events: none;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        @media (min-width: 1024px) {
-            .sticky-results {
-                position: sticky;
-                top: 2rem;
-            }
-        }
-
-        /* Mobile fixed bottom results */
         @media (max-width: 1023px) {
-            .mobile-fixed-bottom {
+            .mobile-sticky-results {
                 position: fixed;
                 bottom: 0;
                 left: 0;
                 right: 0;
-                z-index: 40;
+                z-index: 50;
                 background: white;
-                padding: 1rem;
                 box-shadow: 0 -10px 15px -3px rgba(0, 0, 0, 0.1);
                 border-top: 1px solid #e2e8f0;
-                display: flex;
-                flex-direction: column;
-                gap: 0.5rem;
+                padding: 1rem;
+                border-radius: 1.5rem 1.5rem 0 0;
             }
-            .mobile-fixed-bottom #screenshot-area {
-                padding: 0;
-                box-shadow: none;
-                border: none;
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                gap: 1rem;
-            }
-            .mobile-fixed-bottom #screenshot-area > h2,
-            .mobile-fixed-bottom #screenshot-area .visual-progress,
-            .mobile-fixed-bottom #screenshot-area .verdict-container {
-                display: none;
-            }
-            .mobile-fixed-bottom .expense-item {
-                flex: 1;
-                padding: 0.5rem !important;
-            }
-            .mobile-fixed-bottom .expense-item span {
-                font-size: 0.6rem !important;
-            }
-            .mobile-fixed-bottom .expense-item p {
-                font-size: 1rem !important;
-            }
-            .mobile-fixed-bottom .expense-item .monthly-sub {
-                display: none;
-            }
-            .mobile-fixed-bottom .action-buttons {
-                display: none;
-            }
-
-            main {
-                padding-bottom: 8rem; /* Extra padding for the fixed footer */
+            body {
+                padding-bottom: 220px;
             }
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen font-sans antialiased flex flex-col">
+<body class="bg-slate-50 text-slate-800 min-h-screen font-sans antialiased">
 
     <!-- Шапка приложения -->
     <header class="bg-gradient-to-r from-brand-800 to-slate-900 text-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex items-center space-x-4">
-            <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
-                <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">На главную</span>
-            </a>
-            <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
-            <div class="flex items-center space-x-3">
-                <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h1 class="text-2xl font-black tracking-tight">Своя машина или Такси?</h1>
-                    <p class="text-xs text-brand-200">Честное сравнение расходов на личный транспорт и поездки</p>
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
+                    <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">На главную</span>
+                </a>
+                <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
+                <div class="flex items-center space-x-3">
+                    <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner text-white">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5h-1.948a1 1 0 00-.894.553L7.382 11H4a1 1 0 00-1 1v5a1 1 0 001 1h1a3 3 0 006 0h2a3 3 0 006 0h1a1 1 0 001-1v-5a1 1 0 00-1-1h-3.382l-2.774-5.447A1 1 0 0013 5z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tight">Машина или Такси</h1>
+                        <p class="text-xs text-brand-200">Честное сравнение стоимости владения авто и поездок на такси</p>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 w-full flex-grow">
+    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <!-- Левая колонка: Вводы -->
+
+            <!-- ЛЕВАЯ КОЛОНКА: Ввод параметров -->
             <div class="lg:col-span-7 space-y-8">
 
-                <!-- Блок 1: Логика Такси -->
-                <section class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-100">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                            <svg class="w-6 h-6 text-amber-600" fill="currentColor" viewBox="0 0 24 24"><path d="M18.8 4H5.2c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h13.6c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5.8 13H7v-2h6v2zm3-4H7v-2h9v2zm0-4H7V7h9v2z"/></svg>
+                <!-- Блок Автомобиль -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-6">
+                    <div class="flex items-center gap-3 border-b pb-4">
+                        <div class="w-10 h-10 bg-brand-50 rounded-xl flex items-center justify-center text-brand-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                         </div>
-                        <h2 class="text-xl font-black text-slate-900">Расходы на такси</h2>
+                        <h2 class="text-lg font-bold text-slate-900">Ваш Автомобиль</h2>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Регион -->
+                        <!-- Цена авто -->
                         <div class="space-y-2">
-                            <label class="block text-sm font-bold text-slate-700">Ваш регион</label>
-                            <select id="taxi-region" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-slate-800 appearance-none">
-                                <option value="moscow">Москва</option>
-                                <option value="spb">Санкт-Петербург</option>
-                                <option value="million">Миллионники</option>
-                                <option value="regions">Регионы РФ</option>
-                            </select>
-                        </div>
-
-                        <!-- Класс -->
-                        <div class="space-y-2">
-                            <label class="block text-sm font-bold text-slate-700">Класс такси</label>
-                            <select id="taxi-class" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-slate-800 appearance-none">
-                                <option value="economy">Эконом</option>
-                                <option value="comfort" selected>Комфорт</option>
-                                <option value="business">Бизнес</option>
-                            </select>
-                        </div>
-
-                        <!-- Стоимость поездки -->
-                        <div class="space-y-2">
-                            <label class="block text-sm font-bold text-slate-700">Средний чек поездки</label>
+                            <label class="text-xs font-bold text-slate-500 uppercase">Цена автомобиля</label>
                             <div class="relative">
-                                <input type="text" id="taxi-trip-cost" class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-bold text-lg text-slate-800">
-                                <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
+                                <input type="text" id="car-price" oninput="handleInput(this, 'carPrice')" class="w-full pl-4 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="3 000 000">
+                                <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
                             </div>
                         </div>
-
-                        <!-- Поездок в неделю -->
+                        <!-- Пробег в год -->
                         <div class="space-y-2">
-                            <label class="block text-sm font-bold text-slate-700">Поездок в неделю</label>
+                            <label class="text-xs font-bold text-slate-500 uppercase">Пробег в год (км)</label>
                             <div class="relative">
-                                <input type="number" id="taxi-trips-per-week" value="10" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-bold text-lg text-slate-800">
+                                <input type="text" id="annual-mileage" oninput="handleInput(this, 'annualMileage')" class="w-full pl-4 pr-14 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="15 000">
+                                <span class="absolute right-4 top-3.5 text-slate-400">км</span>
                             </div>
                         </div>
-                    </div>
-                </section>
-
-                <!-- Блок 2: Логика Автомобиля -->
-                <section class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-100">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="w-10 h-10 bg-brand-100 rounded-xl flex items-center justify-center">
-                            <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                        </div>
-                        <h2 class="text-xl font-black text-slate-900">Расходы на автомобиль</h2>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Стоимость авто -->
-                        <div class="space-y-2 md:col-span-2">
-                            <label class="block text-sm font-bold text-slate-700">Стоимость автомобиля</label>
-                            <div class="relative">
-                                <input type="text" id="car-price" placeholder="Например: 2 500 000" class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-bold text-xl text-slate-900">
-                                <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
-                            </div>
-                        </div>
-
-                        <!-- Топливо -->
+                        <!-- Расход -->
                         <div class="space-y-2">
-                            <label class="block text-sm font-bold text-slate-700">Топливо в месяц</label>
+                            <label class="text-xs font-bold text-slate-500 uppercase">Расход (л/100 км)</label>
+                            <input type="number" id="fuel-consumption" oninput="handleRawInput('fuelConsumption', this.value)" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="10">
+                        </div>
+                        <!-- Цена топлива -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-500 uppercase">Цена литра топлива</label>
                             <div class="relative">
-                                <input type="text" id="car-fuel" placeholder="10 000" class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-slate-800">
-                                <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
+                                <input type="number" id="fuel-price" oninput="handleRawInput('fuelPrice', this.value)" class="w-full pl-4 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="55">
+                                <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
                             </div>
                         </div>
-
                         <!-- Страховка -->
                         <div class="space-y-2">
-                            <label class="block text-sm font-bold text-slate-700">Страховка (в год)</label>
+                            <label class="text-xs font-bold text-slate-500 uppercase">Страховка (ОСАГО+КАСКО) в год</label>
                             <div class="relative">
-                                <input type="text" id="car-insurance" placeholder="60 000" class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-slate-800">
-                                <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
+                                <input type="text" id="insurance" oninput="handleInput(this, 'insurance')" class="w-full pl-4 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="80 000">
+                                <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
                             </div>
                         </div>
-
-                        <!-- Прочие расходы -->
-                        <div class="space-y-2 md:col-span-2">
-                            <label class="block text-sm font-bold text-slate-700">ТО, парковка, штрафы, шиномонтаж (в год)</label>
+                        <!-- Обслуживание -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-500 uppercase">ТО и ремонт в год</label>
                             <div class="relative">
-                                <input type="text" id="car-service" placeholder="50 000" class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-slate-800">
-                                <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
-                            </div>
-                        </div>
-
-                        <!-- Амортизация -->
-                        <div class="space-y-4 md:col-span-2 bg-slate-50 p-5 rounded-2xl border border-slate-100">
-                            <div class="flex justify-between items-center">
-                                <div class="flex items-center gap-1.5">
-                                    <label class="text-sm font-bold text-slate-700">Амортизация (потеря стоимости) в год</label>
-                                    <span class="tooltip text-[10px] bg-slate-200 text-slate-500 w-4 h-4 flex items-center justify-center rounded-full">?
-                                        <span class="tooltiptext">Любой автомобиль дешевеет с каждым годом. Даже если он просто стоит в гараже, его рыночная стоимость падает.</span>
-                                    </span>
-                                </div>
-                                <span id="depreciation-value" class="text-brand-600 font-black">10%</span>
-                            </div>
-                            <input type="range" id="car-depreciation" min="0" max="30" step="1" value="10" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-600">
-                            <div class="flex justify-between text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-                                <span>Бережная эксплуатация</span>
-                                <span>Активная езда</span>
+                                <input type="text" id="maintenance" oninput="handleInput(this, 'maintenance')" class="w-full pl-4 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="40 000">
+                                <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
                             </div>
                         </div>
                     </div>
-                </section>
+
+                    <!-- Девальвация (Потеря стоимости) -->
+                    <div class="space-y-4 pt-4 border-t border-slate-100">
+                        <div class="flex justify-between items-center">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Потеря стоимости в год</label>
+                            <span id="depreciation-display" class="text-sm font-black text-rose-600">10%</span>
+                        </div>
+                        <input type="range" id="depreciation-range" min="0" max="30" step="1" value="10" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer" oninput="handleRawInput('depreciation', this.value)">
+                        <p class="text-[10px] text-slate-400">Средняя потеря стоимости нового авто составляет 10-15% в год. Для б/у машин этот показатель ниже.</p>
+                    </div>
+                </div>
+
+                <!-- Блок Такси -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-6">
+                    <div class="flex items-center gap-3 border-b pb-4">
+                        <div class="w-10 h-10 bg-yellow-50 rounded-xl flex items-center justify-center text-yellow-600">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 17a2 2 0 11-4 0 2 2 0 014 0zM9 17a2 2 0 11-4 0 2 2 0 014 0z"></path><path d="M13 5h-1.948a1 1 0 00-.894.553L7.382 11H4a1 1 0 00-1 1v5a1 1 0 001 1h1a3 3 0 006 0h2a3 3 0 006 0h1a1 1 0 001-1v-5a1 1 0 00-1-1h-3.382l-2.774-5.447A1 1 0 0013 5z"></path></svg>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-900">Поездки на Такси</h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Поездок в день -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-500 uppercase">Поездок в день</label>
+                            <input type="number" id="trips-per-day" oninput="handleRawInput('tripsPerDay', this.value)" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="2">
+                        </div>
+                        <!-- Средняя цена поездки -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-500 uppercase">Средняя цена поездки</label>
+                            <div class="relative">
+                                <input type="text" id="trip-price" oninput="handleInput(this, 'tripPrice')" class="w-full pl-4 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="500">
+                                <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100">
+                        <label class="text-xs font-bold text-slate-500 uppercase block mb-3">Быстрые пресеты тарифов (за поездку)</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="setTaxiPreset(350)" class="py-2 text-[10px] font-bold bg-slate-100 hover:bg-slate-200 rounded-lg transition uppercase">Эконом</button>
+                            <button onclick="setTaxiPreset(600)" class="py-2 text-[10px] font-bold bg-slate-100 hover:bg-slate-200 rounded-lg transition uppercase">Комфорт</button>
+                            <button onclick="setTaxiPreset(1200)" class="py-2 text-[10px] font-bold bg-slate-100 hover:bg-slate-200 rounded-lg transition uppercase">Бизнес</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Кнопки Поделиться (десктоп) -->
+                <div class="hidden lg:grid grid-cols-2 gap-4">
+                    <button onclick="shareResult()" class="flex items-center justify-center gap-2 py-4 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-2xl border border-slate-200 transition-all shadow-sm active:scale-[0.98]">
+                        <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
+                        Поделиться расчетом
+                    </button>
+                    <button onclick="takeScreenshot()" class="flex items-center justify-center gap-2 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition-all shadow-sm active:scale-[0.98]">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Сохранить скриншот
+                    </button>
+                </div>
+
             </div>
 
-            <!-- Правая колонка: Результаты -->
-            <div class="lg:col-span-5">
-                <div class="sticky-results mobile-fixed-bottom space-y-6">
+            <!-- ПРАВАЯ КОЛОНКА: Результаты (Стильные карточки) -->
+            <div class="lg:col-span-5 space-y-6">
 
-                    <div id="screenshot-area" class="bg-white p-6 sm:p-8 rounded-3xl shadow-lg border border-slate-100 space-y-8">
-                        <h2 class="text-xl font-black text-slate-900 border-b pb-4">Итоговое сравнение</h2>
+                <div id="screenshot-area" class="space-y-6 lg:bg-transparent bg-slate-50 p-0 lg:p-0 rounded-3xl">
 
-                        <!-- Годовые траты -->
-                        <div class="grid grid-cols-1 lg:grid-cols-1 gap-4 flex flex-row lg:flex-col w-full">
-                            <div class="expense-item p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">На машину в год</span>
-                                <p id="res-car-annual" class="text-3xl font-black text-slate-900 mt-1">0 ₽</p>
-                                <p id="res-car-monthly" class="monthly-sub text-xs text-slate-500 mt-1">≈ 0 ₽ в месяц</p>
-                            </div>
-
-                            <div class="expense-item p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">На такси в год</span>
-                                <p id="res-taxi-annual" class="text-3xl font-black text-slate-900 mt-1">0 ₽</p>
-                                <p id="res-taxi-monthly" class="monthly-sub text-xs text-slate-500 mt-1">≈ 0 ₽ в месяц</p>
-                            </div>
+                    <!-- Главный вердикт -->
+                    <div id="verdict-card" class="p-8 rounded-3xl transition-all duration-500 flex flex-col items-center text-center space-y-4 shadow-xl border">
+                        <div id="verdict-icon" class="w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-2">🚗</div>
+                        <div>
+                            <h3 id="verdict-title" class="text-2xl font-black mb-2">Выгоднее на машине</h3>
+                            <p id="verdict-description" class="text-sm opacity-80 leading-relaxed px-4">С учетом всех расходов, включая потерю стоимости авто, владение машиной обходится дешевле такси.</p>
                         </div>
-
-                        <!-- Визуализация (Прогресс-бар) -->
-                        <div class="visual-progress space-y-3">
-                            <div class="flex justify-between text-xs font-bold uppercase tracking-tighter">
-                                <span class="text-brand-600">Автомобиль</span>
-                                <span class="text-amber-600">Такси</span>
-                            </div>
-                            <div class="h-6 w-full bg-slate-100 rounded-full overflow-hidden flex">
-                                <div id="progress-car" class="bg-brand-500 transition-all duration-700" style="width: 50%"></div>
-                                <div id="progress-taxi" class="bg-amber-400 transition-all duration-700" style="width: 50%"></div>
-                            </div>
-                            <p class="text-[10px] text-center text-slate-400 font-medium italic">Визуальное соотношение годовых расходов</p>
-                        </div>
-
-                        <!-- Вердикт -->
-                        <div id="verdict-card" class="verdict-container p-6 rounded-2xl text-center space-y-2 transition-all duration-500">
-                            <p id="verdict-title" class="text-sm font-bold uppercase tracking-widest"></p>
-                            <p id="verdict-amount" class="text-2xl font-black"></p>
-                            <p id="verdict-text" class="text-xs opacity-80 font-medium"></p>
+                        <div class="w-full pt-6 border-t border-black/5 mt-2">
+                            <p class="text-xs font-bold uppercase tracking-wider opacity-60 mb-1">Разница в месяц</p>
+                            <p id="monthly-diff" class="text-4xl font-black">0 ₽</p>
                         </div>
                     </div>
 
-                    <!-- Кнопки действий -->
-                    <div class="action-buttons grid grid-cols-2 gap-4">
-                        <button onclick="shareLink()" class="flex items-center justify-center gap-2 py-4 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-2xl border border-slate-200 transition-all shadow-sm active:scale-[0.98]">
-                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
-                            Ссылка
-                        </button>
-                        <button onclick="takeScreenshot()" class="flex items-center justify-center gap-2 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition-all shadow-sm active:scale-[0.98]">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                            Скриншот
-                        </button>
+                    <!-- Детализация расходов -->
+                    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+                        <div class="p-6 border-b border-slate-50 flex justify-between items-center">
+                            <h3 class="text-sm font-black uppercase tracking-widest text-slate-400">Детализация в месяц</h3>
+                        </div>
+
+                        <div class="p-6 space-y-6">
+                            <!-- Машина -->
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-end">
+                                    <span class="text-sm font-bold text-slate-700">Машина</span>
+                                    <span id="car-monthly-total" class="text-lg font-black text-slate-900">0 ₽</span>
+                                </div>
+                                <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden flex">
+                                    <div id="car-bar-fuel" class="h-full bg-brand-500 transition-all duration-500" style="width: 30%" title="Топливо"></div>
+                                    <div id="car-bar-fixed" class="h-full bg-brand-700 transition-all duration-500" style="width: 20%" title="Страховка и ТО"></div>
+                                    <div id="car-bar-depreciation" class="h-full bg-rose-500 transition-all duration-500" style="width: 50%" title="Потеря стоимости"></div>
+                                </div>
+                                <div class="flex flex-wrap gap-x-4 gap-y-2 pt-1">
+                                    <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-400"><span class="w-2 h-2 rounded-full bg-brand-500"></span>Топливо</div>
+                                    <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-400"><span class="w-2 h-2 rounded-full bg-brand-700"></span>Страх./ТО</div>
+                                    <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-400"><span class="w-2 h-2 rounded-full bg-rose-500"></span>Девальвация</div>
+                                </div>
+                            </div>
+
+                            <!-- Такси -->
+                            <div class="space-y-3 pt-2">
+                                <div class="flex justify-between items-end">
+                                    <span class="text-sm font-bold text-slate-700">Такси</span>
+                                    <span id="taxi-monthly-total" class="text-lg font-black text-slate-900">0 ₽</span>
+                                </div>
+                                <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+                                    <div id="taxi-bar" class="h-full bg-yellow-500 transition-all duration-500" style="width: 80%"></div>
+                                </div>
+                                <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 pt-1"><span class="w-2 h-2 rounded-full bg-yellow-500"></span>Стоимость поездок</div>
+                            </div>
+                        </div>
                     </div>
 
+                    <!-- Инфо-карточки -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center space-y-2">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider leading-none">Бензин в месяц</span>
+                            <span id="fuel-monthly" class="text-xl font-black text-slate-900">0 ₽</span>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center space-y-2">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider leading-none">Такси в год</span>
+                            <span id="taxi-annual" class="text-xl font-black text-slate-900">0 ₽</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Мобильная кнопка Share (только на мобилках) -->
+                <div class="lg:hidden mt-4">
+                    <button onclick="shareResult()" class="w-full flex items-center justify-center gap-2 py-4 bg-white text-slate-700 font-bold rounded-2xl border border-slate-200 transition-all shadow-sm active:scale-[0.98]">
+                        <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
+                        Поделиться
+                    </button>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="py-8 text-center text-xs text-slate-400 border-t border-slate-200 mt-12">
-        <p>© 2026 Финансовый Хаб. Профессиональные инструменты анализа.</p>
+    <!-- Мобильная залипающая панель результатов -->
+    <div class="lg:hidden mobile-sticky-results">
+        <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+                <span id="mobile-verdict-icon" class="text-2xl">🚗</span>
+                <span id="mobile-verdict-title" class="font-black text-slate-900">Выгоднее на машине</span>
+            </div>
+            <div class="text-right">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Разница</p>
+                <p id="mobile-monthly-diff" class="text-lg font-black text-brand-600">0 ₽</p>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+            <div class="bg-slate-50 p-2 rounded-xl text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Авто/мес</p>
+                <p id="mobile-car-total" class="text-sm font-black text-slate-900">0 ₽</p>
+            </div>
+            <div class="bg-slate-50 p-2 rounded-xl text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Такси/мес</p>
+                <p id="mobile-taxi-total" class="text-sm font-black text-slate-900">0 ₽</p>
+            </div>
+        </div>
+        <button onclick="takeScreenshot()" class="w-full mt-3 py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
+            📸 Сохранить результат
+        </button>
+    </div>
+
+    <footer class="max-w-7xl mx-auto px-4 py-12 text-center text-xs text-slate-400 pb-40 lg:pb-12">
+        <p>© 2026 Финансовый Хаб. Расчеты носят информационный характер.</p>
     </footer>
 
-    <!-- Всплывающие уведомления (Toast) -->
-    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 z-[100] bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
         <span class="text-brand-500 font-bold">✓</span>
-        <span id="toast-message" class="text-sm">Ссылка скопирована!</span>
+        <span id="toast-message" class="text-sm">Результат сохранен!</span>
     </div>
 
     <script>
-        // Матрица цен на такси (Регион + Класс = Цена поездки)
-        const taxiMatrix = {
-            moscow: { economy: 600, comfort: 1000, business: 2500 },
-            spb: { economy: 500, comfort: 850, business: 2000 },
-            million: { economy: 300, comfort: 550, business: 1500 },
-            regions: { economy: 200, comfort: 350, business: 1000 }
+        const state = {
+            carPrice: 3000000,
+            annualMileage: 15000,
+            fuelConsumption: 10,
+            fuelPrice: 55,
+            insurance: 80000,
+            maintenance: 40000,
+            depreciation: 10,
+            tripsPerDay: 2,
+            tripPrice: 500
         };
 
-        // Инициализация данных
-        const inputs = {
-            taxiRegion: document.getElementById('taxi-region'),
-            taxiClass: document.getElementById('taxi-class'),
-            taxiTripCost: document.getElementById('taxi-trip-cost'),
-            taxiTripsPerWeek: document.getElementById('taxi-trips-per-week'),
-            carPrice: document.getElementById('car-price'),
-            carFuel: document.getElementById('car-fuel'),
-            carInsurance: document.getElementById('car-insurance'),
-            carService: document.getElementById('car-service'),
-            carDepreciation: document.getElementById('car-depreciation'),
-            depreciationValue: document.getElementById('depreciation-value')
-        };
-
-        const results = {
-            carAnnual: document.getElementById('res-car-annual'),
-            carMonthly: document.getElementById('res-car-monthly'),
-            taxiAnnual: document.getElementById('res-taxi-annual'),
-            taxiMonthly: document.getElementById('res-taxi-monthly'),
-            progressCar: document.getElementById('progress-car'),
-            progressTaxi: document.getElementById('progress-taxi'),
-            verdictCard: document.getElementById('verdict-card'),
-            verdictTitle: document.getElementById('verdict-title'),
-            verdictAmount: document.getElementById('verdict-amount'),
-            verdictText: document.getElementById('verdict-text')
-        };
-
-        // Форматирование чисел
         function formatMoney(amount) {
-            return Math.round(amount).toLocaleString('ru-RU') + ' ₽';
+            return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(amount);
         }
 
-        function parseCleanNumber(str) {
-            return parseFloat(str.replace(/\s+/g, '')) || 0;
-        }
+        function handleInput(el, key) {
+            let cursorPosition = el.selectionStart;
+            let originalLength = el.value.length;
+            let cleanVal = el.value.replace(/\s+/g, '').replace(/\D/g, '');
 
-        function handleNumericInput(input) {
-            let cursorPosition = input.selectionStart;
-            let originalLength = input.value.length;
-            let cleanVal = input.value.replace(/\s+/g, '').replace(/\D/g, '');
             if (cleanVal === '') {
-                input.value = '';
+                state[key] = 0;
                 calculate();
                 return;
             }
+
             let parsed = parseInt(cleanVal, 10);
+            state[key] = parsed;
+
             let formatted = new Intl.NumberFormat('ru-RU').format(parsed);
-            input.value = formatted;
+            el.value = formatted;
 
             let newLength = formatted.length;
             let diff = newLength - originalLength;
-            input.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
+            el.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
+
             calculate();
         }
 
-        // Обновление цены такси при смене региона/класса
-        function updateTaxiBasePrice() {
-            const region = inputs.taxiRegion.value;
-            const taxiClass = inputs.taxiClass.value;
-            const price = taxiMatrix[region][taxiClass];
-            inputs.taxiTripCost.value = new Intl.NumberFormat('ru-RU').format(price);
-            calculate();
-        }
-
-        // Основная логика расчета
-        function calculate() {
-            // Такси
-            const tripCost = parseCleanNumber(inputs.taxiTripCost.value);
-            const tripsPerWeek = parseFloat(inputs.taxiTripsPerWeek.value) || 0;
-            const taxiAnnual = tripCost * tripsPerWeek * 52.14; // Среднее кол-во недель в году
-            const taxiMonthly = taxiAnnual / 12;
-
-            // Машина
-            const carPrice = parseCleanNumber(inputs.carPrice.value);
-            const fuelMonthly = parseCleanNumber(inputs.carFuel.value);
-            const insuranceAnnual = parseCleanNumber(inputs.carInsurance.value);
-            const serviceAnnual = parseCleanNumber(inputs.carService.value);
-            const depreciationPercent = parseFloat(inputs.carDepreciation.value) || 0;
-
-            const depreciationAnnual = carPrice * (depreciationPercent / 100);
-            const carAnnual = (fuelMonthly * 12) + insuranceAnnual + serviceAnnual + depreciationAnnual;
-            const carMonthly = carAnnual / 12;
-
-            // Вывод результатов
-            results.carAnnual.innerText = formatMoney(carAnnual);
-            results.carMonthly.innerText = '≈ ' + formatMoney(carMonthly) + ' в месяц';
-            results.taxiAnnual.innerText = formatMoney(taxiAnnual);
-            results.taxiMonthly.innerText = '≈ ' + formatMoney(taxiMonthly) + ' в месяц';
-
-            // Прогресс-бар
-            const total = carAnnual + taxiAnnual;
-            if (total > 0) {
-                const carWidth = (carAnnual / total) * 100;
-                const taxiWidth = (taxiAnnual / total) * 100;
-                results.progressCar.style.width = carWidth + '%';
-                results.progressTaxi.style.width = taxiWidth + '%';
+        function handleRawInput(key, val) {
+            state[key] = parseFloat(val) || 0;
+            if (key === 'depreciation') {
+                document.getElementById('depreciation-display').innerText = val + '%';
             }
+            calculate();
+        }
+
+        function setTaxiPreset(price) {
+            state.tripPrice = price;
+            document.getElementById('trip-price').value = new Intl.NumberFormat('ru-RU').format(price);
+            calculate();
+        }
+
+        function calculate() {
+            // Машина
+            const fuelCostAnnual = (state.annualMileage / 100) * state.fuelConsumption * state.fuelPrice;
+            const depreciationAnnual = state.carPrice * (state.depreciation / 100);
+            const totalCarAnnual = fuelCostAnnual + state.insurance + state.maintenance + depreciationAnnual;
+            const totalCarMonthly = totalCarAnnual / 12;
+
+            // Такси
+            const totalTaxiMonthly = state.tripsPerDay * state.tripPrice * 30.42; // Среднее кол-во дней в месяце
+            const totalTaxiAnnual = totalTaxiMonthly * 12;
+
+            // Обновление UI
+            document.getElementById('car-monthly-total').innerText = formatMoney(totalCarMonthly);
+            document.getElementById('taxi-monthly-total').innerText = formatMoney(totalTaxiMonthly);
+            document.getElementById('fuel-monthly').innerText = formatMoney(fuelCostAnnual / 12);
+            document.getElementById('taxi-annual').innerText = formatMoney(totalTaxiAnnual);
+
+            // Бары
+            const carSum = (fuelCostAnnual / 12) + (state.insurance / 12 + state.maintenance / 12) + (depreciationAnnual / 12);
+            document.getElementById('car-bar-fuel').style.width = ((fuelCostAnnual / 12) / carSum * 100) + '%';
+            document.getElementById('car-bar-fixed').style.width = (((state.insurance + state.maintenance) / 12) / carSum * 100) + '%';
+            document.getElementById('car-bar-depreciation').style.width = ((depreciationAnnual / 12) / carSum * 100) + '%';
+            document.getElementById('taxi-bar').style.width = '100%';
 
             // Вердикт
-            const diff = Math.abs(carAnnual - taxiAnnual);
-            if (carAnnual < taxiAnnual) {
-                results.verdictCard.className = 'p-6 rounded-2xl text-center space-y-2 bg-brand-50 border border-brand-100 text-brand-900';
-                results.verdictTitle.innerText = 'Машина выгоднее';
-                results.verdictAmount.innerText = 'Экономия ' + formatMoney(diff) + ' в год';
-                results.verdictText.innerText = 'Собственный автомобиль обходится дешевле такси при текущем стиле жизни.';
-            } else if (taxiAnnual < carAnnual) {
-                results.verdictCard.className = 'p-6 rounded-2xl text-center space-y-2 bg-amber-50 border border-amber-100 text-amber-900';
-                results.verdictTitle.innerText = 'Такси выгоднее';
-                results.verdictAmount.innerText = 'Экономия ' + formatMoney(diff) + ' в год';
-                results.verdictText.innerText = 'Поездки на такси существенно дешевле содержания и амортизации своего авто.';
+            const diff = Math.abs(totalCarMonthly - totalTaxiMonthly);
+            const verdictCard = document.getElementById('verdict-card');
+            const verdictIcon = document.getElementById('verdict-icon');
+            const verdictTitle = document.getElementById('verdict-title');
+            const verdictDesc = document.getElementById('verdict-description');
+            const monthlyDiffEl = document.getElementById('monthly-diff');
+
+            // Мобильный вердикт
+            const mobileIcon = document.getElementById('mobile-verdict-icon');
+            const mobileTitle = document.getElementById('mobile-verdict-title');
+            const mobileDiff = document.getElementById('mobile-monthly-diff');
+            const mobileCar = document.getElementById('mobile-car-total');
+            const mobileTaxi = document.getElementById('mobile-taxi-total');
+
+            if (totalCarMonthly < totalTaxiMonthly) {
+                // Машина выгоднее
+                verdictCard.className = "p-8 rounded-3xl transition-all duration-500 flex flex-col items-center text-center space-y-4 shadow-xl border bg-gradient-to-br from-brand-50 to-white border-brand-200 text-slate-900";
+                verdictIcon.innerText = "🚗";
+                verdictTitle.innerText = "Машина выгоднее";
+                verdictDesc.innerText = "С учетом всех расходов, включая потерю стоимости авто, владение машиной обходится дешевле такси.";
+                monthlyDiffEl.innerText = formatMoney(diff);
+                monthlyDiffEl.className = "text-4xl font-black text-brand-600";
+
+                mobileIcon.innerText = "🚗";
+                mobileTitle.innerText = "Машина выгоднее";
+                mobileDiff.innerText = formatMoney(diff);
+                mobileDiff.className = "text-lg font-black text-brand-600";
             } else {
-                results.verdictCard.className = 'p-6 rounded-2xl text-center space-y-2 bg-slate-50 border border-slate-100 text-slate-900';
-                results.verdictTitle.innerText = 'Паритет';
-                results.verdictAmount.innerText = 'Расходы равны';
-                results.verdictText.innerText = 'Выбирайте то, что вам больше по душе — финансовой разницы почти нет.';
+                // Такси выгоднее
+                verdictCard.className = "p-8 rounded-3xl transition-all duration-500 flex flex-col items-center text-center space-y-4 shadow-xl border bg-gradient-to-br from-yellow-50 to-white border-yellow-200 text-slate-900";
+                verdictIcon.innerText = "🚕";
+                verdictTitle.innerText = "Такси выгоднее";
+                verdictDesc.innerText = "Поездки на такси обойдутся дешевле, чем содержание и обслуживание собственного автомобиля.";
+                monthlyDiffEl.innerText = formatMoney(diff);
+                monthlyDiffEl.className = "text-4xl font-black text-yellow-600";
+
+                mobileIcon.innerText = "🚕";
+                mobileTitle.innerText = "Такси выгоднее";
+                mobileDiff.innerText = formatMoney(diff);
+                mobileDiff.className = "text-lg font-black text-yellow-600";
             }
+
+            mobileCar.innerText = formatMoney(totalCarMonthly);
+            mobileTaxi.innerText = formatMoney(totalTaxiMonthly);
         }
 
-        // Слушатели событий
-        inputs.taxiRegion.addEventListener('change', updateTaxiBasePrice);
-        inputs.taxiClass.addEventListener('change', updateTaxiBasePrice);
-        inputs.taxiTripCost.addEventListener('input', () => handleNumericInput(inputs.taxiTripCost));
-        inputs.taxiTripsPerWeek.addEventListener('input', calculate);
-
-        inputs.carPrice.addEventListener('input', () => handleNumericInput(inputs.carPrice));
-        inputs.carFuel.addEventListener('input', () => handleNumericInput(inputs.carFuel));
-        inputs.carInsurance.addEventListener('input', () => handleNumericInput(inputs.carInsurance));
-        inputs.carService.addEventListener('input', () => handleNumericInput(inputs.carService));
-
-        inputs.carDepreciation.addEventListener('input', (e) => {
-            inputs.depreciationValue.innerText = e.target.value + '%';
-            calculate();
-        });
-
-        // Toast
         function showToast(message) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-message').innerText = message;
@@ -501,20 +461,38 @@
             }, 2500);
         }
 
-        window.shareLink = function() {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                showToast("Ссылка скопирована!");
-            });
+        window.shareResult = function() {
+            const url = window.location.href;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Машина или Такси?',
+                    text: 'Сравнил стоимость владения авто и поездок на такси. Смотри результат!',
+                    url: url
+                }).catch(err => console.log('Error sharing', err));
+            } else {
+                navigator.clipboard.writeText(url).then(() => {
+                    showToast("Ссылка скопирована!");
+                });
+            }
         };
 
         window.takeScreenshot = function() {
             const element = document.getElementById('screenshot-area');
-            showToast("Подготовка...");
+            if (!element) return;
+
+            showToast("Создаем скриншот...");
+
             html2canvas(element, {
                 backgroundColor: '#f8fafc',
                 scale: 2,
                 logging: false,
-                useCORS: true
+                useCORS: true,
+                onclone: (clonedDoc) => {
+                    const area = clonedDoc.getElementById('screenshot-area');
+                    if (area) {
+                        area.style.padding = '32px';
+                    }
+                }
             }).then(canvas => {
                 canvas.toBlob((blob) => {
                     const file = new File([blob], "car-vs-taxi.png", { type: "image/png" });
@@ -522,29 +500,25 @@
                         navigator.share({
                             files: [file],
                             title: 'Машина или Такси?',
-                            text: 'Мой расчет в финансовом хабе'
-                        }).catch(err => console.log(err));
+                            text: 'Мой расчет стоимости владения авто против такси.'
+                        }).then(() => showToast("Успешно отправлено!"))
+                          .catch((err) => console.log('User cancelled share', err));
                     } else {
                         const link = document.createElement('a');
-                        link.download = 'car-vs-taxi-result.png';
+                        link.download = 'car-vs-taxi.png';
                         link.href = canvas.toDataURL('image/png');
                         link.click();
                         showToast("Скриншот скачан!");
                     }
                 }, 'image/png');
+            }).catch(err => {
+                console.error('Screenshot error:', err);
+                showToast("Ошибка при создании скриншота");
             });
         };
 
-        // Инициализация
-        window.onload = () => {
-            // Дефолтные значения
-            inputs.carPrice.value = '2 500 000';
-            inputs.carFuel.value = '10 000';
-            inputs.carInsurance.value = '60 000';
-            inputs.carService.value = '50 000';
-            updateTaxiBasePrice();
-        };
+        // Init
+        calculate();
     </script>
-
 </body>
 </html>
