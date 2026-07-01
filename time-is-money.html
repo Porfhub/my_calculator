@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сколько стоит час твоей жизни - Калькулятор реальной стоимости времени</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2canvas CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 8px;
+            position: absolute;
+            z-index: 50;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 1.4;
+            pointer-events: none;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen font-sans antialiased flex flex-col">
+
+    <!-- Шапка -->
+    <header class="bg-gradient-to-r from-brand-800 to-slate-900 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex items-center space-x-4">
+            <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
+                <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">На главную</span>
+            </a>
+            <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
+            <div class="flex items-center space-x-3">
+                <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-tight">Сколько стоит час твоей жизни</h1>
+                    <p class="text-xs text-brand-200">Переводим цены на товары в часы реальной работы</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 w-full flex-grow">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- ЛЕВАЯ КОЛОНКА (Ввод параметров) -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-6">
+                    <h2 class="text-lg font-bold text-slate-900 border-b pb-3">Параметры работы и трат</h2>
+
+                    <!-- Доход -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label for="income-input" class="text-sm font-semibold text-slate-700">Чистый доход в месяц (на руки)</label>
+                            <span class="text-sm font-bold text-slate-900" id="income-display">100 000 ₽</span>
+                        </div>
+                        <div class="relative rounded-lg shadow-sm">
+                            <input type="text" id="income-input" oninput="handleInput('income', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
+                        </div>
+                        <input type="range" id="income-range" min="10000" max="1000000" step="5000" value="100000" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer" oninput="syncRange('income', this.value)">
+                    </div>
+
+                    <!-- Рабочие часы -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label for="hours-input" class="text-sm font-semibold text-slate-700">Официальные рабочие часы в неделю</label>
+                            <span class="text-sm font-bold text-slate-900" id="hours-display">40 ч.</span>
+                        </div>
+                        <div class="relative rounded-lg shadow-sm">
+                            <input type="number" id="hours-input" min="1" max="168" oninput="handleInput('hours', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">ч.</div>
+                        </div>
+                        <input type="range" id="hours-range" min="1" max="100" step="1" value="40" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer" oninput="syncRange('hours', this.value)">
+                    </div>
+
+                    <!-- Дорога -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label for="commute-input" class="text-sm font-semibold text-slate-700">Время на дорогу (туда-обратно) в день</label>
+                            <span class="text-sm font-bold text-slate-900" id="commute-display">2 ч.</span>
+                        </div>
+                        <div class="relative rounded-lg shadow-sm">
+                            <input type="number" id="commute-input" min="0" max="24" step="0.5" oninput="handleInput('commute', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">ч.</div>
+                        </div>
+                        <input type="range" id="commute-range" min="0" max="12" step="0.5" value="2" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer" oninput="syncRange('commute', this.value)">
+                    </div>
+
+                    <!-- Переработки -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label for="overtime-input" class="text-sm font-semibold text-slate-700">Неоплачиваемые переработки в неделю</label>
+                            <span class="text-sm font-bold text-slate-900" id="overtime-display">5 ч.</span>
+                        </div>
+                        <div class="relative rounded-lg shadow-sm">
+                            <input type="number" id="overtime-input" min="0" max="100" oninput="handleInput('overtime', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">ч.</div>
+                        </div>
+                        <input type="range" id="overtime-range" min="0" max="40" step="1" value="5" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer" oninput="syncRange('overtime', this.value)">
+                    </div>
+
+                    <!-- Покупка -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label for="purchase-input" class="text-sm font-semibold text-slate-700">Стоимость желаемой покупки</label>
+                            <span class="text-sm font-bold text-slate-900" id="purchase-display">150 000 ₽</span>
+                        </div>
+                        <div class="relative rounded-lg shadow-sm">
+                            <input type="text" id="purchase-input" oninput="handleInput('purchase', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
+                        </div>
+                        <input type="range" id="purchase-range" min="1000" max="2000000" step="1000" value="150000" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer" oninput="syncRange('purchase', this.value)">
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ПРАВАЯ КОЛОНКА (Результаты) -->
+            <div class="lg:col-span-7 space-y-6">
+
+                <!-- Главная карточка (в стиле savings-card) -->
+                <div id="results-card" class="bg-gradient-to-br from-brand-900 to-emerald-850 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden transition-all duration-300 transform">
+                    <div class="absolute -right-10 -bottom-10 opacity-10">
+                        <svg class="w-48 h-48" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>
+                    </div>
+                    <div class="relative z-10 space-y-6">
+                        <div>
+                            <span class="text-xs uppercase font-black bg-brand-600 px-3 py-1 rounded-full text-brand-50 tracking-wide">Реальная стоимость часа</span>
+                            <div class="mt-4 flex items-baseline gap-3">
+                                <p id="real-hourly-rate" class="text-5xl font-black text-emerald-200">0 ₽</p>
+                                <span class="text-lg text-brand-200">в час</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-brand-800/60 pt-6">
+                            <div>
+                                <p class="text-xs text-brand-200 uppercase font-bold mb-1">Официальная ставка</p>
+                                <p id="official-hourly-rate" class="text-xl font-bold text-white">0 ₽ / час</p>
+                                <p class="text-[10px] text-brand-300 mt-1">Без учета дороги и переработок</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-brand-200 uppercase font-bold mb-1">Разница в цене часа</p>
+                                <p id="rate-diff" class="text-xl font-bold text-rose-300">0%</p>
+                                <p class="text-[10px] text-brand-300 mt-1">Ваше время дешевле, чем кажется</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Отрезвляющий вердикт -->
+                <div id="verdict-block" class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-start gap-4 transition-all duration-300">
+                    <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-black text-slate-900 mb-1">Отрезвляющий итог</h3>
+                        <p id="verdict-text" class="text-slate-600 text-sm leading-relaxed">
+                            Эта покупка обойдется вам в <span class="font-bold text-slate-900" id="hours-cost">0</span> часов реальной работы (или <span class="font-bold text-slate-900" id="days-cost">0</span> полных рабочих дней). Точно берем?
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Детали расчета -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 space-y-4">
+                    <h4 class="text-xs font-black text-slate-400 uppercase tracking-wider">Математика реальности (в месяц)</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="space-y-1">
+                            <p class="text-[10px] text-slate-500 font-bold uppercase">Всего часов</p>
+                            <p id="total-monthly-hours" class="text-xl font-black text-slate-800">0 ч.</p>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-[10px] text-slate-500 font-bold uppercase">На дорогу</p>
+                            <p id="monthly-commute-hours" class="text-xl font-black text-slate-800">0 ч.</p>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-[10px] text-slate-500 font-bold uppercase">На переработки</p>
+                            <p id="monthly-overtime-hours" class="text-xl font-black text-slate-800">0 ч.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Кнопки -->
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="shareLink()" class="flex items-center justify-center gap-2 py-4 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-2xl border border-slate-200 transition-all shadow-sm active:scale-[0.98]">
+                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
+                        Ссылка
+                    </button>
+                    <button onclick="takeScreenshot()" class="flex items-center justify-center gap-2 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition-all shadow-sm active:scale-[0.98]">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Скриншот
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-400 border-t border-slate-100">
+        <p>© 2026 Финансовый Хаб. Помните: время — единственный невосполнимый ресурс.</p>
+    </footer>
+
+    <!-- Всплывающие уведомления (Toast) -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <span class="text-brand-500 font-bold">✓</span>
+        <span id="toast-message" class="text-sm">Ссылка скопирована!</span>
+    </div>
+
+    <script>
+        const state = {
+            income: 100000,
+            hours: 40,
+            commute: 2,
+            overtime: 5,
+            purchase: 150000
+        };
+
+        const DAYS_IN_MONTH = 21.6;
+        const WEEKS_IN_MONTH = 4.33;
+
+        function formatMoney(val) {
+            return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(val);
+        }
+
+        function formatNumber(val) {
+            return new Intl.NumberFormat('ru-RU').format(val);
+        }
+
+        function handleInput(field, el) {
+            let val = el.value.replace(/\s+/g, '');
+            if (field === 'income' || field === 'purchase') {
+                val = parseFloat(val) || 0;
+                // Formatting for display in the input itself
+                let cursorPosition = el.selectionStart;
+                let originalLength = el.value.length;
+                let formatted = formatNumber(val);
+                el.value = formatted;
+                let newLength = formatted.length;
+                let diff = newLength - originalLength;
+                el.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
+            } else {
+                val = parseFloat(val) || 0;
+            }
+
+            state[field] = val;
+            document.getElementById(`${field}-range`).value = val;
+            update();
+        }
+
+        function syncRange(field, val) {
+            val = parseFloat(val);
+            state[field] = val;
+
+            const input = document.getElementById(`${field}-input`);
+            if (field === 'income' || field === 'purchase') {
+                input.value = formatNumber(val);
+            } else {
+                input.value = val;
+            }
+            update();
+        }
+
+        function update() {
+            // Displays
+            document.getElementById('income-display').innerText = formatMoney(state.income);
+            document.getElementById('hours-display').innerText = state.hours + ' ч.';
+            document.getElementById('commute-display').innerText = state.commute + ' ч.';
+            document.getElementById('overtime-display').innerText = state.overtime + ' ч.';
+            document.getElementById('purchase-display').innerText = formatMoney(state.purchase);
+
+            // Logic
+            // Реально потраченное время на работу в месяц = (Официальные часы в неделю * 4.33) + (Время на дорогу в день * 21.6) + (Переработки в неделю * 4.33)
+            const monthlyOfficialHours = state.hours * WEEKS_IN_MONTH;
+            const monthlyCommuteHours = state.commute * DAYS_IN_MONTH;
+            const monthlyOvertimeHours = state.overtime * WEEKS_IN_MONTH;
+            const totalRealHours = monthlyOfficialHours + monthlyCommuteHours + monthlyOvertimeHours;
+
+            // Реальная стоимость твоего часа = Чистый доход / Реально потраченное время
+            const realHourlyRate = totalRealHours > 0 ? state.income / totalRealHours : 0;
+
+            // Официальная стоимость часа (Доход / (40 * 4.33)) - wait, why 40 and not state.hours?
+            // The prompt says: Сравни её с "Официальной стоимостью часа" (Доход / (40 * 4.33)).
+            // I'll follow the prompt precisely.
+            const officialHourlyRate = state.income / (40 * 4.33);
+
+            const rateDiff = officialHourlyRate > 0 ? ((officialHourlyRate - realHourlyRate) / officialHourlyRate) * 100 : 0;
+
+            // Стоимость покупки в часах жизни = Стоимость покупки / Реальная стоимость твоего часа
+            const hoursCost = realHourlyRate > 0 ? state.purchase / realHourlyRate : 0;
+
+            // Стоимость покупки в рабочих днях = Стоимость покупки в часах жизни / (Официальные часы в день + Дорога + Переработки в день)
+            const hoursPerDay = (state.hours / 5) + state.commute + (state.overtime / 5);
+            const daysCost = hoursPerDay > 0 ? hoursCost / hoursPerDay : 0;
+
+            // Update UI
+            document.getElementById('real-hourly-rate').innerText = formatMoney(realHourlyRate);
+            document.getElementById('official-hourly-rate').innerText = formatMoney(officialHourlyRate) + ' / час';
+            document.getElementById('rate-diff').innerText = '-' + Math.round(rateDiff) + '%';
+
+            document.getElementById('hours-cost').innerText = formatNumber(Math.round(hoursCost));
+            document.getElementById('days-cost').innerText = formatNumber(Math.round(daysCost));
+
+            document.getElementById('total-monthly-hours').innerText = Math.round(totalRealHours) + ' ч.';
+            document.getElementById('monthly-commute-hours').innerText = Math.round(monthlyCommuteHours) + ' ч.';
+            document.getElementById('monthly-overtime-hours').innerText = Math.round(monthlyOvertimeHours) + ' ч.';
+        }
+
+        function shareLink() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                showToast("Ссылка скопирована!");
+            }).catch(err => {
+                console.error('Ошибка копирования: ', err);
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2500);
+        }
+
+        function takeScreenshot() {
+            const element = document.getElementById('results-card');
+            if (!element) return;
+
+            showToast("Подготовка к отправке...");
+
+            html2canvas(element, {
+                backgroundColor: '#f8fafc',
+                scale: 2,
+                logging: false,
+                useCORS: true
+            }).then(canvas => {
+                canvas.toBlob((blob) => {
+                    const file = new File([blob], "time-is-money.png", { type: "image/png" });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        navigator.share({
+                            files: [file],
+                            title: 'Моя реальная стоимость часа',
+                            text: 'Посмотри, сколько на самом деле стоит твой час жизни!'
+                        }).then(() => showToast("Успешно отправлено!"))
+                          .catch((err) => console.log('User cancelled share', err));
+                    } else {
+                        const link = document.createElement('a');
+                        link.download = 'time-is-money.png';
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                        showToast("Скриншот скачан!");
+                    }
+                }, 'image/png');
+            }).catch(err => {
+                console.error('Ошибка скриншота:', err);
+                showToast("Ошибка при создании скриншота");
+            });
+        }
+
+        // Init
+        document.getElementById('income-input').value = formatNumber(state.income);
+        document.getElementById('hours-input').value = state.hours;
+        document.getElementById('commute-input').value = state.commute;
+        document.getElementById('overtime-input').value = state.overtime;
+        document.getElementById('purchase-input').value = formatNumber(state.purchase);
+        update();
+    </script>
+</body>
+</html>
