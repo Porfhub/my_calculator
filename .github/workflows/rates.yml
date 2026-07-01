@@ -28,3 +28,4 @@ jobs:
           git add rates.json
           git commit -m "Автоматическое обновление ставок ЦБ и банков" || echo "No changes to commit"
           git push
+
