@@ -1,6 +1,2 @@
-127.0.0.1 - - [01/Jul/2026 17:14:53] "GET /index.html HTTP/1.1" 200 -
-127.0.0.1 - - [01/Jul/2026 17:14:54] "GET /car-vs-taxi.html HTTP/1.1" 200 -
-127.0.0.1 - - [01/Jul/2026 17:18:07] "GET /index.html HTTP/1.1" 200 -
-127.0.0.1 - - [01/Jul/2026 17:18:09] "GET /inflation-shredder.html HTTP/1.1" 200 -
-127.0.0.1 - - [01/Jul/2026 17:18:09] "GET /inflation.json HTTP/1.1" 200 -
-127.0.0.1 - - [01/Jul/2026 17:18:10] "GET /car-vs-taxi.html HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 18:19:13] "GET /mortgage.html HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 18:19:15] "GET /rates.json HTTP/1.1" 200 -
