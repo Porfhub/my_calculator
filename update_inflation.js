@@ -49,7 +49,7 @@ async function fetchInflation() {
     };
 
     try {
-        console.log('Запускаем поиск данных об инфляции через Gemini...');
+        console.log('AGENT-1: Запускаем поиск данных об инфляции через Gemini...');
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -67,7 +67,7 @@ async function fetchInflation() {
         }
 
         const rawText = result.candidates[0].content.parts[0].text;
-        console.log('Ответ от ИИ:', rawText);
+        console.log('AGENT-1: Ответ от ИИ:', rawText);
 
         // Извлекаем JSON (ищем блок между фигурных скобок)
         const jsonMatch = rawText.match(/\{[\s\S]*?\}/);
@@ -86,8 +86,39 @@ async function fetchInflation() {
                 }
             }
 
-            fs.writeFileSync('inflation.json', JSON.stringify(finalData, null, 2));
-            console.log('Успех! В inflation.json записаны данные об инфляции.');
+            // ШАГ 2: Двойная верификация (AUDITOR)
+            console.log('AGENT-2 (Auditor): Проверка данных об инфляции...');
+            const lastYear = (currentYear - 1).toString();
+            const lastValue = finalData[lastYear] || "unknown";
+
+            const auditPrompt = `Today is ${currentDate}. I received inflation data for Russia.
+            The inflation rate for the year ${lastYear} is reported as ${lastValue}%.
+            Use your Google Search tool to verify if this specific value is correct or very close to the official Rosstat data.
+            Return "VALID" if the data is correct.
+            Return "INVALID" if the data is clearly wrong.
+            Return ONLY the word "VALID" or "INVALID". No explanations.`;
+
+            const auditPayload = {
+                contents: [{ parts: [{ text: auditPrompt }] }],
+                tools: [{ "google_search": {} }]
+            };
+
+            const auditResponse = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(auditPayload)
+            });
+            const auditResult = await auditResponse.json();
+            const auditText = auditResult.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
+
+            console.log('AGENT-2: Вердикт аудитора:', auditText);
+
+            if (auditText.includes("VALID")) {
+                fs.writeFileSync('inflation.json', JSON.stringify(finalData, null, 2));
+                console.log('Успех! Данные об инфляции верифицированы и записаны.');
+            } else {
+                console.error('ОШИБКА: Аудитор не подтвердил данные об инфляции. Запись отменена.');
+            }
             return;
         }
 

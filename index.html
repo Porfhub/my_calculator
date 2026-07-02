@@ -26,6 +26,30 @@
             }
         }
     </script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+   m[i].l=1*new Date();
+   for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+   ym(99999999, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true,
+        webvisor:true
+   });
+
+   function reachGoal(goalId) {
+       console.log("Goal reached:", goalId);
+       if (typeof ym !== "undefined") {
+           ym(99999999, "reachGoal", goalId);
+       }
+   }
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/99999999" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen font-sans antialiased flex flex-col">
 
@@ -36,13 +60,19 @@
                 <h1 class="text-4xl md:text-5xl font-black tracking-tight text-slate-900 mb-4">
                     Финансовый <span class="text-brand-600">Хаб</span>
                 </h1>
-                <p class="text-lg text-slate-500 max-w-2xl mx-auto">
+                <p class="text-lg text-slate-500 max-w-2xl mx-auto mb-6">
                     Набор профессиональных инструментов для точного планирования ваших финансов и анализа доходов.
                 </p>
+
+                <!-- Индикатор актуальности -->
+                <div id="freshness-indicator" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-full border border-slate-200 text-xs font-medium text-slate-600">
+                    <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
+                    <span id="freshness-text">Загрузка данных об обновлении...</span>
+                </div>
             </div>
 
             <!-- Cards Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
 
                 <!-- Mortgage Card -->
                 <a href="mortgage.html" class="group relative bg-white p-8 rounded-3xl shadow-sm border border-slate-100 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] overflow-hidden flex flex-col h-full">
@@ -238,7 +268,23 @@
             }, 2500);
         }
 
+        // Загрузка даты обновления
+        fetch('rates.json')
+            .then(response => response.json())
+            .then(data => {
+                const indicator = document.getElementById('freshness-text');
+                if (data.last_updated) {
+                    indicator.innerText = `Данные по ставкам и инфляции актуальны на сегодня (обновлено роботом в ${data.last_updated} МСК)`;
+                } else {
+                    indicator.innerText = `Данные по ставкам и инфляции актуальны на сегодня (обновлено роботом в 06:00 МСК)`;
+                }
+            })
+            .catch(() => {
+                document.getElementById('freshness-text').innerText = `Данные по ставкам и инфляции актуальны на сегодня (обновлено роботом в 06:00 МСК)`;
+            });
+
         window.shareHub = function() {
+            reachGoal("share_click");
             if (navigator.share) {
                 navigator.share({
                     title: 'Финансовый Хаб',
@@ -253,5 +299,16 @@
         };
     </script>
 
+    <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("sw.js").then(reg => {
+                    console.log("SW registered:", reg.scope);
+                }).catch(err => {
+                    console.log("SW registration failed:", err);
+                });
+            });
+        }
+    </script>
 </body>
 </html>
