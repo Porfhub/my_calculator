@@ -1,5 +1,7 @@
 const fs = require('fs');
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 // Функция-очиститель: убирает проценты, буквы и меняет запятые на точки
 function cleanNum(val, fallbackVal) {
     if (val === undefined || val === null) return fallbackVal;
@@ -87,6 +89,9 @@ async function fetchInflation() {
             }
 
             // ШАГ 2: Двойная верификация (AUDITOR)
+            console.log('Пауза 7 секунд перед аудитом для обхода лимитов API...');
+            await sleep(7000);
+
             console.log('AGENT-2 (Auditor): Проверка данных об инфляции...');
             const lastYear = (currentYear - 1).toString();
             const lastValue = finalData[lastYear] || "unknown";
