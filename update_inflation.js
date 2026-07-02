@@ -1,7 +1,5 @@
 const fs = require('fs');
 
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
 // Функция-очиститель: убирает проценты, буквы и меняет запятые на точки
 function cleanNum(val, fallbackVal) {
     if (val === undefined || val === null) return fallbackVal;
@@ -25,7 +23,7 @@ async function fetchInflation() {
 
     const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
 
-    const promptText = `Today is ${currentDate}. Use your Google Search tool to find the official annual inflation rates in Russia (Rosstat) from 2000 to the current year.
+    const promptText = `Today is ${currentDate}. Provide the official annual inflation rates in Russia (Rosstat) from 2000 to 2025 based on your internal knowledge.
     CRITICAL: You must return ONLY a JSON object where keys are years (as strings) and values are float numbers (annual inflation percentage) using a dot as a decimal separator (e.g., 8.4).
     Return ONLY a valid JSON object. Do not include any markdown, text or code block formatting.
     The JSON structure must strictly be:
@@ -33,12 +31,11 @@ async function fetchInflation() {
         "2000": 20.2,
         "2001": 18.6,
         ...
-        "2024": 8.4
+        "2024": 8.5
     }`;
 
     const payload = {
-        contents: [{ parts: [{ text: promptText }] }],
-        tools: [{ "google_search": {} }]
+        contents: [{ parts: [{ text: promptText }] }]
     };
 
     // Надежный fallback (официальные данные Росстата)
@@ -51,7 +48,7 @@ async function fetchInflation() {
     };
 
     try {
-        console.log('AGENT-1: Запускаем поиск данных об инфляции через Gemini...');
+        console.log('Запускаем поиск данных об инфляции через Gemini...');
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -69,7 +66,7 @@ async function fetchInflation() {
         }
 
         const rawText = result.candidates[0].content.parts[0].text;
-        console.log('AGENT-1: Ответ от ИИ:', rawText);
+        console.log('Ответ от ИИ:', rawText);
 
         // Извлекаем JSON (ищем блок между фигурных скобок)
         const jsonMatch = rawText.match(/\{[\s\S]*?\}/);
@@ -89,8 +86,9 @@ async function fetchInflation() {
             }
 
             // ШАГ 2: Двойная верификация (AUDITOR)
-            console.log('Пауза 7 секунд перед аудитом для обхода лимитов API...');
-            await sleep(7000);
+            console.log('Пауза 10 секунд перед аудитом для обхода лимитов API...');
+            const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+            await sleep(10000);
 
             console.log('AGENT-2 (Auditor): Проверка данных об инфляции...');
             const lastYear = (currentYear - 1).toString();
@@ -98,14 +96,13 @@ async function fetchInflation() {
 
             const auditPrompt = `Today is ${currentDate}. I received inflation data for Russia.
             The inflation rate for the year ${lastYear} is reported as ${lastValue}%.
-            Use your Google Search tool to verify if this specific value is correct or very close to the official Rosstat data.
+            Verify if this specific value is correct or very close to the official Rosstat data using your internal knowledge.
             Return "VALID" if the data is correct.
             Return "INVALID" if the data is clearly wrong.
             Return ONLY the word "VALID" or "INVALID". No explanations.`;
 
             const auditPayload = {
-                contents: [{ parts: [{ text: auditPrompt }] }],
-                tools: [{ "google_search": {} }]
+                contents: [{ parts: [{ text: auditPrompt }] }]
             };
 
             const auditResponse = await fetch(url, {

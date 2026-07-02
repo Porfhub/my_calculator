@@ -260,7 +260,6 @@
         }
 
         window.shareCalculation = function() {
-            reachGoal('share_click');
             const url = window.location.href;
             navigator.clipboard.writeText(url).then(() => {
                 showToast("Ссылка скопирована!");
@@ -270,7 +269,6 @@
         };
 
         window.takeScreenshot = function() {
-            reachGoal('share_click');
             const element = document.getElementById('resultsDashboard');
             if (!element) return;
 
@@ -393,7 +391,6 @@
         }
 
         function calculateWealth() {
-            reachGoal('calculate_success');
             const inputVal = document.getElementById('grossSalary').value.replace(/\s+/g, '');
             const region = document.getElementById('regionSelect').value;
             

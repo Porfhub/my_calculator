@@ -1,7 +1,5 @@
 const fs = require('fs');
 
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
 // Функция-очиститель: убирает проценты, буквы и меняет запятые на точки
 function cleanNum(val, fallbackVal) {
     if (val === undefined || val === null) return fallbackVal;
@@ -23,10 +21,8 @@ async function fetchRates() {
     
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
     
-    const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
-
     // Промпт с жестким указанием формата чисел
-    const promptText = `Today is ${currentDate}. Use your Google Search tool to find the current official key interest rate of the Central Bank of the Russian Federation. Also, search for the current average mortgage interest rates for commercial loans in: Sberbank, VTB, Alfa-Bank, T-Bank, Sovcombank.
+    const promptText = `Today is July 2026. Use your Google Search tool to find the current official key interest rate of the Central Bank of the Russian Federation. Also, search for the current average mortgage interest rates for commercial loans in: Sberbank, VTB, Alfa-Bank, T-Bank, Sovcombank.
     CRITICAL: You must return ONLY float numbers using a dot as a decimal separator (e.g., 18.5). DO NOT use strings, percentage signs (%), or commas (,).
     Return ONLY a valid JSON object. Do not include any markdown, text or code block formatting.
     The JSON structure must strictly be:
@@ -47,7 +43,7 @@ async function fetchRates() {
     const fallback = { "cb_rate": 14.5, "sberbank": 16.8, "vtb": 16.9, "alfa": 17.1, "tbank": 16.5, "sovcom": 17.2 };
 
     try {
-        console.log('AGENT-1: Запускаем реальный поиск ставок через Gemini...');
+        console.log('Запускаем реальный поиск ставок через Gemini...');
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -61,7 +57,7 @@ async function fetchRates() {
         }
 
         const rawText = result.candidates[0].content.parts[0].text;
-        console.log('AGENT-1: Ответ от ИИ:', rawText);
+        console.log('Реальный ответ от ИИ:', rawText);
 
         // Извлекаем JSON
         const jsonMatch = rawText.match(/\{[\s\S]*?\}/);
@@ -78,15 +74,17 @@ async function fetchRates() {
                 sovcom: cleanNum(parsedData.sovcom, fallback.sovcom)
             };
 
-            // ЖЕСТКИЙ ЛИМИТ: если ставка 0% или >= 50% — бракуем
-            if (finalData.cb_rate === 0 || finalData.cb_rate >= 50) {
-                console.error(`КРИТИЧЕСКАЯ ОШИБКА: ИИ выдал нереальную ставку ЦБ (${finalData.cb_rate}%). Отмена обновления.`);
+            // ЖЕСТКИЙ ЛИМИТ: если ставка <= 0% или >= 50% — бракуем
+            if (finalData.cb_rate <= 0 || finalData.cb_rate >= 50) {
+                console.error(`КРИТИЧЕСКАЯ ОШИБКА: ИИ выдал нереальную ставку ЦБ (${finalData.cb_rate}%). Отмена обновления, пишем fallback.`);
+                fs.writeFileSync('rates.json', JSON.stringify(fallback, null, 2));
                 return;
             }
 
             // ШАГ 2: Двойная верификация (AUDITOR)
-            console.log('Пауза 7 секунд перед аудитом для обхода лимитов API...');
-            await sleep(7000);
+            console.log('Пауза 10 секунд перед аудитом для обхода лимитов API...');
+            const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+            await sleep(10000);
 
             console.log('AGENT-2 (Auditor): Проверка полученных данных...');
             const auditPrompt = `Today is ${currentDate}. I received the following financial data for Russia:
@@ -115,16 +113,19 @@ async function fetchRates() {
             if (auditText.includes("VALID")) {
                 // Добавляем метку времени
                 const now = new Date();
-                const lastUpdated = now.toLocaleString('ru-RU', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
+                const formatter = new Intl.DateTimeFormat('ru-RU', {
+                    day: '2-digit', month: '2-digit', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit',
                     timeZone: 'Europe/Moscow'
                 });
+                const parts = formatter.formatToParts(now);
+                const d = parts.find(p => p.type === 'day').value;
+                const m = parts.find(p => p.type === 'month').value;
+                const y = parts.find(p => p.type === 'year').value;
+                const h = parts.find(p => p.type === 'hour').value;
+                const min = parts.find(p => p.type === 'minute').value;
 
-                finalData.last_updated = lastUpdated;
+                finalData.last_updated = `${d}.${m}.${y} ${h}:${min}`;
 
                 fs.writeFileSync('rates.json', JSON.stringify(finalData, null, 2));
                 console.log('Успех! Данные верифицированы и записаны в rates.json:', finalData);
