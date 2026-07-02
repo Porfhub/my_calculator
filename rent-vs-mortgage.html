@@ -488,17 +488,6 @@
 
         calculate();
     </script>
-    <script>
-        if ("serviceWorker" in navigator) {
-            window.addEventListener("load", () => {
-                navigator.serviceWorker.register("sw.js").then(reg => {
-                    console.log("SW registered:", reg.scope);
-                }).catch(err => {
-                    console.log("SW registration failed:", err);
-                });
-            });
-        }
-    </script>
 
     <script>
         (function() {
@@ -515,6 +504,17 @@
             document.addEventListener('input', trackFirstChange);
             document.addEventListener('change', trackFirstChange);
         })();
+    </script>
+    <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("sw.js").then(reg => {
+                    console.log("SW registered:", reg.scope);
+                }).catch(err => {
+                    console.log("SW registration failed:", err);
+                });
+            });
+        }
     </script>
 </body>
 </html>
