@@ -37,6 +37,30 @@
         .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #1e293b; color: #fff; text-align: center; border-radius: 8px; padding: 10px; position: absolute; z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; font-size: 11px; line-height: 1.4; pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
         .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
     </style>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+   m[i].l=1*new Date();
+   for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+   ym(99999999, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true,
+        webvisor:true
+   });
+
+   function reachGoal(goalId) {
+       console.log("Goal reached:", goalId);
+       if (typeof ym !== "undefined") {
+           ym(99999999, "reachGoal", goalId);
+       }
+   }
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/99999999" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen font-sans antialiased flex flex-col">
 
@@ -348,6 +372,7 @@
         }
 
         window.shareLink = function() {
+            reachGoal("share_click");
             const url = window.location.href;
             navigator.clipboard.writeText(url).then(() => {
                 showToast("Ссылка скопирована!");
@@ -368,6 +393,7 @@
         }
 
         window.takeScreenshot = function() {
+            reachGoal("share_click");
             const element = document.getElementById('screenshot-area');
             if (!element) return;
 
@@ -461,6 +487,34 @@
         document.getElementById('years-range').value = state.years;
 
         calculate();
+    </script>
+    <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("sw.js").then(reg => {
+                    console.log("SW registered:", reg.scope);
+                }).catch(err => {
+                    console.log("SW registration failed:", err);
+                });
+            });
+        }
+    </script>
+
+    <script>
+        (function() {
+            let tracked = false;
+            function trackFirstChange() {
+                if (!tracked) {
+                    reachGoal('calculate_success');
+                    tracked = true;
+                    // Remove listeners after first trigger
+                    document.removeEventListener('input', trackFirstChange);
+                    document.removeEventListener('change', trackFirstChange);
+                }
+            }
+            document.addEventListener('input', trackFirstChange);
+            document.addEventListener('change', trackFirstChange);
+        })();
     </script>
 </body>
 </html>
