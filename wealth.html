@@ -117,6 +117,9 @@
 <noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
     <script src="js/theme.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/ui-utils.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased flex flex-col transition-colors duration-300">
 
@@ -295,7 +298,167 @@
     </div>
 
     <script>
-    <script>
+        let regionsData = [];
+        let currentRegion = null;
+
+        async function init() {
+            regionsData = await fetchRegions();
+            populateRegions();
+
+            // Set default region to "Вся Россия" or first available
+            if (regionsData.length > 0) {
+                setRegion(regionsData[0].id);
+            }
+        }
+
+        function populateRegions() {
+            const select = document.getElementById('regionSelect');
+            if (!select) return;
+
+            select.innerHTML = '';
+            regionsData.forEach(region => {
+                const option = document.createElement('option');
+                option.value = region.id;
+                option.textContent = region.name;
+                select.appendChild(option);
+            });
+
+            select.addEventListener('change', (e) => {
+                setRegion(e.target.value);
+            });
+        }
+
+        function setRegion(regionId) {
+            currentRegion = regionsData.find(r => r.id === regionId || r.id === 'MSK' && regionId === 'moscow' || r.id === 'SPB' && regionId === 'spb');
+            if (!currentRegion && regionId === 'moscow') currentRegion = regionsData.find(r => r.id === 'MSK');
+            if (!currentRegion && regionId === 'spb') currentRegion = regionsData.find(r => r.id === 'SPB');
+
+            if (currentRegion) {
+                const select = document.getElementById('regionSelect');
+                if (select) select.value = currentRegion.id;
+            }
+        }
+
+        function handleSalaryInput(input) {
+            const salary = formatInputField(input, input.value);
+            updateNetDisplay(salary);
+        }
+
+        function updateNetDisplay(gross) {
+            const net = calculateNet(gross);
+            const netDisplay = document.getElementById('netSalaryDisplay');
+            const netValue = document.getElementById('netSalaryValue');
+
+            if (gross > 0) {
+                netDisplay.classList.remove('hidden');
+                netValue.textContent = formatMoney(net);
+
+                // Mobile panel
+                document.getElementById('mobile-net-income').textContent = formatMoney(net);
+                document.getElementById('mobile-tax').textContent = formatMoney(gross - net);
+            } else {
+                netDisplay.classList.add('hidden');
+            }
+        }
+
+        function calculateNet(gross) {
+            // 5-tier progressive tax РФ (2025+)
+            // 13% до 2.4 млн
+            // 15% от 2.4 до 5 млн
+            // 18% от 5 до 20 млн
+            // 20% от 20 до 50 млн
+            // 22% свыше 50 млн
+
+            const annualGross = gross * 12;
+            let annualTax = 0;
+
+            if (annualGross <= 2400000) {
+                annualTax = annualGross * 0.13;
+            } else if (annualGross <= 5000000) {
+                annualTax = 2400000 * 0.13 + (annualGross - 2400000) * 0.15;
+            } else if (annualGross <= 20000000) {
+                annualTax = 2400000 * 0.13 + 2600000 * 0.15 + (annualGross - 5000000) * 0.18;
+            } else if (annualGross <= 50000000) {
+                annualTax = 2400000 * 0.13 + 2600000 * 0.15 + 15000000 * 0.18 + (annualGross - 20000000) * 0.20;
+            } else {
+                annualTax = 2400000 * 0.13 + 2600000 * 0.15 + 15000000 * 0.18 + 30000000 * 0.20 + (annualGross - 50000000) * 0.22;
+            }
+
+            return Math.round((annualGross - annualTax) / 12);
+        }
+
+        function calculateWealth() {
+            const grossInput = document.getElementById('grossSalary');
+            const gross = parseCleanNumber(grossInput.value);
+
+            if (gross <= 0) {
+                showToast("Введите вашу зарплату");
+                return;
+            }
+
+            if (!currentRegion) {
+                showToast("Регион не загружен");
+                return;
+            }
+
+            reachGoal('calculate_success');
+
+            const net = calculateNet(gross);
+            const resultsDashboard = document.getElementById('resultsDashboard');
+            resultsDashboard.classList.remove('hidden');
+            setTimeout(() => resultsDashboard.classList.add('opacity-100'), 10);
+
+            // Calculate percentile (simplified logic based on regional data)
+            // percentileLabor is basically where gross stands against median, avg, p90
+            let percentile = 0;
+            if (gross < currentRegion.median) {
+                percentile = Math.round((gross / currentRegion.median) * 50);
+            } else if (gross < currentRegion.avg) {
+                percentile = 50 + Math.round(((gross - currentRegion.median) / (currentRegion.avg - currentRegion.median)) * 25);
+            } else if (gross < currentRegion.p90) {
+                percentile = 75 + Math.round(((gross - currentRegion.avg) / (currentRegion.p90 - currentRegion.avg)) * 15);
+            } else {
+                percentile = 90 + Math.min(9, Math.round((gross / currentRegion.p90) * 2));
+            }
+
+            document.getElementById('percentileLabor').textContent = percentile + '%';
+            document.getElementById('progressBarLabor').style.width = percentile + '%';
+
+            const popPercentile = Math.max(0, percentile - (currentRegion.popOffset || 10));
+            document.getElementById('populationComparison').innerHTML =
+                `А если взять вообще всех жителей (включая детей и пенсионеров), то вы богаче <b>${popPercentile}%</b> населения.`;
+
+            // Median Ratio
+            const medianRatio = (gross / currentRegion.median).toFixed(1);
+            document.getElementById('medianRatio').textContent = `в ${medianRatio} раза больше`;
+            document.getElementById('medianText').textContent = `Сама медиана: ${formatMoney(currentRegion.median)}`;
+
+            // Average Diff
+            const avgDiff = gross - currentRegion.avg;
+            if (avgDiff >= 0) {
+                document.getElementById('avgDiff').textContent = `на ${formatMoney(avgDiff)} больше`;
+                document.getElementById('avgDiff').classList.remove('text-rose-600');
+                document.getElementById('avgDiff').classList.add('text-brand-600');
+            } else {
+                document.getElementById('avgDiff').textContent = `на ${formatMoney(Math.abs(avgDiff))} меньше`;
+                document.getElementById('avgDiff').classList.add('text-rose-600');
+                document.getElementById('avgDiff').classList.remove('text-brand-600');
+            }
+            document.getElementById('avgText').textContent = `Средняя ЗП: ${formatMoney(currentRegion.avg)}`;
+
+            // MROT Ratio
+            const mrotRatio = (gross / currentRegion.mrot).toFixed(1);
+            document.getElementById('mrotRatio').textContent = `${mrotRatio} МРОТ`;
+            document.getElementById('mrotText').textContent = `1 МРОТ = ${formatMoney(currentRegion.mrot)}`;
+
+            resultsDashboard.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.shareCalculation = shareLink;
+        window.takeScreenshot = () => takeScreenshot('resultsDashboard', 'my-wealth-report.png');
+
+        window.onload = init;
+
         if ("serviceWorker" in navigator) {
             window.addEventListener("load", () => {
                 navigator.serviceWorker.register("sw.js").then(reg => {

@@ -106,6 +106,8 @@
 <noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
     <script src="js/theme.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/ui-utils.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased flex flex-col transition-colors duration-300">
 
@@ -341,32 +343,17 @@
         const DAYS_IN_MONTH = 21.6;
         const WEEKS_IN_MONTH = 4.33;
 
-        function formatMoney(val) {
-            return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(val);
-        }
-
-        function formatNumber(val) {
-            return new Intl.NumberFormat('ru-RU').format(val);
-        }
-
         function handleInput(field, el) {
             let val = el.value.replace(/\s+/g, '');
             if (field === 'income' || field === 'purchase') {
-                val = parseFloat(val) || 0;
-                // Formatting for display in the input itself
-                let cursorPosition = el.selectionStart;
-                let originalLength = el.value.length;
-                let formatted = formatNumber(val);
-                el.value = formatted;
-                let newLength = formatted.length;
-                let diff = newLength - originalLength;
-                el.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
+                val = formatInputField(el, el.value);
             } else {
                 val = parseFloat(val) || 0;
             }
 
             state[field] = val;
-            document.getElementById(`${field}-range`).value = val;
+            const range = document.getElementById(`${field}-range`);
+            if (range) range.value = val;
             update();
         }
 
@@ -375,10 +362,12 @@
             state[field] = val;
 
             const input = document.getElementById(`${field}-input`);
-            if (field === 'income' || field === 'purchase') {
-                input.value = formatNumber(val);
-            } else {
-                input.value = val;
+            if (input) {
+                if (field === 'income' || field === 'purchase') {
+                    input.value = formatNumber(val);
+                } else {
+                    input.value = val;
+                }
             }
             update();
         }
@@ -392,26 +381,17 @@
             document.getElementById('purchase-display').innerText = formatMoney(state.purchase);
 
             // Logic
-            // Реально потраченное время на работу в месяц = (Официальные часы в неделю * 4.33) + (Время на дорогу в день * 21.6) + (Переработки в неделю * 4.33)
             const monthlyOfficialHours = state.hours * WEEKS_IN_MONTH;
             const monthlyCommuteHours = state.commute * DAYS_IN_MONTH;
             const monthlyOvertimeHours = state.overtime * WEEKS_IN_MONTH;
             const totalRealHours = monthlyOfficialHours + monthlyCommuteHours + monthlyOvertimeHours;
 
-            // Реальная стоимость твоего часа = Чистый доход / Реально потраченное время
             const realHourlyRate = totalRealHours > 0 ? state.income / totalRealHours : 0;
-
-            // Официальная стоимость часа (Доход / (40 * 4.33)) - wait, why 40 and not state.hours?
-            // The prompt says: Сравни её с "Официальной стоимостью часа" (Доход / (40 * 4.33)).
-            // I'll follow the prompt precisely.
-            const officialHourlyRate = state.income / (40 * 4.33);
+            const officialHourlyRate = state.income / (40 * WEEKS_IN_MONTH);
 
             const rateDiff = officialHourlyRate > 0 ? ((officialHourlyRate - realHourlyRate) / officialHourlyRate) * 100 : 0;
 
-            // Стоимость покупки в часах жизни = Стоимость покупки / Реальная стоимость твоего часа
             const hoursCost = realHourlyRate > 0 ? state.purchase / realHourlyRate : 0;
-
-            // Стоимость покупки в рабочих днях = Стоимость покупки в часах жизни / (Официальные часы в день + Дорога + Переработки в день)
             const hoursPerDay = (state.hours / 5) + state.commute + (state.overtime / 5);
             const daysCost = hoursPerDay > 0 ? hoursCost / hoursPerDay : 0;
 
@@ -427,8 +407,13 @@
             document.getElementById('monthly-commute-hours').innerText = Math.round(monthlyCommuteHours) + ' ч.';
             document.getElementById('monthly-overtime-hours').innerText = Math.round(monthlyOvertimeHours) + ' ч.';
 
-            // Boost logic: how much to increase hourly rate to save 15% of time?
-            const timeReductionFactor = 0.15; // 15% faster
+            // Mobile sticky
+            const mobileRate = document.getElementById('mobile-rate');
+            const mobileDays = document.getElementById('mobile-days');
+            if (mobileRate) mobileRate.innerText = formatMoney(realHourlyRate);
+            if (mobileDays) mobileDays.innerText = Math.round(daysCost) + ' дн.';
+
+            const timeReductionFactor = 0.15;
             const targetHours = hoursCost * (1 - timeReductionFactor);
             const neededRate = targetHours > 0 ? state.purchase / targetHours : realHourlyRate;
             const increase = Math.max(0, neededRate - realHourlyRate);
@@ -437,23 +422,19 @@
             document.getElementById('saved-days-on-boost').innerText = Math.round(daysCost * timeReductionFactor) + ' дн.';
         }
 
-        window.shareLink = function() {
-            reachGoal("share_click");
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Сколько стоит час твоей жизни',
-                    text: 'Узнал свою реальную стоимость часа в Финансовом Хабе!',
-                    url: window.location.href
-                }).catch(err => console.log('Error sharing', err));
-            } else {
-                navigator.clipboard.writeText(window.location.href).then(() => {
-                    showToast("Ссылка скопирована!");
-                }).catch(err => {
-                    console.error('Ошибка копирования: ', err);
-                });
-            }
+        window.onload = function() {
+            // Initialize inputs
+            document.getElementById('income-input').value = formatNumber(state.income);
+            document.getElementById('hours-input').value = state.hours;
+            document.getElementById('commute-input').value = state.commute;
+            document.getElementById('overtime-input').value = state.overtime;
+            document.getElementById('purchase-input').value = formatNumber(state.purchase);
+            update();
         };
 
+        window.shareLink = shareLink;
+        window.takeScreenshot = () => takeScreenshot('results-card', 'time-is-money.png');
+    </script>
 
     <script>
         (function() {
