@@ -39,6 +39,9 @@
             margin: 0;
         }
         input[type=number] {
+            -moz-appearance: textfield;
+        }
+
         @media (max-width: 1023px) {
             .mobile-sticky-results {
                 position: fixed;
@@ -59,8 +62,6 @@
             body {
                 padding-bottom: 180px;
             }
-        }
-            -moz-appearance: textfield;
         }
 
         /* Тултипы */
@@ -116,6 +117,9 @@
 <noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
     <script src="js/theme.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/ui-utils.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
 
@@ -285,27 +289,27 @@
                     <!-- Первоначальный взнос -->
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
-                            <label for="downpayment-input" class="text-sm font-semibold text-slate-700">Первоначальный взнос</label>
-                            <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold" id="downpayment-percent">0%</span>
+                    <label for="downpayment-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Первоначальный взнос</label>
+                    <span class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded font-bold" id="downpayment-percent">0%</span>
                         </div>
                         <div class="relative rounded-lg shadow-sm">
-                            <input type="text" id="downpayment-input" oninput="handleDownpaymentInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
+                    <input type="text" id="downpayment-input" oninput="handleDownpaymentInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                         </div>
-                        <input type="range" id="downpayment-range" min="0" max="40000000" step="50000" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer" oninput="syncRangeToInput('downpayment', this.value)">
+                <input type="range" id="downpayment-range" min="0" max="40000000" step="50000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('downpayment', this.value)">
                     </div>
 
                     <!-- Процентная ставка -->
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
-                            <label for="rate-input" class="text-sm font-semibold text-slate-700">Процентная ставка</label>
+                    <label for="rate-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Процентная ставка</label>
                             <span class="text-sm font-bold text-brand-700" id="rate-display">16%</span>
                         </div>
                         <div class="relative rounded-lg shadow-sm">
-                            <input type="number" id="rate-input" step="0.1" min="0.1" max="50" oninput="handleRateInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
+                    <input type="number" id="rate-input" step="0.1" min="0.1" max="50" oninput="handleRateInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">%</div>
                         </div>
-                        <input type="range" id="rate-range" min="1" max="35" step="0.1" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer" oninput="syncRangeToInput('rate', this.value)">
+                <input type="range" id="rate-range" min="1" max="35" step="0.1" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('rate', this.value)">
                     </div>
 
                     <!-- ТУМБЛЕР РЕЖИМА расчета новой ипотеки -->
@@ -674,34 +678,6 @@
         let chartInstance = null;
         let currentCBRate = 21.0; // Значение по умолчанию, будет обновлено из JSON
 
-        // Помощник: форматирование валюты
-        function formatMoney(amount) {
-            return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(amount);
-        }
-
-        // Помощник: парсинг чисел из инпутов
-        function parseCleanNumber(str) {
-            return parseFloat(str.replace(/\s+/g, '')) || 0;
-        }
-
-        function formatInputField(input, val) {
-            let cursorPosition = input.selectionStart;
-            let originalLength = input.value.length;
-            let cleanVal = val.toString().replace(/\s+/g, '').replace(/\D/g, '');
-            if (cleanVal === '') {
-                input.value = '';
-                return 0;
-            }
-            let parsed = parseInt(cleanVal, 10);
-            let formatted = new Intl.NumberFormat('ru-RU').format(parsed);
-            input.value = formatted;
-
-            let newLength = formatted.length;
-            let diff = newLength - originalLength;
-            input.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
-
-            return parsed;
-        }
 
         function switchMainTab(tab) {
             reachGoal("mortgage_tab_switch");
@@ -809,13 +785,15 @@
                 state.activeCurrentBalance = state.activeOriginalLoan;
                 formatInputField(el, state.activeCurrentBalance);
             }
-            document.getElementById('active-balance-range').value = state.activeCurrentBalance;
+            const range = document.getElementById('active-balance-range');
+            if (range) range.value = state.activeCurrentBalance;
             updateCalculations();
         }
 
         function handleActiveAmountInput(el) {
             state.activeOriginalLoan = formatInputField(el, el.value);
-            document.getElementById('active-balance-range').max = state.activeOriginalLoan;
+            const range = document.getElementById('active-balance-range');
+            if (range) range.max = state.activeOriginalLoan;
             calcTheoreticalBalance();
             updateCalculations();
         }
@@ -848,13 +826,18 @@
 
         function handleCostInput(el) {
             state.cost = formatInputField(el, el.value);
-            document.getElementById('cost-range').value = state.cost;
+            const costRange = document.getElementById('cost-range');
+            if (costRange) costRange.value = state.cost;
+
             if (state.downPayment > state.cost) {
                 state.downPayment = state.cost;
-                formatInputField(document.getElementById('downpayment-input'), state.downPayment);
-                document.getElementById('downpayment-range').value = state.downPayment;
+                const dpInput = document.getElementById('downpayment-input');
+                if (dpInput) formatInputField(dpInput, state.downPayment);
+                const dpRange = document.getElementById('downpayment-range');
+                if (dpRange) dpRange.value = state.downPayment;
             }
-            document.getElementById('downpayment-range').max = state.cost;
+            const dpRangeMax = document.getElementById('downpayment-range');
+            if (dpRangeMax) dpRangeMax.max = state.cost;
             updateCalculations();
         }
 
@@ -864,13 +847,15 @@
                 state.downPayment = state.cost;
                 formatInputField(el, state.downPayment);
             }
-            document.getElementById('downpayment-range').value = state.downPayment;
+            const range = document.getElementById('downpayment-range');
+            if (range) range.value = state.downPayment;
             updateCalculations();
         }
 
         function handleTargetPaymentInput(el) {
             state.targetPayment = formatInputField(el, el.value);
-            document.getElementById('payment-range').value = state.targetPayment;
+            const range = document.getElementById('payment-range');
+            if (range) range.value = state.targetPayment;
             updateCalculations();
             scrollToResults();
         }
@@ -902,7 +887,7 @@
         function handleRecurringInput(el) {
             state.recurringPrepayment = formatInputField(el, el.value);
             updateCalculations();
-            scrollToResults();
+            // scrollToResults(); // Removed auto-scroll on this field as it's annoying
         }
 
         function setCost(val) {
@@ -1057,16 +1042,6 @@
             updateCalculations();
         }
 
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-message').innerText = message;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            toast.classList.add('translate-y-0', 'opacity-100');
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 2500);
-        }
 
         function scrollToResults() {
             if (window.innerWidth < 1024) {
@@ -1690,25 +1665,22 @@
             if (el) el.innerText = val.toFixed(1) + '%';
         }
 
-        function loadLiveRates() {
+        async function loadLiveRates() {
             // Загрузка ставок из файла
-            fetch('rates.json')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.cb_rate) {
-                        currentCBRate = data.cb_rate;
-                        document.getElementById('cb-rate-display').innerText = formatCBRate(currentCBRate) + '%';
-                    }
-                    if (data.sberbank) updateBankRateDisplay('sber', data.sberbank);
-                    if (data.vtb) updateBankRateDisplay('vtb', data.vtb);
-                    if (data.alfa) updateBankRateDisplay('alfa', data.alfa);
-                    if (data.tbank) updateBankRateDisplay('tbank', data.tbank);
-                    if (data.sovcom) updateBankRateDisplay('sovcom', data.sovcom);
-                })
-                .catch(err => {
-                    console.error('Ошибка загрузки rates.json:', err);
-                    document.getElementById('cb-rate-display').innerText = 'Ошибка';
-                });
+            const data = await fetchRates();
+            if (data) {
+                if (data.cb_rate) {
+                    currentCBRate = data.cb_rate;
+                    document.getElementById('cb-rate-display').innerText = formatCBRate(currentCBRate) + '%';
+                }
+                if (data.sberbank) updateBankRateDisplay('sber', data.sberbank);
+                if (data.vtb) updateBankRateDisplay('vtb', data.vtb);
+                if (data.alfa) updateBankRateDisplay('alfa', data.alfa);
+                if (data.tbank) updateBankRateDisplay('tbank', data.tbank);
+                if (data.sovcom) updateBankRateDisplay('sovcom', data.sovcom);
+            } else {
+                document.getElementById('cb-rate-display').innerText = 'Ошибка';
+            }
         }
 
         // Инициализация при первой загрузке

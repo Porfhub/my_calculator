@@ -83,6 +83,9 @@
 <noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
     <script src="js/theme.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/ui-utils.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
 
@@ -264,10 +267,8 @@
         };
 
         async function init() {
-            try {
-                const response = await fetch('inflation.json');
-                inflationData = await response.json();
-
+            inflationData = await fetchInflation();
+            if (inflationData) {
                 // Настройка выпадающего списка лет
                 const yearSelect = document.getElementById('year-select');
                 const years = Object.keys(inflationData).sort((a, b) => b - a);
@@ -275,6 +276,7 @@
                 // Ограничиваем выбор до текущий год - 1
                 const validYears = years.filter(y => y < state.currentYear).sort((a, b) => a - b);
 
+                yearSelect.innerHTML = '';
                 validYears.forEach(year => {
                     const option = document.createElement('option');
                     option.value = year;
@@ -288,32 +290,13 @@
                 document.getElementById('year-range').value = state.startYear;
 
                 calculate();
-            } catch (err) {
-                console.error('Ошибка загрузки данных об инфляции:', err);
+            } else {
                 showToast('Ошибка загрузки данных');
             }
         }
 
-        function formatMoney(amount) {
-            return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(amount);
-        }
-
         function handleAmountInput(el) {
-            let cursorPosition = el.selectionStart;
-            let originalLength = el.value.length;
-            let cleanVal = el.value.replace(/\s+/g, '').replace(/\D/g, '');
-            if (cleanVal === '') {
-                state.amount = 0;
-                return;
-            }
-            state.amount = parseInt(cleanVal, 10);
-            let formatted = new Intl.NumberFormat('ru-RU').format(state.amount);
-            el.value = formatted;
-
-            let newLength = formatted.length;
-            let diff = newLength - originalLength;
-            el.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
-
+            state.amount = formatInputField(el, el.value);
             document.getElementById('amount-range').value = state.amount;
             document.getElementById('amount-display').innerText = formatMoney(state.amount);
             calculate();
@@ -428,6 +411,10 @@
             });
         }
 
+        window.shareLink = shareLink;
+        window.takeScreenshot = () => takeScreenshot('screenshot-area', 'inflation-report.png');
+        window.onload = init;
+    </script>
 
     <script>
         (function() {

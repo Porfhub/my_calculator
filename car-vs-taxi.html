@@ -77,6 +77,8 @@
 <noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
     <script src="js/theme.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/ui-utils.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
 
@@ -376,31 +378,8 @@
             tripPrice: 500
         };
 
-        function formatMoney(amount) {
-            return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(amount);
-        }
-
         function handleInput(el, key) {
-            let cursorPosition = el.selectionStart;
-            let originalLength = el.value.length;
-            let cleanVal = el.value.replace(/\s+/g, '').replace(/\D/g, '');
-
-            if (cleanVal === '') {
-                state[key] = 0;
-                calculate();
-                return;
-            }
-
-            let parsed = parseInt(cleanVal, 10);
-            state[key] = parsed;
-
-            let formatted = new Intl.NumberFormat('ru-RU').format(parsed);
-            el.value = formatted;
-
-            let newLength = formatted.length;
-            let diff = newLength - originalLength;
-            el.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
-
+            state[key] = formatInputField(el, el.value);
             calculate();
         }
 
@@ -512,6 +491,19 @@
             mobileCar.innerText = formatMoney(totalCarMonthly);
             mobileTaxi.innerText = formatMoney(totalTaxiMonthly);
         }
+
+        window.onload = function() {
+            document.getElementById('car-price').value = formatNumber(state.carPrice);
+            document.getElementById('annual-mileage').value = formatNumber(state.annualMileage);
+            document.getElementById('insurance').value = formatNumber(state.insurance);
+            document.getElementById('maintenance').value = formatNumber(state.maintenance);
+            document.getElementById('trip-price').value = formatNumber(state.tripPrice);
+            calculate();
+        };
+
+        window.shareResult = shareLink;
+        window.takeScreenshot = () => takeScreenshot('screenshot-area', 'car-vs-taxi.png');
+    </script>
 
 
     <script>
