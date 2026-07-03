@@ -10,6 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -75,8 +76,17 @@
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
+    <script src="js/theme.js"></script>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen font-sans antialiased">
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
+
+    <!-- Переключатель темной темы -->
+    <div class="fixed top-24 right-4 z-50 md:top-6 md:right-8">
+        <button id="theme-toggle" onclick="toggleDarkMode()" class="p-3 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:scale-110 transition-all active:scale-95">
+            <svg id="sun-icon" class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
+            <svg id="moon-icon" class="w-6 h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+        </button>
+    </div>
 
     <!-- Шапка приложения -->
     <header class="bg-gradient-to-r from-brand-800 to-slate-900 text-white shadow-md">
@@ -110,20 +120,29 @@
             <div class="lg:col-span-7 space-y-8">
 
                 <!-- Блок Автомобиль -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-6">
-                    <div class="flex items-center gap-3 border-b pb-4">
-                        <div class="w-10 h-10 bg-brand-50 rounded-xl flex items-center justify-center text-brand-600">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
+                    <div class="flex items-center gap-3 border-b dark:border-slate-800 pb-4">
+                        <div class="w-10 h-10 bg-brand-50 dark:bg-brand-900/20 rounded-xl flex items-center justify-center text-brand-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                         </div>
-                        <h2 class="text-lg font-bold text-slate-900">Ваш Автомобиль</h2>
+                        <h2 class="text-lg font-bold text-slate-900 dark:text-white">Ваш Автомобиль</h2>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Пресеты классов авто -->
+                        <div class="md:col-span-2 space-y-3">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Пресет класса автомобиля</label>
+                            <div class="grid grid-cols-3 gap-3">
+                                <button onclick="setCarPreset('economy')" class="py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-black text-slate-600 dark:text-slate-400 hover:border-brand-500 hover:text-brand-600 transition-all uppercase">Эконом</button>
+                                <button onclick="setCarPreset('comfort')" class="py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-black text-slate-600 dark:text-slate-400 hover:border-brand-500 hover:text-brand-600 transition-all uppercase">Комфорт</button>
+                                <button onclick="setCarPreset('business')" class="py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-black text-slate-600 dark:text-slate-400 hover:border-brand-500 hover:text-brand-600 transition-all uppercase">Бизнес</button>
+                            </div>
+                        </div>
                         <!-- Цена авто -->
                         <div class="space-y-2">
                             <label class="text-xs font-bold text-slate-500 uppercase">Цена автомобиля</label>
                             <div class="relative">
-                                <input type="text" id="car-price" oninput="handleInput(this, 'carPrice')" class="w-full pl-4 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="3 000 000">
+                                <input type="text" id="car-price" oninput="handleInput(this, 'carPrice')" class="w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold dark:text-white" value="3 000 000">
                                 <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
                             </div>
                         </div>
@@ -399,6 +418,30 @@
             calculate();
         }
 
+        function setCarPreset(type) {
+            const presets = {
+                economy: { price: 1500000, insurance: 45000, maintenance: 25000, fuel: 7, depreciation: 8 },
+                comfort: { price: 3000000, insurance: 90000, maintenance: 45000, fuel: 10, depreciation: 10 },
+                business: { price: 7000000, insurance: 250000, maintenance: 100000, fuel: 14, depreciation: 15 }
+            };
+            const p = presets[type];
+            state.carPrice = p.price;
+            state.insurance = p.insurance;
+            state.maintenance = p.maintenance;
+            state.fuelConsumption = p.fuel;
+            state.depreciation = p.depreciation;
+
+            document.getElementById('car-price').value = new Intl.NumberFormat('ru-RU').format(p.price);
+            document.getElementById('insurance').value = new Intl.NumberFormat('ru-RU').format(p.insurance);
+            document.getElementById('maintenance').value = new Intl.NumberFormat('ru-RU').format(p.maintenance);
+            document.getElementById('fuel-consumption').value = p.fuel;
+            document.getElementById('depreciation-range').value = p.depreciation;
+            document.getElementById('depreciation-display').innerText = p.depreciation + '%';
+
+            showToast(`Установлены параметры класса: ${type === 'economy' ? 'Эконом' : type === 'comfort' ? 'Комфорт' : 'Бизнес'}`);
+            calculate();
+        }
+
         function calculate() {
             // Машина
             const fuelCostAnnual = (state.annualMileage / 100) * state.fuelConsumption * state.fuelPrice;
@@ -470,78 +513,6 @@
             mobileTaxi.innerText = formatMoney(totalTaxiMonthly);
         }
 
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-message').innerText = message;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            toast.classList.add('translate-y-0', 'opacity-100');
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 2500);
-        }
-
-        window.shareResult = function() {
-            reachGoal("share_click");
-            const url = window.location.href;
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Машина или Такси?',
-                    text: 'Сравнил стоимость владения авто и поездок на такси. Смотри результат!',
-                    url: url
-                }).catch(err => console.log('Error sharing', err));
-            } else {
-                navigator.clipboard.writeText(url).then(() => {
-                    showToast("Ссылка скопирована!");
-                });
-            }
-        };
-
-        window.takeScreenshot = function() {
-            reachGoal("share_click");
-            const element = document.getElementById('screenshot-area');
-            if (!element) return;
-
-            showToast("Создаем скриншот...");
-
-            html2canvas(element, {
-                backgroundColor: '#f8fafc',
-                scale: 2,
-                logging: false,
-                useCORS: true,
-                onclone: (clonedDoc) => {
-                    const area = clonedDoc.getElementById('screenshot-area');
-                    if (area) {
-                        area.style.padding = '32px';
-                    }
-                }
-            }).then(canvas => {
-                canvas.toBlob((blob) => {
-                    const file = new File([blob], "car-vs-taxi.png", { type: "image/png" });
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        navigator.share({
-                            files: [file],
-                            title: 'Машина или Такси?',
-                            text: 'Мой расчет стоимости владения авто против такси.'
-                        }).then(() => showToast("Успешно отправлено!"))
-                          .catch((err) => console.log('User cancelled share', err));
-                    } else {
-                        const link = document.createElement('a');
-                        link.download = 'car-vs-taxi.png';
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-                        showToast("Скриншот скачан!");
-                    }
-                }, 'image/png');
-            }).catch(err => {
-                console.error('Screenshot error:', err);
-                showToast("Ошибка при создании скриншота");
-            });
-        };
-
-        // Init
-        calculate();
-    </script>
 
     <script>
         (function() {

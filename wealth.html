@@ -18,6 +18,7 @@
     </script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -41,6 +42,27 @@
         select { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
+        @media (max-width: 1023px) {
+            .mobile-sticky-results {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 50;
+                background: white;
+                box-shadow: 0 -10px 15px -3px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid #e2e8f0;
+                padding: 1rem;
+                border-radius: 1.5rem 1.5rem 0 0;
+            }
+            .dark .mobile-sticky-results {
+                background: #0f172a;
+                border-top-color: #1e293b;
+            }
+            body {
+                padding-bottom: 180px;
+            }
+        }
 
         /* Тултипы */
         .tooltip {
@@ -94,8 +116,17 @@
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
+    <script src="js/theme.js"></script>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen font-sans antialiased flex flex-col">
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased flex flex-col transition-colors duration-300">
+
+    <!-- Переключатель темной темы -->
+    <div class="fixed top-24 right-4 z-50 md:top-6 md:right-8">
+        <button id="theme-toggle" onclick="toggleDarkMode()" class="p-3 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:scale-110 transition-all active:scale-95">
+            <svg id="sun-icon" class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
+            <svg id="moon-icon" class="w-6 h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+        </button>
+    </div>
 
     <!-- Единая шапка сайта -->
     <header class="bg-gradient-to-r from-brand-800 to-slate-900 text-white shadow-md">
@@ -117,34 +148,38 @@
     </header>
 
     <main class="flex-grow flex items-center justify-center p-4 sm:p-8">
-        <div class="max-w-4xl w-full bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-slate-100">
+        <div class="max-w-4xl w-full bg-white dark:bg-slate-900 rounded-3xl p-6 md:p-10 shadow-sm border border-slate-100 dark:border-slate-800">
             
             <div class="text-center mb-8">
-                <h2 class="text-3xl font-black text-slate-900 mb-2">Насколько вы богаты?</h2>
-                <p class="text-slate-500 text-sm">Официальная оценка на основе данных 2026 года</p>
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-2">Насколько вы богаты?</h2>
+                <p class="text-slate-500 dark:text-slate-400 text-sm">Официальная оценка на основе данных 2026 года</p>
             </div>
 
-            <div class="bg-amber-50 border border-amber-200 p-4 mb-8 rounded-xl flex gap-3 items-start">
+            <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-900/50 p-4 mb-8 rounded-xl flex gap-3 items-start">
                 <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <p class="text-xs text-amber-800 font-medium leading-relaxed">
+                <p class="text-xs text-amber-800 dark:text-amber-200 font-medium leading-relaxed">
                     Учтите: расчет идет <b>ДО ВЫЧЕТА НАЛОГОВ</b> (грязными). Указывайте свой полный оклад по договору, чтобы сравнение с официальной статистикой было точным.
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div class="space-y-2">
-                    <label class="block text-sm font-semibold text-slate-700">Ваша зарплата (Оклад полностью)</label>
+                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Ваша зарплата (Оклад полностью)</label>
                     <div class="relative">
-                        <input type="text" id="grossSalary" placeholder="Например: 100 000" oninput="handleSalaryInput(this)" class="w-full pl-4 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
+                        <input type="text" id="grossSalary" placeholder="Например: 100 000" oninput="handleSalaryInput(this)" class="w-full pl-4 pr-12 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
                         <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                     </div>
-                    <div id="netSalaryDisplay" class="text-xs font-bold text-slate-400 ml-1 hidden">На руки: <span id="netSalaryValue" class="text-brand-600">0 ₽</span></div>
+                    <div id="netSalaryDisplay" class="text-xs font-bold text-slate-400 dark:text-slate-500 ml-1 hidden">На руки: <span id="netSalaryValue" class="text-brand-600">0 ₽</span></div>
                 </div>
                 
                 <div class="space-y-2">
-                    <label class="block text-sm font-semibold text-slate-700">Регион</label>
+                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Регион</label>
+                    <div class="flex gap-2 mb-2">
+                        <button onclick="setRegion('moscow')" class="flex-1 py-1.5 text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20 hover:text-brand-600 transition">Москва</button>
+                        <button onclick="setRegion('spb')" class="flex-1 py-1.5 text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20 hover:text-brand-600 transition">С.-Петербург</button>
+                    </div>
                     <div class="relative">
-                        <select id="regionSelect" class="w-full pl-4 pr-10 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
+                        <select id="regionSelect" class="w-full pl-4 pr-10 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
                             <option value="">Загрузка регионов...</option>
                         </select>
                         <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-400">
@@ -162,7 +197,7 @@
             <div id="resultsDashboard" class="hidden opacity-0 transition-opacity duration-700 space-y-6">
                 
                 <div class="space-y-6">
-                <div class="bg-white rounded-3xl p-6 md:p-8 border border-brand-100 shadow-xl relative overflow-hidden">
+                <div id="status-card" class="bg-white dark:bg-slate-900 rounded-3xl p-6 md:p-8 border border-brand-100 dark:border-slate-800 shadow-xl relative overflow-hidden transition-colors duration-500">
                     <div class="relative z-10">
                         <h2 class="text-sm uppercase tracking-wide font-black text-slate-400 mb-2">Ваше место среди работающих:</h2>
                         <div class="flex flex-wrap items-baseline gap-3 mb-4">
@@ -231,6 +266,22 @@
                 </div>
             </div>
         </div>
+    <!-- Мобильная залипающая панель результатов -->
+    <div class="lg:hidden mobile-sticky-results">
+        <div class="flex items-center justify-between mb-3">
+            <div class="flex flex-col">
+                <span class="text-[10px] font-bold text-slate-400 uppercase">Чистый доход</span>
+                <span id="mobile-net-income" class="font-black text-slate-900 dark:text-white">0 ₽</span>
+            </div>
+            <div class="text-right">
+                <p class="text-[10px] font-bold text-slate-400 uppercase">Налог</p>
+                <p id="mobile-tax" class="text-lg font-black text-rose-600">0 ₽</p>
+            </div>
+        </div>
+        <button onclick="takeScreenshot()" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
+            📸 Сохранить расчет
+        </button>
+    </div>
     </main>
 
     <footer class="max-w-4xl mx-auto px-4 pb-8 text-center text-xs text-slate-400">
@@ -244,214 +295,6 @@
     </div>
 
     <script>
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-message').innerText = message;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            toast.classList.add('translate-y-0', 'opacity-100');
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 2500);
-        }
-
-        window.shareCalculation = function() {
-            const url = window.location.href;
-            navigator.clipboard.writeText(url).then(() => {
-                showToast("Ссылка скопирована!");
-            }).catch(err => {
-                console.error('Ошибка копирования: ', err);
-            });
-        };
-
-        window.takeScreenshot = function() {
-            const element = document.getElementById('resultsDashboard');
-            if (!element) return;
-
-            showToast("Подготовка к отправке...");
-
-            html2canvas(element, {
-                backgroundColor: '#f8fafc',
-                scale: 2,
-                logging: false,
-                useCORS: true
-            }).then(canvas => {
-                canvas.toBlob((blob) => {
-                    const file = new File([blob], "wealth-calculation.png", { type: "image/png" });
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        navigator.share({
-                            files: [file],
-                            title: 'Мое место в экономике РФ',
-                            text: 'Посмотри на результаты моего "Рентгена Доходов"!'
-                        }).then(() => showToast("Успешно отправлено!"))
-                          .catch((err) => console.log('User cancelled share', err));
-                    } else {
-                        const link = document.createElement('a');
-                        link.download = 'wealth-calculation.png';
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-                        showToast("Скриншот скачан!");
-                    }
-                }, 'image/png');
-            }).catch(err => {
-                console.error('Ошибка скриншота:', err);
-                showToast("Ошибка при создании скриншота");
-            });
-        };
-
-        let statsData = {};
-
-        async function loadRegions() {
-            try {
-                const response = await fetch('regions.json');
-                const data = await response.json();
-                const select = document.getElementById('regionSelect');
-                select.innerHTML = '';
-
-                data.forEach(region => {
-                    statsData[region.id] = region;
-                    const option = document.createElement('option');
-                    option.value = region.id;
-                    option.textContent = region.name;
-                    select.appendChild(option);
-                });
-            } catch (err) {
-                console.error('Ошибка загрузки регионов:', err);
-                document.getElementById('regionSelect').innerHTML = '<option value="">Ошибка загрузки</option>';
-            }
-        }
-
-        loadRegions();
-
-        function erf(x) {
-            let sign = (x >= 0) ? 1 : -1;
-            x = Math.abs(x);
-            let a1 =  0.254829592, a2 = -0.284496736, a3 =  1.421413741, a4 = -1.453152027, a5 =  1.061405429, p  =  0.3275911;
-            let t = 1.0 / (1.0 + p * x);
-            let y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
-            return sign * y;
-        }
-
-        function getPercentile(salary, median, p90) {
-            let mu = Math.log(median);
-            let sigma = (Math.log(p90) - mu) / 1.28155;
-            let logX = Math.log(salary);
-            let z = (logX - mu) / (sigma * Math.SQRT2);
-            let cdf = 0.5 * (1 + erf(z));
-            return Math.min(Math.max(cdf * 100, 0), 99.9);
-        }
-
-        function formatMoney(amount) {
-            return Math.round(amount).toLocaleString('ru-RU') + ' ₽';
-        }
-
-        function handleSalaryInput(input) {
-            let cursorPosition = input.selectionStart;
-            let originalLength = input.value.length;
-            let cleanVal = input.value.replace(/\s+/g, '').replace(/\D/g, '');
-            if (cleanVal === '') {
-                input.value = '';
-                document.getElementById('netSalaryDisplay').classList.add('hidden');
-                return;
-            }
-            let parsed = parseInt(cleanVal, 10);
-            let formatted = new Intl.NumberFormat('ru-RU').format(parsed);
-            input.value = formatted;
-
-            let newLength = formatted.length;
-            let diff = newLength - originalLength;
-            input.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
-
-            const net = calculateNetSalary(parsed);
-            document.getElementById('netSalaryValue').innerText = formatMoney(net);
-            document.getElementById('netSalaryDisplay').classList.remove('hidden');
-        }
-
-        function calculateNetSalary(gross) {
-            const annualGross = gross * 12;
-            let totalTax = 0;
-
-            if (annualGross <= 2400000) {
-                totalTax = annualGross * 0.13;
-            } else if (annualGross <= 5000000) {
-                totalTax = (2400000 * 0.13) + (annualGross - 2400000) * 0.15;
-            } else if (annualGross <= 20000000) {
-                totalTax = (2400000 * 0.13) + (2600000 * 0.15) + (annualGross - 5000000) * 0.18;
-            } else if (annualGross <= 50000000) {
-                totalTax = (2400000 * 0.13) + (2600000 * 0.15) + (15000000 * 0.18) + (annualGross - 20000000) * 0.20;
-            } else {
-                totalTax = (2400000 * 0.13) + (2600000 * 0.15) + (15000000 * 0.18) + (30000000 * 0.20) + (annualGross - 50000000) * 0.22;
-            }
-
-            return (annualGross - totalTax) / 12;
-        }
-
-        function calculateWealth() {
-            const inputVal = document.getElementById('grossSalary').value.replace(/\s+/g, '');
-            const region = document.getElementById('regionSelect').value;
-            
-            if (!inputVal || inputVal <= 0) return;
-
-            const grossSalary = parseFloat(inputVal);
-            const netSalary = calculateNetSalary(grossSalary);
-            const stats = statsData[region];
-
-            // Очищаем статистику от налогов (считаем, что в базе Gross)
-            const netMedian = calculateNetSalary(stats.median);
-            const netAvg = calculateNetSalary(stats.avg);
-            const netP90 = calculateNetSalary(stats.p90);
-            const netMrot = calculateNetSalary(stats.mrot);
-
-            // Сравнение идет по чистой зарплате (Net)
-            const laborPercentile = getPercentile(netSalary, netMedian, netP90);
-            const popPercentile = Math.min(laborPercentile + stats.popOffset, 99.99);
-
-            const medianRatio = (netSalary / netMedian).toFixed(1);
-            const avgDiff = netSalary - netAvg;
-            const mrotRatio = (netSalary / netMrot).toFixed(1);
-
-            document.getElementById('progressBarLabor').style.width = '0%';
-            
-            setTimeout(() => {
-                document.getElementById('percentileLabor').innerText = laborPercentile.toFixed(1) + '%';
-                document.getElementById('progressBarLabor').style.width = laborPercentile + '%';
-            }, 100);
-            
-            document.getElementById('populationComparison').innerHTML = 
-                `А если взять вообще всех жителей, то вы богаче <b>${popPercentile.toFixed(1)}%</b> населения.`;
-
-            const medianEl = document.getElementById('medianRatio');
-            if (medianRatio >= 1) {
-                medianEl.innerText = `Больше в ${medianRatio} раз`;
-                medianEl.className = "text-xl font-black text-brand-600";
-            } else {
-                medianEl.innerText = `Меньше нормы`;
-                medianEl.className = "text-xl font-black text-rose-600";
-            }
-            document.getElementById('medianText').innerText = `Чистая медиана: ${formatMoney(netMedian)}`;
-
-            const avgEl = document.getElementById('avgDiff');
-            if (avgDiff >= 0) {
-                avgEl.innerText = `Больше на ${formatMoney(avgDiff)}`;
-                avgEl.className = "text-xl font-black text-emerald-600";
-            } else {
-                avgEl.innerText = `Меньше на ${formatMoney(Math.abs(avgDiff))}`;
-                avgEl.className = "text-xl font-black text-amber-600";
-            }
-            document.getElementById('avgText').innerText = `Чистая средняя: ${formatMoney(netAvg)}`;
-
-            document.getElementById('mrotRatio').innerText = `${mrotRatio} МРОТ`;
-            document.getElementById('mrotText').innerText = `1 чистый МРОТ = ${formatMoney(netMrot)}`;
-
-            const dashboard = document.getElementById('resultsDashboard');
-            dashboard.classList.remove('hidden');
-            setTimeout(() => dashboard.classList.remove('opacity-0'), 50);
-        }
-        
-        document.getElementById('grossSalary').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') calculateWealth();
-        });
-    </script>
     <script>
         if ("serviceWorker" in navigator) {
             window.addEventListener("load", () => {
