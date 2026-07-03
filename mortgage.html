@@ -74,28 +74,24 @@
         }
     </style>
 <!-- Yandex.Metrika counter -->
-<script type="text/javascript" >
-   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-   m[i].l=1*new Date();
-   for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=110360838', 'ym');
 
-   ym(99999999, "init", {
-        clickmap:true,
-        trackLinks:true,
-        accurateTrackBounce:true,
-        webvisor:true
-   });
+    ym(110360838, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
 
-   function reachGoal(goalId) {
-       console.log("Goal reached:", goalId);
-       if (typeof ym !== "undefined") {
-           ym(99999999, "reachGoal", goalId);
-       }
-   }
+    function reachGoal(goalId) {
+        console.log("Goal reached:", goalId);
+        if (typeof ym !== "undefined") {
+            ym(110360838, 'reachGoal', goalId);
+        }
+    }
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/99999999" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen font-sans antialiased">
@@ -122,7 +118,7 @@
             </div>
 
             <!-- Табы выбора режима калькулятора -->
-            <div class="bg-slate-800/80 p-1 rounded-xl flex border border-slate-700">
+            <div class="bg-slate-800/80 p-1 rounded-xl grid grid-cols-2 sm:flex border border-slate-700 w-full sm:w-auto">
                 <button id="tab-new" onclick="switchMainTab('new')" class="px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 bg-brand-600 text-white shadow-md">
                     Новая ипотека
                 </button>
@@ -409,17 +405,6 @@
                     </div>
                 </div>
 
-                <!-- Кнопки Поделиться -->
-                <div class="grid grid-cols-2 gap-3">
-                    <button onclick="shareLink()" class="flex items-center justify-center gap-2 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-2xl border border-slate-200 transition-all shadow-sm active:scale-[0.98]">
-                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
-                        Ссылка
-                    </button>
-                    <button onclick="takeScreenshot()" class="flex items-center justify-center gap-2 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition-all shadow-sm active:scale-[0.98]">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        Скриншот
-                    </button>
-                </div>
 
             </div>
 
@@ -468,7 +453,7 @@
                                     <p id="saving-months" class="text-2xl font-black text-emerald-200">0 мес.</p>
                                 </div>
                             </div>
-                            <div class="border-t border-brand-800/60 pt-3 text-[11px] text-brand-200 flex justify-between">
+                            <div class="border-t border-brand-800/60 pt-3 text-[11px] text-brand-200 flex flex-col sm:flex-row sm:justify-between gap-2">
                                 <span>Будущая сумма выплат: <strong id="res-total-paid" class="text-white">0 ₽</strong></span>
                                 <span>Планируемый досрочный капитал: <strong id="res-total-prepaid" class="text-emerald-300">0 ₽</strong></span>
                             </div>
@@ -487,6 +472,18 @@
                         <div class="relative flex-1" style="max-height: 280px;">
                             <canvas id="balanceChart" class="w-full h-full"></canvas>
                         </div>
+                    </div>
+
+                    <!-- Кнопки Поделиться -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="shareLink()" class="flex items-center justify-center gap-2 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-2xl border border-slate-200 transition-all shadow-sm active:scale-[0.98]">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
+                            Поделиться
+                        </button>
+                        <button onclick="takeScreenshot()" class="flex items-center justify-center gap-2 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition-all shadow-sm active:scale-[0.98]">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            Скриншот
+                        </button>
                     </div>
                 </div>
             </div>
