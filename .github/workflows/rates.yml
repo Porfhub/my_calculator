@@ -1,8 +1,8 @@
 name: Update Mortgage Rates
 on:
   schedule:
-    - cron: '0 3 * * *' # Запуск каждый день (3:00 UTC = 6:00 МСК)
-  workflow_dispatch: # Позволяет запускать кнопку обновления руками
+    - cron: '0 3 * * *' # 6:00 МСК
+  workflow_dispatch:
 
 jobs:
   update-rates:
@@ -18,11 +18,9 @@ jobs:
 
       - name: Run scripts to fetch financial data
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: |
           node update_rates.js
-          echo "Waiting 60 seconds to completely clear API rate limits..."
-          sleep 60
           node update_inflation.js
 
       - name: Commit and push changes
@@ -30,5 +28,5 @@ jobs:
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "actions@github.com"
           git add rates.json inflation.json
-          git commit -m "Автоматическое обновление финансовых данных (ставки и инфляция)" || echo "No changes to commit"
+          git commit -m "Обновление финансовых данных через DeepSeek и ЦБ РФ" || echo "No changes to commit"
           git push
