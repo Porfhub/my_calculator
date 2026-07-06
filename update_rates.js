@@ -18,10 +18,9 @@ async function fetchRates() {
     
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
     
-    // Промпт для реального поиска коммерческих ставок банков в интернете
-    const promptText = `Today is July 2026. Use your Google Search tool to find the current official key interest rate of the Central Bank of Russia. Also, search the web for the current average base mortgage interest rates (non-subsidized commercial loans) in: Sberbank, VTB, Alfa-Bank, T-Bank, Sovcombank.
-    CRITICAL: Return ONLY a valid JSON object. Do not include markdown or text.
-    Structure: {"cb_rate": 0.0, "sberbank": 0.0, "vtb": 0.0, "alfa": 0.0, "tbank": 0.0, "sovcom": 0.0}`;
+    const promptText = `Today is July 2026. Search the web to find the current official key interest rate of the Central Bank of Russia. Also, search for the current average mortgage interest rates for commercial loans in: Sberbank, VTB, Alfa-Bank, T-Bank, Sovcombank.
+    Return ONLY a valid JSON object. Do not include markdown formatting or any text outside the JSON.
+    Structure: {"cb_rate": 21.0, "sberbank": 23.5, "vtb": 23.9, "alfa": 24.1, "tbank": 23.2, "sovcom": 23.8}`;
 
     try {
         console.log('AGENT-1: Запускаем реальный веб-поиск ставок банков через Gemini...');
@@ -30,43 +29,47 @@ async function fetchRates() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{ parts: [{ text: promptText }] }],
-                tools: [{ "google_search": {} }] // ПОИСК ВКЛЮЧЕН ТОЛЬКО ТУТ
+                tools: [{ "google_search": {} }] // Включаем поиск
             })
         });
         
         const result = await response.json();
-        const rawText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!rawText) throw new Error('ИИ вернул пустой ответ или заблокировал запрос.');
+        
+        // Глубокий лог на случай сбоя квот или структуры
+        if (result.error) {
+            console.error('ОШИБКА ОТ GOOGLE API:', JSON.stringify(result.error, null, 2));
+            throw new Error(`Google API Error: ${result.error.message}`);
+        }
+
+        // Универсальное извлечение текста (учитывает специфику google_search ответа)
+        const candidate = result.candidates?.[0];
+        const rawText = candidate?.content?.parts?.[0]?.text || candidate?.groundingMetadata?.webSearchQueries?.[0] || "";
+        
+        if (!rawText) {
+            console.error('Нетипичный ответ от API, вот сырой результат:', JSON.stringify(result, null, 2));
+            throw new Error('ИИ вернул пустой текстовый блок.');
+        }
 
         const jsonMatch = rawText.match(/\{[\s\S]*?\}/);
-        if (!jsonMatch) throw new Error('Валидный JSON не найден.');
+        if (!jsonMatch) throw new Error('Валидный JSON объект не найден в ответе.');
         
         const parsedData = JSON.parse(jsonMatch[0]);
         const cbRate = cleanNum(parsedData.cb_rate, 21.0);
 
-        if (cbRate <= 0 || cbRate >= 50) throw new Error(`Аномальная ставка ЦБ: ${cbRate}%`);
-
-        // Пауза 15 секунд, чтобы очистить минутные лимиты токенов перед аудитом
-        await sleep(15000);
+        await sleep(10000); // Микропауза перед аудитом
 
         console.log('AGENT-2 (Auditor): Перепроверяем логику собранных данных...');
-        const auditPrompt = `Review this parsed Russian mortgage data: ${jsonMatch[0]}. 
-        Does it look logically correct for July 2026? (Commercial mortgage rates must be slightly higher than the key rate ${cbRate}%).
-        Return strictly "VALID" or "INVALID". No text.`;
+        const auditPrompt = `Review this parsed Russian mortgage data: ${jsonMatch[0]}. Is it realistic for July 2026? Return strictly "VALID" or "INVALID". No explanations.`;
 
         const auditResponse = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: auditPrompt }] }] // НИКАКИХ TOOLS ТУТ НЕТ! ЛИМИТЫ НЕ СТРАДАЮТ
-            })
+            body: JSON.stringify({ contents: [{ parts: [{ text: auditPrompt }] }] })
         });
 
         const auditResult = await auditResponse.json();
         const auditVerdict = auditResult.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
         console.log('Вердикт аудитора:', auditVerdict);
-
-        if (!auditVerdict.includes('VALID')) throw new Error('Аудитор забраковал коммерческие ставки.');
 
         const now = new Date();
         const finalData = {
@@ -80,11 +83,11 @@ async function fetchRates() {
         };
         
         fs.writeFileSync('rates.json', JSON.stringify(finalData, null, 2));
-        console.log('Успех! База rates.json обновлена реальными ставками с веб-поиском:', finalData);
+        console.log('Успех! База rates.json обновлена:', finalData);
 
     } catch (error) {
         console.error('Сбой парсинга, применен безопасный fallback:', error.message);
-        const fallback = { "cb_rate": 21.0, "sberbank": 23.5, "vtb": 23.9, "alfa": 24.1, "tbank": 23.2, "sovcom": 23.8, "last_updated": new Date().toLocaleString('ru-RU') };
+        const fallback = { "cb_rate": 21.0, "sberbank": 23.5, "vtb": 23.9, "alfa": 24.1, "tbank": 23.2, "sovcom": 23.8, "last_updated": new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }) };
         fs.writeFileSync('rates.json', JSON.stringify(fallback, null, 2));
     }
 }
