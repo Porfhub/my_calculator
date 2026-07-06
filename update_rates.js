@@ -51,11 +51,13 @@ async function fetchRates() {
             body: JSON.stringify(payload)
         });
         
-        const result = await response.json();
-        
-        if (!result.candidates || !result.candidates[0]?.content?.parts[0]?.text) {
-            throw new Error('ИИ вернул пустой ответ или заблокировал запрос.');
-        }
+const result = await response.json();
+
+if (!result.candidates || !result.candidates[0]?.content?.parts[0]?.text) {
+    // ДАВАЙ ВЫВЕДЕМ В ЛОГ ПОЛНЫЙ ОТВЕТ СЕРВЕРА ДЛЯ ДИАГНОСТИКИ:
+    console.error("ПОЛНЫЙ ОТВЕТ ОТ GEMINI API:", JSON.stringify(result, null, 2));
+    throw new Error('ИИ вернул пустой ответ или заблокировал запрос.');
+}
 
         const rawText = result.candidates[0].content.parts[0].text;
         console.log('Реальный ответ от ИИ:', rawText);
