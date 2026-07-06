@@ -18,7 +18,7 @@ jobs:
 
       - name: Run scripts to fetch financial data
         env:
-          DEEPSEEK_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           node update_rates.js
           node update_inflation.js
