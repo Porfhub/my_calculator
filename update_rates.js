@@ -14,6 +14,7 @@ function cleanNum(val, fallbackVal) {
 
 async function fetchRates() {
     const apiKey = process.env.GEMINI_API_KEY;
+    const currentMonthYear = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
     if (!apiKey) {
         console.error('Ошибка: GEMINI_API_KEY не обнаружен в переменных окружения.');
         process.exit(1);
@@ -87,7 +88,7 @@ async function fetchRates() {
             await sleep(10000);
 
             console.log('AGENT-2 (Auditor): Проверка полученных данных...');
-            const auditPrompt = `Today is ${currentDate}. I received the following financial data for Russia:
+            const auditPrompt = `Today is ${currentMonthYear}. I received the following financial data for Russia:
             Key Rate (CBR): ${finalData.cb_rate}%
             Mortgage rates: Sberbank ${finalData.sberbank}%, VTB ${finalData.vtb}%, Alfa ${finalData.alfa}%.
             Use your Google Search tool to verify if these numbers are realistic and close to the current official rates.

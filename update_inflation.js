@@ -21,9 +21,9 @@ async function fetchInflation() {
 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
-    const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+    const currentMonthYear = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
 
-    const promptText = `Today is ${currentDate}. Provide the official annual inflation rates in Russia (Rosstat) from 2000 to 2025 based on your internal knowledge.
+    const promptText = `Today is ${currentMonthYear}. Provide the official annual inflation rates in Russia (Rosstat) from 2000 to 2025 based on your internal knowledge.
     CRITICAL: You must return ONLY a JSON object where keys are years (as strings) and values are float numbers (annual inflation percentage) using a dot as a decimal separator (e.g., 8.4).
     Return ONLY a valid JSON object. Do not include any markdown, text or code block formatting.
     The JSON structure must strictly be:
@@ -94,7 +94,7 @@ async function fetchInflation() {
             const lastYear = (currentYear - 1).toString();
             const lastValue = finalData[lastYear] || "unknown";
 
-            const auditPrompt = `Today is ${currentDate}. I received inflation data for Russia.
+            const auditPrompt = `Today is ${currentMonthYear}. I received inflation data for Russia.
             The inflation rate for the year ${lastYear} is reported as ${lastValue}%.
             Verify if this specific value is correct or very close to the official Rosstat data using your internal knowledge.
             Return "VALID" if the data is correct.
