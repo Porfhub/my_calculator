@@ -1,13 +1,12 @@
 const fs = require('fs');
 
+// Функция-очиститель: преобразует строки с запятыми в нормальные числа
 function cleanNum(val, fallbackVal) {
     if (val === undefined || val === null) return fallbackVal;
     const strVal = String(val).replace(',', '.').replace(/[^0-9.]/g, '');
     const num = Number(strVal);
     return (isNaN(num) || num === 0) ? fallbackVal : num;
 }
-
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 async function fetchRates() {
     const apiKey = process.env.GEMINI_API_KEY;
@@ -18,76 +17,92 @@ async function fetchRates() {
     
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
     
-    const promptText = `Today is July 2026. Search the web to find the current official key interest rate of the Central Bank of Russia. Also, search for the current average mortgage interest rates for commercial loans in: Sberbank, VTB, Alfa-Bank, T-Bank, Sovcombank.
-    Return ONLY a valid JSON object. Do not include markdown formatting or any text outside the JSON.
-    Structure: {"cb_rate": 21.0, "sberbank": 23.5, "vtb": 23.9, "alfa": 24.1, "tbank": 23.2, "sovcom": 23.8}`;
+    let cbRateActual = 21.0; // Базовое значение по умолчанию
+
+    // ШАГ 1: Извлекаем самую последнюю и актуальную ставку напрямую из API Центробанка РФ
+    try {
+        const cbrResponse = await fetch('https://www.cbr.ru/scripts/xml_main_info.asp');
+        const xmlText = await cbrResponse.text();
+        
+        // Изолируем блок ключевой ставки
+        const keyRateBlock = xmlText.match(/<keyRate[^>]*>([\s\S]*?)<\/keyRate>/);
+        
+        if (keyRateBlock && keyRateBlock[1]) {
+            // Находим все элементы <item> внутри блока
+            const items = keyRateBlock[1].match(/<item[^>]*>([\s\S]*?)<\/item>/g);
+            
+            if (items && items.length > 0) {
+                // Берем самый последний (самый свежий по дате) элемент
+                const lastItem = items[items.length - 1];
+                const valueMatch = lastItem.match(/<item[^>]*>([\s\S]*?)<\/item>/);
+                
+                if (valueMatch && valueMatch[1]) {
+                    cbRateActual = cleanNum(valueMatch[1], 21.0);
+                    console.log('Успешно получена АКТУАЛЬНАЯ ставка ЦБ из API Центробанка:', cbRateActual);
+                }
+            }
+        }
+    } catch (e) {
+        console.log('Не удалось достучаться до API CBR, берем базовый маркер:', e.message);
+    }
+    
+    // ШАГ 2: Передаем точную ставку ЦБ в Gemini для расчета коммерческих ипотечных спредов топ-5 банков
+    // Поиск в интернете отключен — это чистый, легкий и бесплатный текстовый запрос
+    const promptText = `You are a financial assistant. Today is July 2026. The official key interest rate of the Central Bank of Russia is exactly ${cbRateActual}%.
+    Based on historical data and the typical structural spread/margin that major Russian commercial banks add to the key rate for standard mortgage programs (non-subsidized, retail loans), calculate the realistic average mortgage rates for: Sberbank, VTB, Alfa-Bank, T-Bank, Sovcombank.
+    Return ONLY a valid JSON object. No markdown blocks, no text.
+    Structure: {"sberbank": 0.0, "vtb": 0.0, "alfa": 0.0, "tbank": 0.0, "sovcom": 0.0}`;
 
     try {
-        console.log('AGENT-1: Запускаем реальный веб-поиск ставок банков через Gemini...');
+        console.log('Запускаем текстовый расчет коммерческих ставок через Gemini (Без поиска)...');
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: promptText }] }],
-                tools: [{ "google_search": {} }] // Включаем поиск
+                contents: [{ parts: [{ text: promptText }] }] // Без использования tools
             })
         });
         
         const result = await response.json();
         
-        // Глубокий лог на случай сбоя квот или структуры
         if (result.error) {
-            console.error('ОШИБКА ОТ GOOGLE API:', JSON.stringify(result.error, null, 2));
             throw new Error(`Google API Error: ${result.error.message}`);
         }
 
-        // Универсальное извлечение текста (учитывает специфику google_search ответа)
-        const candidate = result.candidates?.[0];
-        const rawText = candidate?.content?.parts?.[0]?.text || candidate?.groundingMetadata?.webSearchQueries?.[0] || "";
-        
-        if (!rawText) {
-            console.error('Нетипичный ответ от API, вот сырой результат:', JSON.stringify(result, null, 2));
-            throw new Error('ИИ вернул пустой текстовый блок.');
-        }
+        const rawText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!rawText) throw new Error('ИИ вернул пустой текстовый блок.');
 
         const jsonMatch = rawText.match(/\{[\s\S]*?\}/);
         if (!jsonMatch) throw new Error('Валидный JSON объект не найден в ответе.');
         
         const parsedData = JSON.parse(jsonMatch[0]);
-        const cbRate = cleanNum(parsedData.cb_rate, 21.0);
-
-        await sleep(10000); // Микропауза перед аудитом
-
-        console.log('AGENT-2 (Auditor): Перепроверяем логику собранных данных...');
-        const auditPrompt = `Review this parsed Russian mortgage data: ${jsonMatch[0]}. Is it realistic for July 2026? Return strictly "VALID" or "INVALID". No explanations.`;
-
-        const auditResponse = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text: auditPrompt }] }] })
-        });
-
-        const auditResult = await auditResponse.json();
-        const auditVerdict = auditResult.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
-        console.log('Вердикт аудитора:', auditVerdict);
 
         const now = new Date();
         const finalData = {
-            cb_rate: cbRate,
-            sberbank: cleanNum(parsedData.sberbank, 23.5),
-            vtb: cleanNum(parsedData.vtb, 23.9),
-            alfa: cleanNum(parsedData.alfa, 24.1),
-            tbank: cleanNum(parsedData.tbank, 23.2),
-            sovcom: cleanNum(parsedData.sovcom, 23.8),
+            cb_rate: cbRateActual,
+            sberbank: cleanNum(parsedData.sberbank, cbRateActual + 2.5),
+            vtb: cleanNum(parsedData.vtb, cbRateActual + 2.9),
+            alfa: cleanNum(parsedData.alfa, cbRateActual + 3.1),
+            tbank: cleanNum(parsedData.tbank, cbRateActual + 2.2),
+            sovcom: cleanNum(parsedData.sovcom, cbRateActual + 2.8),
             last_updated: now.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' })
         };
         
         fs.writeFileSync('rates.json', JSON.stringify(finalData, null, 2));
-        console.log('Успех! База rates.json обновлена:', finalData);
+        console.log('Успех! База rates.json успешно обновлена данными:', finalData);
 
     } catch (error) {
-        console.error('Сбой парсинга, применен безопасный fallback:', error.message);
-        const fallback = { "cb_rate": 21.0, "sberbank": 23.5, "vtb": 23.9, "alfa": 24.1, "tbank": 23.2, "sovcom": 23.8, "last_updated": new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }) };
+        console.error('Сбой расчета, применен безопасный fallback:', error.message);
+        const now = new Date();
+        const fallback = {
+            "cb_rate": cbRateActual,
+            "sberbank": cbRateActual + 2.5,
+            "vtb": cbRateActual + 2.9,
+            "alfa": cbRateActual + 3.1,
+            "tbank": cbRateActual + 2.2,
+            "sovcom": cbRateActual + 2.8,
+            "last_updated": now.toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' })
+        };
         fs.writeFileSync('rates.json', JSON.stringify(fallback, null, 2));
     }
 }
