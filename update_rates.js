@@ -7,84 +7,84 @@ function cleanNum(val, fallbackVal) {
     return (isNaN(num) || num === 0) ? fallbackVal : num;
 }
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 async function fetchRates() {
-    const apiKey = process.env.DEEPSEEK_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-        console.error('Ошибка: DEEPSEEK_API_KEY не обнаружен.');
+        console.error('Ошибка: GEMINI_API_KEY не обнаружен.');
         process.exit(1);
     }
-
-    const fallback = { "cb_rate": 21.0, "sberbank": 23.5, "vtb": 23.9, "alfa": 24.1, "tbank": 23.2, "sovcom": 23.8 };
-    let cbRateActual = fallback.cb_rate;
-
-    // Шаг 1: Гарантированно берем железную ставку ЦБ напрямую из API Центробанка
-    try {
-        const cbrResponse = await fetch('https://www.cbr.ru/scripts/xml_main_info.asp');
-        const xmlText = await cbrResponse.text();
-        const match = xmlText.match(/<keyRate[^>]*>([\s\S]*?)<\/keyRate>/);
-        if (match && match[1]) {
-            cbRateActual = cleanNum(match[1], fallback.cb_rate);
-            console.log('Успешно получена ставка ЦБ из API Центробанка:', cbRateActual);
-        }
-    } catch (e) {
-        console.log('Не удалось достучаться до API СВR, используем базовые маркеры:', e.message);
-    }
-
-    // Шаг 2: Идем в DeepSeek за актуализацией банковских коммерческих ставок
-    const url = 'https://api.deepseek.com/v1/chat/completions';
     
-    const promptText = `Сегодня июль 2026 года. Актуальная ключевая ставка ЦБ РФ составляет ${cbRateActual}%. 
-    Спрогнозируй или выведи средние коммерческие ставки по ипотеке без льгот на основе этого контекста для банков: Sberbank, VTB, Alfa-Bank, T-Bank, Sovcombank.
-    Ответь СТРОГО в формате JSON. Никакого текста вокруг, никаких markdown блоков \`\`\`json.
-    Структура:
-    {
-        "sberbank": число,
-        "vtb": число,
-        "alfa": число,
-        "tbank": число,
-        "sovcom": число
-    }`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    
+    // Промпт для реального поиска коммерческих ставок банков в интернете
+    const promptText = `Today is July 2026. Use your Google Search tool to find the current official key interest rate of the Central Bank of Russia. Also, search the web for the current average base mortgage interest rates (non-subsidized commercial loans) in: Sberbank, VTB, Alfa-Bank, T-Bank, Sovcombank.
+    CRITICAL: Return ONLY a valid JSON object. Do not include markdown or text.
+    Structure: {"cb_rate": 0.0, "sberbank": 0.0, "vtb": 0.0, "alfa": 0.0, "tbank": 0.0, "sovcom": 0.0}`;
 
     try {
-        console.log('Запускаем генерацию коммерческих ставок через DeepSeek...');
+        console.log('AGENT-1: Запускаем реальный веб-поиск ставок банков через Gemini...');
         const response = await fetch(url, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                model: "deepseek-chat",
-                messages: [{ role: "user", content: promptText }],
-                temperature: 0.2
+                contents: [{ parts: [{ text: promptText }] }],
+                tools: [{ "google_search": {} }] // ПОИСК ВКЛЮЧЕН ТОЛЬКО ТУТ
+            })
+        });
+        
+        const result = await response.json();
+        const rawText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!rawText) throw new Error('ИИ вернул пустой ответ или заблокировал запрос.');
+
+        const jsonMatch = rawText.match(/\{[\s\S]*?\}/);
+        if (!jsonMatch) throw new Error('Валидный JSON не найден.');
+        
+        const parsedData = JSON.parse(jsonMatch[0]);
+        const cbRate = cleanNum(parsedData.cb_rate, 21.0);
+
+        if (cbRate <= 0 || cbRate >= 50) throw new Error(`Аномальная ставка ЦБ: ${cbRate}%`);
+
+        // Пауза 15 секунд, чтобы очистить минутные лимиты токенов перед аудитом
+        await sleep(15000);
+
+        console.log('AGENT-2 (Auditor): Перепроверяем логику собранных данных...');
+        const auditPrompt = `Review this parsed Russian mortgage data: ${jsonMatch[0]}. 
+        Does it look logically correct for July 2026? (Commercial mortgage rates must be slightly higher than the key rate ${cbRate}%).
+        Return strictly "VALID" or "INVALID". No text.`;
+
+        const auditResponse = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: auditPrompt }] }] // НИКАКИХ TOOLS ТУТ НЕТ! ЛИМИТЫ НЕ СТРАДАЮТ
             })
         });
 
-        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-        const result = await response.json();
-        const rawText = result.choices[0].message.content.trim();
-        
-        console.log('Ответ от DeepSeek:', rawText);
-        const parsedData = JSON.parse(rawText);
+        const auditResult = await auditResponse.json();
+        const auditVerdict = auditResult.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
+        console.log('Вердикт аудитора:', auditVerdict);
+
+        if (!auditVerdict.includes('VALID')) throw new Error('Аудитор забраковал коммерческие ставки.');
 
         const now = new Date();
         const finalData = {
-            cb_rate: cbRateActual,
-            sberbank: cleanNum(parsedData.sberbank, fallback.sberbank),
-            vtb: cleanNum(parsedData.vtb, fallback.vtb),
-            alfa: cleanNum(parsedData.alfa, fallback.alfa),
-            tbank: cleanNum(parsedData.tbank, fallback.tbank),
-            sovcom: cleanNum(parsedData.sovcom, fallback.sovcom),
+            cb_rate: cbRate,
+            sberbank: cleanNum(parsedData.sberbank, 23.5),
+            vtb: cleanNum(parsedData.vtb, 23.9),
+            alfa: cleanNum(parsedData.alfa, 24.1),
+            tbank: cleanNum(parsedData.tbank, 23.2),
+            sovcom: cleanNum(parsedData.sovcom, 23.8),
             last_updated: now.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' })
         };
-
+        
         fs.writeFileSync('rates.json', JSON.stringify(finalData, null, 2));
-        console.log('Успех! Файл rates.json обновлен:', finalData);
+        console.log('Успех! База rates.json обновлена реальными ставками с веб-поиском:', finalData);
 
     } catch (error) {
-        console.error('Сбой DeepSeek, пишем безопасный конфиг:', error.message);
-        const now = new Date();
-        fallback.last_updated = now.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' });
+        console.error('Сбой парсинга, применен безопасный fallback:', error.message);
+        const fallback = { "cb_rate": 21.0, "sberbank": 23.5, "vtb": 23.9, "alfa": 24.1, "tbank": 23.2, "sovcom": 23.8, "last_updated": new Date().toLocaleString('ru-RU') };
         fs.writeFileSync('rates.json', JSON.stringify(fallback, null, 2));
     }
 }
