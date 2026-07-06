@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Когда я стану миллионером? — Умный расчет цели</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2canvas CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Скрытие стрелок у input type=number */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        @media (max-width: 1023px) {
+            .mobile-sticky-results {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 50;
+                background: white;
+                box-shadow: 0 -10px 15px -3px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid #e2e8f0;
+                padding: 1rem;
+                border-radius: 1.5rem 1.5rem 0 0;
+            }
+            .dark .mobile-sticky-results {
+                background: #0f172a;
+                border-top-color: #1e293b;
+            }
+            body {
+                padding-bottom: 220px;
+            }
+        }
+    </style>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=110360838', 'ym');
+
+    ym(110360838, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+
+    function reachGoal(goalId) {
+        console.log("Goal reached:", goalId);
+        if (typeof ym !== "undefined") {
+            ym(110360838, 'reachGoal', goalId);
+        }
+    }
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+    <script src="js/theme.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/ui-utils.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
+
+    <!-- Переключатель темной темы -->
+    <div class="fixed top-24 right-4 z-50 md:top-6 md:right-8">
+        <button id="theme-toggle" onclick="toggleDarkMode()" class="p-3 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:scale-110 transition-all active:scale-95">
+            <svg id="sun-icon" class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
+            <svg id="moon-icon" class="w-6 h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+        </button>
+    </div>
+
+    <!-- Шапка приложения -->
+    <header class="bg-gradient-to-r from-brand-800 to-slate-900 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
+                    <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">На главную</span>
+                </a>
+                <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
+                <div class="flex items-center space-x-3">
+                    <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tight">Миллионер</h1>
+                        <p class="text-xs text-brand-200">Когда ваши накопления пробьют заветную сумму?</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <!-- Всплывающие уведомления (Toast) -->
+        <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+            <span class="text-brand-500 font-bold">✓</span>
+            <span id="toast-message" class="text-sm">Данные успешно обновлены</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+            <!-- ЛЕВАЯ КОЛОНКА: Ввод параметров -->
+            <div class="lg:col-span-5 space-y-6">
+                <!-- Текущая точка -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-4">
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-2">Текущая точка</h2>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Дата рождения</label>
+                            <input type="date" id="birth-date" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-slate-800 dark:text-white">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Текущий возраст</label>
+                            <input type="number" id="current-age" min="0" max="120" value="25" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-slate-800 dark:text-white">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Текущие накопления</label>
+                            <span class="text-sm font-bold text-slate-900 dark:text-white" id="savings-display">0 ₽</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="current-savings" value="100 000" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
+                        </div>
+                        <input type="range" id="savings-range" min="0" max="1000000" step="10000" value="100000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                    </div>
+                </div>
+
+                <!-- Ежемесячный бюджет -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-4">
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-2">Ежемесячный бюджет</h2>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Регулярный доход</label>
+                            <span class="text-sm font-bold text-slate-900 dark:text-white" id="income-display">0 ₽</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="monthly-income" value="150 000" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
+                        </div>
+                        <input type="range" id="income-range" min="0" max="1000000" step="5000" value="150000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Регулярные траты</label>
+                            <span class="text-sm font-bold text-slate-900 dark:text-white" id="expenses-display">0 ₽</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="monthly-expenses" value="70 000" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
+                        </div>
+                        <input type="range" id="expenses-range" min="0" max="1000000" step="5000" value="70000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                    </div>
+
+                    <div class="p-4 bg-brand-50 dark:bg-brand-900/20 rounded-xl border border-brand-100 dark:border-brand-800 flex justify-between items-center">
+                        <span class="text-sm font-bold text-brand-800 dark:text-brand-300">Остаток для инвестиций:</span>
+                        <span class="text-lg font-black text-brand-700 dark:text-brand-400" id="free-cash-display">0 ₽</span>
+                    </div>
+                </div>
+
+                <!-- Внешние факторы -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-4">
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-2">Цель и условия</h2>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Ставка по вкладу (% годовых)</label>
+                            <span class="text-sm font-bold text-brand-700" id="rate-display">16%</span>
+                        </div>
+                        <div class="relative">
+                            <input type="number" id="interest-rate" step="0.1" value="16" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">%</div>
+                        </div>
+                        <input type="range" id="rate-range" min="0" max="30" step="0.1" value="16" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Желаемая сумма</label>
+                            <span class="text-sm font-bold text-slate-900 dark:text-white" id="goal-display">0 ₽</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="goal-sum" value="1 000 000" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
+                        </div>
+                        <input type="range" id="goal-range" min="100000" max="100000000" step="100000" value="1000000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                        <div class="flex gap-2">
+                            <button onclick="setGoal(1000000)" class="flex-1 py-1 text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-brand-50 transition">1 млн</button>
+                            <button onclick="setGoal(5000000)" class="flex-1 py-1 text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-brand-50 transition">5 млн</button>
+                            <button onclick="setGoal(10000000)" class="flex-1 py-1 text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-brand-50 transition">10 млн</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ПРАВАЯ КОЛОНКА: Результаты -->
+            <div class="lg:col-span-7 space-y-6" id="results-container">
+                <div id="screenshot-area" class="bg-slate-100 dark:bg-slate-900/50 p-4 -m-4 rounded-3xl space-y-6">
+                    <!-- Главный инсайт -->
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-sm border border-slate-100 dark:border-slate-800 text-center relative overflow-hidden">
+                        <div class="absolute -right-12 -top-12 opacity-5">
+                            <svg class="w-48 h-48 text-brand-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">Дата достижения цели</h3>
+                        <div id="target-date-main" class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-2 leading-tight">...</div>
+                        <div id="target-day-week" class="text-lg font-bold text-brand-600 uppercase">...</div>
+
+                        <div class="mt-8 pt-8 border-t dark:border-slate-800 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-xs font-bold text-slate-400 uppercase mb-1">Ваш возраст тогда</p>
+                                <p id="age-at-target" class="text-xl font-black text-slate-800 dark:text-slate-200">...</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-400 uppercase mb-1">Осталось подождать</p>
+                                <p id="days-remaining" class="text-xl font-black text-slate-800 dark:text-slate-200">...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Мотивационный блок -->
+                    <div class="bg-gradient-to-br from-brand-600 to-emerald-800 rounded-3xl p-6 text-white shadow-xl">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg leading-none">Сила сложных процентов</h4>
+                                <p class="text-brand-100 text-xs mt-1">Банк сделает часть работы за вас</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-white/10 p-4 rounded-2xl">
+                                <p class="text-[10px] font-bold text-brand-100 uppercase mb-1">Начислено процентов</p>
+                                <p id="total-interest" class="text-xl font-black">0 ₽</p>
+                            </div>
+                            <div class="bg-white/10 p-4 rounded-2xl">
+                                <p class="text-[10px] font-bold text-brand-100 uppercase mb-1">Ваши вложения</p>
+                                <p id="total-invested" class="text-xl font-black">0 ₽</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- График -->
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+                        <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 mb-4">График роста капитала</h3>
+                        <div class="h-64 relative">
+                            <canvas id="growthChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Интерактивный совет -->
+                <div id="advice-block" class="bg-brand-50 dark:bg-brand-900/20 p-6 rounded-3xl border border-brand-100 dark:border-brand-800">
+                    <div class="flex gap-4">
+                        <div class="shrink-0 w-10 h-10 bg-brand-100 dark:bg-brand-800 rounded-full flex items-center justify-center text-brand-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-brand-900 dark:text-brand-300">Совет по ускорению</h4>
+                            <p id="advice-text" class="text-sm text-brand-700 dark:text-brand-400 mt-1">...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Кнопки действий -->
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="shareLink()" class="flex items-center justify-center gap-2 py-4 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 transition shadow-sm active:scale-95">
+                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
+                        Поделиться
+                    </button>
+                    <button onclick="takeScreenshot('screenshot-area', 'millionaire-goal.png')" class="flex items-center justify-center gap-2 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition shadow-lg active:scale-95">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Сохранить
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Мобильная панель -->
+        <div class="lg:hidden mobile-sticky-results">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Дата цели</span>
+                    <span id="mobile-target-date" class="font-black text-slate-900 dark:text-white">...</span>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Проценты</p>
+                    <p id="mobile-interest" class="text-lg font-black text-brand-600">...</p>
+                </div>
+            </div>
+            <button onclick="takeScreenshot('screenshot-area', 'millionaire-goal.png')" class="w-full py-4 bg-brand-600 text-white font-black rounded-2xl text-sm shadow-lg active:scale-95">
+                📸 Сохранить расчет цели
+            </button>
+        </div>
+    </main>
+
+    <footer class="py-12 text-center text-xs text-slate-400 border-t dark:border-slate-800 mt-12">
+        <p class="max-w-md mx-auto px-6">Расчет является ориентировочным и основан на математической модели сложных процентов. Реальная доходность может отличаться.</p>
+        <p class="mt-4">© 2026 Финансовый Хаб. Профессиональные инструменты планирования.</p>
+    </footer>
+
+    <script>
+        // Состояние
+        let state = {
+            birthDate: '',
+            currentAge: 25,
+            currentSavings: 100000,
+            monthlyIncome: 150000,
+            monthlyExpenses: 70000,
+            interestRate: 16,
+            goalSum: 1000000
+        };
+
+        let chartInstance = null;
+
+        // Инициализация
+        window.onload = async () => {
+            initTheme();
+
+            // Загрузка актуальных ставок
+            const rates = await fetchRates();
+            if (rates) {
+                const avgRate = (rates.sberbank + rates.vtb + rates.alfa + rates.tbank + rates.sovcom) / 5;
+                state.interestRate = parseFloat(avgRate.toFixed(1));
+                document.getElementById('interest-rate').value = state.interestRate;
+                document.getElementById('rate-range').value = state.interestRate;
+            }
+
+            // Установка даты рождения по умолчанию (25 лет назад)
+            const d = new Date();
+            d.setFullYear(d.getFullYear() - 25);
+            state.birthDate = d.toISOString().split('T')[0];
+            document.getElementById('birth-date').value = state.birthDate;
+
+            setupEventListeners();
+            updateAll();
+        };
+
+        function setupEventListeners() {
+            const inputs = [
+                { id: 'birth-date', key: 'birthDate', type: 'input' },
+                { id: 'current-age', key: 'currentAge', type: 'number' },
+                { id: 'current-savings', key: 'currentSavings', type: 'format' },
+                { id: 'savings-range', key: 'currentSavings', type: 'range' },
+                { id: 'monthly-income', key: 'monthlyIncome', type: 'format' },
+                { id: 'income-range', key: 'monthlyIncome', type: 'range' },
+                { id: 'monthly-expenses', key: 'monthlyExpenses', type: 'format' },
+                { id: 'expenses-range', key: 'monthlyExpenses', type: 'range' },
+                { id: 'interest-rate', key: 'interestRate', type: 'number' },
+                { id: 'rate-range', key: 'interestRate', type: 'range' },
+                { id: 'goal-sum', key: 'goalSum', type: 'format' },
+                { id: 'goal-range', key: 'goalSum', type: 'range' }
+            ];
+
+            inputs.forEach(input => {
+                const el = document.getElementById(input.id);
+                el.addEventListener('input', (e) => {
+                    if (input.type === 'format') {
+                        state[input.key] = formatInputField(el, el.value);
+                        // Sync range
+                        const range = document.getElementById(input.id.replace('current-', '').replace('monthly-', '').replace('goal-sum', 'goal') + '-range');
+                        if (range) range.value = state[input.key];
+                    } else if (input.type === 'range') {
+                        state[input.key] = parseFloat(el.value);
+                        // Sync text input
+                        const textInput = document.getElementById(input.id.replace('-range', '').replace('income', 'monthly-income').replace('expenses', 'monthly-expenses').replace('savings', 'current-savings').replace('goal', 'goal-sum'));
+                        if (textInput && textInput.type === 'text') {
+                            textInput.value = formatNumber(state[input.key]);
+                        } else if (textInput) {
+                            textInput.value = state[input.key];
+                        }
+                    } else if (input.type === 'number') {
+                        state[input.key] = parseFloat(el.value) || 0;
+                        const range = document.getElementById(input.id + '-range');
+                        if (range) range.value = state[input.key];
+                    } else {
+                        state[input.key] = el.value;
+                    }
+                    updateAll();
+                });
+            });
+        }
+
+        function setGoal(val) {
+            state.goalSum = val;
+            document.getElementById('goal-sum').value = formatNumber(val);
+            document.getElementById('goal-range').value = val;
+            updateAll();
+            showToast(`Цель установлена: ${formatMoney(val)}`);
+        }
+
+        function calculate() {
+            const freeCash = state.monthlyIncome - state.monthlyExpenses;
+            const monthlyRate = state.interestRate / 12 / 100;
+
+            let balance = state.currentSavings;
+            let month = 0;
+            let totalInterest = 0;
+            let totalInvested = state.currentSavings;
+
+            const history = [{ month: 0, balance: balance }];
+
+            if (balance >= state.goalSum) {
+                return { months: 0, totalInterest: 0, totalInvested: balance, history, unreachable: false };
+            }
+
+            if (freeCash <= 0 && monthlyRate <= 0) {
+                return { unreachable: true };
+            }
+
+            // Проверка на достижимость (если проценты не покрывают инфляцию/траты и нет дохода - но тут упростим)
+            // Если баланс не растет
+            if (balance + freeCash <= balance && monthlyRate <= 0) {
+                 return { unreachable: true };
+            }
+
+            const maxMonths = 1200; // 100 лет лимит
+
+            while (balance < state.goalSum && month < maxMonths) {
+                month++;
+                const interest = balance * monthlyRate;
+                balance += interest + freeCash;
+                totalInterest += interest;
+                totalInvested += freeCash;
+
+                if (month % 12 === 0 || balance >= state.goalSum) {
+                    history.push({ month, balance });
+                }
+            }
+
+            return {
+                months: month,
+                totalInterest,
+                totalInvested,
+                history,
+                unreachable: month >= maxMonths
+            };
+        }
+
+        function updateAll() {
+            const freeCash = state.monthlyIncome - state.monthlyExpenses;
+            document.getElementById('savings-display').innerText = formatMoney(state.currentSavings);
+            document.getElementById('income-display').innerText = formatMoney(state.monthlyIncome);
+            document.getElementById('expenses-display').innerText = formatMoney(state.monthlyExpenses);
+            document.getElementById('free-cash-display').innerText = formatMoney(freeCash);
+            document.getElementById('rate-display').innerText = state.interestRate + '%';
+            document.getElementById('goal-display').innerText = formatMoney(state.goalSum);
+
+            const result = calculate();
+            const targetMain = document.getElementById('target-date-main');
+            const targetDay = document.getElementById('target-day-week');
+            const ageDisplay = document.getElementById('age-at-target');
+            const daysDisplay = document.getElementById('days-remaining');
+            const interestDisplay = document.getElementById('total-interest');
+            const investedDisplay = document.getElementById('total-invested');
+            const mobileDate = document.getElementById('mobile-target-date');
+            const mobileInterest = document.getElementById('mobile-interest');
+
+            if (result.unreachable) {
+                targetMain.innerText = "Цель недостижима";
+                targetMain.classList.add('text-rose-500');
+                targetDay.innerText = "Попробуйте изменить параметры";
+                ageDisplay.innerText = "—";
+                daysDisplay.innerText = "—";
+                interestDisplay.innerText = "0 ₽";
+                investedDisplay.innerText = "0 ₽";
+                document.getElementById('advice-text').innerText = "Упс, с текущими тратами цель недостижима. Попробуйте уменьшить расходы или увеличить доходы!";
+                return;
+            }
+
+            targetMain.classList.remove('text-rose-500');
+
+            const now = new Date();
+            const targetDate = new Date(now.getFullYear(), now.getMonth() + result.months, now.getDate());
+
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            targetMain.innerText = targetDate.toLocaleDateString('ru-RU', options);
+            mobileDate.innerText = targetDate.toLocaleDateString('ru-RU', { year: 'numeric', month: 'short' });
+
+            const daysWeek = ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"];
+            targetDay.innerText = daysWeek[targetDate.getDay()];
+
+            // Расчет возраста
+            if (state.birthDate) {
+                const birth = new Date(state.birthDate);
+                let years = targetDate.getFullYear() - birth.getFullYear();
+                let months = targetDate.getMonth() - birth.getMonth();
+                let days = targetDate.getDate() - birth.getDate();
+
+                if (days < 0) {
+                    months--;
+                    const prevMonth = new Date(targetDate.getFullYear(), targetDate.getMonth(), 0);
+                    days += prevMonth.getDate();
+                }
+                if (months < 0) {
+                    years--;
+                    months += 12;
+                }
+                ageDisplay.innerText = `${years} ${getYearWord(years)}, ${months} ${getMonthWord(months)}`;
+            } else {
+                const age = state.currentAge + (result.months / 12);
+                ageDisplay.innerText = `~${age.toFixed(1)} ${getYearWord(Math.floor(age))}`;
+            }
+
+            const diffTime = Math.abs(targetDate - now);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            daysDisplay.innerText = `${formatNumber(diffDays)} дней`;
+
+            interestDisplay.innerText = formatMoney(result.totalInterest);
+            mobileInterest.innerText = formatMoney(result.totalInterest);
+            investedDisplay.innerText = formatMoney(result.totalInvested);
+
+            // Совет
+            if (result.months <= 0) {
+                document.getElementById('advice-text').innerText = "Поздравляем! Вы уже достигли своей цели. Время ставить новую планку!";
+            } else {
+                // Рассчитаем ускорение если добавить 5000
+                state.monthlyExpenses -= 5000;
+                const fasterResult = calculate();
+                state.monthlyExpenses += 5000;
+                const monthsSaved = result.months - fasterResult.months;
+
+                if (monthsSaved > 0) {
+                    document.getElementById('advice-text').innerText = `Отличный темп! Если вы уменьшите ежемесячные траты всего на 5 000 руб., то приблизите цель на ${monthsSaved} ${getMonthWord(monthsSaved)} быстрее!`;
+                } else {
+                    document.getElementById('advice-text').innerText = "Вы на верном пути. Главное — дисциплина и регулярность пополнений!";
+                }
+            }
+
+            updateChart(result.history);
+        }
+
+        function updateChart(history) {
+            const ctx = document.getElementById('growthChart').getContext('2d');
+
+            const labels = history.map(h => {
+                const now = new Date();
+                const d = new Date(now.getFullYear(), now.getMonth() + h.month);
+                return d.toLocaleDateString('ru-RU', { year: '2-digit', month: 'short' });
+            });
+            const data = history.map(h => h.balance);
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Капитал',
+                        data: data,
+                        borderColor: '#16a34a',
+                        backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: history.length > 50 ? 0 : 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: (value) => formatNumber(value) + ' ₽',
+                                font: { size: 10 }
+                            },
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        x: {
+                            ticks: { font: { size: 10 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 6 },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

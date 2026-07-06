@@ -13,7 +13,8 @@ def run_verification():
             'wealth.html',
             'inflation-shredder.html',
             'car-vs-taxi.html',
-            'time-is-money.html'
+            'time-is-money.html',
+            'millionaire.html'
         ]
 
         for p_name in pages:
