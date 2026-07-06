@@ -87,18 +87,18 @@ async function fetchRates() {
             const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
             await sleep(10000);
 
-            console.log('AGENT-2 (Auditor): Проверка полученных данных...');
+console.log('AGENT-2 (Auditor): Проверка полученных данных...');
             const auditPrompt = `Today is ${currentMonthYear}. I received the following financial data for Russia:
             Key Rate (CBR): ${finalData.cb_rate}%
             Mortgage rates: Sberbank ${finalData.sberbank}%, VTB ${finalData.vtb}%, Alfa ${finalData.alfa}%.
-            Use your Google Search tool to verify if these numbers are realistic and close to the current official rates.
+            Verify if these numbers look realistically possible and close to the current official rates.
             Return "VALID" if the data is correct or close to reality.
             Return "INVALID" if the data is clearly wrong or outdated.
             Return ONLY the word "VALID" or "INVALID". No explanations.`;
 
+            // КРИТИЧЕСКИЙ ФИКС: Убираем tools с поиском, чтобы не взрывать лимиты 2 RPM
             const auditPayload = {
-                contents: [{ parts: [{ text: auditPrompt }] }],
-                tools: [{ "google_search": {} }]
+                contents: [{ parts: [{ text: auditPrompt }] }]
             };
 
             const auditResponse = await fetch(url, {
