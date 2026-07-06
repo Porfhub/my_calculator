@@ -21,8 +21,8 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           node update_rates.js
-          echo "Waiting 30 seconds to avoid API rate limits..."
-          sleep 30
+          echo "Waiting 60 seconds to completely clear API rate limits..."
+          sleep 60
           node update_inflation.js
 
       - name: Commit and push changes
