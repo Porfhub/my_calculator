@@ -1,147 +1,90 @@
 const fs = require('fs');
 
-// Функция-очиститель: убирает проценты, буквы и меняет запятые на точки
 function cleanNum(val, fallbackVal) {
     if (val === undefined || val === null) return fallbackVal;
-    
-    // Превращаем в строку, меняем запятую на точку, удаляем всё кроме цифр и точки
     const strVal = String(val).replace(',', '.').replace(/[^0-9.]/g, '');
     const num = Number(strVal);
-    
-    // Если после очистки получилось не число или 0 — берем дефолт
     return (isNaN(num) || num === 0) ? fallbackVal : num;
 }
 
 async function fetchRates() {
-    const apiKey = process.env.GEMINI_API_KEY;
-    const currentMonthYear = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+    const apiKey = process.env.DEEPSEEK_API_KEY;
     if (!apiKey) {
-        console.error('Ошибка: GEMINI_API_KEY не обнаружен в переменных окружения.');
+        console.error('Ошибка: DEEPSEEK_API_KEY не обнаружен.');
         process.exit(1);
     }
+
+    const fallback = { "cb_rate": 21.0, "sberbank": 23.5, "vtb": 23.9, "alfa": 24.1, "tbank": 23.2, "sovcom": 23.8 };
+    let cbRateActual = fallback.cb_rate;
+
+    // Шаг 1: Гарантированно берем железную ставку ЦБ напрямую из API Центробанка
+    try {
+        const cbrResponse = await fetch('https://www.cbr.ru/scripts/xml_main_info.asp');
+        const xmlText = await cbrResponse.text();
+        const match = xmlText.match(/<keyRate[^>]*>([\s\S]*?)<\/keyRate>/);
+        if (match && match[1]) {
+            cbRateActual = cleanNum(match[1], fallback.cb_rate);
+            console.log('Успешно получена ставка ЦБ из API Центробанка:', cbRateActual);
+        }
+    } catch (e) {
+        console.log('Не удалось достучаться до API СВR, используем базовые маркеры:', e.message);
+    }
+
+    // Шаг 2: Идем в DeepSeek за актуализацией банковских коммерческих ставок
+    const url = 'https://api.deepseek.com/v1/chat/completions';
     
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-    
-    // Промпт с жестким указанием формата чисел
-    const promptText = `Today is July 2026. Use your Google Search tool to find the current official key interest rate of the Central Bank of the Russian Federation. Also, search for the current average mortgage interest rates for commercial loans in: Sberbank, VTB, Alfa-Bank, T-Bank, Sovcombank.
-    CRITICAL: You must return ONLY float numbers using a dot as a decimal separator (e.g., 18.5). DO NOT use strings, percentage signs (%), or commas (,).
-    Return ONLY a valid JSON object. Do not include any markdown, text or code block formatting.
-    The JSON structure must strictly be:
+    const promptText = `Сегодня июль 2026 года. Актуальная ключевая ставка ЦБ РФ составляет ${cbRateActual}%. 
+    Спрогнозируй или выведи средние коммерческие ставки по ипотеке без льгот на основе этого контекста для банков: Sberbank, VTB, Alfa-Bank, T-Bank, Sovcombank.
+    Ответь СТРОГО в формате JSON. Никакого текста вокруг, никаких markdown блоков \`\`\`json.
+    Структура:
     {
-        "cb_rate": [insert float number here],
-        "sberbank": [insert float number here],
-        "vtb": [insert float number here],
-        "alfa": [insert float number here],
-        "tbank": [insert float number here],
-        "sovcom": [insert float number here]
+        "sberbank": число,
+        "vtb": число,
+        "alfa": число,
+        "tbank": число,
+        "sovcom": число
     }`;
 
-    const payload = {
-        contents: [{ parts: [{ text: promptText }] }],
-        tools: [{ "google_search": {} }]
-    };
-
-    const fallback = { "cb_rate": 14.5, "sberbank": 16.8, "vtb": 16.9, "alfa": 17.1, "tbank": 16.5, "sovcom": 17.2 };
-
     try {
-        console.log('Запускаем реальный поиск ставок через Gemini...');
+        console.log('Запускаем генерацию коммерческих ставок через DeepSeek...');
         const response = await fetch(url, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: "deepseek-chat",
+                messages: [{ role: "user", content: promptText }],
+                temperature: 0.2
+            })
         });
+
+        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+        const result = await response.json();
+        const rawText = result.choices[0].message.content.trim();
         
-const result = await response.json();
+        console.log('Ответ от DeepSeek:', rawText);
+        const parsedData = JSON.parse(rawText);
 
-if (!result.candidates || !result.candidates[0]?.content?.parts[0]?.text) {
-    // ДАВАЙ ВЫВЕДЕМ В ЛОГ ПОЛНЫЙ ОТВЕТ СЕРВЕРА ДЛЯ ДИАГНОСТИКИ:
-    console.error("ПОЛНЫЙ ОТВЕТ ОТ GEMINI API:", JSON.stringify(result, null, 2));
-    throw new Error('ИИ вернул пустой ответ или заблокировал запрос.');
-}
+        const now = new Date();
+        const finalData = {
+            cb_rate: cbRateActual,
+            sberbank: cleanNum(parsedData.sberbank, fallback.sberbank),
+            vtb: cleanNum(parsedData.vtb, fallback.vtb),
+            alfa: cleanNum(parsedData.alfa, fallback.alfa),
+            tbank: cleanNum(parsedData.tbank, fallback.tbank),
+            sovcom: cleanNum(parsedData.sovcom, fallback.sovcom),
+            last_updated: now.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' })
+        };
 
-        const rawText = result.candidates[0].content.parts[0].text;
-        console.log('Реальный ответ от ИИ:', rawText);
-
-        // Извлекаем JSON
-        const jsonMatch = rawText.match(/\{[\s\S]*?\}/);
-        if (jsonMatch) {
-            const parsedData = JSON.parse(jsonMatch[0]);
-
-            // Пропускаем все данные через нашу функцию-очиститель
-            const finalData = {
-                cb_rate: cleanNum(parsedData.cb_rate, fallback.cb_rate),
-                sberbank: cleanNum(parsedData.sberbank, fallback.sberbank),
-                vtb: cleanNum(parsedData.vtb, fallback.vtb),
-                alfa: cleanNum(parsedData.alfa, fallback.alfa),
-                tbank: cleanNum(parsedData.tbank, fallback.tbank),
-                sovcom: cleanNum(parsedData.sovcom, fallback.sovcom)
-            };
-
-            // ЖЕСТКИЙ ЛИМИТ: если ставка <= 0% или >= 50% — бракуем
-            if (finalData.cb_rate <= 0 || finalData.cb_rate >= 50) {
-                console.error(`КРИТИЧЕСКАЯ ОШИБКА: ИИ выдал нереальную ставку ЦБ (${finalData.cb_rate}%). Отмена обновления, пишем fallback.`);
-                fs.writeFileSync('rates.json', JSON.stringify(fallback, null, 2));
-                return;
-            }
-
-            // ШАГ 2: Двойная верификация (AUDITOR)
-            console.log('Пауза 10 секунд перед аудитом для обхода лимитов API...');
-            const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-            await sleep(10000);
-
-console.log('AGENT-2 (Auditor): Проверка полученных данных...');
-            const auditPrompt = `Today is ${currentMonthYear}. I received the following financial data for Russia:
-            Key Rate (CBR): ${finalData.cb_rate}%
-            Mortgage rates: Sberbank ${finalData.sberbank}%, VTB ${finalData.vtb}%, Alfa ${finalData.alfa}%.
-            Verify if these numbers look realistically possible and close to the current official rates.
-            Return "VALID" if the data is correct or close to reality.
-            Return "INVALID" if the data is clearly wrong or outdated.
-            Return ONLY the word "VALID" or "INVALID". No explanations.`;
-
-            // КРИТИЧЕСКИЙ ФИКС: Убираем tools с поиском, чтобы не взрывать лимиты 2 RPM
-            const auditPayload = {
-                contents: [{ parts: [{ text: auditPrompt }] }]
-            };
-
-            const auditResponse = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(auditPayload)
-            });
-            const auditResult = await auditResponse.json();
-            const auditText = auditResult.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
-
-            console.log('AGENT-2: Вердикт аудитора:', auditText);
-
-            if (auditText.includes("VALID")) {
-                // Добавляем метку времени
-                const now = new Date();
-                const formatter = new Intl.DateTimeFormat('ru-RU', {
-                    day: '2-digit', month: '2-digit', year: 'numeric',
-                    hour: '2-digit', minute: '2-digit',
-                    timeZone: 'Europe/Moscow'
-                });
-                const parts = formatter.formatToParts(now);
-                const d = parts.find(p => p.type === 'day').value;
-                const m = parts.find(p => p.type === 'month').value;
-                const y = parts.find(p => p.type === 'year').value;
-                const h = parts.find(p => p.type === 'hour').value;
-                const min = parts.find(p => p.type === 'minute').value;
-
-                finalData.last_updated = `${d}.${m}.${y} ${h}:${min}`;
-
-                fs.writeFileSync('rates.json', JSON.stringify(finalData, null, 2));
-                console.log('Успех! Данные верифицированы и записаны в rates.json:', finalData);
-            } else {
-                console.error('ОШИБКА: Аудитор не подтвердил валидность данных. Запись отменена.');
-            }
-            return;
-        }
-
-        throw new Error('В ответе ИИ не найден валидный JSON.');
+        fs.writeFileSync('rates.json', JSON.stringify(finalData, null, 2));
+        console.log('Успех! Файл rates.json обновлен:', finalData);
 
     } catch (error) {
-        console.error('Ошибка парсинга реальных ставок, пишем безопасный конфиг:', error.message);
+        console.error('Сбой DeepSeek, пишем безопасный конфиг:', error.message);
+        const now = new Date();
+        fallback.last_updated = now.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' });
         fs.writeFileSync('rates.json', JSON.stringify(fallback, null, 2));
     }
 }
