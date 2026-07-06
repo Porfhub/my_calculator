@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор честной стоимости кредита — CalcHub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2canvas CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        @media (max-width: 1023px) {
+            .mobile-sticky-results {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 50;
+                background: white;
+                box-shadow: 0 -10px 15px -3px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid #e2e8f0;
+                padding: 1rem;
+                border-radius: 1.5rem 1.5rem 0 0;
+            }
+            .dark .mobile-sticky-results {
+                background: #0f172a;
+                border-top-color: #1e293b;
+            }
+            body {
+                padding-bottom: 120px;
+            }
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 240px;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 50;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -120px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.4;
+            pointer-events: none;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=110360838', 'ym');
+
+        ym(110360838, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+
+        function reachGoal(goalId) {
+            console.log("Goal reached:", goalId);
+            if (typeof ym !== "undefined") {
+                ym(110360838, 'reachGoal', goalId);
+            }
+        }
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    <script src="js/theme.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/ui-utils.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
+
+    <!-- Theme Toggle -->
+    <div class="fixed top-24 right-4 z-50 md:top-6 md:right-8">
+        <button id="theme-toggle" onclick="toggleDarkMode()" class="p-3 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:scale-110 transition-all active:scale-95">
+            <svg id="sun-icon" class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
+            <svg id="moon-icon" class="w-6 h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+        </button>
+    </div>
+
+    <header class="bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
+                    <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">На главную</span>
+                </a>
+                <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
+                <div class="flex items-center space-x-3">
+                    <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tight">Честная Ставка</h1>
+                        <p class="text-xs text-slate-300">Разоблачение скрытых комиссий и страховок</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <!-- Мобильная залипающая панель результатов -->
+        <div id="mobile-results" class="lg:hidden mobile-sticky-results hidden">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Честная ставка</span>
+                    <span id="mobile-rate" class="font-black text-rose-600">0%</span>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">Платеж</p>
+                    <p id="mobile-payment" class="text-lg font-black text-slate-900 dark:text-white">0 ₽</p>
+                </div>
+            </div>
+            <button onclick="takeScreenshot('screenshot-area', 'honest-credit-cost.png')" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
+                📸 Сохранить расчет
+            </button>
+        </div>
+
+        <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+            <span class="text-brand-500 font-bold">✓</span>
+            <span id="toast-message" class="text-sm">Готово</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+            <!-- Left Column: Inputs -->
+            <div class="lg:col-span-5 space-y-6">
+                <!-- Block A: Base Conditions -->
+                <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-3">Базовые условия кредита</h2>
+
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Сумма на руки</label>
+                            <div class="relative">
+                                <input type="text" id="amount-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg" value="500 000">
+                                <span class="absolute right-4 top-3.5 text-slate-400 font-bold">₽</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Срок кредита</label>
+                                <div class="relative">
+                                    <input type="number" id="term-input" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg" value="36">
+                                    <select id="term-unit" class="absolute right-2 top-2 bg-white dark:bg-slate-700 border-none text-xs font-bold rounded-lg p-1.5 outline-none">
+                                        <option value="months">мес.</option>
+                                        <option value="years">лет</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Ставка банка</label>
+                                <div class="relative">
+                                    <input type="number" id="rate-input" step="0.1" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg" value="12.9">
+                                    <span class="absolute right-4 top-3.5 text-slate-400 font-bold">%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Block B: Hidden Costs -->
+                <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-3">Дополнительные услуги</h2>
+
+                    <div class="space-y-6">
+                        <!-- Insurance -->
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                                    Стоимость страховки
+                                    <span class="tooltip">
+                                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <span class="tooltiptext">Банки часто включают стоимость страховки прямо в сумму кредита. Вы получаете на руки базовую сумму, но проценты начисляются на общую стоимость вместе со страховкой. Это главный источник скрытой переплаты.</span>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input type="text" id="insurance-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="50 000">
+                                <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
+                            </div>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" id="insurance-in-body" class="w-5 h-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500" checked>
+                                <span class="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-brand-600 transition-colors">Включена в тело кредита</span>
+                            </label>
+                        </div>
+
+                        <!-- One-time commissions -->
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                                Единоразовые комиссии
+                                <span class="tooltip">
+                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span class="tooltiptext">Любые платежи, которые вы отдаете банку или автосалону в первый день: плата за оформление, комиссии за выдачу наличных или покупка модных услуг вроде "снижение процентной ставки".</span>
+                                </span>
+                            </label>
+                            <div class="relative">
+                                <input type="text" id="commissions-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="0">
+                                <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
+                            </div>
+                        </div>
+
+                        <!-- Monthly payments -->
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                                Ежемесячные SMS и услуги
+                                <span class="tooltip">
+                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span class="tooltiptext">Регулярные мелкие платежи (например, за SMS-информирование, комиссии за ведение счета или скрытые сервисные пакеты). За несколько лет они набегают в приличную сумму.</span>
+                                </span>
+                            </label>
+                            <div class="relative">
+                                <input type="text" id="monthly-hidden-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="599">
+                                <span class="absolute right-4 top-3.5 text-slate-400">₽/мес.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="calculateHonestRate()" class="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white font-black rounded-2xl shadow-lg transition-all active:scale-[0.98] text-lg">
+                    Разоблачить условия
+                </button>
+            </div>
+
+            <!-- Right Column: Results -->
+            <div id="results-container" class="lg:col-span-7 space-y-6 opacity-0 transition-opacity duration-500 pointer-events-none">
+                <div id="screenshot-area" class="space-y-6">
+                    <!-- Rate Comparison Card -->
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-8 text-center space-y-6 overflow-hidden relative">
+                        <div class="relative z-10">
+                            <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-8">Сравнение процентных ставок</h2>
+
+                            <div class="flex flex-col md:flex-row items-center justify-around gap-8">
+                                <div class="space-y-2">
+                                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">В рекламе</p>
+                                    <p id="advertised-rate-display" class="text-4xl font-black text-slate-400 line-through decoration-slate-300">12.9%</p>
+                                </div>
+
+                                <div class="hidden md:block">
+                                    <svg class="w-12 h-12 text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
+                                </div>
+
+                                <div class="p-6 bg-rose-50 dark:bg-rose-900/20 rounded-3xl border-2 border-rose-100 dark:border-rose-800 animate-pulse-slow">
+                                    <p class="text-sm font-bold text-rose-600 uppercase tracking-widest mb-2">Реальная честная ставка</p>
+                                    <p id="real-rate-display" class="text-6xl font-black text-rose-600">24.5%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Overpayment for "Air" -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 flex flex-col items-center justify-center text-center space-y-2">
+                            <div class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center mb-2">
+                                <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.99 7.99 0 0121 13a7.98 7.98 0 01-3.343 5.657z"></path></svg>
+                            </div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Переплата за "воздух"</p>
+                            <p id="air-overpayment-display" class="text-2xl font-black text-amber-600">86 400 ₽</p>
+                            <p class="text-[10px] text-slate-400 leading-tight">Страховки + комиссии + скрытые платежи + проценты на страховку</p>
+                        </div>
+
+                        <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 flex flex-col items-center justify-center text-center space-y-2">
+                            <div class="w-12 h-12 bg-brand-50 rounded-2xl flex items-center justify-center mb-2">
+                                <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Реальный платеж</p>
+                            <p id="real-payment-display" class="text-2xl font-black text-slate-900 dark:text-white">18 450 ₽</p>
+                            <p class="text-[10px] text-slate-400 leading-tight">С учетом всех ежемесячных комиссий и скрытых сервисов</p>
+                        </div>
+                    </div>
+
+                    <!-- Chart and Verdict -->
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                            <div class="md:col-span-5 flex flex-col justify-center">
+                                <canvas id="structureChart" class="w-full max-h-[250px]"></canvas>
+                            </div>
+                            <div class="md:col-span-7 flex flex-col justify-center space-y-4">
+                                <div id="verdict-container" class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                    <p id="verdict-text" class="text-sm leading-relaxed italic text-slate-600 dark:text-slate-300">
+                                        Загрузка вердикта...
+                                    </p>
+                                </div>
+                                <div class="flex gap-3">
+                                    <button onclick="shareLink()" class="flex-1 py-3 bg-white dark:bg-slate-800 hover:bg-slate-50 text-slate-700 dark:text-slate-300 font-bold rounded-xl border border-slate-200 dark:border-slate-700 transition shadow-sm text-sm">
+                                        Поделиться
+                                    </button>
+                                    <button onclick="takeScreenshot('screenshot-area', 'honest-credit-cost.png')" class="flex-1 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl transition shadow-sm text-sm">
+                                        Скриншот
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-8 text-center text-xs text-slate-400 border-t dark:border-slate-800 mt-12">
+        <p>© 2026 Финансовый Хаб. Инструменты честного анализа.</p>
+    </footer>
+
+    <script>
+        let structureChart = null;
+
+        function handleFormattedInput(el) {
+            formatInputField(el, el.value);
+        }
+
+        function calculateHonestRate() {
+            // 1. Get Inputs
+            const amountHand = parseCleanNumber(document.getElementById('amount-input').value);
+            let term = parseInt(document.getElementById('term-input').value) || 0;
+            const termUnit = document.getElementById('term-unit').value;
+            const bankRate = parseFloat(document.getElementById('rate-input').value) || 0;
+
+            const insurance = parseCleanNumber(document.getElementById('insurance-input').value);
+            const insuranceInBody = document.getElementById('insurance-in-body').checked;
+            const commissions = parseCleanNumber(document.getElementById('commissions-input').value);
+            const monthlyHidden = parseCleanNumber(document.getElementById('monthly-hidden-input').value);
+
+            if (termUnit === 'years') term *= 12;
+            if (amountHand <= 0 || term <= 0) {
+                showToast("Введите корректную сумму и срок");
+                return;
+            }
+
+            // 2. Mathematical Logic
+            const fullDebt = insuranceInBody ? (amountHand + insurance) : amountHand;
+            const iMonthlyBank = bankRate / 100 / 12;
+
+            let pmtBase = 0;
+            if (iMonthlyBank > 0) {
+                pmtBase = fullDebt * (iMonthlyBank * Math.pow(1 + iMonthlyBank, term)) / (Math.pow(1 + iMonthlyBank, term) - 1);
+            } else {
+                pmtBase = fullDebt / term;
+            }
+
+            const pmtReal = pmtBase + monthlyHidden;
+            const totalPaid = pmtReal * term;
+            const totalBankInterest = pmtBase * term - fullDebt;
+            const airOverpayment = (insurance) + (commissions) + (monthlyHidden * term) + (insuranceInBody ? (pmtBase * term - (amountHand + insurance)) * (insurance / (amountHand + insurance)) : 0);
+
+            // Refined air overpayment: TotalPaid - PurePrinciple - PureInterestOnPrinciple
+            // Let's stick to the prompt's definition:
+            // "Sum of all insurances + all hidden commissions for the whole term + interests bank charged on top of the insurance body"
+            const interestOnInsurance = insuranceInBody ? (totalBankInterest * (insurance / fullDebt)) : 0;
+            const totalAir = insurance + commissions + (monthlyHidden * term) + interestOnInsurance;
+
+            // 3. EIR Calculation (Internal Rate of Return)
+            // Month 0: +amountHand - commissions - (insuranceInBody ? 0 : insurance)
+            // Months 1..N: -pmtReal
+            const initialInflow = amountHand - commissions - (insuranceInBody ? 0 : insurance);
+
+            const findEir = (target, pmt, n) => {
+                let low = -0.1; // Supports negative rates down to -10% monthly
+                let high = 2.0; // Up to 200% monthly
+
+                const getNpv = (rate) => {
+                    if (Math.abs(rate) < 0.00001) return target - pmt * n;
+                    return target - pmt * (1 - Math.pow(1 + rate, -n)) / rate;
+                };
+
+                // Bisection method
+                for (let i = 0; i < 60; i++) {
+                    let mid = (low + high) / 2;
+                    if (getNpv(mid) > 0) high = mid;
+                    else low = mid;
+                }
+                return (low + high) / 2;
+            };
+
+            const monthlyEir = findEir(initialInflow, pmtReal, term);
+            const annualEir = (Math.pow(1 + monthlyEir, 12) - 1) * 100;
+
+            // 4. Update UI
+            document.getElementById('advertised-rate-display').innerText = bankRate.toFixed(1) + '%';
+            document.getElementById('real-rate-display').innerText = annualEir.toFixed(1) + '%';
+            document.getElementById('real-payment-display').innerText = formatMoney(pmtReal);
+            document.getElementById('air-overpayment-display').innerText = formatMoney(totalAir);
+
+            if (annualEir > bankRate * 1.5) {
+                document.getElementById('real-rate-display').className = "text-6xl font-black text-rose-600 animate-bounce-short";
+            } else {
+                document.getElementById('real-rate-display').className = "text-6xl font-black text-rose-600";
+            }
+
+            // Verdict
+            const diffRub = Math.round(totalAir);
+            const verdictText = `Внимание! Из-за скрытой нагрузки вы переплачиваете лишние ${formatMoney(diffRub)}. Реальная стоимость этого кредита ${annualEir > bankRate * 1.8 ? 'более чем в два раза' : 'значительно'} выше, чем обещает реклама. Вы имеете право отказаться от навязанных услуг в течение установленного законом периода охлаждения.`;
+            document.getElementById('verdict-text').innerText = verdictText;
+
+            // Chart
+            updateChart(amountHand, totalBankInterest - interestOnInsurance, totalAir);
+
+            // Show results
+            const container = document.getElementById('results-container');
+            container.classList.remove('opacity-0', 'pointer-events-none');
+
+            // Update mobile results
+            document.getElementById('mobile-rate').innerText = annualEir.toFixed(1) + '%';
+            document.getElementById('mobile-payment').innerText = formatMoney(pmtReal);
+            document.getElementById('mobile-results').classList.remove('hidden');
+
+            if (window.innerWidth < 1024) {
+                container.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            reachGoal("calculate_success");
+        }
+
+        function updateChart(received, interest, air) {
+            const ctx = document.getElementById('structureChart').getContext('2d');
+
+            if (structureChart) structureChart.destroy();
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#cbd5e1' : '#475569';
+
+            structureChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['На руки', 'Честный %', 'Переплата за воздух'],
+                    datasets: [{
+                        data: [received, interest, air],
+                        backgroundColor: ['#22c55e', '#64748b', '#f43f5e'],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: textColor,
+                                font: { size: 11, weight: 'bold' },
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const val = context.raw;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const pct = ((val / total) * 100).toFixed(1);
+                                    return ` ${context.label}: ${formatMoney(val)} (${pct}%)`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        window.onload = () => {
+            initTheme();
+            // Optional: run initial calc if values are present
+        };
+    </script>
+</body>
+</html>
