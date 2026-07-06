@@ -9,7 +9,7 @@ function cleanNum(val, fallbackVal) {
 }
 
 async function fetchRates() {
-    let cbRateActual = 14.25; // Свежий дефолтный fallback на случай сбоя сети
+    let cbRateActual = 0.00; // Свежий дефолтный fallback на случай сбоя сети
 
     // ШАГ 1: Полноценный и точный запрос к SOAP/XML веб-сервису ЦБ РФ (DailyInfo)
     try {
