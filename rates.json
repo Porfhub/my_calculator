@@ -1,8 +1,9 @@
 {
-  "cb_rate": 14.5,
-  "sberbank": 16.8,
-  "vtb": 16.9,
-  "alfa": 17.1,
-  "tbank": 16.5,
-  "sovcom": 17.2
+  "cb_rate": 21,
+  "sberbank": 23.5,
+  "vtb": 23.9,
+  "alfa": 24.1,
+  "tbank": 23.2,
+  "sovcom": 23.8,
+  "last_updated": "06.07.2026, 23:02"
 }
