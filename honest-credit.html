@@ -391,13 +391,10 @@
             }
 
             const pmtReal = pmtBase + monthlyHidden;
-            const totalPaid = pmtReal * term;
             const totalBankInterest = pmtBase * term - fullDebt;
-            const airOverpayment = (insurance) + (commissions) + (monthlyHidden * term) + (insuranceInBody ? (pmtBase * term - (amountHand + insurance)) * (insurance / (amountHand + insurance)) : 0);
 
-            // Refined air overpayment: TotalPaid - PurePrinciple - PureInterestOnPrinciple
-            // Let's stick to the prompt's definition:
-            // "Sum of all insurances + all hidden commissions for the whole term + interests bank charged on top of the insurance body"
+            // "Air" overpayment definition:
+            // Sum of all insurances + all hidden commissions for the whole term + interests bank charged on top of the insurance body
             const interestOnInsurance = insuranceInBody ? (totalBankInterest * (insurance / fullDebt)) : 0;
             const totalAir = insurance + commissions + (monthlyHidden * term) + interestOnInsurance;
 
@@ -425,7 +422,8 @@
             };
 
             const monthlyEir = findEir(initialInflow, pmtReal, term);
-            const annualEir = (Math.pow(1 + monthlyEir, 12) - 1) * 100;
+            // Convert to nominal annual rate (PSK logic)
+            const annualEir = monthlyEir * 12 * 100;
 
             // 4. Update UI
             document.getElementById('advertised-rate-display').innerText = bankRate.toFixed(1) + '%';
@@ -433,16 +431,26 @@
             document.getElementById('real-payment-display').innerText = formatMoney(pmtReal);
             document.getElementById('air-overpayment-display').innerText = formatMoney(totalAir);
 
-            if (annualEir > bankRate * 1.5) {
-                document.getElementById('real-rate-display').className = "text-6xl font-black text-rose-600 animate-bounce-short";
-            } else {
-                document.getElementById('real-rate-display').className = "text-6xl font-black text-rose-600";
-            }
-
-            // Verdict
+            const realRateDisplay = document.getElementById('real-rate-display');
+            const mobileRateDisplay = document.getElementById('mobile-rate');
+            const rateCard = realRateDisplay.closest('div');
             const diffRub = Math.round(totalAir);
-            const verdictText = `Внимание! Из-за скрытой нагрузки вы переплачиваете лишние ${formatMoney(diffRub)}. Реальная стоимость этого кредита ${annualEir > bankRate * 1.8 ? 'более чем в два раза' : 'значительно'} выше, чем обещает реклама. Вы имеете право отказаться от навязанных услуг в течение установленного законом периода охлаждения.`;
-            document.getElementById('verdict-text').innerText = verdictText;
+
+            if (diffRub > 10) { // Tiny margin for float errors
+                realRateDisplay.className = "text-6xl font-black text-rose-600 " + (annualEir > bankRate * 1.5 ? "animate-bounce-short" : "");
+                mobileRateDisplay.className = "font-black text-rose-600";
+                rateCard.className = "p-6 bg-rose-50 dark:bg-rose-900/20 rounded-3xl border-2 border-rose-100 dark:border-rose-800 animate-pulse-slow";
+
+                const verdictText = `Внимание! Из-за скрытой нагрузки вы переплачиваете лишние ${formatMoney(diffRub)}. Реальная стоимость этого кредита ${annualEir > bankRate * 1.8 ? 'более чем в два раза' : 'значительно'} выше, чем обещает реклама. Вы имеете право отказаться от навязанных услуг в течение установленного законом периода охлаждения.`;
+                document.getElementById('verdict-text').innerText = verdictText;
+            } else {
+                // Honest deal
+                realRateDisplay.className = "text-6xl font-black text-emerald-600";
+                mobileRateDisplay.className = "font-black text-emerald-600";
+                rateCard.className = "p-6 bg-emerald-50 dark:bg-emerald-900/20 rounded-3xl border-2 border-emerald-100 dark:border-emerald-800";
+
+                document.getElementById('verdict-text').innerText = "Честное предложение! У этого кредита отсутствуют скрытые комиссии и навязанные страховки. Вы платите только чистый процент банку.";
+            }
 
             // Chart
             updateChart(amountHand, totalBankInterest - interestOnInsurance, totalAir);
