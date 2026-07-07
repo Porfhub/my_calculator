@@ -425,15 +425,25 @@
                                 <div class="w-10 h-5 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-600"></div>
                             </label>
                         </div>
-                        <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-150 dark:border-slate-800">
-                            <div class="flex flex-col">
-                                <span class="text-[10px] font-bold text-slate-500 uppercase">Нал. вычет</span>
-                                <span class="text-[9px] text-slate-400">до 650к ₽</span>
+                        <div class="space-y-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-150 dark:border-slate-800">
+                            <div class="flex items-center justify-between">
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] font-bold text-slate-500 uppercase">Нал. вычет</span>
+                                    <span class="text-[9px] text-slate-400">до 650к ₽</span>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="tax-toggle" onchange="toggleTaxDeduction()" class="sr-only peer">
+                                    <div class="w-10 h-5 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-600"></div>
+                                </label>
                             </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" id="tax-toggle" onchange="toggleTaxDeduction()" class="sr-only peer">
-                                <div class="w-10 h-5 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-600"></div>
-                            </label>
+                            <!-- Sub-menu выбора стратегии вычета -->
+                            <div id="tax-strategy-menu" class="hidden flex flex-col gap-2 pt-2 border-t border-slate-200 dark:border-slate-700 animate-in fade-in slide-in-from-top-1 duration-200">
+                                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Куда направить вычет?</span>
+                                <div class="flex bg-slate-200 dark:bg-slate-700 p-1 rounded-lg">
+                                    <button id="strat-pocket" onclick="setTaxStrategy('pocket')" class="flex-1 py-1 text-[10px] font-bold rounded-md transition-all bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm">В карман</button>
+                                    <button id="strat-reinvest" onclick="setTaxStrategy('reinvest')" class="flex-1 py-1 text-[10px] font-bold rounded-md transition-all text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200">В досрочку</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -672,7 +682,8 @@
             recurringPrepayment: 0,
             customPrepayments: {}, // формат { monthIndex: Number }
             includeInsurance: false,
-            includeTaxDeduction: false
+            includeTaxDeduction: false,
+            taxDeductionStrategy: 'pocket'
         };
 
         let chartInstance = null;
@@ -913,8 +924,30 @@
 
         function toggleTaxDeduction() {
             state.includeTaxDeduction = document.getElementById('tax-toggle').checked;
+            const menu = document.getElementById('tax-strategy-menu');
+            if (state.includeTaxDeduction) {
+                menu.classList.remove('hidden');
+            } else {
+                menu.classList.add('hidden');
+            }
             updateCalculations();
             showToast(state.includeTaxDeduction ? "Налоговый вычет учтен в экономии" : "Налоговый вычет не учитывается");
+        }
+
+        function setTaxStrategy(strat) {
+            state.taxDeductionStrategy = strat;
+            const pocketBtn = document.getElementById('strat-pocket');
+            const reinvestBtn = document.getElementById('strat-reinvest');
+
+            if (strat === 'pocket') {
+                pocketBtn.className = "flex-1 py-1 text-[10px] font-bold rounded-md transition-all bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm";
+                reinvestBtn.className = "flex-1 py-1 text-[10px] font-bold rounded-md transition-all text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200";
+            } else {
+                reinvestBtn.className = "flex-1 py-1 text-[10px] font-bold rounded-md transition-all bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm";
+                pocketBtn.className = "flex-1 py-1 text-[10px] font-bold rounded-md transition-all text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200";
+            }
+            updateCalculations();
+            showToast(strat === 'pocket' ? "Вычет будет считаться виртуальной скидкой" : "Вычет будет автоматически гасить основной долг");
         }
 
         function updateInputsDOM() {
@@ -1094,6 +1127,12 @@
             let totalPaid = 0;
             let totalPrepaid = 0;
             let totalInsurance = 0;
+            let totalTaxReturned = 0;
+
+            let remainingPropertyDeduction = 260000;
+            let remainingInterestDeduction = 390000;
+            let yearlyPrincipalPaid = 0;
+            let yearlyInterestPaid = 0;
 
             let currentMonthlyPayment = 0;
 
@@ -1155,6 +1194,33 @@
                 balance = balance - principal - prepayment;
                 if (balance < 0) balance = 0;
 
+                yearlyPrincipalPaid += principal;
+                yearlyInterestPaid += interest;
+
+                // Налоговый вычет каждый 12-й месяц
+                if (month % 12 === 0) {
+                    let returnedPropertyTax = Math.min(remainingPropertyDeduction, yearlyPrincipalPaid * 0.13);
+                    remainingPropertyDeduction -= returnedPropertyTax;
+
+                    let returnedInterestTax = Math.min(remainingInterestDeduction, yearlyInterestPaid * 0.13);
+                    remainingInterestDeduction -= returnedInterestTax;
+
+                    let yearlyTaxReturn = returnedPropertyTax + returnedInterestTax;
+                    totalTaxReturned += yearlyTaxReturn;
+
+                    if (state.includeTaxDeduction && state.taxDeductionStrategy === 'reinvest' && withPrepayments) {
+                        // Добавляем вычет к досрочке этого месяца
+                        let taxPrepayment = Math.min(balance, yearlyTaxReturn);
+                        balance -= taxPrepayment;
+                        prepayment += taxPrepayment;
+                        actualPayment += taxPrepayment;
+                        totalPrepaid += taxPrepayment;
+                    }
+
+                    yearlyPrincipalPaid = 0;
+                    yearlyInterestPaid = 0;
+                }
+
                 schedule.push({
                     month,
                     payment: scheduledPayment,
@@ -1187,7 +1253,8 @@
                 totalPaid,
                 totalPrepaid,
                 realTerm: month,
-                totalInsurance
+                totalInsurance,
+                totalTaxReturned
             };
         }
 
@@ -1494,19 +1561,21 @@
             }
             document.getElementById('res-monthly-payment').innerText = formatMoney(displayMonthlyPayment);
             document.getElementById('res-real-term').innerText = formatMonthsToYearsAndMonths(preResults.realTerm);
-            document.getElementById('res-total-interest').innerText = formatMoney(preResults.totalInterest);
+
+            let overpaymentDisplay = preResults.totalInterest;
+            if (state.includeTaxDeduction && state.taxDeductionStrategy === 'pocket') {
+                overpaymentDisplay -= preResults.totalTaxReturned;
+            }
+            document.getElementById('res-total-interest').innerText = formatMoney(overpaymentDisplay);
+
             document.getElementById('res-total-paid').innerText = formatMoney(preResults.totalPaid);
             document.getElementById('res-total-prepaid').innerText = formatMoney(preResults.totalPrepaid);
 
             let savedInterest = baseResults.totalInterest - preResults.totalInterest;
             let savedMonths = baseResults.realTerm - preResults.realTerm;
-            let taxBenefit = 0;
 
             if (state.includeTaxDeduction) {
-                // Упрощенный расчет: 260к за покупку + до 390к за проценты (итого 650к)
-                // Но не больше чем сама переплата
-                taxBenefit = Math.min(650000, 260000 + (preResults.totalInterest * 0.13));
-                savedInterest += taxBenefit;
+                savedInterest += preResults.totalTaxReturned;
             }
 
             document.getElementById('saving-money').innerText = formatMoney(savedInterest > 0 ? savedInterest : 0);
@@ -1585,6 +1654,7 @@
         window.setTerm = setTerm;
         window.toggleInsurance = toggleInsurance;
         window.toggleTaxDeduction = toggleTaxDeduction;
+        window.setTaxStrategy = setTaxStrategy;
         window.switchCalculationMode = switchCalculationMode;
         window.toggleStrategy = toggleStrategy;
         window.setTemplate = setTemplate;
