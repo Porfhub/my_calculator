@@ -544,20 +544,42 @@
     </div>
 
     <script>
-        // ЛОКАЛЬНЫЙ ИНКАПСУЛИРОВАННЫЙ UTILS ФУНКЦИОНАЛ (Защита от конфликтов внешних файлов)
+        // ЛОКАЛЬНЫЙ ИНКАПСУЛИРОВАННЫЙ UTILS ФУНКЦИОНАЛ
         function localFormatMoney(amount) {
             return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(amount);
         }
         function localFormatNumber(amount) {
             return new Intl.NumberFormat('ru-RU').format(amount);
         }
+        function localParseCleanNumber(str) {
+            if (typeof str !== 'string') return parseFloat(str) || 0;
+            return parseFloat(str.replace(/\s+/g, '').replace(',', '.')) || 0;
+        }
         function localGetYearWord(years) {
             let n = Math.abs(years) % 100; if (n >= 5 && n <= 20) return 'лет';
             n %= 10; if (n === 1) return 'год'; if (n >= 2 && n <= 4) return 'года'; return 'лет';
         }
-        function localGetMonthWord(months) {
-            let n = Math.abs(months) % 100; if (n >= 5 && n <= 20) return 'месяцев';
-            n %= 10; if (n === 1) return 'месяц'; if (n >= 2 && n <= 4) return 'месяца'; return 'месяцев';
+
+        // Твоя функция форматирования полей ввода из utils.js
+        function formatInputField(input, val) {
+            let cursorPosition = input.selectionStart;
+            let originalLength = input.value.length;
+            let cleanVal = val.toString().replace(/\s+/g, '').replace(/\D/g, '');
+
+            if (cleanVal === '') {
+                input.value = '';
+                return 0;
+            }
+
+            let parsed = parseInt(cleanVal, 10);
+            let formatted = new Intl.NumberFormat('ru-RU').format(parsed);
+            input.value = formatted;
+
+            let newLength = formatted.length;
+            let diff = newLength - originalLength;
+            input.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
+
+            return parsed;
         }
 
         let activeTab = 'new';
@@ -640,8 +662,9 @@
         }
 
         function toggleBankRateButton(bankKey, bankName) {
-            const btn = document.getElementById(`btn-rate-${bankKey === 'sberbank' ? 'sber' : bankKey}`);
-            const textElem = document.getElementById(`rate-${bankKey === 'sberbank' ? 'sber' : bankKey}`);
+            const shortKey = bankKey === 'sberbank' ? 'sber' : (bankKey === 'sovcombank' ? 'sovcom' : bankKey);
+            const btn = document.getElementById(`btn-rate-${shortKey}`);
+            const textElem = document.getElementById(`rate-${shortKey}`);
             if (!textElem) return;
 
             const screenRate = parseFloat(textElem.innerText.replace('%', '')) || (activeTab === 'new' ? 16.0 : 12.0);
@@ -867,6 +890,7 @@
 
         function renderAmortizationTable(schedule) {
             const container = document.getElementById('years-accordion-container');
+            if (!container) return;
             container.innerHTML = ''; if (!schedule.length) return;
 
             let years = {};
@@ -874,11 +898,14 @@
                 let y = Math.ceil(x.month / 12); if (!years[y]) years[y] = []; years[y].push(x);
             });
 
-            document.getElementById('custom-prepayments-counter').innerText = `Спецплатежей: ${Object.keys(state.customPrepayments).length}`;
+            const prepayCounter = document.getElementById('custom-prepayments-counter');
+            if (prepayCounter) prepayCounter.innerText = `Спецплатежей: ${Object.keys(state.customPrepayments).length}`;
             
             const overlay = document.getElementById('pro-paywall-overlay');
-            if (!state.isProUnlocked && Object.keys(years).length > 3) overlay.classList.remove('hidden');
-            else overlay.classList.add('hidden');
+            if (overlay) {
+                if (!state.isProUnlocked && Object.keys(years).length > 3) overlay.classList.remove('hidden');
+                else overlay.classList.add('hidden');
+            }
 
             Object.keys(years).forEach(y => {
                 const yNum = parseInt(y); const isLocked = !state.isProUnlocked && yNum > 3;
@@ -939,26 +966,36 @@
         }
 
         function toggleYearAccordion(id) {
-            document.getElementById(`content-${id}`).classList.toggle('hidden');
-            document.getElementById(`arrow-${id}`).classList.toggle('rotate-180');
+            const content = document.getElementById(`content-${id}`);
+            const arrow = document.getElementById(`arrow-${id}`);
+            if (content) content.classList.toggle('hidden');
+            if (arrow) arrow.classList.toggle('rotate-180');
         }
 
         function updateChart(sWith, sWithout) {
-            const ctx = document.getElementById('balanceChart').getContext('2d');
+            const canvas = document.getElementById('balanceChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
             let labels = [], dWith = [], dWithout = []; let len = Math.max(sWith.length, sWithout.length); let step = len > 120 ? 6 : 2;
             for (let i = 0; i < len; i += step) { labels.push(`${Math.floor(i/12)+1}г`); dWith.push(i < sWith.length ? sWith[i].balance : 0); dWithout.push(i < sWithout.length ? sWithout[i].balance : 0); }
-            if (chartInstance) chartInstance.destroy(); const isDark = document.documentElement.classList.contains('dark');
-            chartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        { data: dWith, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.02)', borderWidth: 3, fill: true, tension: 0.4, pointRadius: 1 },
-                        { data: dWithout, borderColor: isDark ? '#475569' : '#cbd5e1', backgroundColor: 'transparent', borderWidth: 2, borderDash: [4,4], tension: 0.4, pointRadius: 0 }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: isDark?'#334155':'#f1f5f9' }, ticks: { font: { size: 9 }, callback: v => (v/1000000).toFixed(1)+'м' } }, x: { grid: { display: false }, ticks: { font: { size: 9 } } } } }
-            });
+            
+            try {
+                if (chartInstance) chartInstance.destroy(); 
+                const isDark = document.documentElement.classList.contains('dark');
+                chartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            { data: dWith, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.02)', borderWidth: 3, fill: true, tension: 0.4, pointRadius: 1 },
+                            { data: dWithout, borderColor: isDark ? '#475569' : '#cbd5e1', backgroundColor: 'transparent', borderWidth: 2, borderDash: [4,4], tension: 0.4, pointRadius: 0 }
+                        ]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: isDark?'#334155':'#f1f5f9' }, ticks: { font: { size: 9 }, callback: v => (v/1000000).toFixed(1)+'м' } }, x: { grid: { display: false }, ticks: { font: { size: 9 } } } } }
+                });
+            } catch (e) {
+                console.error("Chart rendering skipped inside cycle:", e);
+            }
         }
 
         function updateCalculations() {
@@ -980,8 +1017,13 @@
             document.getElementById('mobile-payment').innerText = localFormatMoney(monthlyPmt);
 
             const valM = document.getElementById('mobile-saving'); const ctaM = document.getElementById('mobile-cta-text');
-            if (savedInt > 0 || savedM > 0) { valM.innerText = localFormatMoney(savedInt); valM.classList.remove('hidden'); ctaM.classList.add('hidden'); }
-            else { valM.classList.add('hidden'); ctaM.classList.remove('hidden'); }
+            if (savedInt > 0 || savedM > 0) { 
+                if (valM) { valM.innerText = localFormatMoney(savedInt); valM.classList.remove('hidden'); }
+                if (ctaM) ctaM.classList.add('hidden'); 
+            } else { 
+                if (valM) valM.classList.add('hidden'); 
+                if (ctaM) ctaM.classList.remove('hidden'); 
+            }
 
             let rTotal = loanAmount + preRes.totalInterest; let bPct = rTotal > 0 ? (loanAmount / rTotal) * 100 : 50;
             document.getElementById('ratio-body').style.width = bPct + '%'; document.getElementById('ratio-interest').style.width = (100 - bPct) + '%';
@@ -1003,7 +1045,8 @@
             document.getElementById('downpayment-range').max = state.cost; document.getElementById('downpayment-range').value = state.downPayment;
             document.getElementById('rate-input').value = state.rate; document.getElementById('rate-range').value = state.rate;
             document.getElementById('term-input').value = state.termYears; document.getElementById('term-range').value = state.termYears;
-            document.getElementById('payment-input').value = localFormatNumber(state.targetPayment); document.getElementById('payment-range').value = state.targetPayment;
+            if (document.getElementById('payment-input')) document.getElementById('payment-input').value = localFormatNumber(state.targetPayment); 
+            if (document.getElementById('payment-range')) document.getElementById('payment-range').value = state.targetPayment;
             document.getElementById('active-amount-input').value = localFormatNumber(state.activeOriginalLoan); document.getElementById('active-rate-input').value = state.activeRate;
             document.getElementById('active-term-input').value = state.activeOriginalTermYears; document.getElementById('active-paid-months-input').value = state.activePaidMonths;
             document.getElementById('active-balance-input').value = localFormatNumber(state.activeCurrentBalance);
@@ -1012,15 +1055,19 @@
 
         async function loadLiveRates() {
             if (typeof fetchRates === 'function') {
-                const data = await fetchRates();
-                if (data) {
-                    liveRatesData = data;
-                    if (data.cb_rate) document.getElementById('cb-rate-display').innerText = data.cb_rate.toFixed(2) + '%';
-                    if (data.sberbank) document.getElementById('rate-sber').innerText = data.sberbank.toFixed(1) + '%';
-                    if (data.vtb) document.getElementById('rate-vtb').innerText = data.vtb.toFixed(1) + '%';
-                    if (data.alfa) document.getElementById('rate-alfa').innerText = data.alfa.toFixed(1) + '%';
-                    if (data.tbank) document.getElementById('rate-tbank').innerText = data.tbank.toFixed(1) + '%';
-                    if (data.sovcom) document.getElementById('rate-sovcom').innerText = data.sovcom.toFixed(1) + '%';
+                try {
+                    const data = await fetchRates();
+                    if (data) {
+                        liveRatesData = data;
+                        if (data.cb_rate && document.getElementById('cb-rate-display')) document.getElementById('cb-rate-display').innerText = data.cb_rate.toFixed(2) + '%';
+                        if (data.sberbank && document.getElementById('rate-sber')) document.getElementById('rate-sber').innerText = data.sberbank.toFixed(1) + '%';
+                        if (data.vtb && document.getElementById('rate-vtb')) document.getElementById('rate-vtb').innerText = data.vtb.toFixed(1) + '%';
+                        if (data.alfa && document.getElementById('rate-alfa')) document.getElementById('rate-alfa').innerText = data.alfa.toFixed(1) + '%';
+                        if (data.tbank && document.getElementById('rate-tbank')) document.getElementById('rate-tbank').innerText = data.tbank.toFixed(1) + '%';
+                        if (data.sovcom && document.getElementById('rate-sovcom')) document.getElementById('rate-sovcom').innerText = data.sovcom.toFixed(1) + '%';
+                    }
+                } catch (err) {
+                    console.error("Failed to map fetched rates:", err);
                 }
             }
             updateCalculations();
