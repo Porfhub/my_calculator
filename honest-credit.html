@@ -59,7 +59,7 @@
                 border-top-color: #1e293b;
             }
             body {
-                padding-bottom: 140px;
+                padding-bottom: 120px;
             }
         }
 
@@ -185,31 +185,28 @@
                         <div class="space-y-2">
                             <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Сумма на руки</label>
                             <div class="relative">
-                                <input type="text" id="amount-input" oninput="handleCostInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg" value="500 000">
+                                <input type="text" id="amount-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg" value="500 000">
                                 <span class="absolute right-4 top-3.5 text-slate-400 font-bold">₽</span>
                             </div>
-                            <input type="range" id="amount-range" min="50000" max="5000000" step="50000" value="500000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRange('amount', this.value)">
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
                             <div class="space-y-2">
                                 <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Срок кредита</label>
                                 <div class="relative">
-                                    <input type="number" id="term-input" oninput="handleSimpleInput('term', this.value)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg" value="36">
-                                    <select id="term-unit" onchange="changeTermUnit()" class="absolute right-2 top-2 bg-white dark:bg-slate-700 border-none text-xs font-bold rounded-lg p-1.5 outline-none">
+                                    <input type="number" id="term-input" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg" value="36">
+                                    <select id="term-unit" class="absolute right-2 top-2 bg-white dark:bg-slate-700 border-none text-xs font-bold rounded-lg p-1.5 outline-none">
                                         <option value="months">мес.</option>
                                         <option value="years">лет</option>
                                     </select>
                                 </div>
-                                <input type="range" id="term-range" min="3" max="60" step="1" value="36" class="w-full accent-brand-600 h-1.2 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRange('term', this.value)">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Ставка банка</label>
                                 <div class="relative">
-                                    <input type="number" id="rate-input" step="0.1" oninput="handleSimpleInput('rate', this.value)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg" value="12.9">
+                                    <input type="number" id="rate-input" step="0.1" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg" value="12.9">
                                     <span class="absolute right-4 top-3.5 text-slate-400 font-bold">%</span>
                                 </div>
-                                <input type="range" id="rate-range" min="1" max="40" step="0.1" value="12.9" class="w-full accent-brand-600 h-1.2 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRange('rate', this.value)">
                             </div>
                         </div>
                     </div>
@@ -232,10 +229,9 @@
                                 </label>
                             </div>
                             <div class="relative">
-                                <input type="text" id="insurance-input" oninput="handleInsuranceInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="50 000">
+                                <input type="text" id="insurance-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="50 000">
                                 <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
                             </div>
-                            <input type="range" id="insurance-range" min="0" max="500000" step="5000" value="50000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRange('insurance', this.value)">
                             <label class="flex items-center gap-3 cursor-pointer group">
                                 <input type="checkbox" id="insurance-in-body" class="w-5 h-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500" checked>
                                 <span class="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-brand-600 transition-colors">Включена в тело кредита</span>
@@ -252,10 +248,9 @@
                                 </span>
                             </label>
                             <div class="relative">
-                                <input type="text" id="commissions-input" oninput="handleCommissionsInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="0">
+                                <input type="text" id="commissions-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="0">
                                 <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
                             </div>
-                            <input type="range" id="commissions-range" min="0" max="200000" step="2000" value="0" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRange('commissions', this.value)">
                         </div>
 
                         <!-- Monthly payments -->
@@ -268,33 +263,8 @@
                                 </span>
                             </label>
                             <div class="relative">
-                                <input type="text" id="monthly-hidden-input" oninput="handleMonthlyHiddenInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="599">
+                                <input type="text" id="monthly-hidden-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="599">
                                 <span class="absolute right-4 top-3.5 text-slate-400">₽/мес.</span>
-                            </div>
-                            <input type="range" id="monthly-hidden-range" min="0" max="5000" step="100" value="599" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRange('monthlyHidden', this.value)">
-                        </div>
-
-                        <!-- Налоговый вычет по процентам (НОВИНКА) -->
-                        <div class="pt-4 border-t dark:border-slate-800 space-y-4">
-                            <div class="flex items-center justify-between">
-                                <label class="text-sm font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide">Налоговый вычет по процентам</label>
-                                <label class="relative inline-flex items-center cursor-pointer select-none">
-                                    <input type="checkbox" id="tax-toggle" onchange="toggleTaxDeduction()" class="sr-only peer">
-                                    <div class="w-10 h-5 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-600"></div>
-                                </label>
-                            </div>
-                            
-                            <!-- Стратегия вычета -->
-                            <div id="tax-strategy-container" class="hidden space-y-2">
-                                <p class="text-xs text-slate-400">Куда направить возвращенные государством деньги (13% от переплаты)?</p>
-                                <div class="p-1 bg-slate-100 dark:bg-slate-800 rounded-xl grid grid-cols-2 gap-1 border dark:border-slate-700">
-                                    <button id="strategy-pocket" onclick="setTaxStrategy('pocket')" class="py-2 text-xs font-bold rounded-lg transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm">
-                                        💰 В карман
-                                    </button>
-                                    <button id="strategy-reinvest" onclick="setTaxStrategy('reinvest')" class="py-2 text-xs font-bold rounded-lg transition-all text-slate-500 dark:text-slate-400">
-                                        🚀 Снизить долг
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -323,7 +293,7 @@
                                     <svg class="w-12 h-12 text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
                                 </div>
 
-                                <div id="rate-card-container" class="p-6 bg-rose-50 dark:bg-rose-900/20 rounded-3xl border-2 border-rose-100 dark:border-rose-800">
+                                <div class="p-6 bg-rose-50 dark:bg-rose-900/20 rounded-3xl border-2 border-rose-100 dark:border-rose-800 animate-pulse-slow">
                                     <p class="text-sm font-bold text-rose-600 uppercase tracking-widest mb-2">Реальная честная ставка</p>
                                     <p id="real-rate-display" class="text-6xl font-black text-rose-600">24.5%</p>
                                 </div>
@@ -349,18 +319,6 @@
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Реальный платеж</p>
                             <p id="real-payment-display" class="text-2xl font-black text-slate-900 dark:text-white">18 450 ₽</p>
                             <p class="text-[10px] text-slate-400 leading-tight">С учетом всех ежемесячных комиссий и скрытых сервисов</p>
-                        </div>
-                    </div>
-
-                    <!-- Блок эффекта налогового вычета (НОВИНКА) -->
-                    <div id="tax-result-card" class="hidden bg-gradient-to-br from-brand-800 to-emerald-950 text-white rounded-3xl p-6 shadow-sm border border-brand-700 space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold uppercase tracking-wider bg-brand-600 px-2.5 py-0.5 rounded-full">Государство возвращает</span>
-                            <span id="tax-bonus-label" class="text-xs text-brand-200">Вычет по процентам</span>
-                        </div>
-                        <div class="flex justify-between items-baseline">
-                            <p id="tax-returned-display" class="text-3xl font-black text-emerald-200">0 ₽</p>
-                            <p id="tax-impact-display" class="text-sm text-brand-100 font-medium"></p>
                         </div>
                     </div>
 
@@ -398,97 +356,13 @@
 
     <script>
         let structureChart = null;
-        let configTax = { enabled: false, strategy: 'pocket' };
 
-        // Интеграция синхронизации инпутов и ползунков
-        function syncRange(field, val) {
-            const range = document.getElementById(`${field}-range`);
-            const input = document.getElementById(`${field}-input`);
-            
-            if (field === 'amount' || field === 'insurance' || field === 'commissions' || field === 'monthlyHidden') {
-                let parsed = parseInt(val) || 0;
-                input.value = new Intl.NumberFormat('ru-RU').format(parsed);
-            } else {
-                input.value = val;
-            }
-            calculateHonestRate();
-        }
-
-        function handleCostInput(el) {
-            let clean = parseCleanNumber(el.value);
-            document.getElementById('amount-range').value = clean;
-            el.value = new Intl.NumberFormat('ru-RU').format(clean);
-            calculateHonestRate();
-        }
-
-        function handleInsuranceInput(el) {
-            let clean = parseCleanNumber(el.value);
-            document.getElementById('insurance-range').value = clean;
-            el.value = new Intl.NumberFormat('ru-RU').format(clean);
-            calculateHonestRate();
-        }
-
-        function handleCommissionsInput(el) {
-            let clean = parseCleanNumber(el.value);
-            document.getElementById('commissions-range').value = clean;
-            el.value = new Intl.NumberFormat('ru-RU').format(clean);
-            calculateHonestRate();
-        }
-
-        function handleMonthlyHiddenInput(el) {
-            let clean = parseCleanNumber(el.value);
-            document.getElementById('monthly-hidden-range').value = clean;
-            el.value = new Intl.NumberFormat('ru-RU').format(clean);
-            calculateHonestRate();
-        }
-
-        function handleSimpleInput(field, val) {
-            document.getElementById(`${field}-range`).value = val;
-            calculateHonestRate();
-        }
-
-        function changeTermUnit() {
-            const unit = document.getElementById('term-unit').value;
-            const range = document.getElementById('term-range');
-            const input = document.getElementById('term-input');
-            if (unit === 'years') {
-                range.min = 1; range.max = 5; range.step = 1;
-                range.value = Math.round(parseInt(input.value) / 12) || 3;
-            } else {
-                range.min = 3; range.max = 60; range.step = 1;
-                range.value = parseInt(input.value) * 12 || 36;
-            }
-            input.value = range.value;
-            calculateHonestRate();
-        }
-
-        function toggleTaxDeduction() {
-            configTax.enabled = document.getElementById('tax-toggle').checked;
-            const container = document.getElementById('tax-strategy-container');
-            if (configTax.enabled) {
-                container.classList.remove('hidden');
-            } else {
-                container.classList.add('hidden');
-            }
-            calculateHonestRate();
-        }
-
-        function setTaxStrategy(strat) {
-            configTax.strategy = strat;
-            const btnPocket = document.getElementById('strategy-pocket');
-            const btnReinvest = document.getElementById('strategy-reinvest');
-            
-            if (strat === 'pocket') {
-                btnPocket.className = "py-2 text-xs font-bold rounded-lg transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm";
-                btnReinvest.className = "py-2 text-xs font-bold rounded-lg transition-all text-slate-500 dark:text-slate-400";
-            } else {
-                btnReinvest.className = "py-2 text-xs font-bold rounded-lg transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm";
-                btnPocket.className = "py-2 text-xs font-bold rounded-lg transition-all text-slate-500 dark:text-slate-400";
-            }
-            calculateHonestRate();
+        function handleFormattedInput(el) {
+            formatInputField(el, el.value);
         }
 
         function calculateHonestRate() {
+            // 1. Get Inputs
             const amountHand = parseCleanNumber(document.getElementById('amount-input').value);
             let term = parseInt(document.getElementById('term-input').value) || 0;
             const termUnit = document.getElementById('term-unit').value;
@@ -500,8 +374,12 @@
             const monthlyHidden = parseCleanNumber(document.getElementById('monthly-hidden-input').value);
 
             if (termUnit === 'years') term *= 12;
-            if (amountHand <= 0 || term <= 0) return;
+            if (amountHand <= 0 || term <= 0) {
+                showToast("Введите корректную сумму и срок");
+                return;
+            }
 
+            // 2. Mathematical Logic
             const fullDebt = insuranceInBody ? (amountHand + insurance) : amountHand;
             const iMonthlyBank = bankRate / 100 / 12;
 
@@ -514,23 +392,27 @@
 
             const pmtReal = pmtBase + monthlyHidden;
             const totalBankInterest = pmtBase * term - fullDebt;
-            const interestOnInsurance = insuranceInBody ? (totalBankInterest * (insurance / fullDebt)) : 0;
-            let totalAir = insurance + commissions + (monthlyHidden * term) + interestOnInsurance;
 
-            // Новая глубокая финансовая логика: Вычет по процентам (13% от переплаты банку, кап 390к)
-            let totalInterestForTax = totalBankInterest;
-            let taxReturned = Math.min(390000, totalInterestForTax * 0.13);
-            
-            let finalTerm = term;
-            let finalAir = totalAir;
-            let initialInflow = amountHand - commissions - (insuranceInBody ? 0 : insurance);
+            // "Air" overpayment definition:
+            // Sum of all insurances + all hidden commissions for the whole term + interests bank charged on top of the insurance body
+            const interestOnInsurance = insuranceInBody ? (totalBankInterest * (insurance / fullDebt)) : 0;
+            const totalAir = insurance + commissions + (monthlyHidden * term) + interestOnInsurance;
+
+            // 3. EIR Calculation (Internal Rate of Return)
+            // Month 0: +amountHand - commissions - (insuranceInBody ? 0 : insurance)
+            // Months 1..N: -pmtReal
+            const initialInflow = amountHand - commissions - (insuranceInBody ? 0 : insurance);
 
             const findEir = (target, pmt, n) => {
-                let low = -0.1; let high = 2.0;
+                let low = -0.1; // Supports negative rates down to -10% monthly
+                let high = 2.0; // Up to 200% monthly
+
                 const getNpv = (rate) => {
                     if (Math.abs(rate) < 0.00001) return target - pmt * n;
                     return target - pmt * (1 - Math.pow(1 + rate, -n)) / rate;
                 };
+
+                // Bisection method
                 for (let i = 0; i < 60; i++) {
                     let mid = (low + high) / 2;
                     if (getNpv(mid) > 0) high = mid;
@@ -539,90 +421,61 @@
                 return (low + high) / 2;
             };
 
-            let monthlyEir = findEir(initialInflow, pmtReal, term);
-
-            // Обработка логики вычета
-            const taxCard = document.getElementById('tax-result-card');
-            if (configTax.enabled && taxReturned > 0) {
-                taxCard.classList.remove('hidden');
-                document.getElementById('tax-returned-display').innerText = formatMoney(taxReturned);
-                
-                if (configTax.strategy === 'reinvest') {
-                    // Симулируем падение долга за счет сложного процента (вычет реинвестируется ежегодно кусками)
-                    let yearlyReturn = taxReturned / Math.ceil(term / 12);
-                    let simBalance = fullDebt;
-                    let mIdx = 0;
-                    
-                    while (simBalance > 0 && mIdx < term) {
-                        mIdx++;
-                        let interest = simBalance * iMonthlyBank;
-                        let principal = pmtBase - interest;
-                        simBalance -= principal;
-                        
-                        if (mIdx % 12 === 0 && simBalance > 0) {
-                            simBalance -= yearlyReturn; // Вливание налогового бонуса от ФНС
-                        }
-                    }
-                    
-                    // Эффект реинвестирования снижает виртуальную нагрузку
-                    let interestSaved = (term - mIdx) * pmtBase;
-                    finalAir = Math.max(0, totalAir - taxReturned - interestSaved);
-                    document.getElementById('tax-impact-display').innerText = `Снижает нагрузку на ${formatMoney(taxReturned + interestSaved)}`;
-                    // Пересчет честной ставки с уменьшенным бременем
-                    monthlyEir = findEir(initialInflow + taxReturned, pmtReal, term);
-                } else {
-                    document.getElementById('tax-impact-display').innerText = `Чистый возврат наличными в ваш кошелек`;
-                    finalAir = Math.max(0, totalAir - taxReturned);
-                }
-            } else {
-                taxCard.classList.add('hidden');
-            }
-
+            const monthlyEir = findEir(initialInflow, pmtReal, term);
+            // Convert to nominal annual rate (PSK logic)
             const annualEir = monthlyEir * 12 * 100;
 
-            // Обновление интерфейса
+            // 4. Update UI
             document.getElementById('advertised-rate-display').innerText = bankRate.toFixed(1) + '%';
             document.getElementById('real-rate-display').innerText = annualEir.toFixed(1) + '%';
             document.getElementById('real-payment-display').innerText = formatMoney(pmtReal);
-            document.getElementById('air-overpayment-display').innerText = formatMoney(finalAir);
+            document.getElementById('air-overpayment-display').innerText = formatMoney(totalAir);
 
             const realRateDisplay = document.getElementById('real-rate-display');
             const mobileRateDisplay = document.getElementById('mobile-rate');
-            const rateCard = document.getElementById('rate-card-container');
-            const diffRub = Math.round(finalAir);
+            const rateCard = realRateDisplay.closest('div');
+            const diffRub = Math.round(totalAir);
 
-            if (diffRub > 10) {
-                realRateDisplay.className = "text-6xl font-black text-rose-600";
+            if (diffRub > 10) { // Tiny margin for float errors
+                realRateDisplay.className = "text-6xl font-black text-rose-600 " + (annualEir > bankRate * 1.5 ? "animate-bounce-short" : "");
                 mobileRateDisplay.className = "font-black text-rose-600";
                 rateCard.className = "p-6 bg-rose-50 dark:bg-rose-900/20 rounded-3xl border-2 border-rose-100 dark:border-rose-800 animate-pulse-slow";
 
-                let verdictText = `Внимание! Из-за скрытой нагрузки вы переплачиваете лишние ${formatMoney(diffRub)}. Реальная стоимость этого кредита значительно выше, чем обещает реклама.`;
-                if (configTax.enabled && configTax.strategy === 'reinvest') {
-                    verdictText += ` Но благодаря реинвестированию налогового вычета, вы возвращаете контроль и компенсируете часть потерь!`;
-                }
+                const verdictText = `Внимание! Из-за скрытой нагрузки вы переплачиваете лишние ${formatMoney(diffRub)}. Реальная стоимость этого кредита ${annualEir > bankRate * 1.8 ? 'более чем в два раза' : 'значительно'} выше, чем обещает реклама. Вы имеете право отказаться от навязанных услуг в течение установленного законом периода охлаждения.`;
                 document.getElementById('verdict-text').innerText = verdictText;
             } else {
+                // Honest deal
                 realRateDisplay.className = "text-6xl font-black text-emerald-600";
                 mobileRateDisplay.className = "font-black text-emerald-600";
                 rateCard.className = "p-6 bg-emerald-50 dark:bg-emerald-900/20 rounded-3xl border-2 border-emerald-100 dark:border-emerald-800";
+
                 document.getElementById('verdict-text').innerText = "Честное предложение! У этого кредита отсутствуют скрытые комиссии и навязанные страховки. Вы платите только чистый процент банку.";
             }
 
-            updateChart(amountHand, Math.max(0, totalBankInterest - interestOnInsurance), finalAir);
+            // Chart
+            updateChart(amountHand, totalBankInterest - interestOnInsurance, totalAir);
 
+            // Show results
             const container = document.getElementById('results-container');
             container.classList.remove('opacity-0', 'pointer-events-none');
 
+            // Update mobile results
             document.getElementById('mobile-rate').innerText = annualEir.toFixed(1) + '%';
             document.getElementById('mobile-payment').innerText = formatMoney(pmtReal);
             document.getElementById('mobile-results').classList.remove('hidden');
+
+            if (window.innerWidth < 1024) {
+                container.scrollIntoView({ behavior: 'smooth' });
+            }
 
             reachGoal("calculate_success");
         }
 
         function updateChart(received, interest, air) {
             const ctx = document.getElementById('structureChart').getContext('2d');
+
             if (structureChart) structureChart.destroy();
+
             const isDark = document.documentElement.classList.contains('dark');
             const textColor = isDark ? '#cbd5e1' : '#475569';
 
@@ -668,7 +521,7 @@
 
         window.onload = () => {
             initTheme();
-            calculateHonestRate(); // Мгновенный дефолтный расчет при загрузке
+            // Optional: run initial calc if values are present
         };
     </script>
 </body>

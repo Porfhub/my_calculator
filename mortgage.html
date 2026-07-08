@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Интерактивный Ипотечный Калькулятор | ИпотекаПро</title>
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js CDN -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- html2canvas CDN -->
+    <!-- html2canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         tailwind.config = {
@@ -32,7 +32,7 @@
         }
     </script>
     <style>
-        /* Скрытие стрелок у input type=number */
+        /* Hide number input arrows */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -40,6 +40,14 @@
         }
         input[type=number] {
             -moz-appearance: textfield;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
         @media (max-width: 1023px) {
@@ -52,56 +60,38 @@
                 background: white;
                 box-shadow: 0 -10px 15px -3px rgba(0, 0, 0, 0.1);
                 border-top: 1px solid #e2e8f0;
-                padding: 1rem;
-                border-radius: 1.5rem 1.5rem 0 0;
+                padding: 1.25rem;
+                border-radius: 2rem 2rem 0 0;
             }
             .dark .mobile-sticky-results {
                 background: #0f172a;
                 border-top-color: #1e293b;
             }
             body {
-                padding-bottom: 180px;
+                padding-bottom: 200px;
             }
         }
 
-        /* Тултипы */
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            cursor: help;
+        .animate-pulse-vibrant {
+            animation: pulse-vibrant 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 200px;
-            background-color: #1e293b;
-            color: #fff;
-            text-align: center;
-            border-radius: 8px;
-            padding: 8px;
-            position: absolute;
-            z-index: 50;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -100px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 11px;
-            font-weight: 500;
-            line-height: 1.4;
-            pointer-events: none;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
+        @keyframes pulse-vibrant {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.03); }
         }
 
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
+        .blur-access {
+            filter: blur(5px);
+            pointer-events: none;
+            user-select: none;
+            opacity: 0.5;
         }
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+
+        .paywall-gradient {
+            background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.9) 20%, white 100%);
+        }
+        .dark .paywall-gradient {
+            background: linear-gradient(to bottom, transparent, rgba(15,23,42,0.9) 20%, #0f172a 100%);
         }
     </style>
     <!-- Yandex.Metrika counter -->
@@ -126,9 +116,9 @@
     <script src="js/api.js"></script>
     <script src="js/ui-utils.js"></script>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen font-sans antialiased transition-colors duration-300">
 
-    <!-- Переключатель темной темы -->
+    <!-- Theme Toggle -->
     <div class="fixed top-24 right-4 z-50 md:top-6 md:right-8">
         <button id="theme-toggle" onclick="toggleDarkMode()" class="p-3 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:scale-110 transition-all active:scale-95">
             <svg id="sun-icon" class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
@@ -136,7 +126,6 @@
         </button>
     </div>
 
-    <!-- Шапка приложения -->
     <header class="bg-gradient-to-r from-brand-800 to-slate-900 text-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div class="flex items-center space-x-4">
@@ -145,20 +134,12 @@
                     <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">На главную</span>
                 </a>
                 <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
-                <div class="flex items-center space-x-3">
-                    <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner">
-                        <svg class="w-8 h-8 text-white animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h1 class="text-2xl font-black tracking-tight">ИпотекаПро</h1>
-                        <p class="text-xs text-brand-200">Умный калькулятор с детальным планированием досрочных платежей</p>
-                    </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-tight">ИпотекаПро</h1>
+                    <p class="text-xs text-brand-200">Умный расчет с выгодой досрочных погашений</p>
                 </div>
             </div>
 
-            <!-- Табы выбора режима калькулятора -->
             <div class="bg-slate-800/80 p-1 rounded-xl grid grid-cols-2 sm:flex border border-slate-700 w-full sm:w-auto">
                 <button id="tab-new" onclick="switchMainTab('new')" class="px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 bg-brand-600 text-white shadow-md">
                     Новая ипотека
@@ -170,322 +151,280 @@
         </div>
     </header>
 
-    <!-- ГОРИЗОНТАЛЬНЫЙ БЛОК: Актуальные ставки банков -->
+    <!-- Банковские ставки -->
     <section class="max-w-7xl mx-auto px-4 pt-6 sm:px-6 lg:px-8">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm space-y-3">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
                 <div class="space-y-1">
-                    <div class="flex flex-wrap items-center gap-2">
-                        <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                            <span class="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse"></span>
-                            Мониторинг рыночных ставок ТОП-5 банков РФ
-                        </h3>
-                        <span class="inline-flex items-center gap-1 text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-400 px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">
-                            Ключевая ставка ЦБ: <strong id="cb-rate-display" class="text-slate-900 dark:text-white">...</strong>
-                        </span>
-                    </div>
-                    <p class="text-[11px] text-slate-400 dark:text-slate-500">Нажмите «Применить» для быстрой подстановки актуальной ставки банка в расчет.</p>
+                    <h3 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
+                        Мониторинг рыночных ставок
+                    </h3>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">Ключевая ставка ЦБ РФ: <strong id="cb-rate-display" class="text-slate-900 dark:text-white">...</strong></p>
                 </div>
             </div>
 
-            <!-- Карусель банков (Мобильный скролл) -->
-            <div id="rates-container" class="flex lg:grid lg:grid-cols-5 gap-3 overflow-x-auto pb-2 snap-x scrollbar-hide">
-                <!-- Сбербанк -->
-                <div id="bank-sber" class="min-w-[160px] snap-start p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 rounded-full bg-green-600 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">СБ</div>
-                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Сбербанк</span>
-                    </div>
-                    <div class="flex items-baseline justify-between">
-                        <span class="text-base font-black text-slate-950 dark:text-white" id="rate-sber">...</span>
-                        <button onclick="applyBankRate(state.bankRates.sber, 'Сбербанка', 'sber')" class="bank-apply-btn px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700 shadow-sm">Применить</button>
-                    </div>
+            <div id="rates-container" class="flex lg:grid lg:grid-cols-5 gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory shrink-0">
+                <!-- Sber -->
+                <div id="bank-btn-sberbank" class="min-w-[145px] snap-start p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-brand-500 transition-all cursor-pointer group" onclick="applyDynamicBankRate('sberbank', 'Сбербанк')">
+                    <span class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest group-hover:text-brand-600 transition-colors">Сбербанк</span>
+                    <span class="text-xl font-black text-slate-900 dark:text-white" id="rate-sberbank">...</span>
                 </div>
-                <!-- ВТБ -->
-                <div id="bank-vtb" class="min-w-[160px] snap-start p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">ВТБ</div>
-                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">ВТБ</span>
-                    </div>
-                    <div class="flex items-baseline justify-between">
-                        <span class="text-base font-black text-slate-950 dark:text-white" id="rate-vtb">...</span>
-                        <button onclick="applyBankRate(state.bankRates.vtb, 'ВТБ', 'vtb')" class="bank-apply-btn px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700 shadow-sm">Применить</button>
-                    </div>
+                <!-- VTB -->
+                <div id="bank-btn-vtb" class="min-w-[145px] snap-start p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-brand-500 transition-all cursor-pointer group" onclick="applyDynamicBankRate('vtb', 'ВТБ')">
+                    <span class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest group-hover:text-brand-600 transition-colors">ВТБ</span>
+                    <span class="text-xl font-black text-slate-900 dark:text-white" id="rate-vtb">...</span>
                 </div>
-                <!-- Альфа-Банк -->
-                <div id="bank-alfa" class="min-w-[160px] snap-start p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 rounded-full bg-red-600 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">АБ</div>
-                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Альфа-Банк</span>
-                    </div>
-                    <div class="flex items-baseline justify-between">
-                        <span class="text-base font-black text-slate-950 dark:text-white" id="rate-alfa">...</span>
-                        <button onclick="applyBankRate(state.bankRates.alfa, 'Альфа-Банка', 'alfa')" class="bank-apply-btn px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700 shadow-sm">Применить</button>
-                    </div>
+                <!-- Alfa -->
+                <div id="bank-btn-alfa" class="min-w-[145px] snap-start p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-brand-500 transition-all cursor-pointer group" onclick="applyDynamicBankRate('alfa', 'Альфа-Банк')">
+                    <span class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest group-hover:text-brand-600 transition-colors">Альфа-Банк</span>
+                    <span class="text-xl font-black text-slate-900 dark:text-white" id="rate-alfa">...</span>
                 </div>
-                <!-- Т-Банк -->
-                <div id="bank-tbank" class="min-w-[160px] snap-start p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 rounded-full bg-yellow-500 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">ТБ</div>
-                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Т-Банк</span>
-                    </div>
-                    <div class="flex items-baseline justify-between">
-                        <span class="text-base font-black text-slate-950 dark:text-white" id="rate-tbank">...</span>
-                        <button onclick="applyBankRate(state.bankRates.tbank, 'Т-Банка', 'tbank')" class="bank-apply-btn px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700 shadow-sm">Применить</button>
-                    </div>
+                <!-- T-Bank -->
+                <div id="bank-btn-tbank" class="min-w-[145px] snap-start p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-brand-500 transition-all cursor-pointer group" onclick="applyDynamicBankRate('tbank', 'Т-Банк')">
+                    <span class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest group-hover:text-brand-600 transition-colors">Т-Банк</span>
+                    <span class="text-xl font-black text-slate-900 dark:text-white" id="rate-tbank">...</span>
                 </div>
-                <!-- Совкомбанк -->
-                <div id="bank-sovcom" class="min-w-[160px] snap-start p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 rounded-full bg-blue-700 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">СК</div>
-                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Совкомбанк</span>
-                    </div>
-                    <div class="flex items-baseline justify-between">
-                        <span class="text-base font-black text-slate-950 dark:text-white" id="rate-sovcom">...</span>
-                        <button onclick="applyBankRate(state.bankRates.sovcom, 'Совкомбанка', 'sovcom')" class="bank-apply-btn px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700 shadow-sm">Применить</button>
-                    </div>
+                <!-- Sovcom -->
+                <div id="bank-btn-sovcom" class="min-w-[145px] snap-start p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-brand-500 transition-all cursor-pointer group" onclick="applyDynamicBankRate('sovcom', 'Совкомбанк')">
+                    <span class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest group-hover:text-brand-600 transition-colors">Совкомбанк</span>
+                    <span class="text-xl font-black text-slate-900 dark:text-white" id="rate-sovcom">...</span>
                 </div>
             </div>
         </div>
     </section>
 
     <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <!-- Всплывающие уведомления (Toast) -->
-        <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-            <span class="text-brand-500 font-bold">✓</span>
-            <span id="toast-message" class="text-sm">Данные успешно обновлены</span>
-        </div>
-
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
-            <!-- ЛЕВАЯ КОЛОНКА -->
-            <div class="lg:col-span-5 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
-                <div class="flex items-center justify-between border-b dark:border-slate-800 pb-3">
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white" id="params-title">Параметры новой ипотеки</h2>
-                    <button onclick="resetAll()" class="text-xs text-rose-600 hover:text-rose-700 font-semibold flex items-center gap-1 transition">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                        Сбросить
-                    </button>
-                </div>
 
-                <div id="panel-new" class="space-y-6">
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-center">
-                            <label for="cost-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Стоимость квартиры</label>
-                            <span class="text-sm font-bold text-slate-900 dark:text-white" id="cost-display">0 ₽</span>
-                        </div>
-                        <div class="relative rounded-lg shadow-sm">
-                            <input type="text" id="cost-input" oninput="handleCostInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white shadow-inner">
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
-                        </div>
-                        <input type="range" id="cost-range" min="1000000" max="50000000" step="100000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('cost', this.value)">
+            <!-- ЛЕВАЯ КОЛОНКА: ВВОД -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
+                    <div class="flex items-center justify-between border-b dark:border-slate-800 pb-3">
+                        <h2 class="text-lg font-bold text-slate-900 dark:text-white" id="params-title">Параметры новой ипотеки</h2>
+                        <button onclick="resetAll()" class="text-xs text-rose-600 hover:text-rose-700 font-bold uppercase tracking-tight transition">Сбросить</button>
                     </div>
 
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-center">
-                            <label for="downpayment-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Первоначальный взнос</label>
-                            <span class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded font-bold" id="downpayment-percent">0%</span>
-                        </div>
-                        <div class="relative rounded-lg shadow-sm">
-                            <input type="text" id="downpayment-input" oninput="handleDownpaymentInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white shadow-inner">
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
-                        </div>
-                        <input type="range" id="downpayment-range" min="0" max="40000000" step="50000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('downpayment', this.value)">
-                    </div>
-
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-center">
-                            <label for="rate-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Процентная ставка</label>
-                            <span class="text-sm font-bold text-brand-700" id="rate-display">16%</span>
-                        </div>
-                        <div class="relative rounded-lg shadow-sm">
-                            <input type="number" id="rate-input" step="0.1" min="0.1" max="50" oninput="handleRateInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">%</div>
-                        </div>
-                        <input type="range" id="rate-range" min="1" max="35" step="0.1" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('rate', this.value)">
-                    </div>
-
-                    <div class="p-1 bg-slate-100 dark:bg-slate-800 rounded-xl flex gap-1">
-                        <button id="mode-term-btn" onclick="switchCalculationMode('term')" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all shadow-sm text-slate-600">Я знаю срок</button>
-                        <button id="mode-payment-btn" onclick="switchCalculationMode('payment')" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all text-slate-600">Я знаю комфортный платеж</button>
-                    </div>
-
-                    <div id="term-input-container" class="space-y-2">
-                        <div class="flex justify-between items-center">
-                            <label for="term-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Срок кредита (лет)</label>
-                            <span class="text-sm font-bold text-slate-950 dark:text-white" id="term-display">20 лет</span>
-                        </div>
-                        <div class="relative rounded-lg shadow-sm">
-                            <input type="number" id="term-input" min="1" max="50" oninput="handleTermInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white shadow-inner">
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">лет</div>
-                        </div>
-                        <input type="range" id="term-range" min="1" max="40" step="1" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('term', this.value)">
-                    </div>
-
-                    <div id="payment-input-container" class="space-y-2 hidden">
-                        <div class="flex justify-between items-center">
-                            <label for="payment-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Желаемый ежемесячный платёж</label>
-                            <span class="text-sm font-bold text-slate-950 dark:text-white" id="payment-display">0 ₽</span>
-                        </div>
-                        <div class="relative rounded-lg shadow-sm">
-                            <input type="text" id="payment-input" oninput="handleTargetPaymentInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
-                        </div>
-                        <input type="range" id="payment-range" min="10000" max="1000000" step="5000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('payment', this.value)">
-                    </div>
-                </div>
-
-                <div id="panel-existing" class="space-y-6 hidden">
-                    <div class="space-y-2">
-                        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Исходная сумма взятого кредита</label>
-                        <input type="text" id="active-amount-input" oninput="handleActiveAmountInput(this)" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold text-slate-800 dark:text-white shadow-inner">
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold text-slate-500 uppercase">Ставка %</label>
-                            <input type="number" id="active-rate-input" step="0.1" oninput="handleActiveRateInput(this)" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold shadow-inner">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold text-slate-500 uppercase">Срок (лет)</label>
-                            <input type="number" id="active-term-input" oninput="recalcAndSyncBalance()" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold shadow-inner">
-                        </div>
-                    </div>
-                    <div class="space-y-2 bg-brand-50/50 dark:bg-brand-900/10 p-4 rounded-xl border border-brand-100 dark:border-brand-900/30">
-                        <div class="flex justify-between items-center">
-                            <label class="text-xs font-bold text-brand-800 dark:text-brand-400 uppercase tracking-wide">Текущий остаток долга</label>
-                            <button onclick="calcTheoreticalBalance()" class="text-[11px] text-brand-700 dark:text-brand-400 underline font-bold transition hover:text-brand-800">Рассчитать по графику</button>
-                        </div>
-                        <input type="text" id="active-balance-input" oninput="handleActiveBalanceInput(this)" class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-extrabold text-lg shadow-inner">
-                        <input type="range" id="active-balance-range" class="w-full mt-2 accent-brand-600" oninput="syncActiveBalanceRange(this.value)">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-xs font-bold text-slate-500 uppercase">Уже плачу (месяцев)</label>
-                        <input type="number" id="active-paid-months-input" oninput="recalcAndSyncBalance()" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold shadow-inner">
-                    </div>
-                </div>
-
-                <div class="border-t dark:border-slate-800 pt-4 space-y-4">
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-150 dark:border-slate-800 transition hover:border-slate-200">
-                            <div class="flex flex-col">
-                                <span class="text-[10px] font-bold text-slate-500 uppercase">Страховка</span>
-                                <span class="text-[9px] text-slate-400">1% в год</span>
+                    <div id="panel-new" class="space-y-6">
+                        <!-- Cost -->
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <label for="cost-input" class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Стоимость жилья</label>
+                                <span class="text-sm font-black text-slate-900 dark:text-white" id="cost-display">0 ₽</span>
                             </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" id="insurance-toggle" onchange="toggleInsurance()" class="sr-only peer">
-                                <div class="w-10 h-5 bg-slate-300 dark:bg-slate-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-600"></div>
-                            </label>
+                            <input type="text" id="cost-input" oninput="handleCostInput(this)" class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-brand-500 outline-none transition font-black text-xl text-slate-900 dark:text-white shadow-inner">
+                            <input type="range" id="cost-range" min="1000000" max="50000000" step="100000" class="w-full accent-brand-600 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('cost', this.value)">
                         </div>
-                        <div class="space-y-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-150 dark:border-slate-800 transition hover:border-slate-200">
-                            <div class="flex items-center justify-between">
+
+                        <!-- Downpayment -->
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <label for="downpayment-input" class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Первоначальный взнос</label>
+                                <span class="text-xs bg-slate-900 dark:bg-brand-600 text-white px-2 py-0.5 rounded font-black" id="downpayment-percent">0%</span>
+                            </div>
+                            <input type="text" id="downpayment-input" oninput="handleDownpaymentInput(this)" class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-brand-500 outline-none transition font-black text-xl text-slate-900 dark:text-white shadow-inner">
+                            <input type="range" id="downpayment-range" min="0" max="40000000" step="50000" class="w-full accent-brand-600 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('downpayment', this.value)">
+                        </div>
+
+                        <!-- Rate -->
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <label for="rate-input" class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Ставка в год</label>
+                                <span class="text-sm font-black text-brand-600" id="rate-display">16%</span>
+                            </div>
+                            <input type="number" id="rate-input" step="0.1" oninput="handleRateInput(this)" class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-brand-500 outline-none transition font-black text-xl text-slate-900 dark:text-white shadow-inner">
+                            <input type="range" id="rate-range" min="1" max="40" step="0.1" class="w-full accent-brand-600 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('rate', this.value)">
+                        </div>
+
+                        <!-- Mode Switcher -->
+                        <div class="p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl flex gap-1 shadow-inner">
+                            <button id="mode-term-btn" onclick="switchCalculationMode('term')" class="flex-1 py-3 text-xs font-black uppercase tracking-tight rounded-xl transition-all shadow-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white">
+                                Я знаю срок
+                            </button>
+                            <button id="mode-payment-btn" onclick="switchCalculationMode('payment')" class="flex-1 py-3 text-xs font-black uppercase tracking-tight rounded-xl transition-all text-slate-500 dark:text-slate-400">
+                                Я знаю комфортный платеж
+                            </button>
+                        </div>
+
+                        <!-- Term or Payment -->
+                        <div id="term-input-container" class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <label for="term-input" class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Срок (лет)</label>
+                                <span class="text-sm font-black text-slate-900 dark:text-white" id="term-display">20 лет</span>
+                            </div>
+                            <input type="number" id="term-input" min="1" max="50" oninput="handleTermInput(this)" class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-brand-500 outline-none transition font-black text-xl text-slate-900 dark:text-white shadow-inner">
+                            <input type="range" id="term-range" min="1" max="40" step="1" class="w-full accent-brand-600 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('term', this.value)">
+                        </div>
+
+                        <div id="payment-input-container" class="space-y-3 hidden">
+                            <div class="flex justify-between items-center">
+                                <label for="payment-input" class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Комфортный платёж</label>
+                                <span class="text-sm font-black text-slate-900 dark:text-white" id="payment-display">0 ₽</span>
+                            </div>
+                            <input type="text" id="payment-input" oninput="handleTargetPaymentInput(this)" class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-brand-500 outline-none transition font-black text-xl text-slate-900 dark:text-white shadow-inner">
+                            <input type="range" id="payment-range" min="10000" max="1000000" step="5000" class="w-full accent-brand-600 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('payment', this.value)">
+                        </div>
+                    </div>
+
+                    <!-- Действующая ипотека -->
+                    <div id="panel-existing" class="space-y-6 hidden">
+                        <div class="space-y-2">
+                            <label class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Сумма кредита (остаток)</label>
+                            <input type="text" id="active-amount-input" oninput="handleActiveAmountInput(this)" class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none font-black text-xl shadow-inner">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Ставка %</label>
+                                <input type="number" id="active-rate-input" step="0.1" oninput="handleActiveRateInput(this)" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-bold">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Срок (лет)</label>
+                                <input type="number" id="active-term-input" oninput="recalcAndSyncBalance()" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-bold">
+                            </div>
+                        </div>
+                        <div class="space-y-3 bg-brand-50/50 dark:bg-brand-900/10 p-5 rounded-3xl border border-brand-100 dark:border-brand-900/30">
+                            <div class="flex justify-between items-center">
+                                <label class="text-xs font-black text-brand-800 dark:text-brand-400 uppercase tracking-widest">Текущий остаток</label>
+                                <button onclick="calcTheoreticalBalance()" class="text-[10px] text-brand-700 dark:text-brand-400 underline font-black uppercase">По графику</button>
+                            </div>
+                            <input type="text" id="active-balance-input" oninput="handleActiveBalanceInput(this)" class="w-full px-5 py-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none font-black text-xl text-slate-900 dark:text-white shadow-md">
+                            <input type="range" id="active-balance-range" class="w-full accent-brand-600 h-1.5" oninput="syncActiveBalanceRange(this.value)">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Уже плачу (месяцев)</label>
+                            <input type="number" id="active-paid-months-input" oninput="recalcAndSyncBalance()" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-bold">
+                        </div>
+                    </div>
+
+                    <!-- Доп опции -->
+                    <div class="border-t dark:border-slate-800 pt-6 space-y-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-150 dark:border-slate-800">
                                 <div class="flex flex-col">
-                                    <span class="text-[10px] font-bold text-slate-500 uppercase">Нал. вычет</span>
-                                    <span class="text-[9px] text-slate-400">до 650к ₽</span>
+                                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Страховка</span>
+                                    <span class="text-[9px] text-slate-400">1% в год</span>
                                 </div>
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="tax-toggle" onchange="toggleTaxDeduction()" class="sr-only peer">
+                                    <input type="checkbox" id="insurance-toggle" onchange="toggleInsurance()" class="sr-only peer">
                                     <div class="w-10 h-5 bg-slate-300 dark:bg-slate-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-600"></div>
                                 </label>
                             </div>
-                            <div id="tax-strategy-menu" class="hidden flex flex-col gap-2 pt-2 border-t dark:border-slate-700 animate-in fade-in slide-in-from-top-1 duration-200">
-                                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center">Куда направить вычет?</span>
-                                <div class="flex bg-slate-200 dark:bg-slate-700 p-1 rounded-lg">
-                                    <button id="strat-pocket" onclick="setTaxStrategy('pocket')" class="flex-1 py-1 text-[10px] font-bold rounded-md bg-white dark:bg-slate-600 shadow-sm transition-all">В карман</button>
-                                    <button id="strat-reinvest" onclick="setTaxStrategy('reinvest')" class="flex-1 py-1 text-[10px] font-bold rounded-md text-slate-500 dark:text-slate-400 transition-all">В досрочку</button>
+                            <div class="space-y-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-150 dark:border-slate-800">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex flex-col">
+                                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Нал. вычет</span>
+                                        <span class="text-[9px] text-slate-400">650к ₽</span>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="tax-toggle" onchange="toggleTaxDeduction()" class="sr-only peer">
+                                        <div class="w-10 h-5 bg-slate-300 dark:bg-slate-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-600"></div>
+                                    </label>
+                                </div>
+                                <div id="tax-strategy-menu" class="hidden flex flex-col gap-2 pt-2 border-t dark:border-slate-700">
+                                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-wider text-center">Куда направить?</span>
+                                    <div class="flex bg-slate-200 dark:bg-slate-700 p-1 rounded-xl">
+                                        <button id="strat-pocket" onclick="setTaxStrategy('pocket')" class="flex-1 py-1.5 text-[10px] font-black rounded-lg transition-all bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm uppercase">В карман</button>
+                                        <button id="strat-reinvest" onclick="setTaxStrategy('reinvest')" class="flex-1 py-1.5 text-[10px] font-black rounded-lg transition-all text-slate-500 dark:text-slate-400 uppercase">В досрочку</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm font-bold text-slate-700 dark:text-slate-300">Будущая стратегия досрочных</span>
-                            <span id="strategy-badge" class="text-[10px] uppercase font-black px-2 py-0.5 rounded-full bg-brand-100 text-brand-800">Срок кредита</span>
+                        <!-- Стратегия -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest">Стратегия досрочных</span>
+                                <span id="strategy-badge" class="text-[10px] uppercase font-black px-2 py-0.5 rounded-full bg-brand-100 text-brand-800">Срок кредита</span>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-150 dark:border-slate-800">
+                                <span class="text-[11px] text-slate-500 font-bold uppercase tracking-tight">Уменьшать срок или платеж?</span>
+                                <label class="relative inline-flex items-center cursor-pointer select-none">
+                                    <input type="checkbox" id="strategy-toggle" onchange="toggleStrategy()" class="sr-only peer">
+                                    <div class="w-14 h-7 bg-brand-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-slate-700"></div>
+                                </label>
+                            </div>
                         </div>
-                        <div class="flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-150 dark:border-slate-800">
-                            <span class="text-xs text-slate-500">Что уменьшать при переплатах</span>
-                            <label class="relative inline-flex items-center cursor-pointer select-none">
-                                <input type="checkbox" id="strategy-toggle" onchange="toggleStrategy()" class="sr-only peer">
-                                <div class="w-14 h-7 bg-brand-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-slate-700"></div>
-                            </label>
-                        </div>
-                    </div>
 
-                    <div class="space-y-2">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wide">Регулярный досрочный взнос (каждый месяц)</label>
-                        <input type="text" id="recurring-input" oninput="handleRecurringInput(this)" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold text-slate-800 dark:text-white shadow-inner">
+                        <!-- Recurring Prepayment -->
+                        <div class="space-y-3">
+                            <label class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Регулярный досрочный взнос (мес)</label>
+                            <input type="text" id="recurring-input" oninput="handleRecurringInput(this)" class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none font-black text-lg text-emerald-600 dark:text-emerald-400 shadow-inner">
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ПРАВАЯ КОЛОНКА -->
+            <!-- ПРАВАЯ КОЛОНКА: РЕЗУЛЬТАТЫ -->
             <div class="lg:col-span-7 flex flex-col space-y-6" id="results-panel">
+
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between transition-transform hover:scale-[1.02]">
-                        <span class="text-xs font-bold text-slate-400 block mb-1" id="label-amount">Сумма кредита</span>
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between transition-transform hover:scale-105">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest" id="label-amount">Сумма кредита</span>
                         <span id="res-loan-amount" class="text-lg font-black text-slate-900 dark:text-white">0 ₽</span>
                     </div>
-                    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between transition-transform hover:scale-[1.02]">
-                        <span class="text-xs font-bold text-slate-400 block mb-1">Ежемесячно</span>
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between transition-transform hover:scale-105">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ежемесячно</span>
                         <span id="res-monthly-payment" class="text-lg font-black text-slate-900 dark:text-white">0 ₽</span>
                     </div>
-                    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between transition-transform hover:scale-[1.02]">
-                        <span class="text-xs font-bold text-slate-400 block mb-1">Реальный срок</span>
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between transition-transform hover:scale-105">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Реальный срок</span>
                         <span id="res-real-term" class="text-lg font-black text-brand-700">0 мес.</span>
                     </div>
-                    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between transition-transform hover:scale-[1.02]">
-                        <span class="text-xs font-bold text-slate-400 block mb-1">Переплата</span>
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between transition-transform hover:scale-105">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Переплата</span>
                         <span id="res-total-interest" class="text-lg font-black text-rose-600">0 ₽</span>
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm space-y-2">
-                    <div class="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider">
+                <div class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
                         <span class="text-slate-400">Соотношение выплат</span>
-                        <div class="flex gap-3">
-                            <span class="text-brand-600 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-brand-500"></span>Тело</span>
-                            <span class="text-rose-500 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span>%</span>
+                        <div class="flex gap-4">
+                            <span class="text-brand-600 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-brand-500"></span>Тело</span>
+                            <span class="text-rose-500 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500"></span>%</span>
                         </div>
                     </div>
-                    <div class="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex">
+                    <div class="w-full h-4 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex border border-slate-200 dark:border-slate-700 shadow-inner">
                         <div id="ratio-body" class="h-full bg-brand-500 transition-all duration-1000" style="width: 50%"></div>
                         <div id="ratio-interest" class="h-full bg-rose-500 transition-all duration-1000" style="width: 50%"></div>
                     </div>
-                    <div id="ratio-text" class="text-[10px] text-center text-slate-400 font-medium italic"></div>
+                    <div id="ratio-text" class="text-[10px] text-center text-slate-500 font-bold italic"></div>
                 </div>
 
-                <div id="screenshot-area" class="space-y-6 bg-slate-50 dark:bg-slate-950 p-4 -m-4 rounded-3xl">
-                    <div id="savings-card" class="bg-gradient-to-br from-brand-900 to-emerald-850 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300 transform">
-                        <div class="absolute -right-10 -bottom-10 opacity-10">
-                            <svg class="w-48 h-48" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"></path></svg>
+                <div id="screenshot-area" class="space-y-6 bg-slate-50 dark:bg-slate-950 p-6 -m-6 rounded-[2.5rem] transition-colors">
+                    <!-- Profit Card -->
+                    <div id="savings-card" class="bg-gradient-to-br from-brand-900 to-emerald-850 text-white rounded-[2rem] p-6 shadow-2xl relative overflow-hidden transition-all duration-700 transform">
+                        <div class="absolute -right-12 -bottom-12 opacity-10">
+                            <svg class="w-56 h-56" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"></path></svg>
                         </div>
-                        <div class="relative z-10 space-y-4">
+                        <div class="relative z-10 space-y-5">
                             <div class="flex items-center justify-between">
-                                <span class="text-xs uppercase font-black bg-brand-600 px-3 py-1 rounded-full text-brand-50 tracking-wide" id="saving-badge">Ваша экономия</span>
-                                <span class="text-xs text-brand-200">за счет доплат</span>
+                                <span class="text-[10px] uppercase font-black bg-brand-600/50 backdrop-blur-md px-3 py-1.5 rounded-full text-white tracking-widest" id="saving-badge">Экономия на процентах</span>
                             </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <p class="text-xs text-brand-200">Сбережем процентов</p>
-                                    <p id="saving-money" class="text-2xl font-black text-emerald-200">0 ₽</p>
+                            <div class="grid grid-cols-2 gap-6">
+                                <div class="space-y-1">
+                                    <p class="text-[10px] font-black text-brand-200 uppercase tracking-widest opacity-80">Сбережем денег</p>
+                                    <p id="saving-money" class="text-3xl font-black text-emerald-200">0 ₽</p>
                                 </div>
-                                <div>
-                                    <p class="text-xs text-brand-200">Сократим срок на</p>
-                                    <p id="saving-months" class="text-2xl font-black text-emerald-200">0 мес.</p>
+                                <div class="space-y-1">
+                                    <p class="text-[10px] font-black text-brand-200 uppercase tracking-widest opacity-80">Сократим срок на</p>
+                                    <p id="saving-months" class="text-3xl font-black text-emerald-200">0 мес.</p>
                                 </div>
                             </div>
-                            <div class="border-t border-brand-800/60 pt-3 text-[11px] text-brand-200 flex flex-col sm:flex-row sm:justify-between gap-2">
+                            <div class="border-t border-brand-700/50 pt-4 text-[11px] text-brand-200 flex flex-col sm:flex-row sm:justify-between gap-3 font-bold">
                                 <span>Всего выплат: <strong id="res-total-paid" class="text-white">0 ₽</strong></span>
                                 <span>Досрочный капитал: <strong id="res-total-prepaid" class="text-emerald-300">0 ₽</strong></span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between h-[320px]">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="text-sm font-bold text-slate-800 dark:text-white">Динамика остатка долга</h3>
-                            <div class="flex space-x-2">
-                                <span class="inline-flex items-center text-xs text-slate-400"><span class="w-2.5 h-2.5 rounded-full bg-brand-500 mr-1.5"></span>С доп</span>
-                                <span class="inline-flex items-center text-xs text-slate-400"><span class="w-2.5 h-2.5 rounded-full bg-slate-300 mr-1.5"></span>Без доп</span>
+                    <!-- Chart -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] p-6 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col h-[350px]">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-widest">Прогноз остатка долга</h3>
+                            <div class="flex gap-4">
+                                <span class="inline-flex items-center text-[10px] font-bold text-slate-500 uppercase"><span class="w-2 h-2 rounded-full bg-brand-500 mr-2"></span>С доп</span>
+                                <span class="inline-flex items-center text-[10px] font-bold text-slate-500 uppercase"><span class="w-2 h-2 rounded-full bg-slate-300 mr-2"></span>Без доп</span>
                             </div>
                         </div>
                         <div class="relative flex-1">
@@ -493,12 +432,12 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="shareLink()" class="flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 transition-all shadow-sm active:scale-[0.98]">
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="shareLink()" class="flex items-center justify-center gap-3 py-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-100 font-black uppercase text-xs tracking-widest rounded-2xl border border-slate-200 dark:border-slate-700 transition-all shadow-sm active:scale-95">
                             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
                             Поделиться
                         </button>
-                        <button onclick="takeScreenshot()" class="flex items-center justify-center gap-2 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition-all shadow-sm active:scale-[0.98]">
+                        <button onclick="takeScreenshot()" class="flex items-center justify-center gap-3 py-4 bg-brand-600 hover:bg-brand-700 text-white font-black uppercase text-xs tracking-widest rounded-2xl transition-all shadow-lg active:scale-95">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                             Скриншот
                         </button>
@@ -507,51 +446,72 @@
             </div>
         </div>
 
-        <!-- СЕКЦИЯ: Таблица платежей -->
-        <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
-            <div class="px-6 py-5 border-b dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <!-- ТАБЛИЦА С PAYWALL -->
+        <div class="bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden relative min-h-[500px]">
+            <div class="px-8 py-6 border-b dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h2 class="text-lg font-black text-slate-900 dark:text-white">Интерактивный график платежей</h2>
-                    <p class="text-xs text-slate-500">Раскройте годы для точечного планирования (введите сумму досрочно прямо в таблицу)</p>
+                    <h2 class="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">График платежей по месяцам</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Управляйте каждым месяцем ипотеки индивидуально</p>
                 </div>
-                <div class="flex items-center gap-3">
-                    <button onclick="clearCustomPrepayments()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-bold text-slate-700 dark:text-slate-300 rounded-xl transition">
-                        Сбросить досрочные
+                <div class="flex items-center gap-4">
+                    <button onclick="clearCustomPrepayments()" class="px-5 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-black text-slate-700 dark:text-slate-300 rounded-xl transition uppercase tracking-tighter">
+                        Сбросить доп. взносы
                     </button>
-                    <span id="custom-prepayments-counter" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Спецплатежей: 0</span>
+                    <div id="custom-prepayments-counter" class="text-[10px] font-black text-slate-400 uppercase tracking-widest border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-lg">Спецплатежей: 0</div>
                 </div>
             </div>
-            <div class="p-6">
-                <div id="years-accordion-container" class="space-y-3"></div>
+
+            <div class="p-8">
+                <div id="years-accordion-container" class="space-y-4">
+                    <!-- Content generated by JS -->
+                </div>
+
+                <!-- Paywall Overlay -->
+                <div id="pro-paywall-overlay" class="hidden absolute bottom-0 left-0 right-0 paywall-gradient h-[450px] z-20 flex flex-col items-center justify-end pb-12 px-6">
+                    <div class="max-w-md w-full bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-2xl border border-slate-100 dark:border-slate-800 space-y-8 transform transition-transform hover:scale-105">
+                        <div class="w-20 h-20 bg-brand-100 dark:bg-brand-900/30 rounded-3xl flex items-center justify-center mx-auto text-brand-600">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        </div>
+                        <div class="text-center space-y-2">
+                            <h3 class="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tight">Доступ к PRO-графику</h3>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">График ограничен 3 годами. Активируйте профессиональную версию для полного доступа.</p>
+                        </div>
+                        <div class="space-y-4">
+                            <input type="password" id="pro-password" placeholder="Введите пароль активации" class="w-full px-6 py-4 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-brand-500 text-center font-black tracking-widest text-lg">
+                            <button onclick="unlockPro()" class="w-full py-5 bg-brand-600 hover:bg-brand-700 text-white font-black uppercase text-sm tracking-widest rounded-2xl transition shadow-xl active:scale-95 shadow-brand-500/20">Активировать сейчас</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- Sticky Footer Mobile -->
         <div class="lg:hidden mobile-sticky-results">
-            <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center justify-between mb-4">
                 <div class="flex flex-col">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Ежемесячно</span>
-                    <span id="mobile-payment" class="font-black text-slate-900 dark:text-white text-lg">0 ₽</span>
+                    <span class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Платёж</span>
+                    <span id="mobile-payment" class="font-black text-slate-900 dark:text-white text-xl">0 ₽</span>
                 </div>
                 <div class="text-right flex flex-col items-end">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Экономия</p>
-                    <p id="mobile-saving" class="text-lg font-black text-brand-600">0 ₽</p>
-                    <p id="mobile-magic-hint" class="text-[10px] font-bold text-rose-500 animate-pulse-soft hidden">🔥 Добавь 5 000 ₽ досрочно!</p>
+                    <span class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Экономия</span>
+                    <div id="mobile-saving-container">
+                        <p id="mobile-saving" class="text-2xl font-black text-brand-600 tracking-tighter">0 ₽</p>
+                    </div>
                 </div>
             </div>
-            <button onclick="takeScreenshot()" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
-                📸 Сохранить расчет
-            </button>
+            <button onclick="takeScreenshot()" class="w-full py-4 bg-brand-600 text-white font-black uppercase text-xs tracking-widest rounded-2xl shadow-xl active:scale-95 shadow-brand-500/30">📸 Сохранить расчет</button>
         </div>
     </main>
 
-    <footer class="max-w-7xl mx-auto px-4 py-12 text-center text-xs text-slate-400 border-t dark:border-slate-800">
-        <p>© 2026 ИпотекаПро. Калькулятор для предварительного финансового планирования.</p>
-    </footer>
-
     <script>
         // =========================================================================
-        // ЛОГИКА ПРИЛОЖЕНИЯ
+        // PROPRIETARY MORTGAGE ENGINE
         // =========================================================================
+
+        let activeTab = 'new';
+        let liveRatesData = null;
+        let chartInstance = null;
+        let currentCBRate = 21.0;
 
         let activeTab = 'new';
         let state = {
@@ -573,38 +533,63 @@
             includeTaxDeduction: false,
             taxDeductionStrategy: 'pocket',
             isProUnlocked: false,
-            activeBankId: null,
-            bankRates: { sber: 16.8, vtb: 16.9, alfa: 17.1, tbank: 16.5, sovcom: 17.2 }
+            activeBankKey: null
         };
 
-        let chartInstance = null;
-        let currentCBRate = 21.0;
+        // BANK SELECTION LOGIC
+        function applyDynamicBankRate(bankKey, bankName) {
+            if (state.activeBankKey === bankKey) {
+                state.activeBankKey = null;
+                if (activeTab === 'new') state.rate = 16.0;
+                else state.activeRate = 12.0;
+                showToast("Выбор банка отменен");
+            } else {
+                state.activeBankKey = bankKey;
+                const val = (liveRatesData && liveRatesData[bankKey]) ? liveRatesData[bankKey] : 16.0;
+                if (activeTab === 'new') state.rate = val;
+                else state.activeRate = val;
+                showToast(`Банк: ${bankName} (${val}%)`);
+            }
+            updateBankButtonHighlights();
+            updateInputsDOM();
+            updateCalculations();
+        }
+        window.applyDynamicBankRate = applyDynamicBankRate;
 
+        function updateBankButtonHighlights() {
+            document.querySelectorAll('[id^="bank-btn-"]').forEach(btn => {
+                btn.classList.remove('bg-brand-600', 'text-white', 'shadow-md', 'border-brand-500');
+                btn.classList.add('bg-slate-50', 'dark:bg-slate-800/50', 'border-slate-200', 'dark:border-slate-800');
+            });
+            if (state.activeBankKey) {
+                const active = document.getElementById(`bank-btn-${state.activeBankKey}`);
+                if (active) {
+                    active.classList.add('bg-brand-600', 'text-white', 'shadow-md', 'border-brand-500');
+                    active.classList.remove('bg-slate-50', 'dark:bg-slate-800/50', 'border-slate-200', 'dark:border-slate-800');
+                }
+            }
+        }
+
+        // TABS & INPUTS
         function switchMainTab(tab) {
-            reachGoal("mortgage_tab_switch");
             activeTab = tab;
             state.customPrepayments = {};
-            
-            const btnNew = document.getElementById('tab-new');
-            const btnExt = document.getElementById('tab-existing');
-            const panNew = document.getElementById('panel-new');
-            const panExt = document.getElementById('panel-existing');
-            const title = document.getElementById('params-title');
-
+            state.activeBankKey = null;
+            updateBankButtonHighlights();
+            const btnNew = document.getElementById('tab-new'), btnExt = document.getElementById('tab-existing');
+            const panNew = document.getElementById('panel-new'), panExt = document.getElementById('panel-existing');
             if (tab === 'new') {
                 btnNew.className = "px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all bg-brand-600 text-white shadow-md";
                 btnExt.className = "px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-300 hover:text-white";
-                panNew.classList.remove('hidden');
-                panExt.classList.add('hidden');
-                title.innerText = "Параметры новой ипотеки";
+                panNew.classList.remove('hidden'); panExt.classList.add('hidden');
+                document.getElementById('params-title').innerText = "Параметры новой ипотеки";
                 document.getElementById('label-amount').innerText = "Сумма кредита";
                 document.getElementById('label-term').innerText = "Реальный срок";
             } else {
                 btnExt.className = "px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all bg-brand-600 text-white shadow-md";
                 btnNew.className = "px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-300 hover:text-white";
-                panExt.classList.remove('hidden');
-                panNew.classList.add('hidden');
-                title.innerText = "Параметры действующей ипотеки";
+                panExt.classList.remove('hidden'); panNew.classList.add('hidden');
+                document.getElementById('params-title').innerText = "Действующая ипотека";
                 document.getElementById('label-amount').innerText = "Остаток долга";
                 document.getElementById('label-term').innerText = "Осталось платить";
                 calcTheoreticalBalance();
@@ -612,77 +597,38 @@
             updateCalculations();
         }
 
-        function calcTheoreticalBalance() {
-            const loan = state.activeOriginalLoan, rate = state.activeRate, years = state.activeOriginalTermYears, paid = state.activePaidMonths;
-            if (loan <= 0) return;
-            const mRate = rate / 12 / 100, totalM = years * 12;
-            let pay = 0;
-            if (mRate === 0) pay = loan / totalM;
-            else pay = loan * (mRate * Math.pow(1 + mRate, totalM)) / (Math.pow(1 + mRate, totalM) - 1);
-            let bal = loan;
-            for (let i = 1; i <= Math.min(paid, totalM); i++) bal -= (pay - bal * mRate);
-            state.activeCurrentBalance = Math.max(0, Math.round(bal));
-            document.getElementById('active-balance-input').value = new Intl.NumberFormat('ru-RU').format(state.activeCurrentBalance);
-            document.getElementById('active-balance-range').max = state.activeOriginalLoan;
-            document.getElementById('active-balance-range').value = state.activeCurrentBalance;
-        }
-
-        function handleActiveBalanceInput(el) {
-            state.activeCurrentBalance = formatInputField(el, el.value);
-            document.getElementById('active-balance-range').value = state.activeCurrentBalance;
-            updateCalculations();
-        }
-
-        function syncActiveBalanceRange(v) {
-            state.activeCurrentBalance = parseFloat(v);
-            document.getElementById('active-balance-input').value = new Intl.NumberFormat('ru-RU').format(state.activeCurrentBalance);
-            updateCalculations();
-        }
-
+        function handleCostInput(el) { state.cost = formatInputField(el, el.value); if (state.downPayment > state.cost) state.downPayment = state.cost; updateCalculations(); }
+        function handleDownpaymentInput(el) { state.downPayment = formatInputField(el, el.value); if (state.downPayment > state.cost) state.downPayment = state.cost; updateCalculations(); }
+        function handleRateInput(el) { state.rate = parseFloat(el.value) || 0; state.activeBankKey = null; updateBankButtonHighlights(); updateCalculations(); }
+        function handleTermInput(el) { state.termYears = parseInt(el.value) || 0; updateCalculations(); }
+        function handleTargetPaymentInput(el) { state.targetPayment = formatInputField(el, el.value); updateCalculations(); }
         function handleActiveAmountInput(el) { state.activeOriginalLoan = formatInputField(el, el.value); calcTheoreticalBalance(); updateCalculations(); }
-        function recalcAndSyncBalance() {
-            state.activeOriginalTermYears = parseInt(document.getElementById('active-term-input').value) || 0;
-            state.activePaidMonths = parseInt(document.getElementById('active-paid-months-input').value) || 0;
-            calcTheoreticalBalance(); updateCalculations();
-        }
-
+        function handleActiveRateInput(el) { state.activeRate = parseFloat(el.value) || 0; state.activeBankKey = null; updateBankButtonHighlights(); calcTheoreticalBalance(); updateCalculations(); }
+        function handleActiveBalanceInput(el) { state.activeCurrentBalance = formatInputField(el, el.value); updateCalculations(); }
+        function syncActiveBalanceRange(v) { state.activeCurrentBalance = parseFloat(v); document.getElementById('active-balance-input').value = new Intl.NumberFormat('ru-RU').format(v); updateCalculations(); }
+        function handleRecurringInput(el) { state.recurringPrepayment = formatInputField(el, el.value); updateCalculations(); }
         function syncRangeToInput(f, v) {
             const val = parseFloat(v);
             if (f === 'cost') { state.cost = val; if (state.downPayment > state.cost) state.downPayment = state.cost; }
             else if (f === 'downpayment') { state.downPayment = val; if (state.downPayment > state.cost) state.downPayment = state.cost; }
-            else if (f === 'rate') state.rate = val;
-            else if (f === 'term') state.termYears = parseInt(v);
-            else if (f === 'payment') state.targetPayment = val;
+            else if (f === 'rate') { state.rate = val; state.activeBankKey = null; updateBankButtonHighlights(); }
+            else if (f === 'term') { state.termYears = parseInt(v); }
+            else if (f === 'payment') { state.targetPayment = val; }
             updateInputsDOM(); updateCalculations();
         }
+        function recalcAndSyncBalance() { state.activeOriginalTermYears = parseInt(document.getElementById('active-term-input').value) || 0; state.activePaidMonths = parseInt(document.getElementById('active-paid-months-input').value) || 0; calcTheoreticalBalance(); updateCalculations(); }
 
-        function handleCostInput(el) { state.cost = formatInputField(el, el.value); if (state.downPayment > state.cost) state.downPayment = state.cost; updateInputsDOM(); updateCalculations(); }
-        function handleDownpaymentInput(el) { state.downPayment = formatInputField(el, el.value); if (state.downPayment > state.cost) state.downPayment = state.cost; updateInputsDOM(); updateCalculations(); }
-        function handleTargetPaymentInput(el) { state.targetPayment = formatInputField(el, el.value); updateInputsDOM(); updateCalculations(); }
-        function handleRateInput(el) { state.rate = Math.min(parseFloat(el.value) || 0, 50); state.activeBankId = null; updateBankHighlights(); updateCalculations(); }
-        function handleActiveRateInput(el) { state.activeRate = Math.min(parseFloat(el.value) || 0, 50); state.activeBankId = null; updateBankHighlights(); calcTheoreticalBalance(); updateCalculations(); }
-        function handleTermInput(el) { state.termYears = Math.min(parseInt(el.value) || 0, 50); updateCalculations(); }
-        function handleRecurringInput(el) { state.recurringPrepayment = formatInputField(el, el.value); updateCalculations(); }
-
-        function toggleInsurance() { state.includeInsurance = document.getElementById('insurance-toggle').checked; updateCalculations(); }
-        function toggleTaxDeduction() {
-            state.includeTaxDeduction = document.getElementById('tax-toggle').checked;
-            document.getElementById('tax-strategy-menu').classList.toggle('hidden', !state.includeTaxDeduction);
-            updateCalculations();
-        }
-        function setTaxStrategy(s) {
-            state.taxDeductionStrategy = s;
-            document.getElementById('strat-pocket').className = s === 'pocket' ? "flex-1 py-1 text-[10px] font-bold rounded-md bg-white dark:bg-slate-600 shadow-sm transition-all" : "flex-1 py-1 text-[10px] font-bold text-slate-500 dark:text-slate-400";
-            document.getElementById('strat-reinvest').className = s === 'reinvest' ? "flex-1 py-1 text-[10px] font-bold rounded-md bg-white dark:bg-slate-600 shadow-sm transition-all" : "flex-1 py-1 text-[10px] font-bold text-slate-500 dark:text-slate-400";
-            updateCalculations();
-        }
-
-        function toggleStrategy() {
-            state.prepaymentStrategy = document.getElementById('strategy-toggle').checked ? 'payment' : 'term';
-            const b = document.getElementById('strategy-badge');
-            b.innerText = state.prepaymentStrategy === 'term' ? 'Срок кредита' : 'Размер платежа';
-            b.className = state.prepaymentStrategy === 'term' ? 'text-[10px] uppercase font-black px-2 py-0.5 rounded-full bg-brand-100 text-brand-800' : 'text-[10px] uppercase font-black px-2 py-0.5 rounded-full bg-slate-200 text-slate-800';
-            updateCalculations();
+        function calcTheoreticalBalance() {
+            const loan = state.activeOriginalLoan, rate = state.activeRate, yrs = state.activeOriginalTermYears, paid = state.activePaidMonths;
+            if (loan <= 0) return;
+            const mRate = rate / 12 / 100, tM = yrs * 12;
+            let pay = mRate === 0 ? loan / tM : loan * (mRate * Math.pow(1 + mRate, tM)) / (Math.pow(1 + mRate, tM) - 1);
+            let bal = loan;
+            for (let i = 1; i <= Math.min(paid, tM); i++) bal -= (pay - bal * mRate);
+            state.activeCurrentBalance = Math.max(0, Math.round(bal));
+            document.getElementById('active-balance-input').value = new Intl.NumberFormat('ru-RU').format(state.activeCurrentBalance);
+            document.getElementById('active-balance-range').max = state.activeOriginalLoan;
+            document.getElementById('active-balance-range').value = state.activeCurrentBalance;
         }
 
         function updateInputsDOM() {
@@ -692,226 +638,208 @@
             document.getElementById('rate-input').value = state.rate;
             document.getElementById('term-input').value = state.termYears;
             document.getElementById('payment-input').value = f(state.targetPayment);
-            document.getElementById('recurring-input').value = f(state.recurringPrepayment);
             document.getElementById('active-amount-input').value = f(state.activeOriginalLoan);
             document.getElementById('active-rate-input').value = state.activeRate;
             document.getElementById('active-term-input').value = state.activeOriginalTermYears;
             document.getElementById('active-paid-months-input').value = state.activePaidMonths;
             document.getElementById('active-balance-input').value = f(state.activeCurrentBalance);
+            document.getElementById('recurring-input').value = f(state.recurringPrepayment);
+            document.getElementById('cost-range').value = state.cost;
+            document.getElementById('downpayment-range').value = state.downPayment;
+            document.getElementById('rate-range').value = state.rate;
+            document.getElementById('term-range').value = state.termYears;
+            document.getElementById('payment-range').value = state.targetPayment;
         }
 
-        function switchCalculationMode(m) {
-            state.mode = m;
-            document.getElementById('mode-term-btn').classList.toggle('bg-white', m === 'term');
-            document.getElementById('mode-term-btn').classList.toggle('shadow-sm', m === 'term');
-            document.getElementById('mode-payment-btn').classList.toggle('bg-white', m === 'payment');
-            document.getElementById('mode-payment-btn').classList.toggle('shadow-sm', m === 'payment');
-            document.getElementById('term-input-container').classList.toggle('hidden', m === 'payment');
-            document.getElementById('payment-input-container').classList.toggle('hidden', m === 'term');
+        function switchCalculationMode(mode) {
+            state.mode = mode;
+            const btnT = document.getElementById('mode-term-btn'), btnP = document.getElementById('mode-payment-btn');
+            const conT = document.getElementById('term-input-container'), conP = document.getElementById('payment-input-container');
+            btnT.className = mode === 'term' ? "flex-1 py-3 text-xs font-black uppercase tracking-tight rounded-xl transition-all shadow-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white" : "flex-1 py-3 text-xs font-black uppercase tracking-tight rounded-xl transition-all text-slate-500 dark:text-slate-400";
+            btnP.className = mode === 'payment' ? "flex-1 py-3 text-xs font-black uppercase tracking-tight rounded-xl transition-all shadow-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white" : "flex-1 py-3 text-xs font-black uppercase tracking-tight rounded-xl transition-all text-slate-500 dark:text-slate-400";
+            conT.classList.toggle('hidden', mode !== 'term'); conP.classList.toggle('hidden', mode !== 'payment');
             updateCalculations();
         }
 
-        function applyBankRate(v, n, id) {
-            state.activeBankId = id; updateBankHighlights();
-            if (activeTab === 'new') { state.rate = v; document.getElementById('rate-input').value = v; }
-            else { state.activeRate = v; document.getElementById('active-rate-input').value = v; calcTheoreticalBalance(); }
-            updateCalculations(); showToast(`Применена ставка ${v}% (${n})`);
+        function toggleInsurance() { state.includeInsurance = document.getElementById('insurance-toggle').checked; updateCalculations(); }
+        function toggleTaxDeduction() { state.includeTaxDeduction = document.getElementById('tax-toggle').checked; document.getElementById('tax-strategy-menu').classList.toggle('hidden', !state.includeTaxDeduction); updateCalculations(); }
+        function setTaxStrategy(strat) {
+            state.taxDeductionStrategy = strat;
+            const bP = document.getElementById('strat-pocket'), bR = document.getElementById('strat-reinvest');
+            bP.className = strat === 'pocket' ? "flex-1 py-1.5 text-[10px] font-black rounded-lg transition-all bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm uppercase" : "flex-1 py-1.5 text-[10px] font-black rounded-lg transition-all text-slate-500 dark:text-slate-400 uppercase";
+            bR.className = strat === 'reinvest' ? "flex-1 py-1.5 text-[10px] font-black rounded-lg transition-all bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm uppercase" : "flex-1 py-1.5 text-[10px] font-black rounded-lg transition-all text-slate-500 dark:text-slate-400 uppercase";
+            updateCalculations();
         }
-
-        function updateBankHighlights() {
-            document.querySelectorAll('[id^="bank-"]').forEach(el => el.classList.remove('ring-2', 'ring-brand-500', 'bg-brand-50', 'dark:bg-brand-900/20'));
-            if (state.activeBankId) {
-                const el = document.getElementById(`bank-${state.activeBankId}`);
-                if (el) el.classList.add('ring-2', 'ring-brand-500', 'bg-brand-50', 'dark:bg-brand-900/20');
-            }
+        function toggleStrategy() {
+            state.prepaymentStrategy = document.getElementById('strategy-toggle').checked ? 'payment' : 'term';
+            document.getElementById('strategy-badge').innerText = state.prepaymentStrategy === 'term' ? 'Срок кредита' : 'Размер платежа';
+            updateCalculations();
         }
+        function resetAll() { state = { ...state, cost: 10000000, downPayment: 2000000, rate: 16.0, termYears: 20, targetPayment: 100000, customPrepayments: {}, recurringPrepayment: 0, activeBankKey: null }; updateBankButtonHighlights(); updateInputsDOM(); updateCalculations(); }
+        function clearCustomPrepayments() { state.customPrepayments = {}; updateCalculations(); showToast("Спецплатежи сброшены"); }
+        function setCustomPrepayment(m, a) { if (a <= 0) delete state.customPrepayments[m]; else state.customPrepayments[m] = a; updateCalculations(); }
 
-        function simulateMortgage(withPre = true) {
+        // ENGINE
+        function simulate(withPre = true) {
             let bal = activeTab === 'new' ? (state.cost - state.downPayment) : state.activeCurrentBalance;
             if (bal <= 0) return { schedule: [], totalInterest: 0, totalPaid: 0, totalPrepaid: 0, realTerm: 0, totalTaxReturned: 0 };
-            
             let rate = activeTab === 'new' ? state.rate : state.activeRate;
             let planned = activeTab === 'new' ? (state.termYears * 12) : ((state.activeOriginalTermYears * 12) - state.activePaidMonths);
             if (planned <= 0) planned = 12;
-            
             const mRate = rate / 12 / 100;
-            let currentPay = 0;
-
+            let pay = 0;
             if (activeTab === 'new' && state.mode === 'payment') {
-                currentPay = state.targetPayment;
-                if (currentPay <= bal * mRate) currentPay = Math.ceil(bal * mRate) + 1000;
-                planned = mRate > 0 ? Math.ceil(Math.log(currentPay / (currentPay - bal * mRate)) / Math.log(1 + mRate)) : Math.ceil(bal / currentPay);
+                pay = state.targetPayment;
+                if (pay <= bal * mRate) pay = Math.ceil(bal * mRate) + 1000;
+                planned = mRate > 0 ? Math.ceil(Math.log(pay / (pay - bal * mRate)) / Math.log(1 + mRate)) : Math.ceil(bal / pay);
             } else {
-                currentPay = mRate === 0 ? (bal / planned) : (bal * (mRate * Math.pow(1 + mRate, planned)) / (Math.pow(1 + mRate, planned) - 1));
+                pay = mRate === 0 ? bal / planned : bal * (mRate * Math.pow(1 + mRate, planned)) / (Math.pow(1 + mRate, planned) - 1);
             }
-
-            let sch = [], tInt = 0, tPaid = 0, tPre = 0, tTax = 0;
-            let remProp = 260000, remInt = 390000, yPr = 0, yInt = 0, m = 0;
-
+            let sch = [], tInt = 0, tPaid = 0, tPre = 0, tTax = 0, rP = 260000, rI = 390000, yPr = 0, yIn = 0, m = 0;
             while (bal > 0.01 && m < 600) {
                 m++;
                 let ins = (state.includeInsurance && m % 12 === 1) ? (bal * 0.01) : 0;
                 let interest = bal * mRate;
-                let sched = Math.min(currentPay, bal + interest);
+                let sched = Math.min(pay, bal + interest);
                 let principal = sched - interest;
                 if (principal < 0) principal = 0;
-
                 let pre = withPre ? ((state.customPrepayments[m] || 0) + state.recurringPrepayment) : 0;
                 pre = Math.min(pre, bal - principal);
-
                 bal = Math.max(0, bal - principal - pre);
-                yPr += principal; yInt += interest;
-
+                yPr += principal; yIn += interest;
                 if (m % 12 === 0) {
-                    let rP = Math.min(remProp, yPr * 0.13), rI = Math.min(remInt, yInt * 0.13);
-                    let yR = rP + rI; tTax += yR; remProp -= rP; remInt -= rI;
+                    let dP = Math.min(rP, yPr * 0.13), dI = Math.min(rI, yIn * 0.13), yR = dP + dI;
+                    tTax += yR; rP -= dP; rI -= dI;
                     if (state.includeTaxDeduction && state.taxDeductionStrategy === 'reinvest' && withPre) {
                         let tP = Math.min(bal, yR); bal -= tP; pre += tP;
                     }
-                    yPr = 0; yInt = 0;
+                    yPr = 0; yIn = 0;
                 }
-
-                sch.push({ month: m, payment: sched, interest, principal, prepayment: pre, balance: bal, insurance: ins });
+                sch.push({ m, pay: sched, interest, principal, pre, balance: bal, ins });
                 tInt += interest; tPaid += (sched + pre + ins); tPre += pre;
-
                 if (withPre && pre > 0 && state.prepaymentStrategy === 'payment' && bal > 0) {
-                    let rM = planned - m;
-                    if (rM > 0) currentPay = mRate === 0 ? (bal / rM) : (bal * (mRate * Math.pow(1 + mRate, rM)) / (Math.pow(1 + mRate, rM) - 1));
+                    let rem = planned - m;
+                    if (rem > 0) pay = mRate === 0 ? bal / rem : bal * (mRate * Math.pow(1 + mRate, rem)) / (Math.pow(1 + mRate, rem) - 1);
                 }
             }
             return { schedule: sch, totalInterest: tInt, totalPaid: tPaid, totalPrepaid: tPre, realTerm: m, totalTaxReturned: tTax };
         }
 
-        function renderAmortizationTable(sch) {
-            const container = document.getElementById('years-accordion-container');
-            container.innerHTML = '';
-            if (!sch.length) { container.innerHTML = '<div class="text-center py-8">Нет данных</div>'; return; }
-
-            let years = {};
-            sch.forEach(i => { let y = Math.ceil(i.month / 12); if (!years[y]) years[y] = []; years[y].push(i); });
-            document.getElementById('custom-prepayments-counter').innerText = `Спецплатежей: ${Object.keys(state.customPrepayments).length}`;
-
-            Object.keys(years).forEach(y => {
-                const yn = parseInt(y);
-                if (!state.isProUnlocked && yn > 3) return;
-                const data = years[y], id = `year-${y}`;
-                let yp = 0, yi = 0, ypre = 0, bl = data[data.length-1].balance;
-                data.forEach(m => { yp += m.payment; yi += m.interest; ypre += m.prepayment; });
-
-                const wrap = document.createElement('div');
-                wrap.className = 'flex flex-col';
-                wrap.innerHTML = `
-                    <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-150 dark:border-slate-800 rounded-xl p-4 flex justify-between items-center cursor-pointer hover:bg-slate-100 transition-all" onclick="toggleYearAccordion('${id}')">
-                        <div class="flex items-center gap-2"><span class="w-6 h-6 bg-brand-600 text-white rounded text-[10px] flex items-center justify-center font-bold">${y}</span><span class="font-bold text-sm">Год</span></div>
-                        <div class="text-right"><span class="block text-[10px] text-slate-400 font-bold uppercase">Остаток</span><span class="text-xs font-black">${formatMoney(bl)}</span></div>
-                    </div>
-                    <div id="content-${id}" class="hidden bg-white dark:bg-slate-900 border-x border-b dark:border-slate-800 p-2 space-y-1 rounded-b-xl">
-                        ${data.map(m => `
-                            <div class="grid grid-cols-2 lg:grid-cols-6 gap-2 text-[10px] p-2 border-b dark:border-slate-800">
-                                <span class="font-bold text-slate-400">Месяц ${m.month}</span>
-                                <span class="text-right">Пл: ${formatMoney(m.payment)}</span>
-                                <span class="text-rose-500 text-right font-bold">%: ${formatMoney(m.interest)}</span>
-                                <span class="text-emerald-600 text-right font-bold"><input type="text" value="${state.customPrepayments[m.month] ? new Intl.NumberFormat('ru-RU').format(state.customPrepayments[m.month]) : ''}" oninput="formatTableInputVisual(this)" onchange="handleTablePrepaymentCommit(this, ${m.month})" class="w-20 text-right bg-brand-50 dark:bg-brand-900/20 border-none outline-none font-bold"></span>
-                                <span class="col-span-2 text-right font-black">Ост: ${formatMoney(m.balance)}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-                container.appendChild(wrap);
-            });
-
-            if (!state.isProUnlocked && Object.keys(years).length > 3) {
-                const pw = document.createElement('div');
-                pw.className = 'p-8 bg-slate-100 dark:bg-slate-800 rounded-3xl text-center space-y-4 shadow-inner mt-4';
-                pw.innerHTML = `<h3 class="font-black text-xl">CalcHub PRO</h3><p class="text-xs text-slate-500">График ограничен 3 годами. Введите пароль для доступа.</p><input type="password" id="pro-password" placeholder="Пароль" class="px-4 py-3 rounded-xl border dark:bg-slate-900 text-center font-bold outline-none focus:ring-2 focus:ring-brand-500"><button onclick="unlockPro()" class="px-8 py-3 bg-brand-600 text-white rounded-xl font-bold ml-2 transition-all active:scale-95">Активировать</button>`;
-                container.appendChild(pw);
+        // UI SYNC
+        function updateCalculations() {
+            const bRes = simulate(false), pRes = simulate(true);
+            const loan = activeTab === 'new' ? (state.cost - state.downPayment) : state.activeCurrentBalance;
+            document.getElementById('res-loan-amount').innerText = formatMoney(loan);
+            document.getElementById('res-monthly-payment').innerText = formatMoney(pRes.schedule[0]?.pay || 0);
+            document.getElementById('res-real-term').innerText = pRes.realTerm + ' мес.';
+            let over = pRes.totalInterest, paid = pRes.totalPaid;
+            if (state.includeTaxDeduction && state.taxDeductionStrategy === 'pocket') { over -= pRes.totalTaxReturned; paid -= pRes.totalTaxReturned; }
+            document.getElementById('res-total-interest').innerText = formatMoney(over);
+            document.getElementById('res-total-paid').innerText = formatMoney(paid);
+            document.getElementById('res-total-prepaid').innerText = formatMoney(pRes.totalPrepaid);
+            let saved = bRes.totalInterest - pRes.totalInterest + (state.includeTaxDeduction ? pRes.totalTaxReturned : 0);
+            document.getElementById('saving-money').innerText = formatMoney(Math.max(0, saved));
+            document.getElementById('saving-months').innerText = Math.max(0, bRes.realTerm - pRes.realTerm) + ' мес.';
+            document.getElementById('mobile-payment').innerText = formatMoney(pRes.schedule[0]?.pay || 0);
+            const mobSavingCon = document.getElementById('mobile-saving-container');
+            if (saved <= 0) {
+                mobSavingCon.innerHTML = `<p class="text-[11px] font-black text-rose-500 animate-pulse-vibrant uppercase tracking-tight">🔥 Добавь 5 000 ₽ досрочно, чтобы увидеть магию</p>`;
+            } else {
+                mobSavingCon.innerHTML = `<p id="mobile-saving" class="text-xl font-black text-brand-600 tracking-tighter">${formatMoney(saved)}</p>`;
             }
+            const bp = (loan / (loan + pRes.totalInterest)) * 100;
+            document.getElementById('ratio-body').style.width = bp + '%';
+            document.getElementById('ratio-interest').style.width = (100 - bp) + '%';
+            document.getElementById('ratio-text').innerText = `Долг: ${Math.round(bp)}% | Проценты: ${Math.round(100-bp)}%`;
+            document.getElementById('cost-display').innerText = formatMoney(state.cost);
+            document.getElementById('downpayment-percent').innerText = state.cost > 0 ? Math.round((state.downPayment/state.cost)*100)+'%' : '0%';
+            document.getElementById('rate-display').innerText = state.rate.toFixed(1)+'%';
+            document.getElementById('term-display').innerText = state.termYears+' '+getYearWord(state.termYears);
+            document.getElementById('payment-display').innerText = formatMoney(state.targetPayment);
+            renderTable(pRes.schedule); updateChart(pRes.schedule, bRes.schedule);
         }
 
-        function toggleYearAccordion(id) { document.getElementById(`content-${id}`)?.classList.toggle('hidden'); }
-        function unlockPro() { if ((document.getElementById('pro-password').value || '').toUpperCase() === 'PORF') { state.isProUnlocked = true; updateCalculations(); showToast("CalcHub PRO активирован!"); } else showToast("Неверный пароль"); }
+        function renderTable(sch) {
+            const con = document.getElementById('years-accordion-container'); con.innerHTML = '';
+            if (!sch.length) return;
+            let years = {}; sch.forEach(i => { let y = Math.ceil(i.m / 12); if (!years[y]) years[y] = []; years[y].push(i); });
+            const yearKeys = Object.keys(years);
+            yearKeys.forEach(y => {
+                const isB = !state.isProUnlocked && parseInt(y) > 3;
+                const data = years[y], id = `year-${y}`;
+                let bl = data[data.length-1].balance;
+                const wrap = document.createElement('div');
+                wrap.className = `transition-all duration-500 ${isB ? 'blur-access' : ''}`;
+                wrap.innerHTML = `
+                    <div class="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl flex justify-between items-center cursor-pointer border border-slate-200 dark:border-slate-800 hover:border-brand-500 transition-all" onclick="toggleYear('${id}')">
+                        <div class="flex items-center gap-3"><span class="w-8 h-8 bg-brand-600 text-white rounded-xl flex items-center justify-center font-black text-xs shadow-lg shadow-brand-500/20">${y}</span><span class="font-black text-sm uppercase tracking-tight text-slate-700 dark:text-slate-300">Год</span></div>
+                        <div class="text-right"><span class="block text-[9px] text-slate-400 font-black uppercase tracking-widest">Остаток</span><span class="text-sm font-black text-slate-900 dark:text-white">${formatMoney(bl)}</span></div>
+                    </div>
+                    <div id="content-${id}" class="hidden bg-white dark:bg-slate-900 border-x border-b border-slate-100 dark:border-slate-800 p-3 space-y-1 rounded-b-3xl">
+                        ${data.map(m => `
+                            <div class="grid grid-cols-2 lg:grid-cols-6 gap-3 text-[10px] p-3 border-b border-slate-50 dark:border-slate-800 items-center">
+                                <span class="font-black text-slate-400 uppercase tracking-tighter">Месяц ${m.m}</span>
+                                <span class="text-right font-bold">${formatMoney(m.pay)}</span>
+                                <span class="text-rose-500 text-right font-black">% ${formatMoney(m.interest)}</span>
+                                <span class="text-emerald-600 text-right"><input type="text" value="${state.customPrepayments[m.m]?new Intl.NumberFormat('ru-RU').format(state.customPrepayments[m.m]):''}" oninput="formatTableInputVisual(this)" onchange="handleTablePrepaymentCommit(this, ${m.m})" class="w-20 text-right bg-brand-50 dark:bg-brand-900/20 border-none outline-none font-black rounded-lg px-2 py-1 shadow-inner" placeholder="0 ₽"></span>
+                                <span class="col-span-2 text-right font-black text-slate-900 dark:text-white text-xs">${formatMoney(m.balance)}</span>
+                            </div>
+                        `).join('')}
+                    </div>`;
+                con.appendChild(wrap);
+            });
+            document.getElementById('pro-paywall-overlay').classList.toggle('hidden', state.isProUnlocked || yearKeys.length <= 3);
+        }
+
+        function toggleYear(id) { const el = document.getElementById(`content-${id}`); if (el) el.classList.toggle('hidden'); }
+        function unlockPro() {
+            const pwd = document.getElementById('pro-password').value;
+            if (pwd && pwd.toUpperCase() === 'PORF') { state.isProUnlocked = true; updateCalculations(); showToast("CalcHub PRO активирован!"); }
+            else showToast("Неверный пароль");
+        }
 
         function formatTableInputVisual(input) {
-            let cursorPosition = input.selectionStart;
-            let originalLength = input.value.length;
-            let cleanVal = input.value.replace(/\D/g, '');
-            if (cleanVal === '') { input.value = ''; return; }
-            let formatted = new Intl.NumberFormat('ru-RU').format(parseInt(cleanVal));
-            input.value = formatted;
-            let diff = formatted.length - originalLength;
-            input.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
+            let val = input.value.replace(/\D/g, '');
+            input.value = val ? new Intl.NumberFormat('ru-RU').format(parseInt(val)) : '';
         }
         function handleTablePrepaymentCommit(input, m) { setCustomPrepayment(m, parseFloat(input.value.replace(/\s+/g, '')) || 0); }
 
         function updateChart(sw, swo) {
             const ctx = document.getElementById('balanceChart').getContext('2d');
-            const labs = sw.map(i => i.month), dw = sw.map(i => i.balance), dwo = swo.map(i => i.balance);
+            const labs = sw.map(i => i.m), dw = sw.map(i => i.balance), dwo = swo.map(i => i.balance);
             if (chartInstance) chartInstance.destroy();
             chartInstance = new Chart(ctx, {
                 type: 'line',
-                data: { labels: labs, datasets: [{ label: 'С доп', data: dw, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.05)', fill: true, tension: 0.3 }, { label: 'Без доп', data: dwo, borderColor: '#cbd5e1', borderDash: [5, 5], tension: 0.3 }] },
-                options: { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { beginAtZero: true, ticks: { callback: v => (v/1000000).toFixed(1) + 'м' } } }, plugins: { legend: { display: false } } }
+                data: {
+                    labels: labs,
+                    datasets: [
+                        { label: 'С досрочными', data: dw, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.05)', fill: true, tension: 0.4, pointRadius: 2, borderWidth: 3 },
+                        { label: 'Без досрочных', data: dwo, borderColor: '#cbd5e1', borderDash: [5, 5], tension: 0.4, pointRadius: 0, borderWidth: 2 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { display: false }, y: { beginAtZero: true, ticks: { font: { size: 9, weight: 'bold' }, color: '#94a3b8', callback: v => (v/1000000).toFixed(1) + 'м' }, grid: { color: 'rgba(203, 213, 225, 0.1)' } } }
+                }
             });
         }
 
-        function updateCalculations() {
-            const br = simulateMortgage(false), pr = simulateMortgage(true);
-            const loan = activeTab === 'new' ? (state.cost - state.downPayment) : state.activeCurrentBalance;
-            
-            document.getElementById('res-loan-amount').innerText = formatMoney(loan);
-            document.getElementById('res-monthly-payment').innerText = formatMoney(pr.schedule[0]?.payment || 0);
-            document.getElementById('res-real-term').innerText = pr.realTerm + ' мес.';
-
-            let over = pr.totalInterest, paid = pr.totalPaid;
-            if (state.includeTaxDeduction && state.taxDeductionStrategy === 'pocket') { over -= pr.totalTaxReturned; paid -= pr.totalTaxReturned; }
-            
-            document.getElementById('res-total-interest').innerText = formatMoney(over);
-            document.getElementById('res-total-paid').innerText = formatMoney(paid);
-            document.getElementById('res-total-prepaid').innerText = formatMoney(pr.totalPrepaid);
-
-            let saved = br.totalInterest - pr.totalInterest + (state.includeTaxDeduction ? pr.totalTaxReturned : 0);
-            document.getElementById('saving-money').innerText = formatMoney(Math.max(0, saved));
-            document.getElementById('saving-months').innerText = Math.max(0, br.realTerm - pr.realTerm) + ' мес.';
-            document.getElementById('mobile-payment').innerText = formatMoney(pr.schedule[0]?.payment || 0);
-            document.getElementById('mobile-saving').innerText = formatMoney(Math.max(0, saved));
-            document.getElementById('mobile-magic-hint').classList.toggle('hidden', saved > 0);
-
-            const bp = (loan / (loan + pr.totalInterest)) * 100;
-            document.getElementById('ratio-body').style.width = bp + '%';
-            document.getElementById('ratio-interest').style.width = (100 - bp) + '%';
-            document.getElementById('ratio-text').innerText = `Долг: ${Math.round(bp)}% | %: ${Math.round(100 - bp)}%`;
-
-            renderAmortizationTable(pr.schedule);
-            updateChart(pr.schedule, br.schedule);
-        }
-
-        function formatMoney(v) { return new Intl.NumberFormat('ru-RU').format(Math.round(v)) + ' ₽'; }
-        function resetAll() {
-            if (activeTab === 'new') { state.cost = 10000000; state.downPayment = 2000000; state.rate = 16.0; state.mode = 'term'; state.termYears = 20; }
-            else { state.activeOriginalLoan = 8000000; state.activeRate = 12.0; state.activeOriginalTermYears = 20; state.activePaidMonths = 36; calcTheoreticalBalance(); }
-            state.customPrepayments = {}; state.recurringPrepayment = 0; state.activeBankId = null; updateInputsDOM(); updateCalculations(); updateBankHighlights();
-        }
-        function clearCustomPrepayments() { state.customPrepayments = {}; updateCalculations(); showToast("Досрочные платежи сброшены"); }
-        function setCustomPrepayment(m, a) { if (a <= 0) delete state.customPrepayments[m]; else state.customPrepayments[m] = a; updateCalculations(); }
-
         async function loadLiveRates() {
-            const d = await fetchRates();
-            if (d) {
-                if (d.cb_rate) { currentCBRate = d.cb_rate; document.getElementById('cb-rate-display').innerText = d.cb_rate.toFixed(2) + '%'; }
-                ['sber', 'vtb', 'alfa', 'tbank', 'sovcom'].forEach(b => { if (d[b]) { state.bankRates[b] = d[b]; const el = document.getElementById(`rate-${b}`); if (el) el.innerText = d[b].toFixed(1) + '%'; } });
+            const data = await fetchRates();
+            if (data) {
+                liveRatesData = data;
+                if (data.cb_rate) { currentCBRate = data.cb_rate; document.getElementById('cb-rate-display').innerText = data.cb_rate.toFixed(2) + '%'; }
+                ['sberbank', 'vtb', 'alfa', 'tbank', 'sovcom'].forEach(k => {
+                    const val = data[k], el = document.getElementById(`rate-${k}`);
+                    if (val && el) el.innerText = val.toFixed(1) + '%';
+                });
             }
         }
 
-        window.applyBankRate = applyBankRate;
-        window.applyDynamicBankRate = applyBankRate;
         window.onload = () => { updateInputsDOM(); switchMainTab('new'); loadLiveRates(); };
-        window.shareLink = () => { navigator.clipboard.writeText(window.location.href); showToast("Ссылка скопирована!"); };
-        window.takeScreenshot = () => {
-            const area = document.getElementById('screenshot-area');
-            html2canvas(area, { backgroundColor: null, scale: 2 }).then(c => {
-                const a = document.createElement('a'); a.download = 'mortgage-calc.png'; a.href = c.toDataURL(); a.click();
-            });
-        };
+        window.shareLink = shareLink;
+        window.takeScreenshot = () => { takeScreenshot('screenshot-area', 'mortgage-pro-calculation.png'); };
     </script>
 </body>
 </html>
