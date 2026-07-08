@@ -133,7 +133,7 @@
                 <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
                 <div class="flex items-center space-x-3">
                     <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner">
-                        <svg class="w-8 h-8 text-white animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                         </svg>
                     </div>
@@ -179,7 +179,7 @@
                     </div>
                     <div class="flex items-baseline justify-between gap-1">
                         <span class="text-base font-black text-slate-950 dark:text-white" id="rate-sber">...</span>
-                        <button id="btn-rate-sber" onclick="toggleBankRateButton('sber', 'Сбербанка')" class="btn-bank-rate px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700">Применить</button>
+                        <button id="btn-rate-sber" onclick="toggleBankRateButton('sberbank', 'Сбербанка')" class="btn-bank-rate px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700">Применить</button>
                     </div>
                 </div>
                 <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition min-w-[145px] sm:min-w-0 snap-start shrink-0">
@@ -328,11 +328,11 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-2">
                             <label class="text-xs font-bold text-slate-400 uppercase">Срок (лет)</label>
-                            <input type="number" id="active-term-input" oninput="recalcAndSyncBalance()" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold">
+                            <input type="number" id="active-term-input" oninput="recalcAndSyncBalance()" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold text-slate-850 dark:text-white">
                         </div>
                         <div class="space-y-2">
                             <label class="text-xs font-bold text-slate-400 uppercase">Уже плачу (мес)</label>
-                            <input type="number" id="active-paid-months-input" oninput="recalcAndSyncBalance()" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold">
+                            <input type="number" id="active-paid-months-input" oninput="recalcAndSyncBalance()" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold text-slate-850 dark:text-white">
                         </div>
                     </div>
 
@@ -420,7 +420,7 @@
                     </div>
                     <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between">
                         <span class="text-xs font-bold text-slate-400 block mb-1" id="label-term">Реальный срок</span>
-                        <span id="res-real-term" class="text-lg font-black text-brand-700">0 мес.</span>
+                        <span id="res-real-term" class="text-lg font-black text-brand-700 dark:text-brand-500">0 мес.</span>
                     </div>
                     <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between">
                         <span class="text-xs font-bold text-slate-400 block mb-1" id="label-interest">Переплата</span>
@@ -538,7 +538,28 @@
         </div>
     </main>
 
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <span class="text-brand-500 font-bold">✓</span>
+        <span id="toast-message" class="text-sm">Готово</span>
+    </div>
+
     <script>
+        // ЛОКАЛЬНЫЙ ИНКАПСУЛИРОВАННЫЙ UTILS ФУНКЦИОНАЛ (Защита от конфликтов внешних файлов)
+        function localFormatMoney(amount) {
+            return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(amount);
+        }
+        function localFormatNumber(amount) {
+            return new Intl.NumberFormat('ru-RU').format(amount);
+        }
+        function localGetYearWord(years) {
+            let n = Math.abs(years) % 100; if (n >= 5 && n <= 20) return 'лет';
+            n %= 10; if (n === 1) return 'год'; if (n >= 2 && n <= 4) return 'года'; return 'лет';
+        }
+        function localGetMonthWord(months) {
+            let n = Math.abs(months) % 100; if (n >= 5 && n <= 20) return 'месяцев';
+            n %= 10; if (n === 1) return 'месяц'; if (n >= 2 && n <= 4) return 'месяца'; return 'месяцев';
+        }
+
         let activeTab = 'new';
         let liveRatesData = null;
         let selectedActiveBankKey = null;
@@ -580,8 +601,7 @@
             if (tab === 'new') {
                 tNew.className = "px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 bg-brand-600 text-white shadow-md";
                 tExist.className = "px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 text-slate-300 hover:text-white";
-                pNew.classList.remove('hidden');
-                pExist.classList.add('hidden');
+                pNew.classList.remove('hidden'); pExist.classList.add('hidden');
                 title.innerText = "Параметры новой ипотеки";
                 document.getElementById('label-amount').innerText = "Сумма кредита";
                 document.getElementById('label-term').innerText = "Реальный срок";
@@ -589,8 +609,7 @@
             } else {
                 tExist.className = "px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 bg-brand-600 text-white shadow-md";
                 tNew.className = "px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 text-slate-300 hover:text-white";
-                pExist.classList.remove('hidden');
-                pNew.classList.add('hidden');
+                pExist.classList.remove('hidden'); pNew.classList.add('hidden');
                 title.innerText = "Параметры действующей ипотеки";
                 document.getElementById('label-amount').innerText = "Остаток долга";
                 document.getElementById('label-term').innerText = "Осталось платить";
@@ -615,27 +634,25 @@
                 bal -= (pmt - (bal * mRate));
             }
             state.activeCurrentBalance = Math.max(0, Math.round(bal));
-            document.getElementById('active-balance-input').value = formatNumber(state.activeCurrentBalance);
+            document.getElementById('active-balance-input').value = localFormatNumber(state.activeCurrentBalance);
             document.getElementById('active-balance-range').max = loan;
             document.getElementById('active-balance-range').value = state.activeCurrentBalance;
         }
 
         function toggleBankRateButton(bankKey, bankName) {
-            const btn = document.getElementById(`btn-rate-${bankKey}`);
-            const rateSpan = document.getElementById(`rate-${bankKey}`);
-            if (!rateSpan) return;
+            const btn = document.getElementById(`btn-rate-${bankKey === 'sberbank' ? 'sber' : bankKey}`);
+            const textElem = document.getElementById(`rate-${bankKey === 'sberbank' ? 'sber' : bankKey}`);
+            if (!textElem) return;
 
-            // Извлекаем чистую цифру с экрана (например "15.9%") -> 15.9
-            const screenRate = parseFloat(rateSpan.innerText.replace('%', '')) || 16.0;
+            const screenRate = parseFloat(textElem.innerText.replace('%', '')) || (activeTab === 'new' ? 16.0 : 12.0);
 
             if (selectedActiveBankKey === bankKey) {
-                // Повторный клик - сброс к базовой
                 resetBankButtonsHighlight();
-                applyRateValue(activeTab === 'new' ? 16.0 : 12.0, "Дефолтная");
+                applyRateValue(activeTab === 'new' ? 16.0 : 12.0, "Базовая");
             } else {
                 resetBankButtonsHighlight();
                 selectedActiveBankKey = bankKey;
-                btn.className = "btn-bank-rate px-2 py-0.5 bg-brand-600 text-white shadow-md rounded-lg text-[10px] font-bold transition border border-brand-600";
+                if (btn) btn.className = "btn-bank-rate px-2 py-0.5 bg-brand-600 text-white shadow-md rounded-lg text-[10px] font-bold transition border border-brand-600";
                 applyRateValue(screenRate, bankName);
             }
         }
@@ -649,97 +666,49 @@
 
         function applyRateValue(val, bankName) {
             if (activeTab === 'new') {
-                state.rate = val;
-                document.getElementById('rate-input').value = val;
-                document.getElementById('rate-range').value = val;
+                state.rate = val; document.getElementById('rate-input').value = val; document.getElementById('rate-range').value = val;
             } else {
-                state.activeRate = val;
-                document.getElementById('active-rate-input').value = val;
-                calcTheoreticalBalance();
+                state.activeRate = val; document.getElementById('active-rate-input').value = val; calcTheoreticalBalance();
             }
             updateCalculations();
-            showToast(`Применена ставка ${val}% (${bankName})`);
+            if (typeof showToast === 'function') showToast(`Применена ставка ${val}% от ${bankName}`);
         }
 
         function handleRateInput(el) {
-            resetBankButtonsHighlight(); // Тушим кнопку при ручном вводе
-            let val = parseFloat(el.value) || 0;
-            state.rate = Math.min(50, val);
-            document.getElementById('rate-range').value = state.rate;
-            updateCalculations();
+            resetBankButtonsHighlight();
+            let val = parseFloat(el.value) || 0; state.rate = Math.min(50, val);
+            document.getElementById('rate-range').value = state.rate; updateCalculations();
         }
 
         function handleActiveRateInput(el) {
             resetBankButtonsHighlight();
-            let val = parseFloat(el.value) || 0;
-            state.activeRate = Math.min(50, val);
-            calcTheoreticalBalance();
-            updateCalculations();
-        }
-
-        function toggleTaxDeduction() {
-            state.includeTaxDeduction = document.getElementById('tax-toggle').checked;
-            const block = document.getElementById('tax-strategy-block');
-            if (state.includeTaxDeduction) block.classList.remove('hidden');
-            else block.classList.add('hidden');
-            updateCalculations();
-        }
-
-        function setTaxStrategy(strat) {
-            state.taxDeductionStrategy = strat;
-            const p = document.getElementById('tax-strat-pocket');
-            const r = document.getElementById('tax-strat-reinvest');
-            if (strat === 'pocket') {
-                p.className = "py-2 text-xs font-bold rounded-lg transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-slate-600";
-                r.className = "py-2 text-xs font-bold rounded-lg transition-all text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800";
-            } else {
-                r.className = "py-2 text-xs font-bold rounded-lg transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-slate-600";
-                p.className = "py-2 text-xs font-bold rounded-lg transition-all text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800";
-            }
-            updateCalculations();
-        }
-
-        function checkProPassword() {
-            const pass = document.getElementById('pro-password-input').value.trim();
-            if (pass.toUpperCase() === 'PORF') {
-                state.isProUnlocked = true;
-                showToast("Доступ PRO успешно активирован!");
-                document.getElementById('pro-paywall-overlay').classList.add('hidden');
-                updateCalculations();
-            } else {
-                showToast("Неверный PRO-пароль!");
-            }
+            let val = parseFloat(el.value) || 0; state.activeRate = Math.min(50, val);
+            calcTheoreticalBalance(); updateCalculations();
         }
 
         function handleCostInput(el) {
-            state.cost = formatInputField(el, el.value);
-            document.getElementById('cost-range').value = state.cost;
-            if (state.downPayment > state.cost) state.downPayment = state.cost;
-            updateCalculations();
+            state.cost = formatInputField(el, el.value); document.getElementById('cost-range').value = state.cost;
+            if (state.downPayment > state.cost) state.downPayment = state.cost; updateCalculations();
         }
 
         function handleDownpaymentInput(el) {
             state.downPayment = formatInputField(el, el.value);
             if (state.downPayment > state.cost) state.downPayment = state.cost;
-            document.getElementById('downpayment-range').value = state.downPayment;
-            updateCalculations();
+            document.getElementById('downpayment-range').value = state.downPayment; updateCalculations();
         }
 
         function handleTargetPaymentInput(el) {
             state.targetPayment = formatInputField(el, el.value);
-            document.getElementById('payment-range').value = state.targetPayment;
-            updateCalculations();
+            document.getElementById('payment-range').value = state.targetPayment; updateCalculations();
         }
 
         function handleTermInput(el) {
             state.termYears = Math.min(50, parseInt(el.value) || 0);
-            document.getElementById('term-range').value = state.termYears;
-            updateCalculations();
+            document.getElementById('term-range').value = state.termYears; updateCalculations();
         }
 
         function handleRecurringInput(el) {
-            state.recurringPrepayment = formatInputField(el, el.value);
-            updateCalculations();
+            state.recurringPrepayment = formatInputField(el, el.value); updateCalculations();
         }
 
         function syncRangeToInput(field, val) {
@@ -755,44 +724,54 @@
             } else if (field === 'payment') {
                 state.targetPayment = v;
             }
-            updateInputsDOM();
-            updateCalculations();
+            updateInputsDOM(); updateCalculations();
         }
 
         function syncActiveBalanceRange(val) {
             state.activeCurrentBalance = parseFloat(val);
-            document.getElementById('active-balance-input').value = formatNumber(state.activeCurrentBalance);
+            document.getElementById('active-balance-input').value = localFormatNumber(state.activeCurrentBalance);
             updateCalculations();
         }
 
         function handleActiveAmountInput(el) {
-            state.activeOriginalLoan = formatInputField(el, el.value);
-            calcTheoreticalBalance();
-            updateCalculations();
+            state.activeOriginalLoan = formatInputField(el, el.value); calcTheoreticalBalance(); updateCalculations();
         }
 
         function handleActiveBalanceInput(el) {
-            state.activeCurrentBalance = formatInputField(el, el.value);
-            updateCalculations();
+            state.activeCurrentBalance = formatInputField(el, el.value); updateCalculations();
         }
 
         function recalcAndSyncBalance() {
             state.activeOriginalTermYears = parseInt(document.getElementById('active-term-input').value) || 0;
             state.activePaidMonths = parseInt(document.getElementById('active-paid-months-input').value) || 0;
-            calcTheoreticalBalance();
+            calcTheoreticalBalance(); updateCalculations();
+        }
+
+        function toggleInsurance() { state.includeInsurance = document.getElementById('insurance-toggle').checked; updateCalculations(); }
+        function toggleTaxDeduction() {
+            state.includeTaxDeduction = document.getElementById('tax-toggle').checked;
+            const b = document.getElementById('tax-strategy-block');
+            if (state.includeTaxDeduction) b.classList.remove('hidden'); else b.classList.add('hidden');
             updateCalculations();
         }
 
-        function setCost(val) { state.cost = val; updateInputsDOM(); updateCalculations(); }
-        function setTerm(val) { state.termYears = val; updateInputsDOM(); updateCalculations(); }
-        function toggleInsurance() { state.includeInsurance = document.getElementById('insurance-toggle').checked; updateCalculations(); }
-        
+        function setTaxStrategy(strat) {
+            state.taxDeductionStrategy = strat;
+            const p = document.getElementById('tax-strat-pocket'); const r = document.getElementById('tax-strat-reinvest');
+            if (strat === 'pocket') {
+                p.className = "py-2 text-xs font-bold rounded-lg transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-slate-600";
+                r.className = "py-2 text-xs font-bold rounded-lg transition-all text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800";
+            } else {
+                r.className = "py-2 text-xs font-bold rounded-lg transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-slate-600";
+                p.className = "py-2 text-xs font-bold rounded-lg transition-all text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800";
+            }
+            updateCalculations();
+        }
+
         function switchCalculationMode(mode) {
             state.mode = mode;
-            const bT = document.getElementById('mode-term-btn');
-            const bP = document.getElementById('mode-payment-btn');
-            const cT = document.getElementById('term-input-container');
-            const cP = document.getElementById('payment-input-container');
+            const bT = document.getElementById('mode-term-btn'); const bP = document.getElementById('mode-payment-btn');
+            const cT = document.getElementById('term-input-container'); const cP = document.getElementById('payment-input-container');
             if (mode === 'term') {
                 bT.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all text-slate-900 bg-white dark:bg-slate-700 dark:text-white shadow-sm";
                 bP.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all text-slate-600 dark:text-slate-400";
@@ -813,29 +792,23 @@
             updateCalculations();
         }
 
-        function updateInputsDOM() {
-            document.getElementById('cost-input').value = formatNumber(state.cost);
-            document.getElementById('cost-range').value = state.cost;
-            document.getElementById('downpayment-input').value = formatNumber(state.downPayment);
-            document.getElementById('downpayment-range').max = state.cost;
-            document.getElementById('downpayment-range').value = state.downPayment;
-            document.getElementById('rate-input').value = state.rate;
-            document.getElementById('rate-range').value = state.rate;
-            document.getElementById('term-input').value = state.termYears;
-            document.getElementById('term-range').value = state.termYears;
-            document.getElementById('payment-input').value = formatNumber(state.targetPayment);
-            document.getElementById('payment-range').value = state.targetPayment;
-            document.getElementById('active-amount-input').value = formatNumber(state.activeOriginalLoan);
-            document.getElementById('active-rate-input').value = state.activeRate;
-            document.getElementById('active-term-input').value = state.activeOriginalTermYears;
-            document.getElementById('active-paid-months-input').value = state.activePaidMonths;
-            document.getElementById('active-balance-input').value = formatNumber(state.activeCurrentBalance);
-            document.getElementById('recurring-input').value = formatNumber(state.recurringPrepayment);
+        function clearCustomPrepayments() { state.customPrepayments = {}; updateCalculations(); }
+        function resetAll() {
+            state.cost = 10000000; state.downPayment = 2000000; state.rate = 16.0; state.mode = 'term'; state.termYears = 20; state.targetPayment = 100000;
+            state.activeOriginalLoan = 8000000; state.activeRate = 12.0; state.activeOriginalTermYears = 20; state.activePaidMonths = 36;
+            state.recurringPrepayment = 0; state.customPrepayments = {}; state.includeInsurance = false; state.includeTaxDeduction = false;
+            document.getElementById('insurance-toggle').checked = false; document.getElementById('tax-toggle').checked = false;
+            document.getElementById('strategy-toggle').checked = false; toggleTaxDeduction(); calcTheoreticalBalance(); updateInputsDOM(); updateCalculations();
         }
 
-        function clearCustomPrepayments() {
-            state.customPrepayments = {};
-            updateCalculations();
+        function checkProPassword() {
+            const pass = document.getElementById('pro-password-input').value.trim();
+            if (pass.toUpperCase() === 'PORF') {
+                state.isProUnlocked = true; if (typeof showToast === 'function') showToast("Доступ PRO успешно активирован!");
+                document.getElementById('pro-paywall-overlay').classList.add('hidden'); updateCalculations();
+            } else {
+                if (typeof showToast === 'function') showToast("Неверный PRO-пароль!");
+            }
         }
 
         function simulateMortgage(withPrepayments = true) {
@@ -863,10 +836,7 @@
             while (balance > 0.01 && m < 600) {
                 m++;
                 let ins = 0;
-                if (state.includeInsurance && (m % 12 === 1)) {
-                    ins = balance * 0.01;
-                    totalInsurance += ins;
-                }
+                if (state.includeInsurance && (m % 12 === 1)) { ins = balance * 0.01; totalInsurance += ins; }
                 
                 let interest = balance * mRate;
                 let scheduled = Math.min(currentPmt, balance + interest);
@@ -876,8 +846,6 @@
                 if (withPrepayments) {
                     prepay += state.customPrepayments[m] || 0;
                     if (state.recurringPrepayment > 0) prepay += state.recurringPrepayment;
-                    
-                    // Реализация твоего вычета: раз в год возвращаем 13% от уплаченного (упрощенный MVP шаг)
                     if (state.includeTaxDeduction && state.taxDeductionStrategy === 'reinvest' && m % 12 === 0) {
                         prepay += Math.min(40000, interest * 0.13); 
                     }
@@ -887,9 +855,7 @@
                 balance = Math.max(0, balance - principal - prepay);
 
                 schedule.push({ month: m, payment: scheduled, interest, principal, prepayment: prepay, balance, insurance: ins });
-                totalInterest += interest;
-                totalPaid += scheduled + prepay + ins;
-                totalPrepaid += prepay;
+                totalInterest += interest; totalPaid += scheduled + prepay + ins; totalPrepaid += prepay;
 
                 if (withPrepayments && prepay > 0 && state.prepaymentStrategy === 'payment' && balance > 0) {
                     let rem = plannedMonths - m;
@@ -901,28 +867,22 @@
 
         function renderAmortizationTable(schedule) {
             const container = document.getElementById('years-accordion-container');
-            container.innerHTML = '';
-            if (!schedule.length) return;
+            container.innerHTML = ''; if (!schedule.length) return;
 
             let years = {};
             schedule.forEach(x => {
-                let y = Math.ceil(x.month / 12);
-                if (!years[y]) years[y] = [];
-                years[y].push(x);
+                let y = Math.ceil(x.month / 12); if (!years[y]) years[y] = []; years[y].push(x);
             });
 
             document.getElementById('custom-prepayments-counter').innerText = `Спецплатежей: ${Object.keys(state.customPrepayments).length}`;
             
-            // Если PRO заблокирован и лет > 3, показываем оверлей-заглушку
             const overlay = document.getElementById('pro-paywall-overlay');
             if (!state.isProUnlocked && Object.keys(years).length > 3) overlay.classList.remove('hidden');
             else overlay.classList.add('hidden');
 
             Object.keys(years).forEach(y => {
-                const yNum = parseInt(y);
-                const isLocked = !state.isProUnlocked && yNum > 3;
-                const yData = years[y];
-                const yearId = `year-${y}`;
+                const yNum = parseInt(y); const isLocked = !state.isProUnlocked && yNum > 3;
+                const yData = years[y]; const yearId = `year-${y}`;
 
                 let yPaid = 0, yInt = 0, yPrep = 0;
                 yData.forEach(m => { yPaid += m.payment; yInt += m.interest; yPrep += m.prepayment; });
@@ -937,11 +897,11 @@
                         <span class="p-1 bg-brand-600 text-white rounded text-xs font-bold w-6 h-6 flex items-center justify-center">${y}</span>
                         <span class="font-bold text-slate-800 dark:text-slate-200 text-sm">${y}-й год</span>
                     </div>
-                    <div class="col-span-2 text-right"><span class="text-xs font-bold text-slate-700 dark:text-slate-300">${formatMoney(yPaid)}</span></div>
-                    <div class="col-span-2 text-right"><span class="text-xs font-bold text-rose-600">${formatMoney(yInt)}</span></div>
-                    <div class="col-span-2 text-right"><span class="text-xs font-bold text-emerald-600">${yPrep > 0 ? formatMoney(yPrep) : '—'}</span></div>
+                    <div class="col-span-2 text-right"><span class="text-xs font-bold text-slate-700 dark:text-slate-300">${localFormatMoney(yPaid)}</span></div>
+                    <div class="col-span-2 text-right"><span class="text-xs font-bold text-rose-600">${localFormatMoney(yInt)}</span></div>
+                    <div class="col-span-2 text-right"><span class="text-xs font-bold text-emerald-600">${yPrep > 0 ? localFormatMoney(yPrep) : '—'}</span></div>
                     <div class="col-span-4 flex justify-between items-center w-full">
-                        <span class="text-xs font-bold text-slate-900 dark:text-white text-right w-full pr-4">${formatMoney(lastBal)}</span>
+                        <span class="text-xs font-bold text-slate-900 dark:text-white text-right w-full pr-4">${localFormatMoney(lastBal)}</span>
                         <svg id="arrow-${yearId}" class="w-5 h-5 text-slate-400 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                 `;
@@ -952,154 +912,123 @@
                         mHtml += `
                             <div data-month="${m.month}" class="grid grid-cols-1 lg:grid-cols-12 gap-4 px-4 py-2 bg-white dark:bg-slate-900 border-b dark:border-slate-800 items-center">
                                 <div class="col-span-2 text-xs text-slate-400">Месяц ${m.month}</div>
-                                <div class="col-span-2 text-right text-xs font-semibold">${formatMoney(m.payment)}</div>
-                                <div class="col-span-2 text-right text-xs font-semibold text-rose-500">${formatMoney(m.interest)}</div>
-                                <div class="col-span-2 text-right text-xs font-semibold text-slate-600">${formatMoney(m.principal)}</div>
+                                <div class="col-span-2 text-right text-xs font-semibold">${localFormatMoney(m.payment)}</div>
+                                <div class="col-span-2 text-right text-xs font-semibold text-rose-500">${localFormatMoney(m.interest)}</div>
+                                <div class="col-span-2 text-right text-xs font-semibold text-slate-600">${localFormatMoney(m.principal)}</div>
                                 <div class="col-span-2 text-center">
-                                    <input type="text" value="${state.customPrepayments[m.month] ? formatNumber(state.customPrepayments[m.month]) : ''}" oninput="formatTableInputVisual(this)" class="w-20 text-center py-0.5 bg-brand-50 dark:bg-slate-800 border rounded font-bold text-xs">
+                                    <input type="text" value="${state.customPrepayments[m.month] ? localFormatNumber(state.customPrepayments[m.month]) : ''}" oninput="formatTableInputVisual(this)" class="w-20 text-center py-0.5 bg-brand-50 dark:bg-slate-800 border rounded font-bold text-xs outline-none text-slate-900 dark:text-white">
                                 </div>
-                                <div class="col-span-2 text-right text-xs font-bold">${formatMoney(m.balance)}</div>
+                                <div class="col-span-2 text-right text-xs font-bold">${localFormatMoney(m.balance)}</div>
                             </div>
                         `;
                     });
                 }
 
-                const content = document.createElement('div');
-                content.id = `content-${yearId}`;
+                const content = document.createElement('div'); content.id = `content-${yearId}`;
                 content.className = "hidden border-x border-b dark:border-slate-800 rounded-b-xl p-1 bg-slate-50 dark:bg-slate-900";
                 content.innerHTML = mHtml;
 
-                const wrap = document.createElement('div');
-                wrap.appendChild(header);
-                wrap.appendChild(content);
-                container.appendChild(wrap);
+                const wrap = document.createElement('div'); wrap.appendChild(header); wrap.appendChild(content); container.appendChild(wrap);
             });
         }
 
         function formatTableInputVisual(input) {
-            let clean = input.value.replace(/\s+/g, '').replace(/\D/g, '');
-            if (!clean) { input.value = ''; return; }
-            let parsed = parseInt(clean, 10);
-            input.value = formatNumber(parsed);
-            let m = parseInt(input.closest('[data-month]').dataset.month);
-            state.customPrepayments[m] = parsed;
-            updateCalculations();
+            let clean = input.value.replace(/\s+/g, '').replace(/\D/g, ''); if (!clean) { input.value = ''; return; }
+            let parsed = parseInt(clean, 10); input.value = localFormatNumber(parsed);
+            let m = parseInt(input.closest('[data-month]').dataset.month); state.customPrepayments[m] = parsed; updateCalculations();
         }
 
         function toggleYearAccordion(id) {
-            const c = document.getElementById(`content-${id}`);
-            const a = document.getElementById(`arrow-${id}`);
-            c.classList.toggle('hidden');
-            a.classList.toggle('rotate-180');
+            document.getElementById(`content-${id}`).classList.toggle('hidden');
+            document.getElementById(`arrow-${id}`).classList.toggle('rotate-180');
         }
 
         function updateChart(sWith, sWithout) {
             const ctx = document.getElementById('balanceChart').getContext('2d');
-            let labels = [], dWith = [], dWithout = [];
-            let len = Math.max(sWith.length, sWithout.length);
-            let step = len > 120 ? 6 : 2;
-
-            for (let i = 0; i < len; i += step) {
-                labels.push(`${Math.floor(i/12)+1}г`);
-                dWith.push(i < sWith.length ? sWith[i].balance : 0);
-                dWithout.push(i < sWithout.length ? sWithout[i].balance : 0);
-            }
-
-            if (chartInstance) chartInstance.destroy();
-            const isDark = document.documentElement.classList.contains('dark');
-
+            let labels = [], dWith = [], dWithout = []; let len = Math.max(sWith.length, sWithout.length); let step = len > 120 ? 6 : 2;
+            for (let i = 0; i < len; i += step) { labels.push(`${Math.floor(i/12)+1}г`); dWith.push(i < sWith.length ? sWith[i].balance : 0); dWithout.push(i < sWithout.length ? sWithout[i].balance : 0); }
+            if (chartInstance) chartInstance.destroy(); const isDark = document.documentElement.classList.contains('dark');
             chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [
-                        { data: dWith, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.02)', borderWidth: 3, fill: true, tension: 0.3, pointRadius: 1 },
-                        { data: dWithout, borderColor: isDark ? '#475569' : '#cbd5e1', backgroundColor: 'transparent', borderWidth: 2, borderDash: [4,4], tension: 0.3, pointRadius: 0 }
+                        { data: dWith, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.02)', borderWidth: 3, fill: true, tension: 0.4, pointRadius: 1 },
+                        { data: dWithout, borderColor: isDark ? '#475569' : '#cbd5e1', backgroundColor: 'transparent', borderWidth: 2, borderDash: [4,4], tension: 0.4, pointRadius: 0 }
                     ]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { grid: { color: isDark?'#334155':'#f1f5f9' }, ticks: { font: { size: 9 }, callback: v => (v/1000000).toFixed(1)+'м' } },
-                        x: { grid: { display: false }, ticks: { font: { size: 9 } } }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: isDark?'#334155':'#f1f5f9' }, ticks: { font: { size: 9 }, callback: v => (v/1000000).toFixed(1)+'м' } }, x: { grid: { display: false }, ticks: { font: { size: 9 } } } } }
             });
         }
 
         function updateCalculations() {
-            const baseRes = simulateMortgage(false);
-            const preRes = simulateMortgage(true);
-
+            const baseRes = simulateMortgage(false); const preRes = simulateMortgage(true);
             let loanAmount = activeTab === 'new' ? (state.cost - state.downPayment) : state.activeCurrentBalance;
             let monthlyPmt = preRes.schedule.length > 0 ? preRes.schedule[0].payment : 0;
-            let savedInt = baseRes.totalInterest - preRes.totalInterest;
-            let savedM = baseRes.realTerm - preRes.realTerm;
+            let savedInt = baseRes.totalInterest - preRes.totalInterest; let savedM = baseRes.realTerm - preRes.realTerm;
 
-            if (state.includeTaxDeduction && state.taxDeductionStrategy === 'pocket') {
-                savedInt += Math.min(390000, preRes.totalInterest * 0.13);
-            }
+            if (state.includeTaxDeduction && state.taxDeductionStrategy === 'pocket') { savedInt += Math.min(390000, preRes.totalInterest * 0.13); }
 
-            document.getElementById('res-loan-amount').innerText = formatMoney(loanAmount);
-            document.getElementById('res-monthly-payment').innerText = formatMoney(monthlyPmt);
+            document.getElementById('res-loan-amount').innerText = localFormatMoney(loanAmount);
+            document.getElementById('res-monthly-payment').innerText = localFormatMoney(monthlyPmt);
             document.getElementById('res-real-term').innerText = `${preRes.realTerm} мес.`;
-            document.getElementById('res-total-interest').innerText = formatMoney(preRes.totalInterest);
-            document.getElementById('res-total-paid').innerText = formatMoney(preRes.totalPaid);
-            document.getElementById('res-total-prepaid').innerText = formatMoney(preRes.totalPrepaid);
-            
-            document.getElementById('saving-money').innerText = formatMoney(savedInt > 0 ? savedInt : 0);
+            document.getElementById('res-total-interest').innerText = localFormatMoney(preRes.totalInterest);
+            document.getElementById('res-total-paid').innerText = localFormatMoney(preRes.totalPaid);
+            document.getElementById('res-total-prepaid').innerText = localFormatMoney(preRes.totalPrepaid);
+            document.getElementById('saving-money').innerText = localFormatMoney(savedInt > 0 ? savedInt : 0);
             document.getElementById('saving-months').innerText = `${savedM > 0 ? savedM : 0} мес.`;
-            document.getElementById('mobile-payment').innerText = formatMoney(monthlyPmt);
+            document.getElementById('mobile-payment').innerText = localFormatMoney(monthlyPmt);
 
-            // Обработка нулевой экономии
-            const valM = document.getElementById('mobile-saving');
-            const ctaM = document.getElementById('mobile-cta-text');
-            if (savedInt > 0 || savedM > 0) {
-                valM.innerText = formatMoney(savedInt);
-                valM.classList.remove('hidden'); ctaM.classList.add('hidden');
-            } else {
-                valM.classList.add('hidden'); ctaM.classList.remove('hidden');
-            }
+            const valM = document.getElementById('mobile-saving'); const ctaM = document.getElementById('mobile-cta-text');
+            if (savedInt > 0 || savedM > 0) { valM.innerText = localFormatMoney(savedInt); valM.classList.remove('hidden'); ctaM.classList.add('hidden'); }
+            else { valM.classList.add('hidden'); ctaM.classList.remove('hidden'); }
 
-            // Индикатор соотношения
-            let rTotal = loanAmount + preRes.totalInterest;
-            let bPct = rTotal > 0 ? (loanAmount / rTotal) * 100 : 50;
-            document.getElementById('ratio-body').style.width = bPct + '%';
-            document.getElementById('ratio-interest').style.width = (100 - bPct) + '%';
+            let rTotal = loanAmount + preRes.totalInterest; let bPct = rTotal > 0 ? (loanAmount / rTotal) * 100 : 50;
+            document.getElementById('ratio-body').style.width = bPct + '%'; document.getElementById('ratio-interest').style.width = (100 - bPct) + '%';
             document.getElementById('ratio-text').innerText = `Тело: ${Math.round(bPct)}% | Проценты: ${Math.round(100 - bPct)}%`;
 
-            document.getElementById('cost-display').innerText = formatMoney(state.cost);
+            document.getElementById('cost-display').innerText = localFormatMoney(state.cost);
             document.getElementById('downpayment-percent').innerText = state.cost > 0 ? Math.round((state.downPayment / state.cost) * 100) + '%' : '0%';
             document.getElementById('rate-display').innerText = state.rate + '%';
-            document.getElementById('term-display').innerText = state.termYears + ' ' + getYearWord(state.termYears);
-            if (document.getElementById('payment-display')) document.getElementById('payment-display').innerText = formatMoney(state.targetPayment);
-            document.getElementById('recurring-display').innerText = formatMoney(state.recurringPrepayment);
+            document.getElementById('term-display').innerText = state.termYears + ' ' + localGetYearWord(state.termYears);
+            if (document.getElementById('payment-display')) document.getElementById('payment-display').innerText = localFormatMoney(state.targetPayment);
+            document.getElementById('recurring-display').innerText = localFormatMoney(state.recurringPrepayment);
 
-            renderAmortizationTable(preRes.schedule);
-            updateChart(preRes.schedule, baseRes.schedule);
+            renderAmortizationTable(preRes.schedule); updateChart(preRes.schedule, baseRes.schedule);
+        }
+
+        function updateInputsDOM() {
+            document.getElementById('cost-input').value = localFormatNumber(state.cost); document.getElementById('cost-range').value = state.cost;
+            document.getElementById('downpayment-input').value = localFormatNumber(state.downPayment);
+            document.getElementById('downpayment-range').max = state.cost; document.getElementById('downpayment-range').value = state.downPayment;
+            document.getElementById('rate-input').value = state.rate; document.getElementById('rate-range').value = state.rate;
+            document.getElementById('term-input').value = state.termYears; document.getElementById('term-range').value = state.termYears;
+            document.getElementById('payment-input').value = localFormatNumber(state.targetPayment); document.getElementById('payment-range').value = state.targetPayment;
+            document.getElementById('active-amount-input').value = localFormatNumber(state.activeOriginalLoan); document.getElementById('active-rate-input').value = state.activeRate;
+            document.getElementById('active-term-input').value = state.activeOriginalTermYears; document.getElementById('active-paid-months-input').value = state.activePaidMonths;
+            document.getElementById('active-balance-input').value = localFormatNumber(state.activeCurrentBalance);
+            document.getElementById('recurring-input').value = localFormatNumber(state.recurringPrepayment);
         }
 
         async function loadLiveRates() {
-            const data = await fetchRates();
-            if (data) {
-                liveRatesData = data;
-                if (data.cb_rate) document.getElementById('cb-rate-display').innerText = data.cb_rate.toFixed(2) + '%';
-                if (data.sberbank) document.getElementById('rate-sber').innerText = data.sberbank.toFixed(1) + '%';
-                if (data.vtb) document.getElementById('rate-vtb').innerText = data.vtb.toFixed(1) + '%';
-                if (data.alfa) document.getElementById('rate-alfa').innerText = data.alfa.toFixed(1) + '%';
-                if (data.tbank) document.getElementById('rate-tbank').innerText = data.tbank.toFixed(1) + '%';
-                if (data.sovcom) document.getElementById('rate-sovcom').innerText = data.sovcom.toFixed(1) + '%';
+            if (typeof fetchRates === 'function') {
+                const data = await fetchRates();
+                if (data) {
+                    liveRatesData = data;
+                    if (data.cb_rate) document.getElementById('cb-rate-display').innerText = data.cb_rate.toFixed(2) + '%';
+                    if (data.sberbank) document.getElementById('rate-sber').innerText = data.sberbank.toFixed(1) + '%';
+                    if (data.vtb) document.getElementById('rate-vtb').innerText = data.vtb.toFixed(1) + '%';
+                    if (data.alfa) document.getElementById('rate-alfa').innerText = data.alfa.toFixed(1) + '%';
+                    if (data.tbank) document.getElementById('rate-tbank').innerText = data.tbank.toFixed(1) + '%';
+                    if (data.sovcom) document.getElementById('rate-sovcom').innerText = data.sovcom.toFixed(1) + '%';
+                }
             }
             updateCalculations();
         }
 
         window.onload = function() {
-            initTheme();
-            updateInputsDOM();
-            switchMainTab('new');
-            loadLiveRates();
+            if (typeof initTheme === 'function') initTheme();
+            calcTheoreticalBalance(); updateInputsDOM(); switchMainTab('new'); loadLiveRates();
         };
     </script>
 </body>
