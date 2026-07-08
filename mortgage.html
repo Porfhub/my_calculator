@@ -584,7 +584,7 @@
             reachGoal("mortgage_tab_switch");
             activeTab = tab;
             state.customPrepayments = {};
-
+            
             const btnNew = document.getElementById('tab-new');
             const btnExt = document.getElementById('tab-existing');
             const panNew = document.getElementById('panel-new');
@@ -729,11 +729,11 @@
         function simulateMortgage(withPre = true) {
             let bal = activeTab === 'new' ? (state.cost - state.downPayment) : state.activeCurrentBalance;
             if (bal <= 0) return { schedule: [], totalInterest: 0, totalPaid: 0, totalPrepaid: 0, realTerm: 0, totalTaxReturned: 0 };
-
+            
             let rate = activeTab === 'new' ? state.rate : state.activeRate;
             let planned = activeTab === 'new' ? (state.termYears * 12) : ((state.activeOriginalTermYears * 12) - state.activePaidMonths);
             if (planned <= 0) planned = 12;
-
+            
             const mRate = rate / 12 / 100;
             let currentPay = 0;
 
@@ -857,14 +857,14 @@
         function updateCalculations() {
             const br = simulateMortgage(false), pr = simulateMortgage(true);
             const loan = activeTab === 'new' ? (state.cost - state.downPayment) : state.activeCurrentBalance;
-
+            
             document.getElementById('res-loan-amount').innerText = formatMoney(loan);
             document.getElementById('res-monthly-payment').innerText = formatMoney(pr.schedule[0]?.payment || 0);
             document.getElementById('res-real-term').innerText = pr.realTerm + ' мес.';
 
             let over = pr.totalInterest, paid = pr.totalPaid;
             if (state.includeTaxDeduction && state.taxDeductionStrategy === 'pocket') { over -= pr.totalTaxReturned; paid -= pr.totalTaxReturned; }
-
+            
             document.getElementById('res-total-interest').innerText = formatMoney(over);
             document.getElementById('res-total-paid').innerText = formatMoney(paid);
             document.getElementById('res-total-prepaid').innerText = formatMoney(pr.totalPrepaid);
