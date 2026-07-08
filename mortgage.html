@@ -183,65 +183,64 @@
                 </div>
             </div>
 
-            <!-- Сетка банков -->
-            <div id="rates-container" class="grid grid-cols-2 md:grid-cols-5 gap-3">
+            <!-- Карусель банков (Мобильный скролл) -->
+            <div id="rates-container" class="flex lg:grid lg:grid-cols-5 gap-3 overflow-x-auto pb-2 snap-x scrollbar-hide">
                 <!-- Сбербанк -->
-                <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition">
+                <div id="bank-sber" class="min-w-[160px] snap-start p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition">
                     <div class="flex items-center space-x-2">
                         <div class="w-6 h-6 rounded-full bg-green-600 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">СБ</div>
                         <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Сбербанк</span>
                     </div>
                     <div class="flex items-baseline justify-between">
                         <span class="text-base font-black text-slate-950 dark:text-white" id="rate-sber">16.8%</span>
-                        <button onclick="applyBankRate(16.8, 'Сбербанка')" class="px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700">Применить</button>
+                        <button onclick="applyBankRate(state.bankRates.sber, 'Сбербанка', 'sber')" class="bank-apply-btn px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700">Применить</button>
                     </div>
                 </div>
                 <!-- ВТБ -->
-                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col justify-between space-y-2 hover:border-slate-200 transition">
+                <div id="bank-vtb" class="min-w-[160px] snap-start p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition">
                     <div class="flex items-center space-x-2">
                         <div class="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">ВТБ</div>
-                        <span class="text-xs font-bold text-slate-700">ВТБ</span>
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">ВТБ</span>
                     </div>
                     <div class="flex items-baseline justify-between">
-                        <span class="text-base font-black text-slate-950" id="rate-vtb">16.9%</span>
-                        <button onclick="applyBankRate(16.9, 'ВТБ')" class="px-2 py-0.5 bg-white hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 transition border border-slate-200">Применить</button>
+                        <span class="text-base font-black text-slate-950 dark:text-white" id="rate-vtb">16.9%</span>
+                        <button onclick="applyBankRate(state.bankRates.vtb, 'ВТБ', 'vtb')" class="bank-apply-btn px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700">Применить</button>
                     </div>
                 </div>
                 <!-- Альфа-Банк -->
-                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col justify-between space-y-2 hover:border-slate-200 transition">
+                <div id="bank-alfa" class="min-w-[160px] snap-start p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition">
                     <div class="flex items-center space-x-2">
                         <div class="w-6 h-6 rounded-full bg-red-600 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">АБ</div>
-                        <span class="text-xs font-bold text-slate-700">Альфа-Банк</span>
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Альфа-Банк</span>
                     </div>
                     <div class="flex items-baseline justify-between">
-                        <span class="text-base font-black text-slate-950" id="rate-alfa">17.1%</span>
-                        <button onclick="applyBankRate(17.1, 'Альфа-Банка')" class="px-2 py-0.5 bg-white hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 transition border border-slate-200">Применить</button>
+                        <span class="text-base font-black text-slate-950 dark:text-white" id="rate-alfa">17.1%</span>
+                        <button onclick="applyBankRate(state.bankRates.alfa, 'Альфа-Банка', 'alfa')" class="bank-apply-btn px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700">Применить</button>
                     </div>
                 </div>
                 <!-- Т-Банк -->
-                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col justify-between space-y-2 hover:border-slate-200 transition">
+                <div id="bank-tbank" class="min-w-[160px] snap-start p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition">
                     <div class="flex items-center space-x-2">
                         <div class="w-6 h-6 rounded-full bg-yellow-500 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">ТБ</div>
-                        <span class="text-xs font-bold text-slate-700">Т-Банк</span>
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Т-Банк</span>
                     </div>
                     <div class="flex items-baseline justify-between">
-                        <span class="text-base font-black text-slate-950" id="rate-tbank">16.5%</span>
-                        <button onclick="applyBankRate(16.5, 'Т-Банка')" class="px-2 py-0.5 bg-white hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 transition border border-slate-200">Применить</button>
+                        <span class="text-base font-black text-slate-950 dark:text-white" id="rate-tbank">16.5%</span>
+                        <button onclick="applyBankRate(state.bankRates.tbank, 'Т-Банка', 'tbank')" class="bank-apply-btn px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700">Применить</button>
                     </div>
                 </div>
                 <!-- Совкомбанк -->
-                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col justify-between space-y-2 hover:border-slate-200 transition">
+                <div id="bank-sovcom" class="min-w-[160px] snap-start p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition">
                     <div class="flex items-center space-x-2">
                         <div class="w-6 h-6 rounded-full bg-blue-700 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">СК</div>
-                        <span class="text-xs font-bold text-slate-700">Совкомбанк</span>
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Совкомбанк</span>
                     </div>
                     <div class="flex items-baseline justify-between">
-                        <span class="text-base font-black text-slate-950" id="rate-sovcom">17.2%</span>
-                        <button onclick="applyBankRate(17.2, 'Совкомбанка')" class="px-2 py-0.5 bg-white hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 transition border border-slate-200">Применить</button>
+                        <span class="text-base font-black text-slate-950 dark:text-white" id="rate-sovcom">17.2%</span>
+                        <button onclick="applyBankRate(state.bankRates.sovcom, 'Совкомбанка', 'sovcom')" class="bank-apply-btn px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700">Применить</button>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div>        </div>
     </section>
 
     <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
@@ -315,10 +314,10 @@
                     <!-- ТУМБЛЕР РЕЖИМА расчета новой ипотеки -->
                     <div class="p-1 bg-slate-100 rounded-xl flex gap-1">
                         <button id="mode-term-btn" onclick="switchCalculationMode('term')" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all shadow-none text-slate-600">
-                            Расчет платежа по сроку
+                            Я знаю срок
                         </button>
                         <button id="mode-payment-btn" onclick="switchCalculationMode('payment')" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all shadow-none text-slate-600">
-                            Расчет срока по платежу
+                            Я знаю комфортный платеж
                         </button>
                     </div>
 
@@ -634,9 +633,12 @@
                 <span class="text-[10px] font-bold text-slate-400 uppercase">Ежемесячно</span>
                 <span id="mobile-payment" class="font-black text-slate-900 dark:text-white">0 ₽</span>
             </div>
-            <div class="text-right">
+            <div class="text-right flex flex-col items-end">
                 <p class="text-[10px] font-bold text-slate-400 uppercase">Экономия</p>
-                <p id="mobile-saving" class="text-lg font-black text-brand-600">0 ₽</p>
+                <div id="mobile-saving-container">
+                    <p id="mobile-saving" class="text-lg font-black text-brand-600">0 ₽</p>
+                    <p id="mobile-magic-hint" class="text-[10px] font-bold text-rose-500 animate-pulse hidden">🔥 Добавь 5 000 ₽ досрочно, чтобы увидеть магию</p>
+                </div>
             </div>
         </div>
         <button onclick="takeScreenshot()" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
@@ -683,11 +685,19 @@
             customPrepayments: {}, // формат { monthIndex: Number }
             includeInsurance: false,
             includeTaxDeduction: false,
-            taxDeductionStrategy: 'pocket'
+            taxDeductionStrategy: 'pocket',
+            isProUnlocked: false,
+            activeBankId: null,
+            bankRates: {
+                sber: 16.8,
+                vtb: 16.9,
+                alfa: 17.1,
+                tbank: 16.5,
+                sovcom: 17.2
+            }
         };
 
-        let chartInstance = null;
-        let currentCBRate = 21.0; // Значение по умолчанию, будет обновлено из JSON
+        let chartInstance = null;        let currentCBRate = 21.0; // Значение по умолчанию, будет обновлено из JSON
 
 
         function switchMainTab(tab) {
@@ -876,11 +886,15 @@
             if (val > 50) val = 50;
             state.rate = val;
             document.getElementById('rate-range').value = val;
+
+            // Сброс подсветки банка при ручном вводе
+            state.activeBankId = null;
+            updateBankHighlights();
+
             updateCalculations();
         }
 
-        function handleTermInput(el) {
-            let val = parseInt(el.value) || 0;
+        function handleTermInput(el) {            let val = parseInt(el.value) || 0;
             if (val > 50) val = 50;
             state.termYears = val;
             document.getElementById('term-range').value = val;
@@ -891,10 +905,14 @@
             let val = parseFloat(el.value) || 0;
             if (val > 50) val = 50;
             state.activeRate = val;
+
+            // Сброс подсветки банка при ручном вводе
+            state.activeBankId = null;
+            updateBankHighlights();
+
             calcTheoreticalBalance();
             updateCalculations();
         }
-
         function handleRecurringInput(el) {
             state.recurringPrepayment = formatInputField(el, el.value);
             updateCalculations();
@@ -1083,7 +1101,22 @@
             }
         }
 
-        function applyBankRate(val, bankName) {
+        function updateBankHighlights() {
+            document.querySelectorAll('[id^="bank-"]').forEach(el => {
+                el.classList.remove('ring-2', 'ring-brand-500', 'bg-brand-50', 'dark:bg-brand-900/20', 'border-brand-200');
+            });
+            if (state.activeBankId) {
+                const activeEl = document.getElementById(`bank-${state.activeBankId}`);
+                if (activeEl) {
+                    activeEl.classList.add('ring-2', 'ring-brand-500', 'bg-brand-50', 'dark:bg-brand-900/20', 'border-brand-200');
+                }
+            }
+        }
+
+        function applyBankRate(val, bankName, bankId) {
+            state.activeBankId = bankId;
+            updateBankHighlights();
+
             if (activeTab === 'new') {
                 state.rate = val;
                 document.getElementById('rate-input').value = val;
@@ -1096,7 +1129,6 @@
             updateCalculations();
             showToast(`Успешно применена ставка ${val}% от ${bankName}`);
         }
-
         function simulateMortgage(withPrepayments = true) {
             let balance = 0;
             let rate = 0;
@@ -1215,10 +1247,12 @@
                         prepayment += taxPrepayment;
                         actualPayment += taxPrepayment;
                         totalPrepaid += taxPrepayment;
+
+                        // Важно: увеличиваем totalPaid здесь, так как actualPayment уже был прибавлен выше без учета вычета
+                        totalPaid += taxPrepayment;
                     }
 
-                    yearlyPrincipalPaid = 0;
-                    yearlyInterestPaid = 0;
+                    yearlyPrincipalPaid = 0;                    yearlyInterestPaid = 0;
                 }
 
                 schedule.push({
@@ -1284,6 +1318,9 @@
             document.getElementById('custom-prepayments-counter').innerText = `Спецплатежей: ${activeCustomCount}`;
 
             Object.keys(years).forEach(year => {
+                const yearNum = parseInt(year);
+                if (!state.isProUnlocked && yearNum > 3) return;
+
                 const yearData = years[year];
                 const yearId = `year-${year}`;
 
@@ -1385,6 +1422,26 @@
                 wrapper.innerHTML = accordionHeader + accordionContent;
                 container.appendChild(wrapper);
             });
+
+            if (!state.isProUnlocked && Object.keys(years).length > 3) {
+                const paywall = document.createElement('div');
+                paywall.id = 'pro-paywall-overlay';
+                paywall.className = 'relative -mt-32 pt-40 pb-12 flex flex-col items-center justify-center text-center px-4 z-20';
+                paywall.innerHTML = \`
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-700 max-w-md w-full space-y-4">
+                        <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900/30 rounded-2xl flex items-center justify-center mx-auto">
+                            <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">CalcHub PRO</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">График платежей ограничен 3 годами. <br>Активируйте PRO для полного доступа.</p>
+                        <div class="flex flex-col gap-2">
+                            <input type="password" id="pro-password" placeholder="Введите PRO пароль" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-brand-500 text-center font-bold">
+                            <button onclick="unlockPro()" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl transition shadow-lg active:scale-95">Активировать</button>
+                        </div>
+                    </div>
+                \`;
+                container.appendChild(paywall);
+            }
         }
 
         function formatTableInputVisual(input) {
@@ -1414,6 +1471,12 @@
         }
 
         function toggleYearAccordion(yearId) {
+            const yearNum = parseInt(yearId.split('-')[1]);
+            if (!state.isProUnlocked && yearNum > 3) {
+                showToast("Доступно только в PRO версии. Введите пароль ниже.");
+                return;
+            }
+
             const content = document.getElementById(`content-${yearId}`);
             const arrow = document.getElementById(`arrow-${yearId}`);
 
@@ -1423,6 +1486,17 @@
             } else {
                 content.classList.add('hidden');
                 arrow.classList.remove('rotate-180');
+            }
+        }
+
+        function unlockPro() {
+            const pwd = document.getElementById('pro-password')?.value || '';
+            if (pwd.toUpperCase() === 'PORF') {
+                state.isProUnlocked = true;
+                showToast("✓ CalcHub PRO активирован!");
+                updateCalculations();
+            } else {
+                showToast("✕ Неверный пароль");
             }
         }
 
@@ -1568,9 +1642,12 @@
             }
             document.getElementById('res-total-interest').innerText = formatMoney(overpaymentDisplay);
 
-            document.getElementById('res-total-paid').innerText = formatMoney(preResults.totalPaid);
+            let totalPaidDisplay = preResults.totalPaid;
+            if (state.includeTaxDeduction && state.taxDeductionStrategy === 'pocket') {
+                totalPaidDisplay -= preResults.totalTaxReturned;
+            }
+            document.getElementById('res-total-paid').innerText = formatMoney(totalPaidDisplay);
             document.getElementById('res-total-prepaid').innerText = formatMoney(preResults.totalPrepaid);
-
             let savedInterest = baseResults.totalInterest - preResults.totalInterest;
             let savedMonths = baseResults.realTerm - preResults.realTerm;
 
@@ -1581,7 +1658,17 @@
             document.getElementById('saving-money').innerText = formatMoney(savedInterest > 0 ? savedInterest : 0);
             document.getElementById('saving-months').innerText = savedMonths > 0 ? formatMonthsToYearsAndMonths(savedMonths) : '0 месяцев';
             document.getElementById('mobile-payment').innerText = formatMoney(displayMonthlyPayment);
-            document.getElementById('mobile-saving').innerText = formatMoney(savedInterest > 0 ? savedInterest : 0);
+
+            const mobileSaving = document.getElementById('mobile-saving');
+            const mobileHint = document.getElementById('mobile-magic-hint');
+            if (savedInterest <= 0) {
+                mobileSaving.classList.add('hidden');
+                mobileHint.classList.remove('hidden');
+            } else {
+                mobileSaving.classList.remove('hidden');
+                mobileHint.classList.add('hidden');
+                mobileSaving.innerText = formatMoney(savedInterest);
+            }
 
             const savingsCard = document.getElementById('savings-card');
             if (savedInterest > 0 || savedMonths > 0) {
@@ -1661,6 +1748,7 @@
         window.resetAll = resetAll;
         window.clearCustomPrepayments = clearCustomPrepayments;
         window.applyBankRate = applyBankRate;
+        window.unlockPro = unlockPro;
         window.toggleYearAccordion = toggleYearAccordion;
         window.formatTableInputVisual = formatTableInputVisual;
         window.handleTablePrepaymentCommit = handleTablePrepaymentCommit;
@@ -1743,13 +1831,12 @@
                     currentCBRate = data.cb_rate;
                     document.getElementById('cb-rate-display').innerText = formatCBRate(currentCBRate) + '%';
                 }
-                if (data.sberbank) updateBankRateDisplay('sber', data.sberbank);
-                if (data.vtb) updateBankRateDisplay('vtb', data.vtb);
-                if (data.alfa) updateBankRateDisplay('alfa', data.alfa);
-                if (data.tbank) updateBankRateDisplay('tbank', data.tbank);
-                if (data.sovcom) updateBankRateDisplay('sovcom', data.sovcom);
-            } else {
-                document.getElementById('cb-rate-display').innerText = 'Ошибка';
+                if (data.sberbank) { state.bankRates.sber = data.sberbank; updateBankRateDisplay('sber', data.sberbank); }
+                if (data.vtb) { state.bankRates.vtb = data.vtb; updateBankRateDisplay('vtb', data.vtb); }
+                if (data.alfa) { state.bankRates.alfa = data.alfa; updateBankRateDisplay('alfa', data.alfa); }
+                if (data.tbank) { state.bankRates.tbank = data.tbank; updateBankRateDisplay('tbank', data.tbank); }
+                if (data.sovcom) { state.bankRates.sovcom = data.sovcom; updateBankRateDisplay('sovcom', data.sovcom); }
+            } else {                document.getElementById('cb-rate-display').innerText = 'Ошибка';
             }
         }
 
