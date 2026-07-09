@@ -14,7 +14,10 @@ def run_verification():
             'inflation-shredder.html',
             'car-vs-taxi.html',
             'time-is-money.html',
-            'millionaire.html'
+            'millionaire.html',
+            'honest-credit.html',
+            'genetic-wealth.html',
+            'financial-freedom.html'
         ]
 
         for p_name in pages:
