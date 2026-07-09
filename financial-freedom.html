@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Таймер Свободы — Калькулятор подушки безопасности и финансовой свободы</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2canvas CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        @media (max-width: 1023px) {
+            .mobile-sticky-results {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 50;
+                background: white;
+                box-shadow: 0 -10px 15px -3px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid #e2e8f0;
+                padding: 1rem;
+                border-radius: 1.5rem 1.5rem 0 0;
+            }
+            .dark .mobile-sticky-results {
+                background: #0f172a;
+                border-top-color: #1e293b;
+            }
+            body {
+                padding-bottom: 220px;
+            }
+        }
+    </style>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=110360838', 'ym');
+
+        ym(110360838, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+
+        function reachGoal(goalId) {
+            console.log("Goal reached:", goalId);
+            if (typeof ym !== "undefined") {
+                ym(110360838, 'reachGoal', goalId);
+            }
+        }
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    <script src="js/theme.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/ui-utils.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
+
+    <!-- Theme Toggle -->
+    <div class="fixed top-24 right-4 z-50 md:top-6 md:right-8">
+        <button id="theme-toggle" onclick="toggleDarkMode()" class="p-3 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:scale-110 transition-all active:scale-95">
+            <svg id="sun-icon" class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
+            <svg id="moon-icon" class="w-6 h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-emerald-800 to-slate-900 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
+                    <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">На главную</span>
+                </a>
+                <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
+                <div class="flex items-center space-x-3">
+                    <div class="p-2.5 bg-emerald-600 rounded-xl shadow-inner">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tight">Таймер Свободы</h1>
+                        <p class="text-xs text-emerald-200">Калькулятор финансовой подушки безопасности</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <!-- Toast notifications -->
+        <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+            <span class="text-emerald-500 font-bold">✓</span>
+            <span id="toast-message" class="text-sm">Данные обновлены</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+            <!-- Left Column: Inputs -->
+            <div class="lg:col-span-5 space-y-6">
+                <!-- Base Conditions -->
+                <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-3">Основные параметры</h2>
+
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Ваши накопления (Подушка)</label>
+                            <div class="relative">
+                                <input type="text" id="savings-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg" value="1 000 000">
+                                <span class="absolute right-4 top-3.5 text-slate-400 font-bold">₽</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Пассивный / Дополнительный доход (в месяц)</label>
+                            <div class="relative">
+                                <input type="text" id="income-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg" value="30 000">
+                                <span class="absolute right-4 top-3.5 text-slate-400 font-bold">₽</span>
+                            </div>
+                            <p class="text-[10px] text-slate-400 leading-tight">Доход, который продолжит поступать, даже если вы перестанете активно работать.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expense Scenarios -->
+                <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-3">Сценарии ежемесячных расходов</h2>
+
+                    <div class="space-y-6">
+                        <!-- Survival -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">1. Выживание (аренда, простая еда, корм питомцу)</label>
+                                <div class="relative w-32 shrink-0">
+                                    <input type="text" id="survival-input" oninput="handleFormattedInputSync(this, 'survival-range')" class="w-full text-right pr-6 py-1 bg-transparent font-bold text-brand-600 border-b border-dashed border-slate-300 outline-none text-sm" value="40 000">
+                                    <span class="absolute right-0 top-1 text-xs font-bold text-brand-600">₽</span>
+                                </div>
+                            </div>
+                            <input type="range" id="survival-range" min="10000" max="300000" step="1000" value="40000" oninput="handleRangeInputSync(this, 'survival-input')" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                        </div>
+
+                        <!-- Comfort -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">2. Комфорт (+ доставки, спортзал, такси)</label>
+                                <div class="relative w-32 shrink-0">
+                                    <input type="text" id="comfort-input" oninput="handleFormattedInputSync(this, 'comfort-range')" class="w-full text-right pr-6 py-1 bg-transparent font-bold text-brand-600 border-b border-dashed border-slate-300 outline-none text-sm" value="80 000">
+                                    <span class="absolute right-0 top-1 text-xs font-bold text-brand-600">₽</span>
+                                </div>
+                            </div>
+                            <input type="range" id="comfort-range" min="20000" max="500000" step="1000" value="80000" oninput="handleRangeInputSync(this, 'comfort-input')" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                        </div>
+
+                        <!-- Luxury -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">3. Роскошь (+ путешествия, премиум шоппинг)</label>
+                                <div class="relative w-32 shrink-0">
+                                    <input type="text" id="luxury-input" oninput="handleFormattedInputSync(this, 'luxury-range')" class="w-full text-right pr-6 py-1 bg-transparent font-bold text-brand-600 border-b border-dashed border-slate-300 outline-none text-sm" value="180 000">
+                                    <span class="absolute right-0 top-1 text-xs font-bold text-brand-600">₽</span>
+                                </div>
+                            </div>
+                            <input type="range" id="luxury-range" min="50000" max="1500000" step="5000" value="180000" oninput="handleRangeInputSync(this, 'luxury-input')" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Optimization Toggles -->
+                <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-4">
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-3">Оптимизация расходов (для Комфорта и Роскоши)</h2>
+
+                    <div class="space-y-3">
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input type="checkbox" id="cut-delivery-toggle" onchange="calculateFreedom()" class="w-5 h-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500">
+                            <span class="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-brand-600 transition-colors">Отказаться от доставок еды (-15 000 ₽/мес)</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input type="checkbox" id="cut-taxi-toggle" onchange="calculateFreedom()" class="w-5 h-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500">
+                            <span class="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-brand-600 transition-colors">Отказаться от бизнес-такси (-10 000 ₽/мес)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Results -->
+            <div class="lg:col-span-7 space-y-6">
+                <div id="screenshot-area" class="bg-slate-100 dark:bg-slate-900/50 p-4 -m-4 rounded-3xl space-y-6">
+                    <!-- Key metrics layout -->
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-sm border border-slate-100 dark:border-slate-800 space-y-6 relative overflow-hidden">
+                        <div class="absolute -right-12 -top-12 opacity-5">
+                            <svg class="w-48 h-48 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
+                            </svg>
+                        </div>
+
+                        <div class="border-b dark:border-slate-800 pb-4">
+                            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">Ключевые ставки проекта:</h3>
+                            <div class="flex flex-wrap gap-4 text-xs font-semibold text-slate-600 dark:text-slate-400">
+                                <div>Ключевая ставка ЦБ: <span id="cb-rate-val" class="font-bold text-slate-900 dark:text-white">...</span></div>
+                                <div class="hidden sm:block text-slate-300 dark:text-slate-700">|</div>
+                                <div>Ставка по депозиту (ЦБ - 2%): <span id="deposit-rate-val" class="font-bold text-emerald-600">...</span></div>
+                                <div class="hidden sm:block text-slate-300 dark:text-slate-700">|</div>
+                                <div>Средняя инфляция: <span id="inflation-rate-val" class="font-bold text-rose-600">...</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Scenarios results breakdown -->
+                        <div class="space-y-4">
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white">Сроки финансовой подушки по сценариям:</h4>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <!-- Card 1: Survival -->
+                                <div class="p-4 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex flex-col justify-between">
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Выживание</p>
+                                        <p id="survival-duration" class="text-2xl font-black text-emerald-600 mt-1">...</p>
+                                    </div>
+                                    <p id="survival-freedom-date" class="text-[10px] text-slate-500 mt-2 leading-tight">Закончится ...</p>
+                                </div>
+
+                                <!-- Card 2: Comfort -->
+                                <div class="p-4 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex flex-col justify-between">
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Комфорт</p>
+                                        <p id="comfort-duration" class="text-2xl font-black text-brand-600 mt-1">...</p>
+                                    </div>
+                                    <p id="comfort-freedom-date" class="text-[10px] text-slate-500 mt-2 leading-tight">Закончится ...</p>
+                                </div>
+
+                                <!-- Card 3: Luxury -->
+                                <div class="p-4 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex flex-col justify-between">
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Роскошь</p>
+                                        <p id="luxury-duration" class="text-2xl font-black text-indigo-600 mt-1">...</p>
+                                    </div>
+                                    <p id="luxury-freedom-date" class="text-[10px] text-slate-500 mt-2 leading-tight">Закончится ...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Active Scenario Highlight Verdict -->
+                        <div class="mt-4 pt-6 border-t dark:border-slate-800">
+                            <div class="p-4 bg-emerald-50 dark:bg-emerald-950/20 rounded-2xl border border-emerald-100 dark:border-emerald-900/40">
+                                <h5 class="text-xs font-black text-emerald-800 dark:text-emerald-400 uppercase tracking-wider mb-1">Итоговый вердикт (Комфорт):</h5>
+                                <p id="comfort-verdict-highlight" class="text-sm font-semibold text-slate-700 dark:text-slate-300 leading-relaxed italic">
+                                    При текущем уровне комфорта и пассивном доходе ваших средств хватит до...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Line Chart showing savings decay -->
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+                        <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 mb-4">Траектория таяния подушки во времени</h3>
+                        <div class="h-80 relative">
+                            <canvas id="decayChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="shareLink()" class="flex items-center justify-center gap-2 py-4 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 transition shadow-sm active:scale-95">
+                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
+                        Поделиться
+                    </button>
+                    <button onclick="takeScreenshot('screenshot-area', 'financial-freedom.png')" class="flex items-center justify-center gap-2 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition shadow-lg active:scale-95">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Сохранить
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Sticky Results Panel -->
+        <div class="lg:hidden mobile-sticky-results">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Свобода (Комфорт)</span>
+                    <span id="mobile-comfort-duration" class="font-black text-brand-600 text-lg">... мес.</span>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Дата окончания</p>
+                    <p id="mobile-comfort-date" class="text-xs font-black text-slate-950 dark:text-white">...</p>
+                </div>
+            </div>
+            <button onclick="takeScreenshot('screenshot-area', 'financial-freedom.png')" class="w-full py-4 bg-brand-600 text-white font-black rounded-2xl text-sm shadow-lg active:scale-95">
+                📸 Сохранить расчет
+            </button>
+        </div>
+    </main>
+
+    <footer class="py-12 text-center text-xs text-slate-400 border-t dark:border-slate-800 mt-12">
+        <p class="max-w-md mx-auto px-6">Проект CalcHub. Финансовые инструменты ответственного планирования жизни.</p>
+        <p class="mt-4">© 2026 Финансовый Хаб.</p>
+    </footer>
+
+    <script>
+        // ЛОКАЛЬНЫЙ ИНКАПСУЛИРОВАННЫЙ UTILS ФУНКЦИОНАЛ
+        function localFormatMoney(amount) {
+            return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(amount);
+        }
+        function localFormatNumber(amount) {
+            return new Intl.NumberFormat('ru-RU').format(amount);
+        }
+
+        // State Management
+        let state = {
+            cbRate: 16.0,
+            depositRate: 14.0,
+            avgInflation: 0.08,
+            currentMonthIndex: new Date().getMonth(),
+            currentYear: new Date().getFullYear()
+        };
+
+        let decayChart = null;
+
+        const monthNamesRU = [
+            "Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
+            "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"
+        ];
+
+        // Format and synchronized inputs
+        function handleFormattedInput(el) {
+            formatInputField(el, el.value);
+            calculateFreedom();
+        }
+
+        function handleFormattedInputSync(el, rangeId) {
+            const parsed = formatInputField(el, el.value);
+            const range = document.getElementById(rangeId);
+            if (range) {
+                range.value = parsed;
+            }
+            calculateFreedom();
+        }
+
+        function handleRangeInputSync(rangeEl, inputId) {
+            const val = parseInt(rangeEl.value) || 0;
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.value = localFormatNumber(val);
+            }
+            calculateFreedom();
+        }
+
+        // Initialize rates and inflation
+        window.onload = async () => {
+            initTheme();
+
+            // Fetch central bank rate
+            const ratesData = await fetchRates();
+            if (ratesData && ratesData.cb_rate) {
+                state.cbRate = parseFloat(ratesData.cb_rate);
+            }
+            state.depositRate = Math.round(state.cbRate - 2);
+
+            document.getElementById('cb-rate-val').innerText = state.cbRate.toFixed(2) + '%';
+            document.getElementById('deposit-rate-val').innerText = state.depositRate.toFixed(1) + '%';
+
+            // Fetch inflation data
+            const inflationData = await fetchInflation();
+            if (inflationData) {
+                const values = Object.values(inflationData).slice(-15);
+                if (values.length > 0) {
+                    const product = values.reduce((acc, r) => acc * (1 + r / 100), 1);
+                    state.avgInflation = Math.pow(product, 1 / values.length) - 1;
+                }
+            }
+            document.getElementById('inflation-rate-val').innerText = (state.avgInflation * 100).toFixed(1) + '%';
+
+            // Initial calculation
+            calculateFreedom();
+        };
+
+        // Core math and simulation loop
+        function calculateFreedom() {
+            const savings = parseCleanNumber(document.getElementById('savings-input').value);
+            const passiveIncome = parseCleanNumber(document.getElementById('income-input').value);
+
+            let baseSurvival = parseCleanNumber(document.getElementById('survival-input').value);
+            let baseComfort = parseCleanNumber(document.getElementById('comfort-input').value);
+            let baseLuxury = parseCleanNumber(document.getElementById('luxury-input').value);
+
+            // Optimization Toggles
+            if (document.getElementById('cut-delivery-toggle').checked) {
+                baseComfort = Math.max(0, baseComfort - 15000);
+                baseLuxury = Math.max(0, baseLuxury - 15000);
+            }
+            if (document.getElementById('cut-taxi-toggle').checked) {
+                baseComfort = Math.max(0, baseComfort - 10000);
+                baseLuxury = Math.max(0, baseLuxury - 10000);
+            }
+
+            const scenarios = [
+                { name: "survival", baseExpense: baseSurvival, color: "#10b981" },
+                { name: "comfort", baseExpense: baseComfort, color: "#16a34a" },
+                { name: "luxury", baseExpense: baseLuxury, color: "#6366f1" }
+            ];
+
+            const monthlyDepositRate = state.depositRate / 100 / 12;
+            const monthlyInflationRate = state.avgInflation / 12;
+
+            // Chart datasets config
+            let chartDatasets = [];
+            let maxProjectionMonths = 0;
+
+            scenarios.forEach(sc => {
+                let balance = savings;
+                let monthIdx = state.currentMonthIndex;
+                let year = state.currentYear;
+                let currentExpense = sc.baseExpense;
+
+                let points = [{ x: 0, y: balance }];
+                let monthsRemaining = 0;
+                let dateString = "Бесконечная свобода";
+                let infinity = false;
+
+                // Max 1200 months (100 years) to avoid infinite loops
+                for (let m = 1; m <= 1200; m++) {
+                    // Apply monthly inflation to base expense dynamically over time
+                    currentExpense = sc.baseExpense * Math.pow(1 + monthlyInflationRate, m);
+
+                    // Monthly calculation: deposit interest is added, inflated expenses are subtracted
+                    const depositInterest = balance * monthlyDepositRate;
+                    balance = balance + depositInterest + passiveIncome - currentExpense;
+
+                    if (balance < 0) {
+                        balance = 0;
+                    }
+                    points.push({ x: m, y: Math.round(balance) });
+
+                    if (balance <= 0 && monthsRemaining === 0) {
+                        monthsRemaining = m;
+                        // Find future date
+                        let fMonth = (monthIdx + m) % 12;
+                        let fYear = year + Math.floor((monthIdx + m) / 12);
+                        const currentDay = new Date().getDate();
+                        dateString = `Свобода закончится ${currentDay} ${monthNamesRU[fMonth]} ${fYear} г.`;
+                        break;
+                    }
+
+                    // Check if passive income exceeds inflated expenses + deposit interest, indicating infinity
+                    if (m === 1200) {
+                        infinity = true;
+                        monthsRemaining = 1200;
+                        dateString = "Никогда не закончится";
+                    }
+                }
+
+                sc.monthsRemaining = monthsRemaining;
+                sc.dateString = dateString;
+                sc.points = points;
+                sc.infinity = infinity;
+
+                if (monthsRemaining > maxProjectionMonths) {
+                    maxProjectionMonths = monthsRemaining;
+                }
+            });
+
+            // Standardize chart points length
+            scenarios.forEach(sc => {
+                chartDatasets.push({
+                    label: sc.name === "survival" ? "Выживание" : sc.name === "comfort" ? "Комфорт" : "Роскошь",
+                    data: sc.points,
+                    borderColor: sc.color,
+                    backgroundColor: sc.color + "20",
+                    borderWidth: 3,
+                    pointRadius: 2,
+                    tension: 0.4,
+                    fill: false
+                });
+            });
+
+            // Update DOM Elements
+            scenarios.forEach(sc => {
+                let durationText = `${sc.monthsRemaining} ${getMonthWord(sc.monthsRemaining)}`;
+                if (sc.infinity) durationText = "∞ (Вечно)";
+
+                document.getElementById(`${sc.name}-duration`).innerText = durationText;
+                document.getElementById(`${sc.name}-freedom-date`).innerText = sc.dateString;
+            });
+
+            // Mobile view elements update
+            let comfortMRemaining = scenarios[1].monthsRemaining;
+            let comfortDurationText = `${comfortMRemaining} ${getMonthWord(comfortMRemaining)}`;
+            if (scenarios[1].infinity) comfortDurationText = "∞ (Вечно)";
+
+            document.getElementById('mobile-comfort-duration').innerText = comfortDurationText;
+            document.getElementById('mobile-comfort-date').innerText = scenarios[1].dateString;
+
+            // Update active verdict highlights
+            const comfortSc = scenarios[1];
+            let comfortDateText = comfortSc.dateString;
+            let comfortMonthsText = `${comfortSc.monthsRemaining} ${getMonthWord(comfortSc.monthsRemaining)}`;
+            if (comfortSc.infinity) {
+                comfortMonthsText = "бесконечное число месяцев";
+                comfortDateText = "средства никогда не закончатся";
+            }
+
+            const verdictHighlight = `При текущем уровне комфорта и пассивном доходе ваших средств хватит на ${comfortMonthsText}. Накопленная подушка безопасности закроет ваши базовые потребности, и деньги прекратят таять к указанному сроку: ${comfortDateText}.`;
+            document.getElementById('comfort-verdict-highlight').innerText = verdictHighlight;
+
+            // Render Chart
+            renderChart(chartDatasets);
+
+            reachGoal("calculate_success");
+        }
+
+        function renderChart(datasets) {
+            const ctx = document.getElementById('decayChart').getContext('2d');
+            if (decayChart) {
+                decayChart.destroy();
+            }
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+            const textColor = isDark ? '#94a3b8' : '#475569';
+
+            decayChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: textColor,
+                                font: { size: 11, weight: 'bold' },
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` Месяц ${context.parsed.x}: ${localFormatMoney(context.parsed.y)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            title: {
+                                display: true,
+                                text: 'Срок (месяцы)',
+                                color: textColor,
+                                font: { size: 10, weight: 'bold' }
+                            },
+                            grid: { color: gridColor },
+                            ticks: { color: textColor }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Остаток подушки (₽)',
+                                color: textColor,
+                                font: { size: 10, weight: 'bold' }
+                            },
+                            grid: { color: gridColor },
+                            ticks: {
+                                color: textColor,
+                                callback: function(value) {
+                                    if (value >= 1000000) {
+                                        return (value / 1000000).toFixed(1) + ' млн';
+                                    }
+                                    return localFormatNumber(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
