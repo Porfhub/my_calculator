@@ -62,6 +62,38 @@
                 padding-bottom: 220px;
             }
         }
+
+        /* Тултипы */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 240px;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -120px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.4;
+            pointer-events: none;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
@@ -132,6 +164,16 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
             <!-- Left Column: Inputs -->
             <div class="lg:col-span-5 space-y-6">
+                <!-- Быстрые пресеты бюджетов трат -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-4">
+                    <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Быстрый выбор бюджета трат</span>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="applyBudgetPreset('poor')" class="py-2.5 bg-slate-50 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all uppercase">Скромно</button>
+                        <button onclick="applyBudgetPreset('normal')" class="py-2.5 bg-slate-50 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all uppercase">Нормально</button>
+                        <button onclick="applyBudgetPreset('rich')" class="py-2.5 bg-slate-50 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all uppercase">Шикую</button>
+                    </div>
+                </div>
+
                 <!-- Base Conditions -->
                 <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
                     <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-3">Основные параметры</h2>
@@ -140,7 +182,7 @@
                         <div class="space-y-2">
                             <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Ваши накопления (Подушка)</label>
                             <div class="relative">
-                                <input type="text" id="savings-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg" value="1 000 000">
+                                <input type="text" id="savings-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg text-slate-800 dark:text-white" value="1 000 000">
                                 <span class="absolute right-4 top-3.5 text-slate-400 font-bold">₽</span>
                             </div>
                         </div>
@@ -148,7 +190,7 @@
                         <div class="space-y-2">
                             <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Пассивный / Дополнительный доход (в месяц)</label>
                             <div class="relative">
-                                <input type="text" id="income-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg" value="30 000">
+                                <input type="text" id="income-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg text-slate-800 dark:text-white" value="30 000">
                                 <span class="absolute right-4 top-3.5 text-slate-400 font-bold">₽</span>
                             </div>
                             <p class="text-[10px] text-slate-400 leading-tight">Доход, который продолжит поступать, даже если вы перестанете активно работать.</p>
@@ -230,11 +272,32 @@
                         <div class="border-b dark:border-slate-800 pb-4">
                             <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">Ключевые ставки проекта:</h3>
                             <div class="flex flex-wrap gap-4 text-xs font-semibold text-slate-600 dark:text-slate-400">
-                                <div>Ключевая ставка ЦБ: <span id="cb-rate-val" class="font-bold text-slate-900 dark:text-white">...</span></div>
+                                <div class="flex items-center gap-1">
+                                    Ключевая ставка ЦБ:
+                                    <span id="cb-rate-val" class="font-bold text-slate-900 dark:text-white">...</span>
+                                    <span class="tooltip inline-block relative cursor-help">
+                                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <span class="tooltiptext absolute hidden bg-slate-900 dark:bg-slate-800 text-white text-[11px] p-2 rounded-lg w-52 text-center bottom-full left-1/2 -ml-26 z-50 mb-1 group-hover:block transition-all shadow-lg leading-normal">Ключевая ставка Центрального Банка РФ. Робот автоматически загружает ее напрямую с официального сайта ЦБ.</span>
+                                    </span>
+                                </div>
                                 <div class="hidden sm:block text-slate-300 dark:text-slate-700">|</div>
-                                <div>Ставка по депозиту (ЦБ - 2%): <span id="deposit-rate-val" class="font-bold text-emerald-600">...</span></div>
+                                <div class="flex items-center gap-1">
+                                    Ставка по депозиту (ЦБ - 2%):
+                                    <span id="deposit-rate-val" class="font-bold text-emerald-600">...</span>
+                                    <span class="tooltip inline-block relative cursor-help">
+                                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <span class="tooltiptext absolute hidden bg-slate-900 dark:bg-slate-800 text-white text-[11px] p-2 rounded-lg w-52 text-center bottom-full left-1/2 -ml-26 z-50 mb-1 group-hover:block transition-all shadow-lg leading-normal">Средняя рыночная доходность вкладов. Обычно на 2% ниже ключевой ставки ЦБ. Используется для симуляции начисления процентов на остаток вашей подушки.</span>
+                                    </span>
+                                </div>
                                 <div class="hidden sm:block text-slate-300 dark:text-slate-700">|</div>
-                                <div>Средняя инфляция: <span id="inflation-rate-val" class="font-bold text-rose-600">...</span></div>
+                                <div class="flex items-center gap-1">
+                                    Средняя инфляция:
+                                    <span id="inflation-rate-val" class="font-bold text-rose-600">...</span>
+                                    <span class="tooltip inline-block relative cursor-help">
+                                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <span class="tooltiptext absolute hidden bg-slate-900 dark:bg-slate-800 text-white text-[11px] p-2 rounded-lg w-52 text-center bottom-full left-1/2 -ml-26 z-50 mb-1 group-hover:block transition-all shadow-lg leading-normal">Среднее геометрическое значение инфляции в РФ за последние 15 лет. Используется для ежегодного индексирования и обесценивания ваших трат.</span>
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
@@ -355,6 +418,40 @@
         ];
 
         // Format and synchronized inputs
+        function applyBudgetPreset(type) {
+            let survivalVal = 40000;
+            let comfortVal = 80000;
+            let luxuryVal = 180000;
+
+            if (type === 'poor') {
+                survivalVal = 20000;
+                comfortVal = 40000;
+                luxuryVal = 80000;
+            } else if (type === 'normal') {
+                survivalVal = 40000;
+                comfortVal = 80000;
+                luxuryVal = 180000;
+            } else if (type === 'rich') {
+                survivalVal = 100000;
+                comfortVal = 200000;
+                luxuryVal = 500000;
+            }
+
+            document.getElementById('survival-input').value = localFormatNumber(survivalVal);
+            document.getElementById('survival-range').value = survivalVal;
+
+            document.getElementById('comfort-input').value = localFormatNumber(comfortVal);
+            document.getElementById('comfort-range').value = comfortVal;
+
+            document.getElementById('luxury-input').value = localFormatNumber(luxuryVal);
+            document.getElementById('luxury-range').value = luxuryVal;
+
+            calculateFreedom();
+            if (typeof showToast === 'function') {
+                showToast(`Применен бюджет: ${type === 'poor' ? 'Скромно' : type === 'normal' ? 'Нормально' : 'Шикую'}`);
+            }
+        }
+
         function handleFormattedInput(el) {
             formatInputField(el, el.value);
             calculateFreedom();
@@ -532,7 +629,12 @@
                 comfortDateText = "средства никогда не закончатся";
             }
 
-            const verdictHighlight = `При текущем уровне комфорта и пассивном доходе ваших средств хватит на ${comfortMonthsText}. Накопленная подушка безопасности закроет ваши базовые потребности, и деньги прекратят таять к указанному сроку: ${comfortDateText}.`;
+            let verdictHighlight = "";
+            if (comfortSc.infinity) {
+                verdictHighlight = `🥳 Полная финансовая свобода! Ваши накопления при текущем уровне комфорта никогда не иссякнут (вечный капитал), так как проценты по вкладу и пассивный доход полностью перекрывают ваши траты. День финансового апокалипсиса отменяется!`;
+            } else {
+                verdictHighlight = `🚨 День финансового апокалипсиса: ${comfortDateText}. При текущем уровне комфорта и пассивном доходе ваших средств хватит ровно на ${comfortMonthsText}. После этой даты ваша подушка безопасности полностью растает. Срочно пересмотрите расходы или найдите новые источники дохода!`;
+            }
             document.getElementById('comfort-verdict-highlight').innerText = verdictHighlight;
 
             // Render Chart
