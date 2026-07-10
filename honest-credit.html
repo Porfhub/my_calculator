@@ -183,30 +183,42 @@
 
                     <div class="space-y-4">
                         <div class="space-y-2">
+                            <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Быстрый выбор суммы</span>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="addSumToInput(100000)" class="py-2 bg-slate-50 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all uppercase">+100к ₽</button>
+                                <button onclick="addSumToInput(500000)" class="py-2 bg-slate-50 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all uppercase">+500к ₽</button>
+                                <button onclick="addSumToInput(1000000)" class="py-2 bg-slate-50 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all uppercase">+1м ₽</button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
                             <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Сумма на руки</label>
                             <div class="relative">
-                                <input type="text" id="amount-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg" value="500 000">
+                                <input type="text" id="amount-input" oninput="handleFormattedInputSync(this, 'amount-range')" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg text-slate-800 dark:text-white" value="500 000">
                                 <span class="absolute right-4 top-3.5 text-slate-400 font-bold">₽</span>
                             </div>
+                            <input type="range" id="amount-range" min="50000" max="10000000" step="50000" value="500000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('amount', this.value)">
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
                             <div class="space-y-2">
                                 <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Срок кредита</label>
                                 <div class="relative">
-                                    <input type="number" id="term-input" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg" value="36">
-                                    <select id="term-unit" class="absolute right-2 top-2 bg-white dark:bg-slate-700 border-none text-xs font-bold rounded-lg p-1.5 outline-none">
+                                    <input type="number" id="term-input" oninput="handleRawInputSync('term', this.value)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg text-slate-800 dark:text-white" value="36">
+                                    <select id="term-unit" onchange="calculateHonestRate()" class="absolute right-2 top-2 bg-white dark:bg-slate-700 border-none text-xs font-bold rounded-lg p-1.5 outline-none">
                                         <option value="months">мес.</option>
                                         <option value="years">лет</option>
                                     </select>
                                 </div>
+                                <input type="range" id="term-range" min="1" max="120" step="1" value="36" class="w-full accent-brand-600 h-1 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('term', this.value)">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Ставка банка</label>
                                 <div class="relative">
-                                    <input type="number" id="rate-input" step="0.1" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg" value="12.9">
+                                    <input type="number" id="rate-input" step="0.1" oninput="handleRawInputSync('rate', this.value)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg text-slate-800 dark:text-white" value="12.9">
                                     <span class="absolute right-4 top-3.5 text-slate-400 font-bold">%</span>
                                 </div>
+                                <input type="range" id="rate-range" min="1" max="50" step="0.1" value="12.9" class="w-full accent-brand-600 h-1 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('rate', this.value)">
                             </div>
                         </div>
                     </div>
@@ -229,11 +241,12 @@
                                 </label>
                             </div>
                             <div class="relative">
-                                <input type="text" id="insurance-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="50 000">
+                                <input type="text" id="insurance-input" oninput="handleFormattedInputSync(this, 'insurance-range')" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="50 000">
                                 <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
                             </div>
+                            <input type="range" id="insurance-range" min="0" max="1000000" step="5000" value="50000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('insurance', this.value)">
                             <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="checkbox" id="insurance-in-body" class="w-5 h-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500" checked>
+                                <input type="checkbox" id="insurance-in-body" onchange="calculateHonestRate()" class="w-5 h-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500" checked>
                                 <span class="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-brand-600 transition-colors">Включена в тело кредита</span>
                             </label>
                         </div>
@@ -248,9 +261,10 @@
                                 </span>
                             </label>
                             <div class="relative">
-                                <input type="text" id="commissions-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="0">
+                                <input type="text" id="commissions-input" oninput="handleFormattedInputSync(this, 'commissions-range')" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="0">
                                 <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
                             </div>
+                            <input type="range" id="commissions-range" min="0" max="500000" step="2000" value="0" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('commissions', this.value)">
                         </div>
 
                         <!-- Monthly payments -->
@@ -263,9 +277,10 @@
                                 </span>
                             </label>
                             <div class="relative">
-                                <input type="text" id="monthly-hidden-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold" value="599">
+                                <input type="text" id="monthly-hidden-input" oninput="handleFormattedInputSync(this, 'monthly-hidden-range')" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="599">
                                 <span class="absolute right-4 top-3.5 text-slate-400">₽/мес.</span>
                             </div>
+                            <input type="range" id="monthly-hidden-range" min="0" max="20000" step="100" value="599" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('monthly-hidden', this.value)">
                         </div>
                     </div>
                 </div>
@@ -361,6 +376,50 @@
             formatInputField(el, el.value);
         }
 
+        function handleFormattedInputSync(el, rangeId) {
+            const val = formatInputField(el, el.value);
+            const range = document.getElementById(rangeId);
+            if (range) {
+                range.value = val;
+            }
+            calculateHonestRate();
+        }
+
+        function handleRawInputSync(field, val) {
+            const range = document.getElementById(`${field}-range`);
+            if (range) {
+                range.value = val;
+            }
+            calculateHonestRate();
+        }
+
+        function syncRangeToInput(field, val) {
+            const input = document.getElementById(`${field}-input`);
+            if (input) {
+                if (field === 'amount' || field === 'insurance' || field === 'commissions' || field === 'monthly-hidden') {
+                    input.value = formatNumber(parseInt(val) || 0);
+                } else {
+                    input.value = val;
+                }
+            }
+            calculateHonestRate();
+        }
+
+        function addSumToInput(amountToAdd) {
+            const amountInput = document.getElementById('amount-input');
+            const currentVal = parseCleanNumber(amountInput.value);
+            const newVal = currentVal + amountToAdd;
+            amountInput.value = formatNumber(newVal);
+            const range = document.getElementById('amount-range');
+            if (range) {
+                range.value = newVal;
+            }
+            calculateHonestRate();
+            if (typeof showToast === 'function') {
+                showToast(`Добавлено: +${formatNumber(amountToAdd)} ₽`);
+            }
+        }
+
         function calculateHonestRate() {
             // 1. Get Inputs
             const amountHand = parseCleanNumber(document.getElementById('amount-input').value);
@@ -439,15 +498,29 @@
             if (diffRub > 10) { // Tiny margin for float errors
                 realRateDisplay.className = "text-6xl font-black text-rose-600 " + (annualEir > bankRate * 1.5 ? "animate-bounce-short" : "");
                 mobileRateDisplay.className = "font-black text-rose-600";
-                rateCard.className = "p-6 bg-rose-50 dark:bg-rose-900/20 rounded-3xl border-2 border-rose-100 dark:border-rose-800 animate-pulse-slow";
 
-                const verdictText = `Внимание! Из-за скрытой нагрузки вы переплачиваете лишние ${formatMoney(diffRub)}. Реальная стоимость этого кредита ${annualEir > bankRate * 1.8 ? 'более чем в два раза' : 'значительно'} выше, чем обещает реклама. Вы имеете право отказаться от навязанных услуг в течение установленного законом периода охлаждения.`;
-                document.getElementById('verdict-text').innerText = verdictText;
+                // Если переплата огромная (более 30% от тела или ставка более чем в 1.5 раза выше)
+                const pctOverpayment = (totalAir / amountHand) * 100;
+                if (pctOverpayment > 20 || annualEir > bankRate * 1.5) {
+                    rateCard.className = "p-8 bg-gradient-to-br from-red-600 to-rose-900 text-white rounded-3xl border-4 border-red-500 shadow-2xl shadow-red-500/20 animate-pulse-slow";
+                    realRateDisplay.className = "text-7xl font-black text-white drop-shadow-md";
+                    const advertisedDisplay = document.getElementById('advertised-rate-display');
+                    if (advertisedDisplay) advertisedDisplay.className = "text-4xl font-black text-slate-200/50 line-through decoration-slate-400";
+
+                    const verdictText = `🚨 Внимание: Кредит содержит грабительские скрытые условия! Из-за навязанной нагрузки вы переплачиваете за "воздух" лишние ${formatMoney(diffRub)} (${Math.round(pctOverpayment)}% от запрашиваемой суммы!). Реальная ставка составляет шокирующие ${annualEir.toFixed(1)}% вместо рекламных ${bankRate.toFixed(1)}%. Срочно пересмотрите условия договора или откажитесь от страховки в «период охлаждения»!`;
+                    document.getElementById('verdict-text').innerText = verdictText;
+                } else {
+                    rateCard.className = "p-6 bg-rose-50 dark:bg-rose-900/20 rounded-3xl border-2 border-rose-100 dark:border-rose-800 animate-pulse-slow text-slate-800 dark:text-slate-100";
+                    const verdictText = `Внимание! Из-за скрытой нагрузки вы переплачиваете лишние ${formatMoney(diffRub)}. Реальная стоимость этого кредита ${annualEir > bankRate * 1.8 ? 'более чем в два раза' : 'значительно'} выше, чем обещает реклама. Вы имеете право отказаться от навязанных услуг в течение установленного законом периода охлаждения.`;
+                    document.getElementById('verdict-text').innerText = verdictText;
+                }
             } else {
                 // Honest deal
                 realRateDisplay.className = "text-6xl font-black text-emerald-600";
                 mobileRateDisplay.className = "font-black text-emerald-600";
-                rateCard.className = "p-6 bg-emerald-50 dark:bg-emerald-900/20 rounded-3xl border-2 border-emerald-100 dark:border-emerald-800";
+                rateCard.className = "p-6 bg-emerald-50 dark:bg-emerald-900/20 rounded-3xl border-2 border-emerald-100 dark:border-emerald-800 text-slate-800 dark:text-slate-100";
+                const advertisedDisplay = document.getElementById('advertised-rate-display');
+                if (advertisedDisplay) advertisedDisplay.className = "text-4xl font-black text-slate-400 line-through decoration-slate-300";
 
                 document.getElementById('verdict-text').innerText = "Честное предложение! У этого кредита отсутствуют скрытые комиссии и навязанные страховки. Вы платите только чистый процент банку.";
             }
