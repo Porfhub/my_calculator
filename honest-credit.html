@@ -164,9 +164,7 @@
                     <p id="mobile-payment" class="text-lg font-black text-slate-900 dark:text-white">0 ₽</p>
                 </div>
             </div>
-            <button onclick="takeScreenshot('screenshot-area', 'honest-credit-cost.png')" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
-                📸 Сохранить расчет
-            </button>
+            <button onclick="shareLinkCustom('Калькулятор Честной Ставки — CalcHub', 'Я разоблачил скрытую переплату по кредиту в Честной Ставке! Моя реальная ставка составляет ' + document.getElementById('mobile-rate').innerText + ' вместо рекламной. Проверь свой кредит!')" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg">📢 Поделиться расчетом</button>
         </div>
 
         <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
@@ -285,13 +283,10 @@
                     </div>
                 </div>
 
-                <button onclick="calculateHonestRate()" class="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white font-black rounded-2xl shadow-lg transition-all active:scale-[0.98] text-lg">
-                    Разоблачить условия
-                </button>
             </div>
 
             <!-- Right Column: Results -->
-            <div id="results-container" class="lg:col-span-7 space-y-6 opacity-0 transition-opacity duration-500 pointer-events-none">
+            <div id="results-container" class="lg:col-span-7 space-y-6">
                 <div id="screenshot-area" class="space-y-6">
                     <!-- Rate Comparison Card -->
                     <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-8 text-center space-y-6 overflow-hidden relative">
@@ -300,8 +295,8 @@
 
                             <div class="flex flex-col md:flex-row items-center justify-around gap-8">
                                 <div class="space-y-2">
-                                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">В рекламе</p>
-                                    <p id="advertised-rate-display" class="text-4xl font-black text-slate-400 line-through decoration-slate-300">12.9%</p>
+                                    <p class="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">В рекламе</p>
+                                    <p id="advertised-rate-display" class="text-4xl font-black text-slate-500 dark:text-slate-400 line-through decoration-slate-300 dark:decoration-slate-600">12.9%</p>
                                 </div>
 
                                 <div class="hidden md:block">
@@ -496,31 +491,32 @@
             const diffRub = Math.round(totalAir);
 
             if (diffRub > 10) { // Tiny margin for float errors
-                realRateDisplay.className = "text-6xl font-black text-rose-600 " + (annualEir > bankRate * 1.5 ? "animate-bounce-short" : "");
-                mobileRateDisplay.className = "font-black text-rose-600";
-
-                // Если переплата огромная (более 30% от тела или ставка более чем в 1.5 раза выше)
+                // Если переплата огромная (более 20% от тела или ставка более чем в 1.5 раза выше)
                 const pctOverpayment = (totalAir / amountHand) * 100;
                 if (pctOverpayment > 20 || annualEir > bankRate * 1.5) {
-                    rateCard.className = "p-8 bg-gradient-to-br from-red-600 to-rose-900 text-white rounded-3xl border-4 border-red-500 shadow-2xl shadow-red-500/20 animate-pulse-slow";
-                    realRateDisplay.className = "text-7xl font-black text-white drop-shadow-md";
+                    rateCard.className = "p-8 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-slate-900 dark:to-orange-950/20 text-slate-900 dark:text-white rounded-3xl border-2 border-orange-500 shadow-xl";
+                    realRateDisplay.className = "text-7xl font-black text-rose-600 dark:text-rose-500 drop-shadow-sm";
                     const advertisedDisplay = document.getElementById('advertised-rate-display');
-                    if (advertisedDisplay) advertisedDisplay.className = "text-4xl font-black text-slate-200/50 line-through decoration-slate-400";
+                    if (advertisedDisplay) advertisedDisplay.className = "text-4xl font-black text-slate-500 dark:text-slate-400 line-through decoration-slate-450";
 
                     const verdictText = `🚨 Внимание: Кредит содержит грабительские скрытые условия! Из-за навязанной нагрузки вы переплачиваете за "воздух" лишние ${formatMoney(diffRub)} (${Math.round(pctOverpayment)}% от запрашиваемой суммы!). Реальная ставка составляет шокирующие ${annualEir.toFixed(1)}% вместо рекламных ${bankRate.toFixed(1)}%. Срочно пересмотрите условия договора или откажитесь от страховки в «период охлаждения»!`;
                     document.getElementById('verdict-text').innerText = verdictText;
                 } else {
-                    rateCard.className = "p-6 bg-rose-50 dark:bg-rose-900/20 rounded-3xl border-2 border-rose-100 dark:border-rose-800 animate-pulse-slow text-slate-800 dark:text-slate-100";
+                    rateCard.className = "p-6 bg-rose-50 dark:bg-rose-950/20 rounded-3xl border-2 border-rose-200 dark:border-rose-900 text-slate-800 dark:text-slate-100";
+                    realRateDisplay.className = "text-6xl font-black text-rose-600 dark:text-rose-500";
+                    const advertisedDisplay = document.getElementById('advertised-rate-display');
+                    if (advertisedDisplay) advertisedDisplay.className = "text-4xl font-black text-slate-500 dark:text-slate-400 line-through decoration-slate-450";
+
                     const verdictText = `Внимание! Из-за скрытой нагрузки вы переплачиваете лишние ${formatMoney(diffRub)}. Реальная стоимость этого кредита ${annualEir > bankRate * 1.8 ? 'более чем в два раза' : 'значительно'} выше, чем обещает реклама. Вы имеете право отказаться от навязанных услуг в течение установленного законом периода охлаждения.`;
                     document.getElementById('verdict-text').innerText = verdictText;
                 }
             } else {
                 // Honest deal
-                realRateDisplay.className = "text-6xl font-black text-emerald-600";
-                mobileRateDisplay.className = "font-black text-emerald-600";
-                rateCard.className = "p-6 bg-emerald-50 dark:bg-emerald-900/20 rounded-3xl border-2 border-emerald-100 dark:border-emerald-800 text-slate-800 dark:text-slate-100";
+                realRateDisplay.className = "text-6xl font-black text-emerald-600 dark:text-emerald-500";
+                mobileRateDisplay.className = "font-black text-emerald-600 dark:text-emerald-500";
+                rateCard.className = "p-6 bg-emerald-50 dark:bg-emerald-950/20 rounded-3xl border-2 border-emerald-200 dark:border-emerald-900 text-slate-800 dark:text-slate-100";
                 const advertisedDisplay = document.getElementById('advertised-rate-display');
-                if (advertisedDisplay) advertisedDisplay.className = "text-4xl font-black text-slate-400 line-through decoration-slate-300";
+                if (advertisedDisplay) advertisedDisplay.className = "text-4xl font-black text-slate-500 dark:text-slate-400 line-through decoration-slate-450";
 
                 document.getElementById('verdict-text').innerText = "Честное предложение! У этого кредита отсутствуют скрытые комиссии и навязанные страховки. Вы платите только чистый процент банку.";
             }
@@ -537,9 +533,6 @@
             document.getElementById('mobile-payment').innerText = formatMoney(pmtReal);
             document.getElementById('mobile-results').classList.remove('hidden');
 
-            if (window.innerWidth < 1024) {
-                container.scrollIntoView({ behavior: 'smooth' });
-            }
 
             reachGoal("calculate_success");
         }
@@ -594,7 +587,7 @@
 
         window.onload = () => {
             initTheme();
-            // Optional: run initial calc if values are present
+            calculateHonestRate();
         };
     </script>
 </body>

@@ -69,7 +69,7 @@
             visibility: hidden;
             width: 200px;
             background-color: #1e293b;
-            color: #fff;
+            color: #fff !important;
             text-align: center;
             border-radius: 8px;
             padding: 8px;
@@ -80,8 +80,10 @@
             margin-left: -100px;
             opacity: 0;
             transition: opacity 0.3s;
-            font-size: 11px;
-            font-weight: 500;
+            font-size: 11px !important;
+            font-weight: 500 !important;
+            text-transform: none !important;
+            letter-spacing: normal !important;
             line-height: 1.4;
             pointer-events: none;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
@@ -171,7 +173,16 @@
                 </div>
             </div>
 
-            <div id="rates-container" class="flex md:grid md:grid-cols-5 gap-3 overflow-x-auto pb-2 md:pb-0 snap-x snap-mandatory scrollbar-hide">
+            <!-- Стрелочки навигации для мобильного каруселя ставок -->
+            <div class="relative group">
+                <button onclick="scrollRates('left')" id="btn-scroll-left" class="absolute -left-2 top-1/2 -translate-y-1/2 z-15 p-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full shadow-md text-slate-600 dark:text-slate-300 hover:scale-110 active:scale-95 transition-all md:hidden hidden">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <button onclick="scrollRates('right')" id="btn-scroll-right" class="absolute -right-2 top-1/2 -translate-y-1/2 z-15 p-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full shadow-md text-slate-600 dark:text-slate-300 hover:scale-110 active:scale-95 transition-all md:hidden">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+
+            <div id="rates-container" onscroll="handleRatesScroll()" class="flex md:grid md:grid-cols-5 gap-3 overflow-x-auto pb-2 md:pb-0 snap-x snap-mandatory scrollbar-hide scroll-smooth">
                 <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition min-w-[145px] sm:min-w-0 snap-start shrink-0">
                     <div class="flex items-center space-x-2">
                         <div class="w-6 h-6 rounded-full bg-green-600 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">СБ</div>
@@ -222,6 +233,7 @@
                         <button id="btn-rate-sovcom" onclick="toggleBankRateButton('sovcom', 'Совкомбанка')" class="btn-bank-rate px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700">Применить</button>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </section>
@@ -431,12 +443,24 @@
 
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
-                            <label for="recurring-input" class="text-xs font-bold text-slate-500 uppercase tracking-wide">Регулярная доплата (каждый месяц)</label>
+                            <label for="recurring-input" class="text-xs font-bold text-slate-500 uppercase tracking-wide flex items-center gap-1">
+                                Регулярная доплата (каждый месяц)
+                                <span class="tooltip">
+                                    <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span class="tooltiptext">Сумма, которую вы готовы платить ежемесячно сверх обязательного ипотечного платежа. Вся доплата направляется на досрочное погашение долга, резко снижая переплату.</span>
+                                </span>
+                            </label>
                             <span class="text-sm font-bold text-emerald-600" id="recurring-display">0 ₽</span>
                         </div>
                         <div class="relative rounded-lg shadow-sm">
                             <input type="text" id="recurring-input" oninput="handleRecurringInput(this)" class="w-full pl-4 pr-12 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
+                        </div>
+                        <!-- Варианты пресетов для быстрой досрочки -->
+                        <div class="grid grid-cols-3 gap-2 mt-2">
+                            <button onclick="applyRecurringPreset(5000)" class="py-1.5 bg-slate-100 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all">5 000 ₽</button>
+                            <button onclick="applyRecurringPreset(10000)" class="py-1.5 bg-slate-100 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all">10 000 ₽</button>
+                            <button onclick="applyRecurringPreset(20000)" class="py-1.5 bg-slate-100 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all">20 000 ₽</button>
                         </div>
                     </div>
                 </div>
@@ -537,24 +561,7 @@
                     <div class="col-span-2 text-right">Остаток долга</div>
                 </div>
 
-                <div id="years-accordion-container" class="space-y-3"></div>
-                
-                <div id="pro-paywall-overlay" class="hidden absolute inset-x-0 top-0 bottom-0 z-20 flex flex-col items-center justify-center pb-12 pt-12 bg-gradient-to-b from-white/90 via-white/98 to-white dark:from-slate-950/90 dark:via-slate-950/98 dark:to-slate-950 backdrop-blur-[2px]">
-                    <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-2xl border-2 border-brand-500/30 dark:border-brand-500/20 text-center max-w-md mx-auto transition-transform scale-100 hover:scale-[1.02]">
-                        <div class="w-16 h-16 bg-gradient-to-br from-amber-400 to-brand-500 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-brand-500/20 animate-pulse">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                        </div>
-                        <h4 class="text-2xl font-black mb-2 text-slate-900 dark:text-white tracking-tight">👑 Раскройте полную силу досрочки</h4>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
-                            Анализ и симуляция досрочных платежей дальше 3-го года доступны только в **PRO версии**. Узнайте, как спецплатежи на 5-й или 10-й год могут сэкономить вам дополнительные **миллионы рублей переплаты**!
-                        </p>
-                        
-                        <div class="flex gap-2 bg-slate-50 dark:bg-slate-800 p-2 rounded-2xl border border-slate-200 dark:border-slate-700">
-                            <input type="text" id="pro-password-input" placeholder="Введите PRO пароль" class="bg-transparent text-xs font-bold px-3 py-2 w-full outline-none text-slate-800 dark:text-white placeholder-slate-400">
-                            <button onclick="checkProPassword()" class="bg-brand-600 hover:bg-brand-700 dark:bg-brand-600 dark:hover:bg-brand-700 text-white font-black text-xs px-5 py-2.5 rounded-xl transition-all shadow-md active:scale-95 whitespace-nowrap">Активировать PRO</button>
-                        </div>
-                    </div>
-                </div>
+                <div id="years-accordion-container" class="space-y-3 relative"></div>
             </div>
         </div>
 
@@ -570,7 +577,7 @@
                     <span id="mobile-cta-text" class="text-[11px] font-bold text-rose-500 dark:text-rose-400 animate-pulse hidden">🔥 Добавь 5 000 ₽ досрочно</span>
                 </div>
             </div>
-            <button onclick="takeScreenshot('screenshot-area', 'mortgage-calculation.png')" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg">📸 Сохранить расчет</button>
+            <button onclick="shareLinkCustom('Ипотечный Расчет — CalcHub', 'Я рассчитал идеальный ипотечный план в ИпотекаПро! Экономия на процентах составила ' + document.getElementById('saving-money').innerText + '. Рассчитай и ты свой сценарий!')" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg">📢 Поделиться расчетом</button>
         </div>
     </main>
 
@@ -736,13 +743,15 @@
         function handleRateInput(el) {
             resetBankButtonsHighlight();
             let val = parseFloat(el.value) || 0; state.rate = Math.min(50, val);
-            document.getElementById('rate-range').value = state.rate; updateCalculations();
+            document.getElementById('rate-range').value = state.rate;
+            updateCalculations();
         }
 
         function handleActiveRateInput(el) {
             resetBankButtonsHighlight();
             let val = parseFloat(el.value) || 0; state.activeRate = Math.min(50, val);
-            calcTheoreticalBalance(); updateCalculations();
+            calcTheoreticalBalance();
+            updateCalculations();
         }
 
         function handleCostInput(el) {
@@ -872,7 +881,24 @@
             }
         }
 
-        function clearCustomPrepayments() { state.customPrepayments = {}; updateCalculations(); }
+        function applyRecurringPreset(val) {
+            state.recurringPrepayment = val;
+            document.getElementById('recurring-input').value = localFormatNumber(val);
+            updateCalculations();
+            if (typeof showToast === 'function') {
+                showToast(`Доплата зафиксирована: +${localFormatNumber(val)} ₽/мес.`);
+            }
+        }
+
+        function clearCustomPrepayments() {
+            state.customPrepayments = {};
+            state.recurringPrepayment = 0;
+            document.getElementById('recurring-input').value = '0';
+            updateCalculations();
+            if (typeof showToast === 'function') {
+                showToast("Все досрочные платежи и регулярные доплаты успешно сброшены!");
+            }
+        }
         function resetAll() {
             state.cost = 10000000; state.downPayment = 2000000; state.rate = 16.0; state.mode = 'term'; state.termYears = 20; state.targetPayment = 100000;
             state.activeOriginalLoan = 8000000; state.activeRate = 12.0; state.activeOriginalTermYears = 20; state.activePaidMonths = 36;
@@ -885,7 +911,7 @@
             const pass = document.getElementById('pro-password-input').value.trim();
             if (pass.toUpperCase() === 'PORF') {
                 state.isProUnlocked = true; if (typeof showToast === 'function') showToast("Доступ PRO успешно активирован!");
-                document.getElementById('pro-paywall-overlay').classList.add('hidden'); updateCalculations();
+                updateCalculations();
             } else {
                 if (typeof showToast === 'function') showToast("Неверный PRO-пароль!");
             }
@@ -957,12 +983,6 @@
 
             const prepayCounter = document.getElementById('custom-prepayments-counter');
             if (prepayCounter) prepayCounter.innerText = `Спецплатежей: ${Object.keys(state.customPrepayments).length}`;
-            
-            const overlay = document.getElementById('pro-paywall-overlay');
-            if (overlay) {
-                if (!state.isProUnlocked && Object.keys(years).length > 3) overlay.classList.remove('hidden');
-                else overlay.classList.add('hidden');
-            }
 
             Object.keys(years).forEach(y => {
                 const yNum = parseInt(y); const isLocked = !state.isProUnlocked && yNum > 3;
@@ -1014,6 +1034,30 @@
 
                 const wrap = document.createElement('div'); wrap.appendChild(header); wrap.appendChild(content); container.appendChild(wrap);
             });
+
+            // Если доступ PRO не разблокирован и лет больше 3, показываем оверлей PRO-пейволла прямо поверх заблокированного года
+            if (!state.isProUnlocked && Object.keys(years).length > 3) {
+                const paywallDiv = document.createElement('div');
+                paywallDiv.id = "pro-paywall-overlay";
+                paywallDiv.className = "absolute inset-x-0 bottom-0 z-20 flex flex-col items-center justify-center pb-8 pt-12 bg-gradient-to-b from-white/80 via-white/95 to-white dark:from-slate-950/80 dark:via-slate-950/95 dark:to-slate-950 backdrop-blur-[2px] min-h-[300px]";
+                paywallDiv.innerHTML = `
+                    <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-2xl border-2 border-brand-500/30 dark:border-brand-500/20 text-center max-w-md mx-auto transition-transform scale-100 hover:scale-[1.02]">
+                        <div class="w-14 h-14 bg-gradient-to-br from-amber-400 to-brand-500 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-brand-500/20 animate-pulse">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        </div>
+                        <h4 class="text-xl font-black mb-2 text-slate-900 dark:text-white tracking-tight">👑 Раскройте полную силу досрочки</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
+                            Анализ и симуляция досрочных платежей дальше 3-го года доступны только в **PRO версии**. Узнайте, как спецплатежи на 5-й или 10-й год могут сэкономить вам дополнительные **миллионы рублей переплаты**!
+                        </p>
+
+                        <div class="flex gap-2 bg-slate-50 dark:bg-slate-800 p-2 rounded-2xl border border-slate-200 dark:border-slate-700">
+                            <input type="text" id="pro-password-input" placeholder="Введите PRO пароль" class="bg-transparent text-xs font-bold px-3 py-2 w-full outline-none text-slate-800 dark:text-white placeholder-slate-400">
+                            <button onclick="checkProPassword()" class="bg-brand-600 hover:bg-brand-700 dark:bg-brand-600 dark:hover:bg-brand-700 text-white font-black text-xs px-5 py-2.5 rounded-xl transition-all shadow-md active:scale-95 whitespace-nowrap">Активировать PRO</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(paywallDiv);
+            }
         }
 
         function formatTableInputVisual(input) {
@@ -1066,7 +1110,8 @@
             document.getElementById('res-loan-amount').innerText = localFormatMoney(loanAmount);
             document.getElementById('res-monthly-payment').innerText = localFormatMoney(monthlyPmt);
             document.getElementById('res-real-term').innerText = `${preRes.realTerm} мес.`;
-            document.getElementById('res-total-interest').innerText = localFormatMoney(preRes.totalInterest);
+            // Переплата и Итого выплатим банку должны включать расходы на страховку (totalInsurance)
+            document.getElementById('res-total-interest').innerText = localFormatMoney(preRes.totalInterest + preRes.totalInsurance);
             document.getElementById('res-total-paid').innerText = localFormatMoney(preRes.totalPaid);
             document.getElementById('res-total-prepaid').innerText = localFormatMoney(preRes.totalPrepaid);
             document.getElementById('saving-money').innerText = localFormatMoney(savedInt > 0 ? savedInt : 0);
@@ -1130,9 +1175,41 @@
             updateCalculations();
         }
 
+        function scrollRates(direction) {
+            const container = document.getElementById('rates-container');
+            if (!container) return;
+            const scrollAmount = 160;
+            if (direction === 'left') {
+                container.scrollLeft -= scrollAmount;
+            } else {
+                container.scrollLeft += scrollAmount;
+            }
+            setTimeout(handleRatesScroll, 200);
+        }
+
+        function handleRatesScroll() {
+            const container = document.getElementById('rates-container');
+            const leftBtn = document.getElementById('btn-scroll-left');
+            const rightBtn = document.getElementById('btn-scroll-right');
+            if (!container) return;
+
+            if (container.scrollLeft > 5) {
+                leftBtn.classList.remove('hidden');
+            } else {
+                leftBtn.classList.add('hidden');
+            }
+
+            if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 5) {
+                rightBtn.classList.add('hidden');
+            } else {
+                rightBtn.classList.remove('hidden');
+            }
+        }
+
         window.onload = function() {
             if (typeof initTheme === 'function') initTheme();
             calcTheoreticalBalance(); updateInputsDOM(); switchMainTab('new'); loadLiveRates();
+            setTimeout(handleRatesScroll, 500);
         };
     </script>
 </body>

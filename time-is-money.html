@@ -315,8 +315,8 @@
                 <p id="mobile-days" class="text-lg font-black text-brand-600">0 дн.</p>
             </div>
         </div>
-        <button onclick="takeScreenshot()" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
-            📸 Сохранить расчет
+        <button onclick="shareLinkCustom('Цена Времени — CalcHub', 'Я перевел стоимость покупок в часы реальной работы! Мой реальный час стоит ' + document.getElementById('mobile-rate').innerText + ', а желаемая покупка обойдется в ' + document.getElementById('mobile-days').innerText + ' моей жизни. Проверь цену своего времени!')" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
+            📢 Поделиться расчетом
         </button>
     </div>
     </main>
