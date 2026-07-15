@@ -73,7 +73,7 @@
             visibility: hidden;
             width: 240px;
             background-color: #1e293b;
-            color: #fff;
+            color: #fff !important;
             text-align: center;
             border-radius: 8px;
             padding: 10px;
@@ -84,8 +84,10 @@
             margin-left: -120px;
             opacity: 0;
             transition: opacity 0.3s;
-            font-size: 12px;
-            font-weight: 500;
+            font-size: 11px !important;
+            font-weight: 500 !important;
+            text-transform: none !important;
+            letter-spacing: normal !important;
             line-height: 1.4;
             pointer-events: none;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
@@ -182,18 +184,66 @@
                         <div class="space-y-2">
                             <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Ваши накопления (Подушка)</label>
                             <div class="relative">
-                                <input type="text" id="savings-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg text-slate-800 dark:text-white" value="1 000 000">
+                                <input type="text" id="savings-input" oninput="handleFormattedInputSync(this, 'savings-range')" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg text-slate-800 dark:text-white" value="1 000 000">
                                 <span class="absolute right-4 top-3.5 text-slate-400 font-bold">₽</span>
+                            </div>
+                            <input type="range" id="savings-range" min="10000" max="20000000" step="50000" value="1000000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('savings', this.value)">
+                        </div>
+
+                        <!-- Выбор типа пассивного дохода -->
+                        <div class="space-y-2 pt-2 border-t dark:border-slate-800">
+                            <span class="text-xs font-bold text-slate-500 dark:text-slate-400 block uppercase tracking-wide">Пассивный доход</span>
+                            <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                                <button id="btn-passive-simple" onclick="switchPassiveMode('simple')" class="py-1.5 text-xs font-bold rounded-lg transition-all bg-white dark:bg-slate-700 text-slate-950 dark:text-white shadow-sm">💰 Обычный</button>
+                                <button id="btn-passive-deposit" onclick="switchPassiveMode('deposit')" class="py-1.5 text-xs font-bold rounded-lg transition-all text-slate-500 dark:text-slate-400">🏦 Вклад</button>
                             </div>
                         </div>
 
-                        <div class="space-y-2">
-                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Пассивный / Дополнительный доход (в месяц)</label>
+                        <!-- Обычный пассивный доход -->
+                        <div id="passive-simple-block" class="space-y-2">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1">
+                                Пассивный доход (в месяц)
+                                <span class="tooltip">
+                                    <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span class="tooltiptext">Любой фиксированный ежемесячный доход (аренда от сдачи жилья, дивиденды, подработка), кроме дохода со вклада.</span>
+                                </span>
+                            </label>
                             <div class="relative">
-                                <input type="text" id="income-input" oninput="handleFormattedInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg text-slate-800 dark:text-white" value="30 000">
+                                <input type="text" id="income-input" oninput="handleFormattedInputSync(this, 'income-range')" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg text-slate-800 dark:text-white" value="30 000">
                                 <span class="absolute right-4 top-3.5 text-slate-400 font-bold">₽</span>
                             </div>
-                            <p class="text-[10px] text-slate-400 leading-tight">Доход, который продолжит поступать, даже если вы перестанете активно работать.</p>
+                            <input type="range" id="income-range" min="0" max="1000000" step="5000" value="30000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('income', this.value)">
+                        </div>
+
+                        <!-- Пассивный доход от вклада -->
+                        <div id="passive-deposit-block" class="space-y-4 hidden bg-slate-50/50 dark:bg-slate-800/20 p-4 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
+                            <div class="space-y-2">
+                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1">
+                                    Сумма на отдельном вкладе
+                                    <span class="tooltip">
+                                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <span class="tooltiptext">Сумма на вашем отдельном банковском депозите, которая приносит проценты каждый месяц. Накопленная подушка безопасности (введенная выше) также лежит на вкладе и работает отдельно.</span>
+                                    </span>
+                                </label>
+                                <div class="relative">
+                                    <input type="text" id="dep-amount-input" oninput="handleFormattedInputSync(this, 'dep-amount-range')" class="w-full pl-4 pr-12 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg text-slate-800 dark:text-white" value="2 000 000">
+                                    <span class="absolute right-4 top-3.5 text-slate-400 font-bold">₽</span>
+                                </div>
+                                <input type="range" id="dep-amount-range" min="0" max="30000000" step="100000" value="2000000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('dep-amount', this.value)">
+                            </div>
+
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Ставка по вкладу (% годовых)</label>
+                                    <span id="dep-rate-display" class="text-sm font-bold text-brand-600">14%</span>
+                                </div>
+                                <input type="range" id="dep-rate-range" min="1" max="30" step="0.5" value="14" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('dep-rate', this.value)">
+                            </div>
+
+                            <div class="p-3 bg-emerald-50 dark:bg-emerald-950/20 rounded-xl border border-emerald-100 dark:border-emerald-900/30 text-xs font-bold text-emerald-800 dark:text-emerald-400 flex justify-between items-center">
+                                <span>Расчетный пассивный доход:</span>
+                                <span id="dep-calculated-income-text">~23 333 ₽/мес.</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -243,16 +293,24 @@
 
                 <!-- Optimization Toggles -->
                 <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-4">
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-3">Оптимизация расходов (для Комфорта и Роскоши)</h2>
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-3">Оптимизация расходов (для Всех сценариев)</h2>
 
                     <div class="space-y-3">
                         <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" id="cut-delivery-toggle" onchange="calculateFreedom()" class="w-5 h-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500">
-                            <span class="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-brand-600 transition-colors">Отказаться от доставок еды (-15 000 ₽/мес)</span>
+                            <span class="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-brand-600 transition-colors">Перестать ходить по ресторанам и кафе (-15 000 ₽/мес)</span>
                         </label>
                         <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" id="cut-taxi-toggle" onchange="calculateFreedom()" class="w-5 h-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500">
-                            <span class="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-brand-600 transition-colors">Отказаться от бизнес-такси (-10 000 ₽/мес)</span>
+                            <span class="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-brand-600 transition-colors">Отказаться от поездок на такси в пользу метро (-10 000 ₽/мес)</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input type="checkbox" id="cut-subscriptions-toggle" onchange="calculateFreedom()" class="w-5 h-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500">
+                            <span class="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-brand-600 transition-colors">Отменить все подписки на развлечения и сервисы (-3 000 ₽/мес)</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input type="checkbox" id="cut-shopping-toggle" onchange="calculateFreedom()" class="w-5 h-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500">
+                            <span class="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-brand-600 transition-colors">Сократить спонтанный шопинг и гаджеты (-20 000 ₽/мес)</span>
                         </label>
                     </div>
                 </div>
@@ -273,29 +331,29 @@
                             <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">Ключевые ставки проекта:</h3>
                             <div class="flex flex-wrap gap-4 text-xs font-semibold text-slate-600 dark:text-slate-400">
                                 <div class="flex items-center gap-1">
-                                    Ключевая ставка ЦБ:
+                                    Ключевая ставка ЦБ: 
                                     <span id="cb-rate-val" class="font-bold text-slate-900 dark:text-white">...</span>
                                     <span class="tooltip inline-block relative cursor-help">
                                         <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                        <span class="tooltiptext absolute hidden bg-slate-900 dark:bg-slate-800 text-white text-[11px] p-2 rounded-lg w-52 text-center bottom-full left-1/2 -ml-26 z-50 mb-1 group-hover:block transition-all shadow-lg leading-normal">Ключевая ставка Центрального Банка РФ. Робот автоматически загружает ее напрямую с официального сайта ЦБ.</span>
+                                        <span class="tooltiptext">Ключевая ставка Центрального Банка РФ. Робот автоматически загружает ее напрямую с официального сайта ЦБ.</span>
                                     </span>
                                 </div>
                                 <div class="hidden sm:block text-slate-300 dark:text-slate-700">|</div>
                                 <div class="flex items-center gap-1">
-                                    Ставка по депозиту (ЦБ - 2%):
+                                    Ставка по депозиту (ЦБ - 2%): 
                                     <span id="deposit-rate-val" class="font-bold text-emerald-600">...</span>
                                     <span class="tooltip inline-block relative cursor-help">
                                         <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                        <span class="tooltiptext absolute hidden bg-slate-900 dark:bg-slate-800 text-white text-[11px] p-2 rounded-lg w-52 text-center bottom-full left-1/2 -ml-26 z-50 mb-1 group-hover:block transition-all shadow-lg leading-normal">Средняя рыночная доходность вкладов. Обычно на 2% ниже ключевой ставки ЦБ. Используется для симуляции начисления процентов на остаток вашей подушки.</span>
+                                        <span class="tooltiptext">Средняя рыночная доходность вкладов. Обычно на 2% ниже ключевой ставки ЦБ. Используется для симуляции начисления процентов на остаток вашей подушки.</span>
                                     </span>
                                 </div>
                                 <div class="hidden sm:block text-slate-300 dark:text-slate-700">|</div>
                                 <div class="flex items-center gap-1">
-                                    Средняя инфляция:
+                                    Средняя инфляция: 
                                     <span id="inflation-rate-val" class="font-bold text-rose-600">...</span>
                                     <span class="tooltip inline-block relative cursor-help">
                                         <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                        <span class="tooltiptext absolute hidden bg-slate-900 dark:bg-slate-800 text-white text-[11px] p-2 rounded-lg w-52 text-center bottom-full left-1/2 -ml-26 z-50 mb-1 group-hover:block transition-all shadow-lg leading-normal">Среднее геометрическое значение инфляции в РФ за последние 15 лет. Используется для ежегодного индексирования и обесценивания ваших трат.</span>
+                                        <span class="tooltiptext">Среднее геометрическое значение инфляции в РФ за последние 15 лет. Используется для ежегодного индексирования и обесценивания ваших трат.</span>
                                     </span>
                                 </div>
                             </div>
@@ -381,9 +439,7 @@
                     <p id="mobile-comfort-date" class="text-xs font-black text-slate-950 dark:text-white">...</p>
                 </div>
             </div>
-            <button onclick="takeScreenshot('screenshot-area', 'financial-freedom.png')" class="w-full py-4 bg-brand-600 text-white font-black rounded-2xl text-sm shadow-lg active:scale-95">
-                📸 Сохранить расчет
-            </button>
+            <button onclick="shareLinkCustom('Таймер Свободы — CalcHub', 'Я рассчитал запас прочности своей финансовой подушки! Моих накоплений в режиме Комфорт хватит на ' + document.getElementById('mobile-comfort-duration').innerText + ' трат. Узнай свой день финансового апокалипсиса!')" class="w-full py-4 bg-brand-600 text-white font-black rounded-2xl text-sm shadow-lg">📢 Поделиться расчетом</button>
         </div>
     </main>
 
@@ -407,7 +463,8 @@
             depositRate: 14.0,
             avgInflation: 0.08,
             currentMonthIndex: new Date().getMonth(),
-            currentYear: new Date().getFullYear()
+            currentYear: new Date().getFullYear(),
+            passiveMode: 'simple'
         };
 
         let decayChart = null;
@@ -475,6 +532,51 @@
             calculateFreedom();
         }
 
+        function syncRangeToInput(field, val) {
+            if (field === 'dep-rate') {
+                document.getElementById('dep-rate-display').innerText = parseFloat(val).toFixed(1) + '%';
+            } else {
+                const input = document.getElementById(`${field}-input`);
+                if (input) {
+                    input.value = localFormatNumber(parseInt(val) || 0);
+                }
+            }
+            calculateFreedom();
+        }
+
+        function switchPassiveMode(mode) {
+            state.passiveMode = mode;
+            const simpleBtn = document.getElementById('btn-passive-simple');
+            const depBtn = document.getElementById('btn-passive-deposit');
+            const simpleBlock = document.getElementById('passive-simple-block');
+            const depBlock = document.getElementById('passive-deposit-block');
+
+            const activeClasses = ['bg-white', 'dark:bg-slate-700', 'text-slate-950', 'dark:text-white', 'shadow-sm'];
+            const inactiveClasses = ['text-slate-500', 'dark:text-slate-400'];
+
+            if (mode === 'simple') {
+                simpleBlock.classList.remove('hidden');
+                depBlock.classList.add('hidden');
+                
+                simpleBtn.classList.add(...activeClasses);
+                simpleBtn.classList.remove(...inactiveClasses);
+                
+                depBtn.classList.remove(...activeClasses);
+                depBtn.classList.add(...inactiveClasses);
+            } else {
+                simpleBlock.classList.add('hidden');
+                depBlock.classList.remove('hidden');
+
+                depBtn.classList.add(...activeClasses);
+                depBtn.classList.remove(...inactiveClasses);
+
+                simpleBtn.classList.remove(...activeClasses);
+                simpleBtn.classList.add(...inactiveClasses);
+            }
+
+            calculateFreedom();
+        }
+
         // Initialize rates and inflation
         window.onload = async () => {
             initTheme();
@@ -507,7 +609,16 @@
         // Core math and simulation loop
         function calculateFreedom() {
             const savings = parseCleanNumber(document.getElementById('savings-input').value);
-            const passiveIncome = parseCleanNumber(document.getElementById('income-input').value);
+            
+            let passiveIncome = 0;
+            if (state.passiveMode === 'deposit') {
+                const depAmount = parseCleanNumber(document.getElementById('dep-amount-input').value);
+                const depRate = parseFloat(document.getElementById('dep-rate-range').value) || 0;
+                passiveIncome = (depAmount * (depRate / 100)) / 12;
+                document.getElementById('dep-calculated-income-text').innerText = `~${localFormatMoney(Math.round(passiveIncome))}/мес.`;
+            } else {
+                passiveIncome = parseCleanNumber(document.getElementById('income-input').value);
+            }
 
             let baseSurvival = parseCleanNumber(document.getElementById('survival-input').value);
             let baseComfort = parseCleanNumber(document.getElementById('comfort-input').value);
