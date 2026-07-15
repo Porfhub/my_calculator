@@ -74,3 +74,21 @@ function shareLink() {
         console.error('Copy error:', err);
     });
 }
+
+function shareLinkCustom(title, text) {
+    reachGoal("share_click");
+    const url = window.location.href;
+    if (navigator.share) {
+        navigator.share({
+            title: title,
+            text: text,
+            url: url
+        }).catch(err => console.log('Error sharing', err));
+    } else {
+        navigator.clipboard.writeText(url).then(() => {
+            showToast("Ссылка скопирована в буфер обмена!");
+        }).catch(err => {
+            console.error('Copy error:', err);
+        });
+    }
+}
