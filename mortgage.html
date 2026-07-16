@@ -44,19 +44,21 @@
                 bottom: 0;
                 left: 0;
                 right: 0;
-                z-index: 50;
+                z-index: 45;
                 background: white;
-                box-shadow: 0 -10px 15px -3px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 -10px 25px -5px rgba(0, 0, 0, 0.15);
                 border-top: 1px solid #e2e8f0;
-                padding: 1rem;
-                border-radius: 1.5rem 1.5rem 0 0;
+                padding: 0.75rem 1rem;
+                border-radius: 1.25rem 1.25rem 0 0;
+                backdrop-filter: blur(8px);
+                background-opacity: 0.95;
             }
             .dark .mobile-sticky-results {
                 background: #0f172a;
                 border-top-color: #1e293b;
             }
             body {
-                padding-bottom: 180px;
+                padding-bottom: 140px;
             }
         }
 
@@ -282,6 +284,12 @@
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                         </div>
                         <input type="range" id="downpayment-range" min="0" max="40000000" step="50000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('downpayment', this.value)">
+                        <!-- Quick percentage presets under input area -->
+                        <div class="flex gap-2">
+                            <button onclick="applyDownpaymentPercentPreset(15)" class="flex-1 py-1 px-2 bg-slate-100 hover:bg-brand-50 dark:bg-slate-800 hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-lg text-[11px] font-bold text-slate-600 dark:text-slate-400 transition-all">15%</button>
+                            <button onclick="applyDownpaymentPercentPreset(20)" class="flex-1 py-1 px-2 bg-slate-100 hover:bg-brand-50 dark:bg-slate-800 hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-lg text-[11px] font-bold text-slate-600 dark:text-slate-400 transition-all">20%</button>
+                            <button onclick="applyDownpaymentPercentPreset(30)" class="flex-1 py-1 px-2 bg-slate-100 hover:bg-brand-50 dark:bg-slate-800 hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-lg text-[11px] font-bold text-slate-600 dark:text-slate-400 transition-all">30%</button>
+                        </div>
                     </div>
 
                     <div class="space-y-2">
@@ -415,9 +423,9 @@
                                 <span class="tooltiptext">«В карман» — вычет остается у вас как личные накопления (виртуальная скидка на проценты). «В досрочку» — деньги ежегодно автоматически направляются на досрочное погашение ипотеки в 12-й месяц, резко уменьшая итоговую переплату.</span>
                             </span>
                         </span>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button id="tax-strat-pocket" onclick="setTaxStrategy('pocket')" class="py-2 text-xs font-bold rounded-lg transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-slate-600">💰 В карман</button>
-                            <button id="tax-strat-reinvest" onclick="setTaxStrategy('reinvest')" class="py-2 text-xs font-bold rounded-lg transition-all text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">🚀 В досрочку</button>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <button id="tax-strat-pocket" onclick="setTaxStrategy('pocket')" class="py-2.5 px-3 text-xs font-bold rounded-xl transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-slate-600 text-left sm:text-center flex items-center justify-center gap-1">💰 Тратить на себя (уменьшить платеж)</button>
+                            <button id="tax-strat-reinvest" onclick="setTaxStrategy('reinvest')" class="py-2.5 px-3 text-xs font-bold rounded-xl transition-all text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-left sm:text-center flex items-center justify-center gap-1">🚀 Досрочное погашение (быстрее закрыть долг)</button>
                         </div>
                     </div>
 
@@ -467,38 +475,72 @@
             </div>
 
             <div class="lg:col-span-7 flex flex-col space-y-6" id="results-panel">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between">
-                        <span class="text-xs font-bold text-slate-400 block mb-1" id="label-amount">Сумма кредита</span>
-                        <span id="res-loan-amount" class="text-lg font-black text-slate-900 dark:text-white">0 ₽</span>
-                    </div>
-                    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between">
-                        <span class="text-xs font-bold text-slate-400 block mb-1">Ежемесячный платёж</span>
-                        <span id="res-monthly-payment" class="text-lg font-black text-slate-900 dark:text-white">0 ₽</span>
-                    </div>
-                    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between">
-                        <span class="text-xs font-bold text-slate-400 block mb-1" id="label-term">Реальный срок</span>
-                        <span id="res-real-term" class="text-lg font-black text-brand-700 dark:text-brand-500">0 мес.</span>
-                    </div>
-                    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between">
-                        <span class="text-xs font-bold text-slate-400 block mb-1" id="label-interest">Переплата</span>
-                        <span id="res-total-interest" class="text-lg font-black text-rose-600">0 ₽</span>
+                <!-- Hero Results Card with Premium Overpayment Focus -->
+                <div class="bg-gradient-to-br from-slate-900 to-slate-950 dark:from-slate-900 dark:to-black text-white rounded-3xl p-6 shadow-xl border border-slate-800 relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="absolute bottom-0 left-0 w-32 h-32 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="relative z-10 text-center md:text-left space-y-4">
+                        <div>
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1" id="label-interest">Итоговая переплата (чистый перерасход)</span>
+                            <span id="res-total-interest" class="text-4xl md:text-5xl font-black text-rose-500 tracking-tight drop-shadow-md">0 ₽</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 pt-4 border-t border-slate-800">
+                            <div>
+                                <span class="text-[10px] font-bold text-slate-400 block mb-1">Обязательный платёж</span>
+                                <span id="res-monthly-payment" class="text-base sm:text-lg font-extrabold text-slate-100">0 ₽</span>
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-bold text-slate-400 block mb-1" id="label-amount">Сумма кредита</span>
+                                <span id="res-loan-amount" class="text-base sm:text-lg font-extrabold text-slate-100">0 ₽</span>
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-bold text-slate-400 block mb-1" id="label-term">Реальный срок</span>
+                                <span id="res-real-term" class="text-base sm:text-lg font-extrabold text-brand-400">0 мес.</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm space-y-2">
-                    <div class="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                        <span>Соотношение выплат</span>
-                        <div class="flex gap-3">
-                            <span class="text-brand-600 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-brand-500"></span>Тело</span>
-                            <span class="text-rose-500 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span>Проценты</span>
+                <!-- Premium Bank Lead Generation CTA -->
+                <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border-2 border-brand-500/20 dark:border-brand-500/10 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-brand-100 dark:bg-brand-950/50 text-brand-600 rounded-xl flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white">Одобрение со скидкой 0.3%</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Заполните одну анкету и отправьте в ТОП-5 банков со скидкой к ставке</p>
                         </div>
                     </div>
-                    <div class="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex">
-                        <div id="ratio-body" class="h-full bg-brand-500 transition-all duration-1000" style="width: 50%"></div>
-                        <div id="ratio-interest" class="h-full bg-rose-500 transition-all duration-1000" style="width: 50%"></div>
+                    <button onclick="openLeadModal()" class="w-full sm:w-auto px-5 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl transition-all shadow-md hover:shadow-brand-500/20 active:scale-[0.98] whitespace-nowrap">Отправить заявку в банки со скидкой 0.3%</button>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-150 dark:border-slate-800 shadow-sm flex flex-col md:flex-row items-center gap-6 justify-between">
+                    <div class="flex-1 space-y-3 w-full text-center md:text-left">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Соотношение выплат в бюджете</span>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between md:justify-start gap-3">
+                                <span class="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                    <span class="w-3 h-3 rounded-full bg-emerald-500 block"></span>Основной долг (Тело)
+                                </span>
+                                <span id="ratio-body-text" class="text-sm font-bold text-slate-900 dark:text-white">50%</span>
+                            </div>
+                            <div class="flex items-center justify-between md:justify-start gap-3">
+                                <span class="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                    <span class="w-3 h-3 rounded-full bg-rose-500 block"></span>Проценты банку (Наценка)
+                                </span>
+                                <span id="ratio-interest-text" class="text-sm font-bold text-slate-900 dark:text-white">50%</span>
+                            </div>
+                        </div>
+                        <p id="ratio-text" class="text-[11px] text-slate-400 dark:text-slate-500 leading-normal italic">Тело кредита к начисленным процентам.</p>
                     </div>
-                    <div id="ratio-text" class="text-[10px] text-center text-slate-400 font-medium italic"></div>
+                    <div class="relative w-24 h-24 md:w-28 md:h-28 shrink-0 flex items-center justify-center">
+                        <canvas id="ratioDonutChart" class="absolute inset-0 w-full h-full"></canvas>
+                        <div class="absolute text-center">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase block tracking-tighter leading-none">КПД</span>
+                            <span id="donut-efficiency" class="text-base font-black text-emerald-500 leading-none">50%</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="screenshot-area" class="space-y-6 bg-slate-50 dark:bg-slate-950 p-4 -m-4 rounded-3xl">
@@ -566,24 +608,73 @@
         </div>
 
         <div class="lg:hidden mobile-sticky-results">
-            <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center justify-between gap-3 mb-2.5">
                 <div class="flex flex-col">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase">Ежемесячно</span>
-                    <span id="mobile-payment" class="font-black text-slate-900 dark:text-white">0 ₽</span>
+                    <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Переплата</span>
+                    <span id="mobile-overpayment" class="text-base font-black text-rose-600 dark:text-rose-500">0 ₽</span>
+                </div>
+                <div class="flex flex-col text-center">
+                    <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Платёж</span>
+                    <span id="mobile-payment" class="text-sm font-black text-slate-900 dark:text-white">0 ₽</span>
                 </div>
                 <div class="text-right" id="mobile-saving-container">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase">Экономия</p>
-                    <p id="mobile-saving" class="text-lg font-black text-brand-600">0 ₽</p>
-                    <span id="mobile-cta-text" class="text-[11px] font-bold text-rose-500 dark:text-rose-400 animate-pulse hidden">🔥 Добавь 5 000 ₽ досрочно</span>
+                    <p class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Экономия</p>
+                    <p id="mobile-saving" class="text-sm font-black text-brand-600">0 ₽</p>
+                    <span id="mobile-cta-text" class="text-[10px] font-bold text-rose-500 dark:text-rose-400 animate-pulse hidden">🔥 Досрочно +5к</span>
                 </div>
             </div>
-            <button onclick="shareLinkCustom('Ипотечный Расчет — CalcHub', 'Я рассчитал идеальный ипотечный план в ИпотекаПро! Экономия на процентах составила ' + document.getElementById('saving-money').innerText + '. Рассчитай и ты свой сценарий!')" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg">📢 Поделиться расчетом</button>
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="openLeadModal()" class="w-full py-2.5 bg-brand-600 text-white font-black rounded-xl text-xs shadow-md">🔥 Заявка под 0.3%</button>
+                <button onclick="shareLinkCustom('Ипотечный Расчет — CalcHub', 'Я рассчитал идеальный ипотечный план в ИпотекаПро! Экономия на процентах составила ' + document.getElementById('saving-money').innerText + '. Рассчитай и ты свой сценарий!')" class="w-full py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-bold rounded-xl text-xs border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                    Поделиться
+                </button>
+            </div>
         </div>
     </main>
 
     <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
         <span class="text-brand-500 font-bold">✓</span>
         <span id="toast-message" class="text-sm">Готово</span>
+    </div>
+
+    <!-- Lead Capture Popup Modal -->
+    <div id="lead-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800 max-w-md w-full relative transform scale-95 transition-transform duration-300 space-y-4">
+            <button onclick="closeLeadModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="text-center space-y-2">
+                <div class="w-12 h-12 bg-brand-100 dark:bg-brand-950/30 text-brand-600 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20"></path></svg>
+                </div>
+                <h3 class="text-lg font-black text-slate-900 dark:text-white">Заявка на одобрение ипотеки</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Получите решение по ставке от <strong id="lead-bank-rate">...</strong> в Сбербанке, ВТБ, Альфа-Банке со скидкой 0.3%</p>
+            </div>
+            <form onsubmit="submitLeadForm(event)" class="space-y-4">
+                <div class="space-y-1">
+                    <label class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">ФИО заемщика</label>
+                    <input type="text" required placeholder="Константинопольский К. К." class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-brand-500 font-medium text-sm text-slate-900 dark:text-white">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Номер телефона</label>
+                    <input type="tel" required placeholder="+7 (999) 123-45-67" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-brand-500 font-medium text-sm text-slate-900 dark:text-white">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Желаемый банк</label>
+                    <select id="lead-bank-select" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-brand-500 font-medium text-sm text-slate-900 dark:text-white">
+                        <option value="all">Отправить во все (рекомендуется)</option>
+                        <option value="sberbank">Сбербанк</option>
+                        <option value="vtb">ВТБ</option>
+                        <option value="alfa">Альфа-Банк</option>
+                        <option value="tbank">Т-Банк</option>
+                        <option value="sovcom">Совкомбанк</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl shadow-lg transition active:scale-[0.98]">Отправить заявку во все банки</button>
+                <p class="text-[9px] text-slate-400 text-center leading-normal">Нажимая кнопку, вы соглашаетесь на обработку персональных данных и передачу анкеты в выбранные кредитные организации.</p>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -651,6 +742,47 @@
         };
 
         let chartInstance = null;
+        let ratioDonutInstance = null;
+
+        function openLeadModal() {
+            const modal = document.getElementById('lead-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setTimeout(() => {
+                    modal.firstElementChild.classList.remove('scale-95');
+                    modal.firstElementChild.classList.add('scale-100');
+                }, 50);
+            }
+            // Populate bank rate display in modal
+            const rateDisplay = document.getElementById('lead-bank-rate');
+            if (rateDisplay) {
+                // Determine lowest rate or current applied rate
+                let currentRate = activeTab === 'new' ? state.rate : state.activeRate;
+                let lowest = (currentRate - 0.3).toFixed(2);
+                rateDisplay.innerText = lowest + '%';
+            }
+        }
+
+        function closeLeadModal() {
+            const modal = document.getElementById('lead-modal');
+            if (modal) {
+                modal.firstElementChild.classList.remove('scale-100');
+                modal.firstElementChild.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.remove('flex');
+                    modal.classList.add('hidden');
+                }, 150);
+            }
+        }
+
+        function submitLeadForm(e) {
+            e.preventDefault();
+            if (typeof showToast === 'function') {
+                showToast("🎉 Заявка успешно отправлена! Менеджер свяжется с вами в течение 10 минут.");
+            }
+            closeLeadModal();
+        }
 
         function switchMainTab(tab) {
             activeTab = tab;
@@ -741,6 +873,11 @@
         }
 
         function handleRateInput(el) {
+            if (selectedActiveBankKey !== null) {
+                if (typeof showToast === 'function') {
+                    showToast("⚠️ Пресет выбранного банка сброшен из-за ручного изменения ставки.");
+                }
+            }
             resetBankButtonsHighlight();
             let val = parseFloat(el.value) || 0; state.rate = Math.min(50, val);
             document.getElementById('rate-range').value = state.rate;
@@ -779,6 +916,17 @@
             state.recurringPrepayment = formatInputField(el, el.value); updateCalculations();
         }
 
+        function applyDownpaymentPercentPreset(pct) {
+            let val = Math.round(state.cost * (pct / 100));
+            state.downPayment = val;
+            document.getElementById('downpayment-input').value = localFormatNumber(val);
+            document.getElementById('downpayment-range').value = val;
+            updateCalculations();
+            if (typeof showToast === 'function') {
+                showToast(`Применен взнос ${pct}%: ${localFormatMoney(val)}`);
+            }
+        }
+
         function syncRangeToInput(field, val) {
             let v = parseFloat(val);
             if (field === 'cost') {
@@ -786,6 +934,11 @@
             } else if (field === 'downpayment') {
                 state.downPayment = v; if (state.downPayment > state.cost) state.downPayment = state.cost;
             } else if (field === 'rate') {
+                if (selectedActiveBankKey !== null) {
+                    if (typeof showToast === 'function') {
+                        showToast("⚠️ Пресет выбранного банка сброшен из-за ручного изменения ставки.");
+                    }
+                }
                 resetBankButtonsHighlight(); state.rate = v;
             } else if (field === 'term') {
                 state.termYears = v;
@@ -827,11 +980,11 @@
             state.taxDeductionStrategy = strat;
             const p = document.getElementById('tax-strat-pocket'); const r = document.getElementById('tax-strat-reinvest');
             if (strat === 'pocket') {
-                p.className = "py-2 text-xs font-bold rounded-lg transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-slate-600";
-                r.className = "py-2 text-xs font-bold rounded-lg transition-all text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800";
+                p.className = "py-2.5 px-3 text-xs font-bold rounded-xl transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-slate-600 text-left sm:text-center flex items-center justify-center gap-1";
+                r.className = "py-2.5 px-3 text-xs font-bold rounded-xl transition-all text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-left sm:text-center flex items-center justify-center gap-1";
             } else {
-                r.className = "py-2 text-xs font-bold rounded-lg transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-slate-600";
-                p.className = "py-2 text-xs font-bold rounded-lg transition-all text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800";
+                r.className = "py-2.5 px-3 text-xs font-bold rounded-xl transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-slate-600 text-left sm:text-center flex items-center justify-center gap-1";
+                p.className = "py-2.5 px-3 text-xs font-bold rounded-xl transition-all text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-left sm:text-center flex items-center justify-center gap-1";
             }
             updateCalculations();
         }
@@ -907,14 +1060,26 @@
             document.getElementById('strategy-toggle').checked = false; toggleTaxDeduction(); calcTheoreticalBalance(); updateInputsDOM(); updateCalculations();
         }
 
-        function checkProPassword() {
-            const pass = document.getElementById('pro-password-input').value.trim();
-            if (pass.toUpperCase() === 'PORF') {
-                state.isProUnlocked = true; if (typeof showToast === 'function') showToast("Доступ PRO успешно активирован!");
-                updateCalculations();
-            } else {
-                if (typeof showToast === 'function') showToast("Неверный PRO-пароль!");
+        function triggerMockPayment(e) {
+            e.preventDefault();
+            const btn = document.getElementById('checkout-submit-btn');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `
+                    <svg class="animate-spin h-4 h-4 text-white mr-2 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Оплата обрабатывается...
+                `;
             }
+            setTimeout(() => {
+                state.isProUnlocked = true;
+                if (typeof showToast === 'function') {
+                    showToast("👑 Поздравляем! Доступ PRO успешно оплачен и активирован.");
+                }
+                updateCalculations();
+            }, 1500);
         }
 
         function simulateMortgage(withPrepayments = true) {
@@ -1046,21 +1211,54 @@
             if (!state.isProUnlocked && Object.keys(years).length > 3) {
                 const paywallDiv = document.createElement('div');
                 paywallDiv.id = "pro-paywall-overlay";
-                paywallDiv.className = "absolute inset-x-0 bottom-0 z-20 flex flex-col items-center justify-center pb-8 pt-12 bg-gradient-to-b from-white/80 via-white/95 to-white dark:from-slate-950/80 dark:via-slate-950/95 dark:to-slate-950 backdrop-blur-[2px] min-h-[300px]";
+                paywallDiv.className = "absolute inset-x-0 bottom-0 z-20 flex flex-col items-center justify-center pb-8 pt-12 bg-gradient-to-b from-white/90 via-white/98 to-white dark:from-slate-950/90 dark:via-slate-950/98 dark:to-slate-950 backdrop-blur-[4px] min-h-[480px]";
                 paywallDiv.innerHTML = `
-                    <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-2xl border-2 border-brand-500/30 dark:border-brand-500/20 text-center max-w-md mx-auto transition-transform scale-100 hover:scale-[1.02]">
-                        <div class="w-14 h-14 bg-gradient-to-br from-amber-400 to-brand-500 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-brand-500/20 animate-pulse">
+                    <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-2xl border-2 border-brand-500/30 dark:border-brand-500/20 text-center max-w-lg mx-auto transition-transform scale-100 hover:scale-[1.01] space-y-4">
+                        <div class="w-14 h-14 bg-gradient-to-br from-amber-400 to-brand-500 text-white rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-brand-500/20 animate-pulse">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                         </div>
-                        <h4 class="text-xl font-black mb-2 text-slate-900 dark:text-white tracking-tight">👑 Раскройте полную силу досрочки</h4>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
-                            Анализ и симуляция досрочных платежей дальше 3-го года доступны только в **PRO версии**. Узнайте, как спецплатежи на 5-й или 10-й год могут сэкономить вам дополнительные **миллионы рублей переплаты**!
-                        </p>
-                        
-                        <div class="flex gap-2 bg-slate-50 dark:bg-slate-800 p-2 rounded-2xl border border-slate-200 dark:border-slate-700">
-                            <input type="text" id="pro-password-input" placeholder="Введите PRO пароль" class="bg-transparent text-xs font-bold px-3 py-2 w-full outline-none text-slate-800 dark:text-white placeholder-slate-400">
-                            <button onclick="checkProPassword()" class="bg-brand-600 hover:bg-brand-700 dark:bg-brand-600 dark:hover:bg-brand-700 text-white font-black text-xs px-5 py-2.5 rounded-xl transition-all shadow-md active:scale-95 whitespace-nowrap">Активировать PRO</button>
+                        <div>
+                            <h4 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">👑 Раскройте полную силу досрочки</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-md mx-auto">
+                                Детальный расчет графика на 4-й год и далее доступен только в **PRO версии**. Узнайте, как спецплатежи могут сэкономить вам дополнительные **миллионы рублей**!
+                            </p>
                         </div>
+
+                        <!-- Sleek Mock Checkout Form (YooKassa / Stripe style) -->
+                        <form onsubmit="triggerMockPayment(event)" class="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 text-left space-y-3.5 max-w-sm mx-auto">
+                            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+                                <span class="text-xs font-bold text-slate-800 dark:text-white">Безопасная оплата картой</span>
+                                <span class="text-xs font-extrabold text-brand-600">490 ₽</span>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label class="text-[9px] font-bold uppercase tracking-wider text-slate-400 block">Номер карты</label>
+                                <div class="relative">
+                                    <input type="text" required placeholder="4276 5500 1234 5678" maxlength="19" class="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-lg outline-none focus:ring-2 focus:ring-brand-500 text-xs font-semibold text-slate-800 dark:text-white">
+                                    <div class="absolute right-3 top-1/2 -translate-y-1/2 flex gap-1">
+                                        <span class="text-[9px] bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-1 py-0.5 rounded font-black">MIR</span>
+                                        <span class="text-[9px] bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-1 py-0.5 rounded font-black">VISA</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="space-y-1">
+                                    <label class="text-[9px] font-bold uppercase tracking-wider text-slate-400 block">Срок действия</label>
+                                    <input type="text" required placeholder="MM/YY" maxlength="5" class="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-lg outline-none focus:ring-2 focus:ring-brand-500 text-xs font-semibold text-slate-800 dark:text-white text-center">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-[9px] font-bold uppercase tracking-wider text-slate-400 block">CVC / CVV</label>
+                                    <input type="password" required placeholder="•••" maxlength="3" class="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-lg outline-none focus:ring-2 focus:ring-brand-500 text-xs font-semibold text-slate-800 dark:text-white text-center">
+                                </div>
+                            </div>
+
+                            <button type="submit" id="checkout-submit-btn" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center">
+                                💳 Купить PRO-доступ за 490 ₽
+                            </button>
+
+                            <span class="text-[8px] text-slate-400 block text-center">Платеж защищен шифрованием SSL / PCI DSS</span>
+                        </form>
                     </div>
                 `;
                 container.appendChild(paywallDiv);
@@ -1099,7 +1297,41 @@
                             { data: dWithout, borderColor: isDark ? '#475569' : '#cbd5e1', backgroundColor: 'transparent', borderWidth: 2, borderDash: [4,4], tension: 0.4, pointRadius: 0 }
                         ]
                     },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: isDark?'#334155':'#f1f5f9' }, ticks: { font: { size: 9 }, callback: v => (v/1000000).toFixed(1)+'м' } }, x: { grid: { display: false }, ticks: { font: { size: 9 } } } } }
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                enabled: true,
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        let val = context.raw;
+                                        return context.datasetIndex === 0 ? `Остаток: ${localFormatMoney(val)}` : `Без досрочных: ${localFormatMoney(val)}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                grid: { color: isDark ? '#1e293b' : '#f1f5f9' },
+                                ticks: {
+                                    font: { size: 9 },
+                                    maxTicksLimit: 5,
+                                    callback: v => (v / 1000000).toFixed(1) + 'м'
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 9 },
+                                    maxTicksLimit: 4
+                                }
+                            }
+                        }
+                    }
                 });
             } catch (e) {
                 console.error("Chart rendering skipped inside cycle:", e);
@@ -1125,6 +1357,11 @@
             document.getElementById('saving-months').innerText = `${savedM > 0 ? savedM : 0} мес.`;
             document.getElementById('mobile-payment').innerText = localFormatMoney(monthlyPmt);
 
+            const mobileOverpay = document.getElementById('mobile-overpayment');
+            if (mobileOverpay) {
+                mobileOverpay.innerText = localFormatMoney(preRes.totalInterest + preRes.totalInsurance);
+            }
+
             const valM = document.getElementById('mobile-saving'); const ctaM = document.getElementById('mobile-cta-text');
             if (savedInt > 0 || savedM > 0) { 
                 if (valM) { valM.innerText = localFormatMoney(savedInt); valM.classList.remove('hidden'); }
@@ -1134,9 +1371,61 @@
                 if (ctaM) ctaM.classList.remove('hidden'); 
             }
 
-            let rTotal = loanAmount + preRes.totalInterest; let bPct = rTotal > 0 ? (loanAmount / rTotal) * 100 : 50;
-            document.getElementById('ratio-body').style.width = bPct + '%'; document.getElementById('ratio-interest').style.width = (100 - bPct) + '%';
-            document.getElementById('ratio-text').innerText = `Тело: ${Math.round(bPct)}% | Проценты: ${Math.round(100 - bPct)}%`;
+            let rTotal = loanAmount + preRes.totalInterest;
+            let bPct = rTotal > 0 ? (loanAmount / rTotal) * 100 : 50;
+            let iPct = 100 - bPct;
+
+            // Update percentage values
+            const bodyTxt = document.getElementById('ratio-body-text');
+            const intTxt = document.getElementById('ratio-interest-text');
+            if (bodyTxt) bodyTxt.innerText = `${Math.round(bPct)}%`;
+            if (intTxt) intTxt.innerText = `${Math.round(iPct)}%`;
+
+            // Update КПД percentage
+            const donutEff = document.getElementById('donut-efficiency');
+            if (donutEff) {
+                donutEff.innerText = `${Math.round(bPct)}%`;
+            }
+
+            document.getElementById('ratio-text').innerText = `Вы выплачиваете ${localFormatMoney(loanAmount)} тела долга и ${localFormatMoney(preRes.totalInterest)} процентов за весь срок кредита.`;
+
+            // Render/Update the Donut Chart
+            const donutCanvas = document.getElementById('ratioDonutChart');
+            if (donutCanvas) {
+                try {
+                    if (ratioDonutInstance) ratioDonutInstance.destroy();
+                    const isDark = document.documentElement.classList.contains('dark');
+                    ratioDonutInstance = new Chart(donutCanvas, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Тело кредита', 'Проценты банку'],
+                            datasets: [{
+                                data: [bPct, iPct],
+                                backgroundColor: ['#10b981', '#f43f5e'],
+                                borderWidth: isDark ? 2 : 1,
+                                borderColor: isDark ? '#0f172a' : '#ffffff'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            cutout: '75%',
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return ` ${context.label}: ${Math.round(context.raw)}%`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                } catch (e) {
+                    console.error("Donut chart rendering skipped:", e);
+                }
+            }
 
             document.getElementById('cost-display').innerText = localFormatMoney(state.cost);
             document.getElementById('downpayment-percent').innerText = state.cost > 0 ? Math.round((state.downPayment / state.cost) * 100) + '%' : '0%';
