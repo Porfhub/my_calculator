@@ -211,19 +211,47 @@
 
                 <!-- Stats Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">Капитал через 20 лет (Ипотека)</span>
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest block mb-4">Капитал через 20 лет (Ипотека)</span>
                         <div class="flex items-baseline gap-2">
-                            <span class="text-3xl font-black text-slate-900" id="final-buy">0 ₽</span>
+                            <span class="text-3xl font-black text-slate-900 dark:text-white" id="final-buy">0 ₽</span>
                         </div>
-                        <p class="text-xs text-slate-500 mt-2">Стоимость жилья минус долг</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Стоимость жилья минус долг</p>
                     </div>
-                    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">Капитал через 20 лет (Аренда)</span>
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest block mb-4">Капитал через 20 лет (Аренда)</span>
                         <div class="flex items-baseline gap-2">
-                            <span class="text-3xl font-black text-slate-900" id="final-rent">0 ₽</span>
+                            <span class="text-3xl font-black text-slate-900 dark:text-white" id="final-rent">0 ₽</span>
                         </div>
-                        <p class="text-xs text-slate-500 mt-2">Накопления в инвестициях</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Накопления в инвестициях</p>
+                    </div>
+                </div>
+
+                <!-- Блок простого объяснения "На пальцах" -->
+                <div class="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 space-y-4 shadow-inner">
+                    <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                        <span>💡 Разбор «на пальцах»: что такое чистый капитал?</span>
+                    </h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Этот калькулятор не просто сравнивает ежемесячные траты. Он находит ответ на главный вопрос: <strong>кто окажется богаче через <span id="explain-years" class="text-brand-600 dark:text-brand-400 font-extrabold">20</span> лет</strong> — покупатель квартиры или арендатор? Мы сравниваем их <em>Чистый Капитал (Net Worth)</em>:
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+                        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl space-y-2 border border-slate-200/50 dark:border-slate-700/50">
+                            <h4 class="text-xs font-black text-brand-600 dark:text-brand-400 uppercase tracking-wider flex items-center gap-1.5">
+                                <span>🏠 Капитал при Ипотеке</span>
+                            </h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                                Это реальная <strong>стоимость вашей квартиры</strong> (с учетом ежегодного роста цен на недвижимость) минус <strong>остаток вашего долга</strong> перед банком. С каждым платежом долг тает, а ваша доля в квартире растет.
+                            </p>
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl space-y-2 border border-slate-200/50 dark:border-slate-700/50">
+                            <h4 class="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                                <span>📈 Капитал при Аренде</span>
+                            </h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                                Арендатор не покупает жилье, но экономит деньги (так как аренда обычно дешевле платежа по ипотеке и не требует первоначального взноса). Калькулятор считает, что вы <strong>инвестируете эту разницу</strong> под процент. Ваш капитал — это сумма этих накоплений со всеми процентами.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -348,6 +376,11 @@
             document.getElementById('rent-display').innerText = formatMoney(state.rent);
             document.getElementById('invest-display').innerText = state.investRate.toFixed(1) + '%';
             document.getElementById('years-display').innerText = state.years + ' лет';
+            
+            const expYears = document.getElementById('explain-years');
+            if (expYears) {
+                expYears.innerText = state.years;
+            }
 
             document.getElementById('final-buy').innerText = formatMoney(buyFinal);
             document.getElementById('final-rent').innerText = formatMoney(rentFinal);
