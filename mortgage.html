@@ -1060,26 +1060,21 @@
             document.getElementById('strategy-toggle').checked = false; toggleTaxDeduction(); calcTheoreticalBalance(); updateInputsDOM(); updateCalculations();
         }
 
-        function triggerMockPayment(e) {
+        function checkProPassword(e) {
             e.preventDefault();
-            const btn = document.getElementById('checkout-submit-btn');
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = `
-                    <svg class="animate-spin h-4 h-4 text-white mr-2 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Оплата обрабатывается...
-                `;
-            }
-            setTimeout(() => {
+            const input = document.getElementById('pro-password-input');
+            const pass = input ? input.value.trim().toUpperCase() : '';
+            if (pass === 'PORF') {
                 state.isProUnlocked = true;
                 if (typeof showToast === 'function') {
-                    showToast("👑 Поздравляем! Доступ PRO успешно оплачен и активирован.");
+                    showToast("👑 Поздравляем! Доступ PRO успешно активирован.");
                 }
                 updateCalculations();
-            }, 1500);
+            } else {
+                if (typeof showToast === 'function') {
+                    showToast("❌ Неверный пароль доступа! Попробуйте еще раз.");
+                }
+            }
         }
 
         function simulateMortgage(withPrepayments = true) {
@@ -1152,12 +1147,12 @@
             Object.keys(years).forEach(y => {
                 const yNum = parseInt(y);
                 
-                // If PRO is locked, do not render years past 4 to prevent clutter and position paywall high up!
-                if (!state.isProUnlocked && yNum > 4) {
+                // If PRO is locked, do not render years past 3 to prevent clutter and position paywall high up!
+                if (!state.isProUnlocked && yNum > 3) {
                     return;
                 }
                 
-                const isLocked = !state.isProUnlocked && yNum > 3;
+                const isLocked = !state.isProUnlocked && yNum > 2;
                 const yData = years[y]; const yearId = `year-${y}`;
 
                 let yPaid = 0, yInt = 0, yPrep = 0;
@@ -1207,8 +1202,8 @@
                 const wrap = document.createElement('div'); wrap.appendChild(header); wrap.appendChild(content); container.appendChild(wrap);
             });
 
-            // Если доступ PRO не разблокирован и лет больше 3, показываем оверлей PRO-пейволла прямо поверх заблокированного года
-            if (!state.isProUnlocked && Object.keys(years).length > 3) {
+            // Если доступ PRO не разблокирован и лет больше 2, показываем оверлей PRO-пейволла прямо поверх заблокированного года
+            if (!state.isProUnlocked && Object.keys(years).length > 2) {
                 const paywallDiv = document.createElement('div');
                 paywallDiv.id = "pro-paywall-overlay";
                 paywallDiv.className = "absolute inset-x-0 bottom-0 z-20 flex flex-col items-center justify-center pb-8 pt-12 bg-gradient-to-b from-white/90 via-white/98 to-white dark:from-slate-950/90 dark:via-slate-950/98 dark:to-slate-950 backdrop-blur-[4px] min-h-[480px]";
@@ -1220,44 +1215,27 @@
                         <div>
                             <h4 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">👑 Раскройте полную силу досрочки</h4>
                             <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-md mx-auto">
-                                Детальный расчет графика на 4-й год и далее доступен только в **PRO версии**. Узнайте, как спецплатежи могут сэкономить вам дополнительные **миллионы рублей**!
+                                Детальный расчет графика на 3-й год и далее доступен только в **PRO версии**. Узнайте, как спецплатежи могут сэкономить вам дополнительные **миллионы рублей**!
                             </p>
                         </div>
 
-                        <!-- Sleek Mock Checkout Form (YooKassa / Stripe style) -->
-                        <form onsubmit="triggerMockPayment(event)" class="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 text-left space-y-3.5 max-w-sm mx-auto">
+                        <!-- Premium Code Verification Form -->
+                        <form onsubmit="checkProPassword(event)" class="bg-slate-50 dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 text-left space-y-4 max-w-sm mx-auto">
                             <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
-                                <span class="text-xs font-bold text-slate-800 dark:text-white">Безопасная оплата картой</span>
-                                <span class="text-xs font-extrabold text-brand-600">490 ₽</span>
+                                <span class="text-xs font-bold text-slate-800 dark:text-white">Активация PRO-доступа</span>
+                                <span class="text-xs font-extrabold text-brand-600">Спецкод</span>
                             </div>
 
                             <div class="space-y-1">
-                                <label class="text-[9px] font-bold uppercase tracking-wider text-slate-400 block">Номер карты</label>
-                                <div class="relative">
-                                    <input type="text" required placeholder="4276 5500 1234 5678" maxlength="19" class="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-lg outline-none focus:ring-2 focus:ring-brand-500 text-xs font-semibold text-slate-800 dark:text-white">
-                                    <div class="absolute right-3 top-1/2 -translate-y-1/2 flex gap-1">
-                                        <span class="text-[9px] bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-1 py-0.5 rounded font-black">MIR</span>
-                                        <span class="text-[9px] bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-1 py-0.5 rounded font-black">VISA</span>
-                                    </div>
-                                </div>
+                                <label class="text-[9px] font-bold uppercase tracking-wider text-slate-400 block">Введите пароль доступа</label>
+                                <input type="text" id="pro-password-input" required placeholder="Например: PORF" class="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-lg outline-none focus:ring-2 focus:ring-brand-500 text-xs font-semibold text-slate-800 dark:text-white uppercase">
                             </div>
 
-                            <div class="grid grid-cols-2 gap-3">
-                                <div class="space-y-1">
-                                    <label class="text-[9px] font-bold uppercase tracking-wider text-slate-400 block">Срок действия</label>
-                                    <input type="text" required placeholder="MM/YY" maxlength="5" class="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-lg outline-none focus:ring-2 focus:ring-brand-500 text-xs font-semibold text-slate-800 dark:text-white text-center">
-                                </div>
-                                <div class="space-y-1">
-                                    <label class="text-[9px] font-bold uppercase tracking-wider text-slate-400 block">CVC / CVV</label>
-                                    <input type="password" required placeholder="•••" maxlength="3" class="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-lg outline-none focus:ring-2 focus:ring-brand-500 text-xs font-semibold text-slate-800 dark:text-white text-center">
-                                </div>
-                            </div>
-
-                            <button type="submit" id="checkout-submit-btn" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center">
-                                💳 Купить PRO-доступ за 490 ₽
+                            <button type="submit" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center">
+                                ✨ Активировать PRO
                             </button>
 
-                            <span class="text-[8px] text-slate-400 block text-center">Платеж защищен шифрованием SSL / PCI DSS</span>
+                            <span class="text-[8px] text-slate-400 block text-center">Используйте тестовый код для полной разблокировки таблицы</span>
                         </form>
                     </div>
                 `;
