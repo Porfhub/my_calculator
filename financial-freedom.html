@@ -658,8 +658,8 @@
                 let dateString = "Бесконечная свобода";
                 let infinity = false;
 
-                // Max 1200 months (100 years) to avoid infinite loops
-                for (let m = 1; m <= 1200; m++) {
+                // Max 360 months (30 years) to avoid speculative compounding and scale explosion
+                for (let m = 1; m <= 360; m++) {
                     // Apply monthly inflation to base expense dynamically over time
                     currentExpense = sc.baseExpense * Math.pow(1 + monthlyInflationRate, m);
 
@@ -670,7 +670,10 @@
                     if (balance < 0) {
                         balance = 0;
                     }
-                    points.push({ x: m, y: Math.round(balance) });
+                    
+                    // Clamp plotted values to 2x initial savings to keep the Chart.js visual scale tight and readable
+                    const plottedVal = Math.min(balance, savings * 2);
+                    points.push({ x: m, y: Math.round(plottedVal) });
 
                     if (balance <= 0 && monthsRemaining === 0) {
                         monthsRemaining = m;
@@ -682,11 +685,11 @@
                         break;
                     }
 
-                    // Check if passive income exceeds inflated expenses + deposit interest, indicating infinity
-                    if (m === 1200) {
+                    // If capital is still positive at the end of 30 years, it is a permanent growing capital
+                    if (m === 360) {
                         infinity = true;
-                        monthsRemaining = 1200;
-                        dateString = "Никогда не закончится";
+                        monthsRemaining = 360;
+                        dateString = "Капитал растет, хватит детям и внукам!";
                     }
                 }
 
@@ -717,33 +720,38 @@
             // Update DOM Elements
             scenarios.forEach(sc => {
                 let durationText = `${sc.monthsRemaining} ${getMonthWord(sc.monthsRemaining)}`;
-                if (sc.infinity) durationText = "∞ (Вечно)";
+                let dateText = sc.dateString;
+                
+                if (sc.infinity) {
+                    durationText = "30+ лет (Перейдет детям)";
+                    dateText = "Вечный капитал перейдет детям по наследству";
+                }
 
                 document.getElementById(`${sc.name}-duration`).innerText = durationText;
-                document.getElementById(`${sc.name}-freedom-date`).innerText = sc.dateString;
+                document.getElementById(`${sc.name}-freedom-date`).innerText = dateText;
             });
 
             // Mobile view elements update
             let comfortMRemaining = scenarios[1].monthsRemaining;
             let comfortDurationText = `${comfortMRemaining} ${getMonthWord(comfortMRemaining)}`;
-            if (scenarios[1].infinity) comfortDurationText = "∞ (Вечно)";
+            let comfortDateText = scenarios[1].dateString;
+            
+            if (scenarios[1].infinity) {
+                comfortDurationText = "30+ лет (Перейдет детям)";
+                comfortDateText = "Вечный капитал перейдет детям по наследству";
+            }
 
             document.getElementById('mobile-comfort-duration').innerText = comfortDurationText;
-            document.getElementById('mobile-comfort-date').innerText = scenarios[1].dateString;
+            document.getElementById('mobile-comfort-date').innerText = comfortDateText;
 
             // Update active verdict highlights
             const comfortSc = scenarios[1];
-            let comfortDateText = comfortSc.dateString;
-            let comfortMonthsText = `${comfortSc.monthsRemaining} ${getMonthWord(comfortSc.monthsRemaining)}`;
-            if (comfortSc.infinity) {
-                comfortMonthsText = "бесконечное число месяцев";
-                comfortDateText = "средства никогда не закончатся";
-            }
-
             let verdictHighlight = "";
             if (comfortSc.infinity) {
-                verdictHighlight = `🥳 Полная финансовая свобода! Ваши накопления при текущем уровне комфорта никогда не иссякнут (вечный капитал), так как проценты по вкладу и пассивный доход полностью перекрывают ваши траты. День финансового апокалипсиса отменяется!`;
+                verdictHighlight = `🥳 Полная финансовая свобода! Ваши накопления при текущем уровне комфорта никогда не иссякнут (вечный капитал), так как проценты по вкладу и пассивный доход полностью перекрывают ваши траты. День финансового апокалипсиса отменяется! Этого богатства с запасом хватит вашим детям и внукам.`;
             } else {
+                let comfortMonthsText = `${comfortSc.monthsRemaining} ${getMonthWord(comfortSc.monthsRemaining)}`;
+                let comfortDateText = comfortSc.dateString;
                 verdictHighlight = `🚨 День финансового апокалипсиса: ${comfortDateText}. При текущем уровне комфорта и пассивном доходе ваших средств хватит ровно на ${comfortMonthsText}. После этой даты ваша подушка безопасности полностью растает. Срочно пересмотрите расходы или найдите новые источники дохода!`;
             }
             document.getElementById('comfort-verdict-highlight').innerText = verdictHighlight;
