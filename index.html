@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Финансовый Хаб - Умные калькуляторы</title>
+    <title>Финансовый Хаб — Умные независимые калькуляторы</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -26,30 +26,52 @@
             }
         }
     </script>
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=110360838', 'ym');
-
-    ym(110360838, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-
-    function reachGoal(goalId) {
-        console.log("Goal reached:", goalId);
-        if (typeof ym !== "undefined") {
-            ym(110360838, 'reachGoal', goalId);
+    <style>
+        /* Custom smooth transition and scroll behaviors */
+        html {
+            scroll-behavior: smooth;
         }
-    }
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<script src="js/theme.js"></script>
+        .glow-active {
+            animation: pulse-ring 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0%, 100% {
+                box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.7);
+                transform: scale(1.02);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+                transform: scale(1.03);
+            }
+        }
+    </style>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=110360838', 'ym');
+
+        ym(110360838, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+
+        function reachGoal(goalId) {
+            console.log("Goal reached:", goalId);
+            if (typeof ym !== "undefined") {
+                ym(110360838, 'reachGoal', goalId);
+            }
+        }
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    <script src="js/theme.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/ui-utils.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased flex flex-col transition-colors duration-300">
 
+    <!-- Floating theme toggle button -->
     <div class="fixed top-6 right-6 z-50">
         <button id="theme-toggle" onclick="toggleDarkMode()" class="p-3 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:scale-110 transition-all active:scale-95">
             <svg id="sun-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
@@ -57,136 +79,209 @@
         </button>
     </div>
 
-    <main class="flex-grow flex flex-col items-center justify-center p-6 py-12">
-        <div class="max-w-4xl w-full">
-            <div class="text-center mb-12">
-                <h1 class="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-4">
-                    Финансовый <span class="text-brand-600">Хаб</span>
-                </h1>
-                <p class="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto mb-6">
-                    Хватит верить рекламным ставкам. Честные калькуляторы, которые срывают маски с банковских уловок и показывают реальную стоимость вашей жизни.
-                </p>
+    <main class="flex-grow flex flex-col items-center justify-center p-4 sm:p-6 py-12">
+        <div class="max-w-6xl w-full">
 
-                <div id="freshness-indicator" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-400 min-w-[320px] justify-center">
-                    <span class="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse shrink-0"></span>
-                    <span id="freshness-text" class="truncate">Загрузка данных об обновлении...</span>
+            <!-- Hero Section -->
+            <div class="text-center mb-12 relative">
+                <!-- Muted Freshness Indicator (visual de-emphasis) -->
+                <div class="mb-4 inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100/60 dark:bg-slate-900/40 rounded-full border border-slate-200/50 dark:border-slate-800/40 text-[10px] font-medium text-slate-400 dark:text-slate-500 justify-center">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand-500/80 animate-pulse shrink-0"></span>
+                    <span id="freshness-text" class="truncate">Проверка обновлений данных...</span>
+                    <!-- Kept matching standard id so background loader works perfectly -->
+                    <span id="freshness-indicator" class="hidden"></span>
+                </div>
+
+                <h1 class="text-4xl md:text-6xl font-black tracking-tight text-slate-900 dark:text-white mb-6">
+                    Финансовый <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-400">Хаб</span>
+                </h1>
+
+                <p class="text-base sm:text-lg md:text-xl font-medium text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-8 leading-relaxed">
+                    Профессиональный независимый финансовый аудит без банковских уловок. Рассчитайте честную стоимость ваших решений.
+                </p>
+            </div>
+
+            <!-- Gamification / Goal-Selection Block -->
+            <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6 rounded-3xl shadow-xl mb-12">
+                <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-4 text-center">
+                    Какая у вас цель? Выберите для быстрого фокуса
+                </h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <button onclick="scrollToGoal('card-mortgage')" class="flex flex-col sm:flex-row items-center justify-center gap-2.5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 hover:bg-brand-50 dark:hover:bg-brand-950/20 border border-slate-100 dark:border-slate-800 hover:border-brand-300 dark:hover:border-brand-900/60 transition-all group">
+                        <span class="text-xl group-hover:scale-125 transition-transform">🏠</span>
+                        <span class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-brand-700 dark:group-hover:text-brand-400 text-center">Купить квартиру</span>
+                    </button>
+                    <button onclick="scrollToGoal('card-honest-credit')" class="flex flex-col sm:flex-row items-center justify-center gap-2.5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 hover:bg-brand-50 dark:hover:bg-brand-950/20 border border-slate-100 dark:border-slate-800 hover:border-brand-300 dark:hover:border-brand-900/60 transition-all group">
+                        <span class="text-xl group-hover:scale-125 transition-transform">💳</span>
+                        <span class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-brand-700 dark:group-hover:text-brand-400 text-center">Взять кредит</span>
+                    </button>
+                    <button onclick="scrollToGoal('card-genetic-wealth')" class="flex flex-col sm:flex-row items-center justify-center gap-2.5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 hover:bg-brand-50 dark:hover:bg-brand-950/20 border border-slate-100 dark:border-slate-800 hover:border-brand-300 dark:hover:border-brand-900/60 transition-all group">
+                        <span class="text-xl group-hover:scale-125 transition-transform">👶</span>
+                        <span class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-brand-700 dark:group-hover:text-brand-400 text-center">Оценить бюджет</span>
+                    </button>
+                    <button onclick="scrollToGoal('card-millionaire')" class="flex flex-col sm:flex-row items-center justify-center gap-2.5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 hover:bg-brand-50 dark:hover:bg-brand-950/20 border border-slate-100 dark:border-slate-800 hover:border-brand-300 dark:hover:border-brand-900/60 transition-all group">
+                        <span class="text-xl group-hover:scale-125 transition-transform">🎯</span>
+                        <span class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-brand-700 dark:group-hover:text-brand-400 text-center">Накопить миллион</span>
+                    </button>
                 </div>
             </div>
 
-            <div class="mb-12">
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-500">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Скрытая правда</h3>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <a href="honest-credit.html" class="group relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-xl dark:hover:shadow-brand-500/10 hover:scale-[1.02] overflow-hidden flex flex-col h-full">
-                        <div class="absolute top-4 right-4 z-20">
-                            <span class="px-3 py-1 text-[10px] uppercase tracking-wider font-black text-red-600 bg-red-100 rounded-full border border-red-200 shadow-sm animate-pulse">Шок-контент</span>
+            <!-- Smart CPA Monetization Widget -->
+            <div id="cpa-widget-block" class="mb-12 bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 text-white rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-2xl relative overflow-hidden transition-all duration-300">
+                <!-- Background visual details -->
+                <div class="absolute -right-16 -top-16 w-48 h-48 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="px-2.5 py-0.5 bg-brand-600/35 text-brand-400 text-[10px] uppercase font-bold tracking-wider rounded-full border border-brand-500/20">Рекомендация ИИ</span>
+                            <h3 class="text-lg sm:text-xl font-extrabold tracking-tight">Персональный подбор финансовых продуктов</h3>
                         </div>
-                        <div class="absolute -right-10 -bottom-10 opacity-5 transition-transform group-hover:scale-110 duration-500">
+                        <p id="cpa-widget-description" class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
+                            Загрузка ваших персональных предложений...
+                        </p>
+                    </div>
+                    <div id="cpa-demo-controls" class="flex flex-col gap-2 shrink-0 w-full sm:w-auto">
+                        <!-- Demorun/Testing controls -->
+                        <div class="flex items-center gap-1.5 justify-end">
+                            <button onclick="emulateCPAClick('credit')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-400 text-[9px] font-bold rounded-lg transition border border-slate-700">Эмул: Кредит</button>
+                            <button onclick="emulateCPAClick('mortgage')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-400 text-[9px] font-bold rounded-lg transition border border-slate-700">Эмул: Ипотека</button>
+                            <button onclick="clearCPACache()" class="px-2.5 py-1 bg-slate-850 hover:bg-red-950/40 text-rose-400 text-[9px] font-bold rounded-lg transition border border-slate-800">Сбросить</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic offers area -->
+                <div id="cpa-offers-container" class="mt-6 border-t border-slate-800/80 pt-6 hidden">
+                    <!-- Cards will be dynamically loaded here based on localStorage or Emulation -->
+                </div>
+            </div>
+
+            <!-- Grid Layout section: Dynamic Card grid with visual hierarchy and dynamic features -->
+            <div class="mb-12">
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
+                        <span class="text-brand-600">⚡</span> Независимые Экспертные Калькуляторы
+                    </h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+
+                    <!-- FEATURED CARD A: Честная Ставка (loan focus, 7 columns) -->
+                    <a id="card-honest-credit" href="honest-credit.html" onclick="trackCalculatorClick('credit')" class="group md:col-span-7 relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01] hover:border-brand-500/20 overflow-hidden flex flex-col h-full">
+                        <div class="absolute top-4 right-4 z-20 flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 text-[10px] uppercase tracking-wider font-black text-red-600 bg-red-50 dark:bg-red-950/40 dark:text-red-400 rounded-full border border-red-200 dark:border-red-900 shadow-sm animate-pulse">Аудит</span>
+                            <span class="px-2.5 py-0.5 text-[10px] uppercase tracking-wider font-black text-brand-600 bg-brand-50 dark:bg-brand-950/40 dark:text-brand-400 rounded-full border border-brand-200 dark:border-brand-900 shadow-sm">ТОП</span>
+                        </div>
+                        <div class="absolute -right-6 -bottom-6 opacity-5 transition-transform group-hover:scale-110 duration-500">
                             <svg class="w-48 h-48 text-brand-600" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                             </svg>
                         </div>
                         <div class="relative z-10 flex flex-col h-full">
-                            <div class="w-14 h-14 bg-brand-50 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-brand-100 shrink-0">
-                                <svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            <div class="w-14 h-14 bg-brand-50 dark:bg-brand-950/40 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-brand-100 dark:group-hover:bg-brand-900/30 shrink-0 shadow-sm">
+                                <svg class="w-8 h-8 text-brand-600 dark:text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                                 </svg>
                             </div>
                             <h2 class="text-2xl font-black text-slate-900 dark:text-white mb-2">Честная Ставка</h2>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
-                                Разоблачите уловки банков. Узнайте реальную стоимость кредита со всеми страховками и комиссиями.
+                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                                Разоблачите уловки банков. Узнайте реальную стоимость кредита со всеми страховками, комиссиями и скрытыми сборами с помощью математического метода IRR.
                             </p>
-                            <div class="flex items-center text-brand-600 font-bold text-sm mt-auto">
-                                Проверить кредит
-                                <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                                </svg>
+
+                            <!-- Teaser Area -->
+                            <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                                <span class="text-xs font-bold text-red-500 dark:text-red-400">Разоблачает скрытые комиссии</span>
+                                <div class="flex items-center text-brand-600 dark:text-brand-400 font-bold text-sm">
+                                    Проверить кредит
+                                    <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </a>
 
-                    <a href="inflation-shredder.html" class="group relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-xl dark:hover:shadow-brand-500/10 hover:scale-[1.02] overflow-hidden flex flex-col h-full">
+                    <!-- STANDARD CARD B: Шредер Рубля (inflation focus, 5 columns) -->
+                    <a id="card-inflation-shredder" href="inflation-shredder.html" class="group md:col-span-5 relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01] hover:border-orange-500/20 overflow-hidden flex flex-col h-full">
                         <div class="absolute top-4 right-4 z-20">
-                            <span class="px-3 py-1 text-[10px] uppercase tracking-wider font-black text-orange-600 bg-orange-100 rounded-full border border-orange-200 shadow-sm">Хит</span>
+                            <span class="px-2.5 py-0.5 text-[10px] uppercase tracking-wider font-black text-orange-600 bg-orange-50 dark:bg-orange-950/40 dark:text-orange-400 rounded-full border border-orange-200 dark:border-orange-900 shadow-sm">Хит</span>
                         </div>
-                        <div class="absolute -right-10 -bottom-10 opacity-5 transition-transform group-hover:scale-110 duration-500">
-                            <svg class="w-48 h-48 text-brand-600" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                        <div class="absolute -right-6 -bottom-6 opacity-5 transition-transform group-hover:scale-110 duration-500">
+                            <svg class="w-48 h-48 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
                         <div class="relative z-10 flex flex-col h-full">
-                            <div class="w-14 h-14 bg-brand-50 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-brand-100 shrink-0">
-                                <svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                            <div class="w-14 h-14 bg-orange-50 dark:bg-orange-950/40 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-orange-100 dark:group-hover:bg-orange-900/30 shrink-0 shadow-sm">
+                                <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M19 12H5m14 0l-4 4m4-4l-4-4"></path>
                                 </svg>
                             </div>
                             <h2 class="text-2xl font-black text-slate-900 dark:text-white mb-2">Шредер Рубля</h2>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
-                                Узнайте, как инфляция обесценила ваши накопления за последние 20 лет.
+                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                                Реальная покупательная способность. Узнайте, как инфляция незаметно уничтожила ваши сбережения за последние 20 лет.
                             </p>
-                            <div class="flex items-center text-brand-600 font-bold text-sm mt-auto">
-                                Запустить шредер
-                                <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                                </svg>
+
+                            <!-- Teaser Area with requested teaser -->
+                            <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800/80 flex flex-col gap-2">
+                                <p class="text-[11px] font-semibold text-orange-500 bg-orange-50/50 dark:bg-orange-950/20 px-2.5 py-1.5 rounded-lg flex items-center justify-between">
+                                    <span>100 000 ₽ в 2000 году превратились в...</span>
+                                    <span class="underline decoration-dotted text-xs font-black">Узнать</span>
+                                </p>
                             </div>
                         </div>
                     </a>
-                </div>
-            </div>
 
-            <div class="mb-12">
-                <h3 class="text-xl font-bold text-slate-900 dark:text-white tracking-tight mb-6 flex items-center gap-2">
-                    <span class="text-2xl">🏠</span> Крупные решения
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    <a href="mortgage.html" class="group relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-xl dark:hover:shadow-brand-500/10 hover:scale-[1.02] overflow-hidden flex flex-col h-full">
-                        <div class="absolute -right-10 -bottom-10 opacity-5 transition-transform group-hover:scale-110 duration-500">
+                    <!-- FEATURED CARD C: ИпотекаПро (mortgage focus, 7 columns) -->
+                    <a id="card-mortgage" href="mortgage.html" onclick="trackCalculatorClick('mortgage')" class="group md:col-span-7 relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01] hover:border-brand-500/20 overflow-hidden flex flex-col h-full">
+                        <div class="absolute top-4 right-4 z-20">
+                            <span class="px-2.5 py-0.5 text-[10px] uppercase tracking-wider font-black text-brand-600 bg-brand-50 dark:bg-brand-950/40 dark:text-brand-400 rounded-full border border-brand-200 dark:border-brand-900 shadow-sm">650к ₽ вычет</span>
+                        </div>
+                        <div class="absolute -right-6 -bottom-6 opacity-5 transition-transform group-hover:scale-110 duration-500">
                             <svg class="w-48 h-48 text-brand-600" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                             </svg>
                         </div>
                         <div class="relative z-10 flex flex-col h-full">
-                            <div class="w-14 h-14 bg-brand-50 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-brand-100 shrink-0">
-                                <svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            <div class="w-14 h-14 bg-brand-50 dark:bg-brand-950/40 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-brand-100 dark:group-hover:bg-brand-900/30 shrink-0 shadow-sm">
+                                <svg class="w-8 h-8 text-brand-600 dark:text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                                 </svg>
                             </div>
                             <h2 class="text-2xl font-black text-slate-900 dark:text-white mb-2">ИпотекаПро</h2>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
-                                Детальный расчет платежей, учет досрочного погашения и визуализация экономии.
+                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                                Расчет досрочных платежей, экономии, налоговых вычетов по стратегиям Pocket vs Reinvest и интеграция с живыми банковскими ставками.
                             </p>
-                            <div class="flex items-center text-brand-600 font-bold text-sm mt-auto">
-                                Перейти к расчету
-                                <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                                </svg>
+
+                            <!-- Teaser Area with dynamic key rate -->
+                            <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800/80 flex flex-col gap-2">
+                                <p class="text-[11px] font-semibold text-brand-600 bg-brand-50/50 dark:bg-brand-950/20 px-2.5 py-1.5 rounded-lg flex items-center justify-between">
+                                    <span>Ключевая ставка ЦБ РФ сегодня: <span id="cb-teaser-rate">21%</span></span>
+                                    <span class="underline decoration-dotted text-xs font-black">Рассчитать переплату за 1 сек</span>
+                                </p>
                             </div>
                         </div>
                     </a>
 
-                    <a href="rent-vs-mortgage.html" class="group relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-xl dark:hover:shadow-brand-500/10 hover:scale-[1.02] overflow-hidden flex flex-col h-full">
-                        <div class="absolute -right-10 -bottom-10 opacity-5 transition-transform group-hover:scale-110 duration-500">
-                            <svg class="w-48 h-48 text-brand-600" fill="currentColor" viewBox="0 0 24 24">
+                    <!-- STANDARD CARD D: Аренда vs Ипотека (property focus, 5 columns) -->
+                    <a id="card-rent-vs-mortgage" href="rent-vs-mortgage.html" class="group md:col-span-5 relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01] hover:border-slate-300 dark:hover:border-slate-700 overflow-hidden flex flex-col h-full">
+                        <div class="absolute -right-6 -bottom-6 opacity-5 transition-transform group-hover:scale-110 duration-500">
+                            <svg class="w-48 h-48 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                             </svg>
                         </div>
                         <div class="relative z-10 flex flex-col h-full">
-                            <div class="w-14 h-14 bg-brand-50 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-brand-100 shrink-0">
-                                <svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            <div class="w-14 h-14 bg-slate-50 dark:bg-slate-950/40 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-slate-100 dark:group-hover:bg-slate-900/30 shrink-0 shadow-sm">
+                                <svg class="w-8 h-8 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                                 </svg>
                             </div>
                             <h2 class="text-2xl font-black text-slate-900 dark:text-white mb-2">Аренда vs Ипотека</h2>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
-                                Честное математическое сравнение покупки и аренды жилья на длинной дистанции.
+                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                                Честное математическое сравнение покупки квартиры в кредит и аренды с инвестированием разницы. Посчитайте, что выгоднее для вас.
                             </p>
-                            <div class="flex items-center text-brand-600 font-bold text-sm mt-auto">
+                            <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-brand-600 dark:text-brand-400 font-bold text-sm">
                                 Сравнить варианты
                                 <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -195,58 +290,51 @@
                         </div>
                     </a>
 
-                    <a href="car-vs-taxi.html" class="group relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-xl dark:hover:shadow-brand-500/10 hover:scale-[1.02] overflow-hidden flex flex-col h-full">
-                        <div class="absolute -right-10 -bottom-10 opacity-5 transition-transform group-hover:scale-110 duration-500">
-                            <svg class="w-48 h-48 text-brand-600" fill="currentColor" viewBox="0 0 24 24">
+                    <!-- STANDARD CARD E: Машина или Такси (auto focus, 4 columns) -->
+                    <a id="card-car-vs-taxi" href="car-vs-taxi.html" class="group md:col-span-4 relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01] hover:border-slate-300 dark:hover:border-slate-700 overflow-hidden flex flex-col h-full">
+                        <div class="absolute -right-6 -bottom-6 opacity-5 transition-transform group-hover:scale-110 duration-500">
+                            <svg class="w-48 h-48 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                                <path d="M13 5h-1.948a1 1 0 00-.894.553L7.382 11H4a1 1 0 00-1 1v5a1 1 0 001 1h1a3 3 0 006 0h2a3 3 0 006 0h1a1 1 0 001-1v-5a1 1 0 00-1-1h-3.382l-2.774-5.447A1 1 0 0013 5z"></path>
                             </svg>
                         </div>
                         <div class="relative z-10 flex flex-col h-full">
-                            <div class="w-14 h-14 bg-brand-50 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-brand-100 shrink-0">
-                                <svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5h-1.948a1 1 0 00-.894.553L7.382 11H4a1 1 0 00-1 1v5a1 1 0 001 1h1a3 3 0 006 0h2a3 3 0 006 0h1a1 1 0 001-1v-5a1 1 0 00-1-1h-3.382l-2.774-5.447A1 1 0 0013 5z"></path>
+                            <div class="w-14 h-14 bg-slate-50 dark:bg-slate-950/40 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-slate-100 dark:group-hover:bg-slate-900/30 shrink-0 shadow-sm">
+                                <svg class="w-8 h-8 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
                                 </svg>
                             </div>
-                            <h2 class="text-2xl font-black text-slate-900 dark:text-white mb-2">Машина или Такси</h2>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
-                                Расчет стоимости владения автомобилем против ежедневных поездок на такси.
+                            <h2 class="text-xl font-black text-slate-900 dark:text-white mb-2">Машина или Такси</h2>
+                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                                Сравнение полной стоимости владения личным автомобилем с ежедневными поездками на Яндекс.Такси.
                             </p>
-                            <div class="flex items-center text-brand-600 font-bold text-sm mt-auto">
-                                Выбрать лучшее
+                            <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-brand-600 dark:text-brand-400 font-bold text-sm">
+                                Найти оптимум
                                 <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                                 </svg>
                             </div>
                         </div>
                     </a>
-                </div>
-            </div>
 
-            <div class="mb-12">
-                <h3 class="text-xl font-bold text-slate-900 dark:text-white tracking-tight mb-6 flex items-center gap-2">
-                    <span class="text-2xl">📈</span> Капитал и жизнь
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <a href="financial-freedom.html" class="group relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-xl dark:hover:shadow-brand-500/10 hover:scale-[1.02] overflow-hidden flex flex-col h-full">
-                        <div class="absolute -right-10 -bottom-10 opacity-5 transition-transform group-hover:scale-110 duration-500">
-                            <svg class="w-48 h-48 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
+                    <!-- HIGHLIGHTED CARD F: Таймер Свободы (freedom focus, 4 columns) -->
+                    <a id="card-financial-freedom" href="financial-freedom.html" class="group md:col-span-4 relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01] hover:border-emerald-500/20 overflow-hidden flex flex-col h-full">
+                        <div class="absolute -right-6 -bottom-6 opacity-5 transition-transform group-hover:scale-110 duration-500">
+                            <svg class="w-48 h-48 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                             </svg>
                         </div>
                         <div class="relative z-10 flex flex-col h-full">
-                            <div class="w-14 h-14 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-2xl flex items-center justify-center mb-6 transition-transform group-hover:scale-110 shrink-0 shadow-md">
-                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            <div class="w-14 h-14 bg-emerald-50 dark:bg-emerald-950/40 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30 shrink-0 shadow-sm">
+                                <svg class="w-8 h-8 text-emerald-600 dark:text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                             </div>
-                            <h2 class="text-2xl font-black text-slate-900 dark:text-white mb-2">Таймер Свободы (Подушка безопасности)</h2>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
-                                Узнайте, на сколько месяцев хватит ваших накоплений при разных сценариях жизни с учетом инфляции и ставок.
+                            <h2 class="text-xl font-black text-slate-900 dark:text-white mb-2">Таймер Свободы</h2>
+                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                                На сколько месяцев жизни вам действительно хватит подушки безопасности с учетом инфляции и банковских депозитов.
                             </p>
-                            <div class="flex items-center text-emerald-600 font-bold text-sm mt-auto">
-                                Рассчитать свободу
+                            <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-emerald-600 dark:text-emerald-400 font-bold text-sm">
+                                Оценить резерв
                                 <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                                 </svg>
@@ -254,24 +342,25 @@
                         </div>
                     </a>
 
-                    <a href="millionaire.html" class="group relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-xl dark:hover:shadow-brand-500/10 hover:scale-[1.02] overflow-hidden flex flex-col h-full">
-                        <div class="absolute -right-10 -bottom-10 opacity-5 transition-transform group-hover:scale-110 duration-500">
-                            <svg class="w-48 h-48 text-brand-600" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    <!-- STANDARD CARD G: Когда я стану миллионером? (saving focus, 4 columns) -->
+                    <a id="card-millionaire" href="millionaire.html" class="group md:col-span-4 relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01] hover:border-slate-300 dark:hover:border-slate-700 overflow-hidden flex flex-col h-full">
+                        <div class="absolute -right-6 -bottom-6 opacity-5 transition-transform group-hover:scale-110 duration-500">
+                            <svg class="w-48 h-48 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2"></path>
                             </svg>
                         </div>
                         <div class="relative z-10 flex flex-col h-full">
-                            <div class="w-14 h-14 bg-brand-50 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-brand-100 shrink-0">
-                                <svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <div class="w-14 h-14 bg-slate-50 dark:bg-slate-950/40 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-slate-100 dark:group-hover:bg-slate-900/30 shrink-0 shadow-sm">
+                                <svg class="w-8 h-8 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                             </div>
-                            <h2 class="text-2xl font-black text-slate-900 dark:text-white mb-2">Когда я стану миллионером?</h2>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
-                                Рассчитайте точную дату и день недели, когда ваши накопления пробьют заветный миллион.
+                            <h2 class="text-xl font-black text-slate-900 dark:text-white mb-2">Стать Миллионером</h2>
+                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                                Калькулятор сложного процента. Рассчитайте точную дату и день недели, когда ваши накопления пробьют миллион.
                             </p>
-                            <div class="flex items-center text-brand-600 font-bold text-sm mt-auto">
-                                Рассчитать цель
+                            <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-brand-600 dark:text-brand-400 font-bold text-sm">
+                                Начать копить
                                 <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                                 </svg>
@@ -279,23 +368,24 @@
                         </div>
                     </a>
 
-                    <a href="wealth.html" class="group relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-xl dark:hover:shadow-brand-500/10 hover:scale-[1.02] overflow-hidden flex flex-col h-full">
-                        <div class="absolute -right-10 -bottom-10 opacity-5 transition-transform group-hover:scale-110 duration-500">
-                            <svg class="w-48 h-48 text-brand-600" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    <!-- STANDARD CARD H: Рентген Доходов (benchmarks focus, 4 columns) -->
+                    <a id="card-wealth" href="wealth.html" class="group md:col-span-4 relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01] hover:border-slate-300 dark:hover:border-slate-700 overflow-hidden flex flex-col h-full">
+                        <div class="absolute -right-6 -bottom-6 opacity-5 transition-transform group-hover:scale-110 duration-500">
+                            <svg class="w-48 h-48 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M16 8v8m-4-5v5m-4-2v2"></path>
                             </svg>
                         </div>
                         <div class="relative z-10 flex flex-col h-full">
-                            <div class="w-14 h-14 bg-brand-50 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-brand-100 shrink-0">
-                                <svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <div class="w-14 h-14 bg-slate-50 dark:bg-slate-950/40 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-slate-100 dark:group-hover:bg-slate-900/30 shrink-0 shadow-sm">
+                                <svg class="w-8 h-8 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                 </svg>
                             </div>
-                            <h2 class="text-2xl font-black text-slate-900 dark:text-white mb-2">Рентген Доходов</h2>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
-                                Сравните свою зарплату с доходами жителей РФ и узнайте свое место в статистике.
+                            <h2 class="text-xl font-black text-slate-900 dark:text-white mb-2">Рентген Доходов</h2>
+                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                                Где вы находитесь в шкале распределения богатства? Сравните свои доходы с реальной Росстат-статистикой регионов.
                             </p>
-                            <div class="flex items-center text-brand-600 font-bold text-sm mt-auto">
+                            <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-brand-600 dark:text-brand-400 font-bold text-sm">
                                 Проверить доход
                                 <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -304,24 +394,25 @@
                         </div>
                     </a>
 
-                    <a href="time-is-money.html" class="group relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-xl dark:hover:shadow-brand-500/10 hover:scale-[1.02] overflow-hidden flex flex-col h-full">
-                        <div class="absolute -right-10 -bottom-10 opacity-5 transition-transform group-hover:scale-110 duration-500">
-                            <svg class="w-48 h-48 text-brand-600" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    <!-- STANDARD CARD I: Цена Времени (time/phone focus, 4 columns) -->
+                    <a id="card-time-is-money" href="time-is-money.html" class="group md:col-span-4 relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01] hover:border-slate-300 dark:hover:border-slate-700 overflow-hidden flex flex-col h-full">
+                        <div class="absolute -right-6 -bottom-6 opacity-5 transition-transform group-hover:scale-110 duration-500">
+                            <svg class="w-48 h-48 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 8v4l3 3"></path>
                             </svg>
                         </div>
                         <div class="relative z-10 flex flex-col h-full">
-                            <div class="w-14 h-14 bg-brand-50 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-brand-100 shrink-0">
-                                <svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <div class="w-14 h-14 bg-slate-50 dark:bg-slate-950/40 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-slate-100 dark:group-hover:bg-slate-900/30 shrink-0 shadow-sm">
+                                <svg class="w-8 h-8 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                             </div>
-                            <h2 class="text-2xl font-black text-slate-900 dark:text-white mb-2">Цена Времени</h2>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
-                                Узнайте, сколько дней реальной жизни стоит ваш новый смартфон.
+                            <h2 class="text-xl font-black text-slate-900 dark:text-white mb-2">Цена Времени</h2>
+                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                                Сколько дней вашей реальной жизни и работы стоит новый смартфон или крупная спонтанная покупка.
                             </p>
-                            <div class="flex items-center text-brand-600 font-bold text-sm mt-auto">
-                                Рассчитать стоимость
+                            <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-brand-600 dark:text-brand-400 font-bold text-sm">
+                                Начать расчет
                                 <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                                 </svg>
@@ -329,23 +420,24 @@
                         </div>
                     </a>
 
-                    <a href="genetic-wealth.html" class="group relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-xl dark:hover:shadow-brand-500/10 hover:scale-[1.02] overflow-hidden flex flex-col h-full">
-                        <div class="absolute -right-10 -bottom-10 opacity-5 transition-transform group-hover:scale-110 duration-500">
-                            <svg class="w-48 h-48 text-brand-600" fill="currentColor" viewBox="0 0 24 24">
+                    <!-- STANDARD CARD J: Генетическое богатство (child budget focus, 4 columns) -->
+                    <a id="card-genetic-wealth" href="genetic-wealth.html" class="group md:col-span-4 relative bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01] hover:border-slate-300 dark:hover:border-slate-700 overflow-hidden flex flex-col h-full">
+                        <div class="absolute -right-6 -bottom-6 opacity-5 transition-transform group-hover:scale-110 duration-500">
+                            <svg class="w-48 h-48 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                             </svg>
                         </div>
                         <div class="relative z-10 flex flex-col h-full">
-                            <div class="w-14 h-14 bg-brand-50 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-brand-100 shrink-0">
-                                <svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            <div class="w-14 h-14 bg-slate-50 dark:bg-slate-950/40 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-slate-100 dark:group-hover:bg-slate-900/30 shrink-0 shadow-sm">
+                                <svg class="w-8 h-8 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                                 </svg>
                             </div>
-                            <h2 class="text-2xl font-black text-slate-900 dark:text-white mb-2">Генетическое богатство</h2>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
-                                Оцените бюджет на воспитание ребенка от 0 до 18 лет с учетом прогнозной инфляции.
+                            <h2 class="text-xl font-black text-slate-900 dark:text-white mb-2">Генетическое богатство</h2>
+                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                                Оцените реальный бюджет на воспитание ребенка до 18 лет по возрастам на основе 15-летнего геометрического скользящего среднего.
                             </p>
-                            <div class="flex items-center text-brand-600 font-bold text-sm mt-auto">
+                            <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-brand-600 dark:text-brand-400 font-bold text-sm">
                                 Оценить бюджет
                                 <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -353,51 +445,269 @@
                             </div>
                         </div>
                     </a>
+
                 </div>
             </div>
 
-            <div class="flex justify-center">
-                <button onclick="shareHub()" class="flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 transition-all shadow-sm active:scale-[0.98]">
+            <!-- Share block & Footer -->
+            <div class="flex justify-center mt-12">
+                <button onclick="shareHub()" class="flex items-center gap-2.5 px-8 py-3.5 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-extrabold rounded-2xl border border-slate-200 dark:border-slate-700 transition-all shadow-md active:scale-95 text-sm sm:text-base">
                     <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path>
                     </svg>
-                    Поделиться Хабом
+                    Поделиться Финансовым Хабом
                 </button>
             </div>
         </div>
     </main>
 
-    <footer class="py-8 text-center text-xs text-slate-400">
-        <p>© 2026 Финансовый Хаб. Профессиональные инструменты анализа.</p>
+    <footer class="py-12 border-t border-slate-200/60 dark:border-slate-800/60 text-center text-xs text-slate-400">
+        <p class="mb-2">© 2026 Финансовый Хаб. Абсолютно независимые расчеты без рекламного давления.</p>
+        <p>Инструменты разработаны на основе чистой финансовой математики и официальных баз макроданных ЦБ РФ.</p>
     </footer>
 
+    <!-- Standard Toast Notification -->
     <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
         <span class="text-brand-500 font-bold">✓</span>
         <span id="toast-message" class="text-sm">Ссылка скопирована!</span>
     </div>
 
+    <!-- Inline scripts for redone index.html UX functionality -->
     <script>
-        // Загрузка даты обновления
-        fetch('rates.json')
-            .then(response => response.json())
-            .then(data => {
-                const indicator = document.getElementById('freshness-text');
-                if (data.last_updated) {
-                    indicator.innerText = `Данные актуальны (обновлено роботом в ${data.last_updated})`;
-                } else {
-                    indicator.innerText = `Данные актуальны (обновлено роботом в 06:00 МСК)`;
-                }
-            })
-            .catch(() => {
-                document.getElementById('freshness-text').innerText = `Данные актуальны (обновлено роботом в 06:00 МСК)`;
-            });
+        // Track card click to save usage for CPA widget
+        function trackCalculatorClick(type) {
+            if (type === 'credit') {
+                localStorage.setItem('calc_credit', 'true');
+            } else if (type === 'mortgage') {
+                localStorage.setItem('calc_mortgage', 'true');
+            }
+            // Trigger quick re-render of CPA widget
+            renderCPAWidget();
+        }
 
+        // Smooth scroll to card goal and flash/glow animate
+        function scrollToGoal(cardId) {
+            const card = document.getElementById(cardId);
+            if (card) {
+                // Record goal click
+                reachGoal('goal_' + cardId);
+
+                // Set flag to show affiliate options
+                if (cardId === 'card-honest-credit') {
+                    localStorage.setItem('calc_credit', 'true');
+                } else if (cardId === 'card-mortgage') {
+                    localStorage.setItem('calc_mortgage', 'true');
+                }
+                renderCPAWidget();
+
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                // Ring pulse effect
+                card.classList.add('glow-active');
+                setTimeout(() => {
+                    card.classList.remove('glow-active');
+                }, 2500);
+            }
+        }
+
+        // Live Dynamic CPA rendering logic
+        function renderCPAWidget() {
+            const description = document.getElementById('cpa-widget-description');
+            const container = document.getElementById('cpa-offers-container');
+            const hasCredit = localStorage.getItem('calc_credit') === 'true';
+            const hasMortgage = localStorage.getItem('calc_mortgage') === 'true';
+
+            if (hasCredit || hasMortgage) {
+                // Determine recommendation focus
+                const focus = hasMortgage ? 'ипотеке' : 'потребительским кредитам';
+                description.innerHTML = `Вы недавно рассчитывали параметры сделки по <strong>${focus}</strong>. Мы подобрали 3 самых надежных банка с минимальной скрытой переплатой и прозрачной отчетностью по нашему рейтингу.`;
+
+                // Render Bank offers based on selection
+                let offersHtml = '';
+                if (hasMortgage) {
+                    offersHtml = `
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="p-5 bg-slate-850 border border-slate-750 rounded-2xl flex flex-col justify-between hover:border-brand-500/30 transition-all">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-[10px] font-black text-white shadow-inner">СБ</div>
+                                            <span class="font-extrabold text-sm text-slate-100">Сбербанк</span>
+                                        </div>
+                                        <span class="text-xs font-bold text-amber-400">⭐ 4.9</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400 mb-2">Ипотека "ДомКлик"</p>
+                                    <p class="text-xl font-black text-emerald-400 mb-1">от 15.9% <span class="text-xs text-slate-400 font-normal">годовых</span></p>
+                                    <p class="text-[10px] text-slate-400">Скрытые комиссии: <strong class="text-emerald-400">0%</strong>. Электронная регистрация.</p>
+                                </div>
+                                <a href="mortgage.html" class="mt-4 w-full py-2 bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-xs text-center rounded-xl transition shadow-sm">Сравнить условия</a>
+                            </div>
+                            <div class="p-5 bg-slate-850 border border-slate-750 rounded-2xl flex flex-col justify-between hover:border-brand-500/30 transition-all">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-[10px] font-black text-white shadow-inner">ВТБ</div>
+                                            <span class="font-extrabold text-sm text-slate-100">ВТБ Банк</span>
+                                        </div>
+                                        <span class="text-xs font-bold text-amber-400">⭐ 4.8</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400 mb-2">Программа "Выгодная"</p>
+                                    <p class="text-xl font-black text-emerald-400 mb-1">от 16.2% <span class="text-xs text-slate-400 font-normal">годовых</span></p>
+                                    <p class="text-[10px] text-slate-400">Скрытые комиссии: <strong class="text-emerald-400">0%</strong>. Честный расчет страховки.</p>
+                                </div>
+                                <a href="mortgage.html" class="mt-4 w-full py-2 bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-xs text-center rounded-xl transition shadow-sm">Сравнить условия</a>
+                            </div>
+                            <div class="p-5 bg-slate-850 border border-slate-750 rounded-2xl flex flex-col justify-between hover:border-brand-500/30 transition-all">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center text-[10px] font-black text-white shadow-inner">ТБ</div>
+                                            <span class="font-extrabold text-sm text-slate-100">Т-Банк</span>
+                                        </div>
+                                        <span class="text-xs font-bold text-amber-400">⭐ 4.8</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400 mb-2">Семейная / Новостройки</p>
+                                    <p class="text-xl font-black text-emerald-400 mb-1">от 16.9% <span class="text-xs text-slate-400 font-normal">годовых</span></p>
+                                    <p class="text-[10px] text-slate-400">Быстрое решение за 5 минут, минимум документов.</p>
+                                </div>
+                                <a href="mortgage.html" class="mt-4 w-full py-2 bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-xs text-center rounded-xl transition shadow-sm">Сравнить условия</a>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    offersHtml = `
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="p-5 bg-slate-850 border border-slate-750 rounded-2xl flex flex-col justify-between hover:border-brand-500/30 transition-all">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-[10px] font-black text-white shadow-inner">СБ</div>
+                                            <span class="font-extrabold text-sm text-slate-100">Сбербанк</span>
+                                        </div>
+                                        <span class="text-xs font-bold text-amber-400">⭐ 4.9</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400 mb-2">Потребительский кредит</p>
+                                    <p class="text-xl font-black text-emerald-400 mb-1">от 12.9% <span class="text-xs text-slate-400 font-normal">годовых</span></p>
+                                    <p class="text-[10px] text-slate-400">Электронное подписание, без страховок по желанию.</p>
+                                </div>
+                                <a href="honest-credit.html" class="mt-4 w-full py-2 bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-xs text-center rounded-xl transition shadow-sm">Разоблачить переплату</a>
+                            </div>
+                            <div class="p-5 bg-slate-850 border border-slate-750 rounded-2xl flex flex-col justify-between hover:border-brand-500/30 transition-all">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center text-[10px] font-black text-white shadow-inner">ТБ</div>
+                                            <span class="font-extrabold text-sm text-slate-100">Т-Банк</span>
+                                        </div>
+                                        <span class="text-xs font-bold text-amber-400">⭐ 4.8</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400 mb-2">Кредит наличными без залога</p>
+                                    <p class="text-xl font-black text-emerald-400 mb-1">от 14.5% <span class="text-xs text-slate-400 font-normal">годовых</span></p>
+                                    <p class="text-[10px] text-slate-400">Круглосуточная поддержка, доставка карты бесплатно.</p>
+                                </div>
+                                <a href="honest-credit.html" class="mt-4 w-full py-2 bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-xs text-center rounded-xl transition shadow-sm">Разоблачить переплату</a>
+                            </div>
+                            <div class="p-5 bg-slate-850 border border-slate-750 rounded-2xl flex flex-col justify-between hover:border-brand-500/30 transition-all">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-[10px] font-black text-white shadow-inner">АБ</div>
+                                            <span class="font-extrabold text-sm text-slate-100">Альфа-Банк</span>
+                                        </div>
+                                        <span class="text-xs font-bold text-amber-400">⭐ 4.7</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400 mb-2">Прозрачный кредит наличными</p>
+                                    <p class="text-xl font-black text-emerald-400 mb-1">от 13.5% <span class="text-xs text-slate-400 font-normal">годовых</span></p>
+                                    <p class="text-[10px] text-slate-400">До 5 млн рублей, льготный период на первый платеж.</p>
+                                </div>
+                                <a href="honest-credit.html" class="mt-4 w-full py-2 bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-xs text-center rounded-xl transition shadow-sm">Разоблачить переплату</a>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML = offersHtml;
+                container.classList.remove('hidden');
+            } else {
+                // Fallback default state
+                description.innerHTML = `Пройдите независимый финансовый аудит ваших кредитов или ипотеки, чтобы получить индивидуальные предложения банков с нулевой скрытой переплатой. Нажмите на любой калькулятор ниже для начала.`;
+                container.innerHTML = `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button onclick="scrollToGoal('card-honest-credit')" class="p-4 bg-slate-850 hover:bg-slate-800 border border-slate-750 rounded-2xl flex items-center justify-between group transition">
+                            <div class="text-left">
+                                <p class="text-xs font-black text-brand-400 uppercase tracking-wider mb-1">Аудит кредитов</p>
+                                <p class="text-sm font-bold text-slate-200">Честная Ставка</p>
+                            </div>
+                            <span class="text-slate-400 group-hover:translate-x-1.5 transition-transform">→</span>
+                        </button>
+                        <button onclick="scrollToGoal('card-mortgage')" class="p-4 bg-slate-850 hover:bg-slate-800 border border-slate-750 rounded-2xl flex items-center justify-between group transition">
+                            <div class="text-left">
+                                <p class="text-xs font-black text-brand-400 uppercase tracking-wider mb-1">Оценка жилья</p>
+                                <p class="text-sm font-bold text-slate-200">ИпотекаПро</p>
+                            </div>
+                            <span class="text-slate-400 group-hover:translate-x-1.5 transition-transform">→</span>
+                        </button>
+                    </div>
+                `;
+                container.classList.remove('hidden');
+            }
+        }
+
+        // Emulate CPA states for direct developer/user testing
+        function emulateCPAClick(type) {
+            if (type === 'credit') {
+                localStorage.setItem('calc_credit', 'true');
+                localStorage.removeItem('calc_mortgage');
+                showToast("Эмуляция: выбран потребительский кредит!");
+            } else if (type === 'mortgage') {
+                localStorage.setItem('calc_mortgage', 'true');
+                localStorage.removeItem('calc_credit');
+                showToast("Эмуляция: выбрана ипотека!");
+            }
+            renderCPAWidget();
+        }
+
+        // Reset testing state
+        function clearCPACache() {
+            localStorage.removeItem('calc_credit');
+            localStorage.removeItem('calc_mortgage');
+            showToast("Кэш предложений успешно очищен!");
+            renderCPAWidget();
+        }
+
+        // Load dynamic CB Rate in teaser
+        function loadCBTeaser() {
+            fetch('rates.json')
+                .then(response => response.json())
+                .then(data => {
+                    const teaserRate = document.getElementById('cb-teaser-rate');
+                    if (data.cb_rate) {
+                        teaserRate.innerText = data.cb_rate.toFixed(1) + '%';
+                    } else {
+                        teaserRate.innerText = '21%';
+                    }
+
+                    // Update freshness text
+                    const freshness = document.getElementById('freshness-text');
+                    if (data.last_updated) {
+                        freshness.innerText = `Данные актуальны (обновлено роботом в ${data.last_updated})`;
+                    } else {
+                        freshness.innerText = `Данные актуальны (обновлено роботом в 06:00 МСК)`;
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('cb-teaser-rate').innerText = '21%';
+                    document.getElementById('freshness-text').innerText = `Данные актуальны (обновлено роботом в 06:00 МСК)`;
+                });
+        }
+
+        // Sharing logic
         window.shareHub = function() {
             reachGoal("share_click");
             if (navigator.share) {
                 navigator.share({
                     title: 'Финансовый Хаб',
-                    text: 'Набор профессиональных финансовых инструментов для точного планирования.',
+                    text: 'Набор профессиональных финансовых инструментов для точного планирования без банковского давления.',
                     url: window.location.href
                 }).catch(err => console.log('Error sharing', err));
             } else {
@@ -406,9 +716,8 @@
                 });
             }
         };
-    </script>
 
-    <script>
+        // Service Worker registration
         if ("serviceWorker" in navigator) {
             window.addEventListener("load", () => {
                 navigator.serviceWorker.register("sw.js").then(reg => {
@@ -418,6 +727,13 @@
                 });
             });
         }
+
+        // On load sequence
+        window.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            loadCBTeaser();
+            renderCPAWidget();
+        });
     </script>
 </body>
 </html>
