@@ -985,7 +985,14 @@
             if (prepayCounter) prepayCounter.innerText = `Спецплатежей: ${Object.keys(state.customPrepayments).length}`;
 
             Object.keys(years).forEach(y => {
-                const yNum = parseInt(y); const isLocked = !state.isProUnlocked && yNum > 3;
+                const yNum = parseInt(y);
+                
+                // If PRO is locked, do not render years past 4 to prevent clutter and position paywall high up!
+                if (!state.isProUnlocked && yNum > 4) {
+                    return;
+                }
+                
+                const isLocked = !state.isProUnlocked && yNum > 3;
                 const yData = years[y]; const yearId = `year-${y}`;
 
                 let yPaid = 0, yInt = 0, yPrep = 0;
