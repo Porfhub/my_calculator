@@ -220,10 +220,26 @@
                     </div>
 
                     <!-- График Chart.js -->
-                    <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
-                        <h3 class="text-sm font-bold text-slate-800 mb-4">Таяние покупательной способности 1000 ₽</h3>
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-100 dark:border-slate-800 shadow-sm">
+                        <h3 class="text-sm font-bold text-slate-800 dark:text-white mb-4">Таяние покупательной способности 1000 ₽</h3>
                         <div class="h-64">
                             <canvas id="inflationChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Таблица инфляции по годам -->
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
+                                <span>📊 Историческая инфляция по годам</span>
+                            </h3>
+                            <span class="text-[10px] bg-brand-50 dark:bg-brand-950/20 text-brand-700 dark:text-brand-400 px-2.5 py-0.5 rounded-full font-black border border-brand-200/50">Росстат</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                            Официальный индекс инфляции по годам за выбранный период (с <span id="inflation-start-year" class="font-bold text-brand-600">2016</span> по <span class="font-bold text-slate-700 dark:text-slate-300">2025</span> г.):
+                        </p>
+                        <div id="inflation-by-year-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 pt-1 text-center text-xs font-semibold">
+                            <!-- Заполняется динамически -->
                         </div>
                     </div>
                 </div>
@@ -350,8 +366,9 @@
 
             // Данные для графика
             const allYears = Object.keys(inflationData).sort((a, b) => a - b);
+            const filteredYears = allYears.filter(y => y >= state.startYear);
             let currentPower = 1000;
-            allYears.forEach(year => {
+            filteredYears.forEach(year => {
                 years.push(year);
                 purchasingPower.push(currentPower);
                 const rate = inflationData[year] || 0;
@@ -359,6 +376,34 @@
             });
 
             updateChart(years, purchasingPower);
+
+            // Dynamic yearly inflation cells rendering
+            const grid = document.getElementById('inflation-by-year-grid');
+            const startYearDisplay = document.getElementById('inflation-start-year');
+            if (grid) {
+                grid.innerHTML = '';
+                if (startYearDisplay) startYearDisplay.innerText = state.startYear;
+
+                filteredYears.forEach(year => {
+                    const rate = inflationData[year];
+                    if (rate === undefined) return;
+
+                    const cell = document.createElement('div');
+                    let colorClass = 'text-emerald-600 dark:text-emerald-400 bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-900/10';
+                    if (rate >= 10) {
+                        colorClass = 'text-rose-600 dark:text-rose-400 bg-rose-50/50 dark:bg-rose-950/20 border-rose-100 dark:border-rose-900/10';
+                    } else if (rate >= 5) {
+                        colorClass = 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-amber-950/20 border-amber-100 dark:border-amber-900/10';
+                    }
+
+                    cell.className = `p-2 rounded-xl ${colorClass} flex flex-col items-center justify-center border`;
+                    cell.innerHTML = `
+                        <span class="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">${year}</span>
+                        <span class="font-black text-xs mt-0.5">${rate.toFixed(1)}%</span>
+                    `;
+                    grid.appendChild(cell);
+                });
+            }
         }
 
         function updateChart(labels, data) {
