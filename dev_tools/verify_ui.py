@@ -12,6 +12,7 @@ def run_verification():
             'mortgage.html',
             'wealth.html',
             'inflation-shredder.html',
+            'rent-vs-mortgage.html',
             'car-vs-taxi.html',
             'time-is-money.html',
             'millionaire.html',
