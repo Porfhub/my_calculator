@@ -17,14 +17,22 @@
                 extend: {
                     colors: {
                         brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            200: '#bbf7d0',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d',
+                            50: '#fdfaf2',
+                            100: '#fbf2d5',
+                            200: '#f5df9e',
+                            500: '#d4af37', // Gold base
+                            600: '#c5a028',
+                            700: '#a3801a',
+                            800: '#816010',
+                            900: '#5e4308',
+                        },
+                        amber: {
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        emerald: {
+                            500: '#10b981',
+                            600: '#059669',
                         }
                     }
                 }
@@ -60,8 +68,71 @@
                 border-top-color: #1e293b;
             }
             body {
-                padding-bottom: 220px;
+                padding-bottom: 240px;
             }
+        }
+
+        /* PREMIUM GOLD GLOW EFFECT */
+        .gold-glow {
+            box-shadow: 0 0 25px -5px rgba(212, 175, 55, 0.35);
+        }
+        .dark .gold-glow {
+            box-shadow: 0 0 35px -5px rgba(212, 175, 55, 0.25);
+        }
+
+        /* TEAR-OFF CALENDAR LEAF COMPONENT */
+        .calendar-leaf {
+            background: #fff;
+            border-radius: 1.25rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+        .dark .calendar-leaf {
+            background: #1e293b;
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.5);
+            border: 1px solid #334155;
+        }
+        .calendar-leaf::before, .calendar-leaf::after {
+            content: '';
+            position: absolute;
+            top: 12px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            z-index: 20;
+        }
+        .dark .calendar-leaf::before, .dark .calendar-leaf::after {
+            background: #475569;
+        }
+        .calendar-leaf::before { left: 40px; }
+        .calendar-leaf::after { right: 40px; }
+
+        .calendar-ring-left, .calendar-ring-right {
+            position: absolute;
+            top: -8px;
+            width: 8px;
+            height: 24px;
+            background: linear-gradient(to bottom, #94a3b8, #cbd5e1);
+            border-radius: 4px;
+            z-index: 10;
+        }
+        .calendar-ring-left { left: 42px; }
+        .calendar-ring-right { right: 44px; }
+
+        /* CONFETTI CANVAS */
+        #confetti-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 30;
         }
     </style>
 <!-- Yandex.Metrika counter -->
@@ -99,8 +170,8 @@
         </button>
     </div>
 
-    <!-- Шапка приложения -->
-    <header class="bg-gradient-to-r from-brand-800 to-slate-900 text-white shadow-md">
+    <!-- Шапка приложения (Gold theme layout) -->
+    <header class="bg-gradient-to-r from-brand-900 via-slate-900 to-brand-900 text-white shadow-md border-b border-brand-700/30">
         <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div class="flex items-center space-x-4">
                 <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
@@ -109,14 +180,14 @@
                 </a>
                 <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
                 <div class="flex items-center space-x-3">
-                    <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="p-2.5 bg-gradient-to-br from-brand-500 to-amber-600 rounded-xl shadow-md text-slate-950">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-black tracking-tight">Миллионер</h1>
-                        <p class="text-xs text-brand-200">Когда ваши накопления пробьют заветную сумму?</p>
+                        <h1 class="text-2xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-brand-200 via-white to-brand-200">Путь к Богатству</h1>
+                        <p class="text-xs text-brand-200">Интерактивный навигатор вашей заветной финансовой свободы</p>
                     </div>
                 </div>
             </div>
@@ -134,150 +205,208 @@
             <!-- ЛЕВАЯ КОЛОНКА: Ввод параметров -->
             <div class="lg:col-span-5 space-y-6">
                 <!-- Текущая точка -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-4">
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-2">Текущая точка</h2>
+                <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-4">
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-2 flex items-center gap-2">
+                        <span class="text-brand-500">📍</span> Текущая точка
+                    </h2>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-2">
-                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Дата рождения</label>
-                            <input type="date" id="birth-date" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-slate-800 dark:text-white">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Дата рождения</label>
+                            <input type="date" id="birth-date" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-slate-800 dark:text-white">
                         </div>
                         <div class="space-y-2">
-                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Текущий возраст</label>
-                            <input type="number" id="current-age" min="0" max="120" value="25" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-slate-800 dark:text-white">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Текущий возраст</label>
+                            <input type="number" id="current-age" min="0" max="120" value="25" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-slate-800 dark:text-white">
                         </div>
                     </div>
 
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
-                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Текущие накопления</label>
+                            <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Текущие накопления</label>
                             <span class="text-sm font-bold text-slate-900 dark:text-white" id="savings-display">0 ₽</span>
                         </div>
                         <div class="relative">
                             <input type="text" id="current-savings" value="100 000" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                         </div>
-                        <input type="range" id="savings-range" min="0" max="1000000" step="10000" value="100000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                        <input type="range" id="savings-range" min="0" max="1000000" step="10000" value="100000" class="w-full accent-brand-500 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
                     </div>
                 </div>
 
                 <!-- Ежемесячный бюджет -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-4">
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-2">Ежемесячный бюджет</h2>
+                <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-4">
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-2 flex items-center gap-2">
+                        <span class="text-emerald-500">💰</span> Ежемесячный бюджет
+                    </h2>
 
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
-                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Регулярный доход</label>
+                            <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Регулярный доход</label>
                             <span class="text-sm font-bold text-slate-900 dark:text-white" id="income-display">0 ₽</span>
                         </div>
                         <div class="relative">
                             <input type="text" id="monthly-income" value="150 000" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                         </div>
-                        <input type="range" id="income-range" min="0" max="1000000" step="5000" value="150000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                        <input type="range" id="income-range" min="0" max="1000000" step="5000" value="150000" class="w-full accent-brand-500 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
                     </div>
 
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
-                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Регулярные траты</label>
+                            <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Регулярные траты</label>
                             <span class="text-sm font-bold text-slate-900 dark:text-white" id="expenses-display">0 ₽</span>
                         </div>
                         <div class="relative">
                             <input type="text" id="monthly-expenses" value="70 000" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                         </div>
-                        <input type="range" id="expenses-range" min="0" max="1000000" step="5000" value="70000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                        <input type="range" id="expenses-range" min="0" max="1000000" step="5000" value="70000" class="w-full accent-brand-500 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
                     </div>
 
-                    <div class="p-4 bg-brand-50 dark:bg-brand-900/20 rounded-xl border border-brand-100 dark:border-brand-800 flex justify-between items-center">
-                        <span class="text-sm font-bold text-brand-800 dark:text-brand-300">Остаток для инвестиций:</span>
-                        <span class="text-lg font-black text-brand-700 dark:text-brand-400" id="free-cash-display">0 ₽</span>
+                    <div class="p-4 bg-emerald-50 dark:bg-emerald-950/20 rounded-2xl border border-emerald-100 dark:border-emerald-900/50 flex justify-between items-center">
+                        <span class="text-xs font-extrabold uppercase text-emerald-800 dark:text-emerald-400 tracking-wider">Остаток для инвестиций:</span>
+                        <span class="text-xl font-black text-emerald-600 dark:text-emerald-400" id="free-cash-display">0 ₽</span>
                     </div>
                 </div>
 
                 <!-- Внешние факторы -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-4">
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-2">Цель и условия</h2>
+                <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-4">
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-2 flex items-center gap-2">
+                        <span class="text-amber-500">🏆</span> Цель и условия
+                    </h2>
 
-                    <div class="space-y-2">
+                    <!-- Goal sum block with premium interactive presets -->
+                    <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Ставка по вкладу (% годовых)</label>
-                            <span class="text-sm font-bold text-brand-700" id="rate-display">16%</span>
-                        </div>
-                        <div class="relative">
-                            <input type="number" id="interest-rate" step="0.1" value="16" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">%</div>
-                        </div>
-                        <input type="range" id="rate-range" min="0" max="30" step="0.1" value="16" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
-                    </div>
-
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-center">
-                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Желаемая сумма</label>
+                            <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Желаемая сумма (Цель)</label>
                             <span class="text-sm font-bold text-slate-900 dark:text-white" id="goal-display">0 ₽</span>
                         </div>
                         <div class="relative">
                             <input type="text" id="goal-sum" value="1 000 000" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                         </div>
-                        <input type="range" id="goal-range" min="100000" max="100000000" step="100000" value="1000000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
-                        <div class="flex gap-2">
-                            <button onclick="setGoal(1000000)" class="flex-1 py-1 text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-brand-50 transition">1 млн</button>
-                            <button onclick="setGoal(5000000)" class="flex-1 py-1 text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-brand-50 transition">5 млн</button>
-                            <button onclick="setGoal(10000000)" class="flex-1 py-1 text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-brand-50 transition">10 млн</button>
+                        <input type="range" id="goal-range" min="100000" max="100000000" step="100000" value="1000000" class="w-full accent-brand-500 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+
+                        <!-- HIGH CONVERTING PREMIUM PRESETS (2026 REALITY) -->
+                        <div class="grid grid-cols-2 gap-2 pt-1">
+                            <button id="btn-goal-1m" onclick="setGoal(1000000, 'btn-goal-1m')" class="goal-preset-btn py-2 px-1 text-[10px] font-black border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:border-brand-500 transition-all uppercase leading-tight active:scale-95 flex flex-col items-center justify-center">
+                                <span>1 000 000 ₽</span>
+                                <span class="opacity-60 font-bold text-[8px] mt-0.5">Первый Рубеж</span>
+                            </button>
+                            <button id="btn-goal-5m" onclick="setGoal(5000000, 'btn-goal-5m')" class="goal-preset-btn py-2 px-1 text-[10px] font-black border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:border-brand-500 transition-all uppercase leading-tight active:scale-95 flex flex-col items-center justify-center">
+                                <span>5 000 000 ₽</span>
+                                <span class="opacity-60 font-bold text-[8px] mt-0.5">Первый взнос</span>
+                            </button>
+                            <button id="btn-goal-15m" onclick="setGoal(15000000, 'btn-goal-15m')" class="goal-preset-btn py-2 px-1 text-[10px] font-black border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:border-brand-500 transition-all uppercase leading-tight active:scale-95 flex flex-col items-center justify-center">
+                                <span>15 000 000 ₽</span>
+                                <span class="opacity-60 font-bold text-[8px] mt-0.5">Своя Квартира</span>
+                            </button>
+                            <button id="btn-goal-100m" onclick="setGoal(100000000, 'btn-goal-100m')" class="goal-preset-btn py-2 px-1 text-[10px] font-black border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:border-brand-500 transition-all uppercase leading-tight active:scale-95 flex flex-col items-center justify-center">
+                                <span>100 000 000 ₽</span>
+                                <span class="opacity-60 font-bold text-[8px] mt-0.5">Дольче Вита</span>
+                            </button>
                         </div>
+                    </div>
+
+                    <div class="space-y-2 pt-2">
+                        <div class="flex justify-between items-center">
+                            <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Ставка по вкладу (% годовых)</label>
+                            <span class="text-sm font-bold text-brand-600 dark:text-brand-400" id="rate-display">16%</span>
+                        </div>
+                        <div class="relative">
+                            <input type="number" id="interest-rate" step="0.1" value="16" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">%</div>
+                        </div>
+                        <input type="range" id="rate-range" min="0" max="30" step="0.1" value="16" class="w-full accent-brand-500 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
                     </div>
                 </div>
             </div>
 
             <!-- ПРАВАЯ КОЛОНКА: Результаты -->
             <div class="lg:col-span-7 space-y-6" id="results-container">
-                <div id="screenshot-area" class="bg-slate-100 dark:bg-slate-900/50 p-4 -m-4 rounded-3xl space-y-6">
-                    <!-- Главный инсайт -->
-                    <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-sm border border-slate-100 dark:border-slate-800 text-center relative overflow-hidden">
-                        <div class="absolute -right-12 -top-12 opacity-5">
-                            <svg class="w-48 h-48 text-brand-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">Дата достижения цели</h3>
-                        <div id="target-date-main" class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-2 leading-tight">...</div>
-                        <div id="target-day-week" class="text-lg font-bold text-brand-600 uppercase">...</div>
+                <div id="screenshot-area" class="bg-slate-100 dark:bg-slate-900/40 p-4 -m-4 rounded-3xl space-y-6">
 
-                        <div class="mt-8 pt-8 border-t dark:border-slate-800 grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <p class="text-xs font-bold text-slate-400 uppercase mb-1">Ваш возраст тогда</p>
-                                <p id="age-at-target" class="text-xl font-black text-slate-800 dark:text-slate-200">...</p>
+                    <!-- TEAR-OFF CALENDAR LEAF COMPONENT -->
+                    <div class="relative p-1">
+                        <div class="calendar-ring-left"></div>
+                        <div class="calendar-ring-right"></div>
+
+                        <div class="calendar-leaf gold-glow relative overflow-hidden text-center transition-all duration-500">
+                            <!-- Confetti background canvas -->
+                            <canvas id="confetti-canvas"></canvas>
+
+                            <!-- Header ribbon representing the "Tear-off" element -->
+                            <div class="bg-gradient-to-r from-red-600 to-rose-700 text-white py-3 px-6 shadow-sm flex flex-col justify-center items-center border-b border-red-700/25">
+                                <span class="text-[10px] font-black uppercase tracking-widest text-red-100">ЗАВЕТНАЯ ДАТА</span>
                             </div>
-                            <div>
-                                <p class="text-xs font-bold text-slate-400 uppercase mb-1">Осталось подождать</p>
-                                <p id="days-remaining" class="text-xl font-black text-slate-800 dark:text-slate-200">...</p>
+
+                            <!-- Calendar interior -->
+                            <div class="p-8 space-y-2 relative z-10 flex flex-col justify-center items-center">
+                                <!-- Day of the week representation -->
+                                <span id="calendar-day-name" class="text-sm font-black uppercase tracking-widest text-brand-600 dark:text-brand-400 transition-all duration-300">ПЯТНИЦА</span>
+
+                                <!-- Huge dynamic date -->
+                                <div id="calendar-date" class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight my-2 tracking-tight transition-all duration-300">
+                                    15 Июня 2035
+                                </div>
+
+                                <!-- Year or secondary helper -->
+                                <span id="calendar-days-remaining" class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 block">... дней ожидания</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inflation Reality Check Block (Psychological Adjustment) -->
+                    <div class="bg-gradient-to-br from-amber-50 to-orange-100/50 dark:from-slate-900 dark:to-orange-950/10 rounded-2xl p-5 border border-amber-200 dark:border-amber-950/50 shadow-md">
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 bg-amber-100 dark:bg-amber-900/30 rounded-xl flex items-center justify-center text-amber-600 shrink-0 text-lg">💡</div>
+                            <div class="space-y-1">
+                                <h4 class="text-xs font-black uppercase tracking-widest text-amber-800 dark:text-amber-400">Корректировка на инфляцию</h4>
+                                <p class="text-sm font-medium text-slate-700 dark:text-slate-300">
+                                    Реальная покупательная способность накопленной суммы составит <span id="real-purchasing-power" class="font-extrabold text-amber-600 dark:text-amber-400 text-base">... ₽</span>
+                                </p>
+                                <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-normal">
+                                    Значение скорректировано на основе исторической средней инфляции в РФ за последние 15 лет (<span id="inflation-percent-text">7.8%</span>), полученной из официального архива.
+                                </p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Мотивационный блок -->
-                    <div class="bg-gradient-to-br from-brand-600 to-emerald-800 rounded-3xl p-6 text-white shadow-xl">
+                    <div class="bg-gradient-to-br from-brand-600 to-amber-700 dark:from-brand-800 dark:to-emerald-950/40 rounded-3xl p-6 text-white shadow-xl border border-brand-500/20">
                         <div class="flex items-center gap-4 mb-6">
                             <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-6 h-6 text-brand-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                                 </svg>
                             </div>
                             <div>
-                                <h4 class="font-bold text-lg leading-none">Сила сложных процентов</h4>
+                                <h4 class="font-black text-lg leading-none">Сила сложных процентов</h4>
                                 <p class="text-brand-100 text-xs mt-1">Банк сделает часть работы за вас</p>
                             </div>
                         </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-white/10 p-4 rounded-2xl">
+                        <div class="grid grid-cols-2 gap-4 text-white">
+                            <div class="bg-white/10 p-4 rounded-2xl border border-white/5">
                                 <p class="text-[10px] font-bold text-brand-100 uppercase mb-1">Начислено процентов</p>
                                 <p id="total-interest" class="text-xl font-black">0 ₽</p>
                             </div>
-                            <div class="bg-white/10 p-4 rounded-2xl">
+                            <div class="bg-white/10 p-4 rounded-2xl border border-white/5">
                                 <p class="text-[10px] font-bold text-brand-100 uppercase mb-1">Ваши вложения</p>
                                 <p id="total-invested" class="text-xl font-black">0 ₽</p>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Дополнительные метрики возраста -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm text-center">
+                            <p class="text-xs font-bold text-slate-400 uppercase mb-1">Ваш возраст в момент триумфа</p>
+                            <p id="age-at-target" class="text-xl font-black text-slate-800 dark:text-slate-100">...</p>
+                        </div>
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm text-center">
+                            <p class="text-xs font-bold text-slate-400 uppercase mb-1">Осталось подождать</p>
+                            <p id="target-date-main" class="text-xl font-black text-slate-800 dark:text-slate-100">...</p>
                         </div>
                     </div>
 
@@ -291,9 +420,9 @@
                 </div>
 
                 <!-- Интерактивный совет -->
-                <div id="advice-block" class="bg-brand-50 dark:bg-brand-900/20 p-6 rounded-3xl border border-brand-100 dark:border-brand-800">
+                <div id="advice-block" class="bg-brand-50 dark:bg-brand-950/20 p-6 rounded-3xl border border-brand-100 dark:border-brand-900/30">
                     <div class="flex gap-4">
-                        <div class="shrink-0 w-10 h-10 bg-brand-100 dark:bg-brand-800 rounded-full flex items-center justify-center text-brand-600">
+                        <div class="shrink-0 w-10 h-10 bg-brand-100 dark:bg-brand-900 rounded-full flex items-center justify-center text-brand-600 dark:text-brand-400">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                             </svg>
@@ -323,12 +452,12 @@
         <div class="lg:hidden mobile-sticky-results">
             <div class="flex items-center justify-between mb-3">
                 <div class="flex flex-col">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Дата цели</span>
+                    <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Дата цели</span>
                     <span id="mobile-target-date" class="font-black text-slate-900 dark:text-white">...</span>
                 </div>
                 <div class="text-right">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Проценты</p>
-                    <p id="mobile-interest" class="text-lg font-black text-brand-600">...</p>
+                    <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Проценты</p>
+                    <p id="mobile-interest" class="text-lg font-black text-brand-600 dark:text-brand-400">...</p>
                 </div>
             </div>
             <button onclick="shareLinkCustom('Когда я стану миллионером — CalcHub', 'Я рассчитал дату достижения своего первого миллиона! Моя цель будет пробита ' + document.getElementById('mobile-target-date').innerText + '. Рассчитай точную дату своей финансовой цели!')" class="w-full py-4 bg-brand-600 text-white font-black rounded-2xl text-sm shadow-lg active:scale-95">
@@ -351,10 +480,75 @@
             monthlyIncome: 150000,
             monthlyExpenses: 70000,
             interestRate: 16,
-            goalSum: 1000000
+            goalSum: 1000000,
+            avgInflation: 0.078 // Default ~7.8% historical average
         };
 
         let chartInstance = null;
+        let confettiAnimationId = null;
+
+        // CONFETTI CELEBRATION SYSTEM
+        function triggerCelebration() {
+            const canvas = document.getElementById('confetti-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            // Set scale
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+
+            const colors = ['#d4af37', '#f59e0b', '#10b981', '#16a34a', '#ffffff'];
+            const particles = [];
+
+            for (let i = 0; i < 75; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height + 10,
+                    size: Math.random() * 5 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    speedX: Math.random() * 6 - 3,
+                    speedY: Math.random() * -6 - 4,
+                    gravity: 0.15,
+                    rotation: Math.random() * 360,
+                    rotationSpeed: Math.random() * 5 - 2.5,
+                    opacity: 1
+                });
+            }
+
+            if (confettiAnimationId) {
+                cancelAnimationFrame(confettiAnimationId);
+            }
+
+            function animateConfetti() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let alive = false;
+
+                particles.forEach(p => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    p.speedY += p.gravity;
+                    p.rotation += p.rotationSpeed;
+
+                    if (p.y < canvas.height) {
+                        alive = true;
+                    }
+
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate((p.rotation * Math.PI) / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    ctx.restore();
+                });
+
+                if (alive) {
+                    confettiAnimationId = requestAnimationFrame(animateConfetti);
+                }
+            }
+
+            animateConfetti();
+        }
 
         // Инициализация
         window.onload = async () => {
@@ -367,6 +561,15 @@
                 state.interestRate = parseFloat(avgRate.toFixed(1));
                 document.getElementById('interest-rate').value = state.interestRate;
                 document.getElementById('rate-range').value = state.interestRate;
+            }
+
+            // Загрузка исторической инфляции для reality check
+            const inflationData = await fetchInflation();
+            if (inflationData) {
+                const values = Object.values(inflationData).slice(-15);
+                const product = values.reduce((acc, r) => acc * (1 + r / 100), 1);
+                state.avgInflation = Math.pow(product, 1 / values.length) - 1;
+                document.getElementById('inflation-percent-text').innerText = (state.avgInflation * 100).toFixed(1) + '%';
             }
 
             // Установка даты рождения по умолчанию (25 лет назад)
@@ -419,16 +622,38 @@
                     } else {
                         state[input.key] = el.value;
                     }
+
+                    // Reset custom highlight on manual changes
+                    if (input.key === 'goalSum') {
+                        resetGoalHighlight();
+                    }
                     updateAll();
                 });
             });
         }
 
-        function setGoal(val) {
+        function resetGoalHighlight() {
+            document.querySelectorAll('.goal-preset-btn').forEach(btn => {
+                btn.classList.remove('border-brand-500', 'bg-brand-50', 'dark:bg-brand-900/20', 'text-brand-700', 'dark:text-brand-300');
+                btn.classList.add('border-slate-200', 'dark:border-slate-800', 'text-slate-600', 'dark:text-slate-400');
+            });
+        }
+
+        function setGoal(val, btnId) {
             state.goalSum = val;
             document.getElementById('goal-sum').value = formatNumber(val);
             document.getElementById('goal-range').value = val;
+
+            // Reset and apply preset visual selection
+            resetGoalHighlight();
+            const btn = document.getElementById(btnId);
+            if (btn) {
+                btn.classList.remove('border-slate-200', 'dark:border-slate-800', 'text-slate-600', 'dark:text-slate-400');
+                btn.classList.add('border-brand-500', 'bg-brand-50', 'dark:bg-brand-900/20', 'text-brand-700', 'dark:text-brand-300');
+            }
+
             updateAll();
+            triggerCelebration();
             showToast(`Цель установлена: ${formatMoney(val)}`);
         }
 
@@ -451,8 +676,7 @@
                 return { unreachable: true };
             }
 
-            // Проверка на достижимость (если проценты не покрывают инфляцию/траты и нет дохода - но тут упростим)
-            // Если баланс не растет
+            // Проверка на достижимость
             if (balance + freeCash <= balance && monthlyRate <= 0) {
                  return { unreachable: true };
             }
@@ -491,37 +715,42 @@
 
             const result = calculate();
             const targetMain = document.getElementById('target-date-main');
-            const targetDay = document.getElementById('target-day-week');
             const ageDisplay = document.getElementById('age-at-target');
-            const daysDisplay = document.getElementById('days-remaining');
             const interestDisplay = document.getElementById('total-interest');
             const investedDisplay = document.getElementById('total-invested');
             const mobileDate = document.getElementById('mobile-target-date');
             const mobileInterest = document.getElementById('mobile-interest');
 
+            // Tear-off calendar leaf elements
+            const calDayName = document.getElementById('calendar-day-name');
+            const calDate = document.getElementById('calendar-date');
+            const calDaysRemaining = document.getElementById('calendar-days-remaining');
+
+            // Reality check element
+            const realPurchasingPowerEl = document.getElementById('real-purchasing-power');
+
             if (result.unreachable) {
-                targetMain.innerText = "Цель недостижима";
-                targetMain.classList.add('text-rose-500');
-                targetDay.innerText = "Попробуйте изменить параметры";
+                calDayName.innerText = "ОШИБКА";
+                calDate.innerText = "ЦЕЛЬ НЕДОСТИЖИМА";
+                calDaysRemaining.innerText = "Измените параметры трат/доходов";
+                targetMain.innerText = "—";
                 ageDisplay.innerText = "—";
-                daysDisplay.innerText = "—";
                 interestDisplay.innerText = "0 ₽";
                 investedDisplay.innerText = "0 ₽";
+                realPurchasingPowerEl.innerText = "0 ₽";
                 document.getElementById('advice-text').innerText = "Упс, с текущими тратами цель недостижима. Попробуйте уменьшить расходы или увеличить доходы!";
                 return;
             }
-
-            targetMain.classList.remove('text-rose-500');
 
             const now = new Date();
             const targetDate = new Date(now.getFullYear(), now.getMonth() + result.months, now.getDate());
 
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            targetMain.innerText = targetDate.toLocaleDateString('ru-RU', options);
+            calDate.innerText = targetDate.toLocaleDateString('ru-RU', options);
             mobileDate.innerText = targetDate.toLocaleDateString('ru-RU', { year: 'numeric', month: 'short' });
 
             const daysWeek = ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"];
-            targetDay.innerText = daysWeek[targetDate.getDay()];
+            calDayName.innerText = daysWeek[targetDate.getDay()];
 
             // Расчет возраста
             if (state.birthDate) {
@@ -547,11 +776,17 @@
 
             const diffTime = Math.abs(targetDate - now);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            daysDisplay.innerText = `${formatNumber(diffDays)} дней`;
+            calDaysRemaining.innerText = `${formatNumber(diffDays)} дней ожидания`;
+            targetMain.innerText = `${formatNumber(diffDays)} дней`;
 
             interestDisplay.innerText = formatMoney(result.totalInterest);
             mobileInterest.innerText = formatMoney(result.totalInterest);
             investedDisplay.innerText = formatMoney(result.totalInvested);
+
+            // Calculate purchasing power in future value (adjusted for inflation)
+            const yearsToGoal = result.months / 12;
+            const purchasingPower = state.goalSum / Math.pow(1 + state.avgInflation, yearsToGoal);
+            realPurchasingPowerEl.innerText = formatMoney(purchasingPower);
 
             // Совет
             if (result.months <= 0) {
@@ -594,8 +829,8 @@
                     datasets: [{
                         label: 'Капитал',
                         data: data,
-                        borderColor: '#16a34a',
-                        backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                        borderColor: '#d4af37',
+                        backgroundColor: 'rgba(212, 175, 55, 0.1)',
                         borderWidth: 3,
                         fill: true,
                         tension: 0.4,
