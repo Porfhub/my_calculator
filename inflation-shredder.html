@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Инфляционный шредер - Что стало с рублем?</title>
+    <title>Инфляционный шредер - Что стало с рублем? | CalcHub</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN -->
@@ -38,6 +38,8 @@
             margin: 0;
         }
         input[type=number] {
+            -moz-appearance: textfield;
+        }
         @media (max-width: 1023px) {
             .mobile-sticky-results {
                 position: fixed;
@@ -58,8 +60,6 @@
             body {
                 padding-bottom: 180px;
             }
-        }
-            -moz-appearance: textfield;
         }
     </style>
 <!-- Yandex.Metrika counter -->
@@ -113,8 +113,11 @@
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-black tracking-tight">Инфляционный шредер</h1>
-                        <p class="text-xs text-brand-200">Узнайте, как инфляция съедает ваши деньги во времени</p>
+                        <h1 class="text-2xl font-black tracking-tight flex items-center gap-2">
+                            <span>Инфляционный шредер</span>
+                            <span class="text-xs font-bold uppercase bg-rose-600 text-white px-2 py-0.5 rounded-md animate-pulse">Шредер Рубля</span>
+                        </h1>
+                        <p class="text-xs text-brand-200">Узнайте, как накопленная инфляция съедает покупательскую способность рубля во времени</p>
                     </div>
                 </div>
             </div>
@@ -144,25 +147,48 @@
                 </div>
 
                 <!-- Год в прошлом -->
-                <div class="space-y-2">
+                <div class="space-y-3">
                     <div class="flex justify-between items-center">
-                        <label for="year-select" class="text-sm font-semibold text-slate-700">В каком году это было?</label>
-                        <span class="text-sm font-bold text-brand-700" id="year-display">2016</span>
+                        <label for="year-select" class="text-sm font-semibold text-slate-700 dark:text-slate-300">В каком году это было?</label>
+                        <span class="text-sm font-bold text-brand-700 dark:text-brand-400" id="year-display">2016</span>
                     </div>
                     <div class="relative">
-                        <select id="year-select" onchange="handleYearChange(this.value)" class="w-full pl-4 pr-10 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800 appearance-none">
+                        <select id="year-select" onchange="handleYearChange(this.value)" class="w-full pl-4 pr-10 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white appearance-none">
                             <!-- Опции будут добавлены динамически -->
                         </select>
                         <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-400">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                     </div>
-                    <input type="range" id="year-range" min="2000" max="2023" step="1" value="2016" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer" oninput="syncRangeToInput('year', this.value)">
+                    <input type="range" id="year-range" min="2000" max="2025" step="1" value="2016" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('year', this.value)">
+
+                    <!-- Era Presets -->
+                    <div class="space-y-2 pt-2">
+                        <label class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Быстрый выбор эпохи</label>
+                        <div class="grid grid-cols-2 gap-2" id="era-presets-container">
+                            <button onclick="setEra(2000)" data-year="2000" class="era-btn px-3 py-2 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-all text-left">2000: Старт века</button>
+                            <button onclick="setEra(2008)" data-year="2008" class="era-btn px-3 py-2 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-all text-left">2008: Кризис</button>
+                            <button onclick="setEra(2014)" data-year="2014" class="era-btn px-3 py-2 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-all text-left">2014: Крым наш</button>
+                            <button onclick="setEra(2020)" data-year="2020" class="era-btn px-3 py-2 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-all text-left">2020: Пандемия</button>
+                            <button onclick="setEra(2022)" data-year="2022" class="era-btn col-span-2 px-3 py-2 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-all text-center">2022: Новая реальность</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Кнопка "Запустить шредер!" -->
+                <div class="pt-4">
+                    <button onclick="runShredder()" class="w-full py-4 bg-gradient-to-r from-orange-600 to-rose-600 hover:from-orange-500 hover:to-rose-500 text-white font-black rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden group">
+                        <span class="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
+                        <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Запустить шредер!
+                    </button>
                 </div>
 
                 <!-- Кнопки Поделиться -->
-                <div class="grid grid-cols-2 gap-3 pt-4">
-                    <button onclick="shareLink()" class="flex items-center justify-center gap-2 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-2xl border border-slate-200 transition-all shadow-sm active:scale-[0.98]">
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <button onclick="shareLink()" class="flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 transition-all shadow-sm active:scale-[0.98]">
                         <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
                         Ссылка
                     </button>
@@ -171,15 +197,30 @@
                         Скриншот
                     </button>
                 </div>
+
+                <!-- Trust Anchor -->
+                <div class="pt-4 border-t border-slate-100 dark:border-slate-800">
+                    <div class="flex items-center gap-3 bg-slate-50 dark:bg-slate-800/60 border border-slate-200/50 dark:border-slate-700/60 p-4 rounded-2xl">
+                        <div class="p-2 bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-xl">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">Официальные данные Росстата</p>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed">Все расчеты производятся строго на основе официального индекса потребительских цен (ИПЦ) РФ.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ПРАВАЯ КОЛОНКА: Результаты -->
             <div class="lg:col-span-7 space-y-6">
                 <!-- БЛОК ДЛЯ СКРИНШОТА -->
-                <div id="screenshot-area" class="space-y-6 bg-slate-50 p-4 -m-4 rounded-3xl">
+                <div id="screenshot-area" class="space-y-6 bg-slate-50 dark:bg-slate-950 p-4 -m-4 rounded-3xl transition-all duration-300">
 
                     <!-- Главная карточка результата -->
-                    <div id="result-card" class="bg-gradient-to-br from-orange-600 to-rose-700 text-white rounded-2xl p-6 shadow-lg relative overflow-hidden">
+                    <div id="result-card" class="bg-gradient-to-br from-orange-600 to-rose-700 text-white rounded-2xl p-6 shadow-lg relative overflow-hidden transition-all duration-300">
                         <div class="absolute -right-10 -bottom-10 opacity-10">
                             <svg class="w-48 h-48" fill="currentColor" viewBox="0 0 24 24"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                         </div>
@@ -203,7 +244,7 @@
                             </div>
                             <div>
                                 <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Индекс Кофе</p>
-                                <p class="text-sm text-slate-600 dark:text-slate-300 mt-1 font-medium" id="coffee-index-text">В 2016 году вы могли купить 100 чашек, а сегодня — только 45.</p>
+                                <p class="text-sm text-slate-600 dark:text-slate-300 mt-1 font-medium leading-relaxed" id="coffee-index-text">В 2016 году вы могли купить 100 чашек, а сегодня — только 45.</p>
                             </div>
                         </div>
                         <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col items-center text-center space-y-3">
@@ -214,7 +255,7 @@
                             </div>
                             <div>
                                 <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Индекс Бургера</p>
-                                <p class="text-sm text-slate-600 dark:text-slate-300 mt-1 font-medium" id="burger-index-text">Покупательная способность вашей суммы сократилась в 2.2 раза.</p>
+                                <p class="text-sm text-slate-600 dark:text-slate-300 mt-1 font-medium leading-relaxed" id="burger-index-text">Покупательная способность вашей суммы сократилась в 2.2 раза.</p>
                             </div>
                         </div>
                     </div>
@@ -228,7 +269,7 @@
                     </div>
 
                     <!-- Таблица инфляции по годам -->
-                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm space-y-3">
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm space-y-4">
                         <div class="flex items-center justify-between">
                             <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
                                 <span>📊 Историческая инфляция по годам</span>
@@ -236,34 +277,53 @@
                             <span class="text-[10px] bg-brand-50 dark:bg-brand-950/20 text-brand-700 dark:text-brand-400 px-2.5 py-0.5 rounded-full font-black border border-brand-200/50">Росстат</span>
                         </div>
                         <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                            Официальный индекс инфляции по годам за выбранный период (с <span id="inflation-start-year" class="font-bold text-brand-600">2016</span> по <span class="font-bold text-slate-700 dark:text-slate-300">2025</span> г.):
+                            Официальный индекс инфляции по годам (с <span id="inflation-start-year" class="font-bold text-brand-600 dark:text-brand-400">2016</span> по <span class="font-bold text-slate-700 dark:text-slate-300">2025</span> г.). <span class="text-brand-600 dark:text-brand-400 font-bold">Нажмите на любой год</span> для просмотра микро-факта:
                         </p>
+
                         <div id="inflation-by-year-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 pt-1 text-center text-xs font-semibold">
                             <!-- Заполняется динамически -->
+                        </div>
+
+                        <!-- Микро-факт при клике на год -->
+                        <div id="micro-fact-card" class="hidden opacity-0 scale-95 transition-all duration-300 bg-gradient-to-br from-brand-50 to-white dark:from-slate-850 dark:to-slate-900 p-5 rounded-2xl border border-brand-200 dark:border-slate-800 shadow-md flex items-start gap-4">
+                            <div class="p-3 bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-xl flex-shrink-0">
+                                <svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18-1.746 0-3.332.477-4.5 1.253"></path>
+                                </svg>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex items-center justify-between gap-4">
+                                    <h4 id="micro-fact-title" class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">Исторический факт</h4>
+                                    <span id="micro-fact-val" class="text-xs font-black bg-brand-100 dark:bg-brand-950/40 text-brand-700 dark:text-brand-400 px-2 py-0.5 rounded-full">0%</span>
+                                </div>
+                                <p id="micro-fact-desc" class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">Кликните на любой год в таблице выше, чтобы получить экономическую историческую справку.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    <div class="lg:hidden mobile-sticky-results">
-        <div class="flex items-center justify-between mb-3">
-            <div class="flex flex-col">
-                <span class="text-[10px] font-bold text-slate-400 uppercase">Остаток ценности</span>
-                <span id="mobile-value" class="font-black text-slate-900 dark:text-white">0 ₽</span>
+
+        <!-- Липкие результаты на мобильных -->
+        <div class="lg:hidden mobile-sticky-results transition-all duration-300">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Остаток ценности</span>
+                    <span id="mobile-value" class="font-black text-slate-900 dark:text-white text-lg">0 ₽</span>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">Потеряно</p>
+                    <p id="mobile-loss" class="text-lg font-black text-rose-600">0 ₽</p>
+                </div>
             </div>
-            <div class="text-right">
-                <p class="text-[10px] font-bold text-slate-400 uppercase">Потеряно</p>
-                <p id="mobile-loss" class="text-lg font-black text-rose-600">0 ₽</p>
-            </div>
+            <button onclick="shareLinkCustom('Шредер Рубля — CalcHub', 'Я запустил Шредер Рубля и проверил реальное обесценивание накоплений из-за инфляции! Мои потери составили ' + document.getElementById('mobile-loss').innerText + '. Проверь свои накопления!')" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
+                📢 Поделиться расчетом
+            </button>
         </div>
-        <button onclick="shareLinkCustom('Шредер Рубля — CalcHub', 'Я запустил Шредер Рубля и проверил реальное обесценивание накоплений из-за инфляции! Мои потери составили ' + document.getElementById('mobile-loss').innerText + '. Проверь свои накопления!')" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
-            📢 Поделиться расчетом
-        </button>
-    </div>
     </main>
 
     <footer class="max-w-7xl mx-auto px-4 py-12 text-center text-xs text-slate-400">
-        <p>© 2026 Инфляционный шредер. Данные основаны на официальной статистике инфляции в РФ.</p>
+        <p>© 2026 Инфляционный шредер. Все расчеты основаны на официальной статистике инфляции в РФ.</p>
     </footer>
 
     <!-- Всплывающие уведомления (Toast) -->
@@ -306,9 +366,39 @@
                 document.getElementById('year-range').value = state.startYear;
 
                 calculate();
+
+                // Highlight default preset button
+                highlightPresetButton(state.startYear);
             } else {
                 showToast('Ошибка загрузки данных');
             }
+        }
+
+        function highlightPresetButton(year) {
+            const buttons = document.querySelectorAll('.era-btn');
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-year') == year) {
+                    btn.className = "era-btn px-3 py-2 text-xs font-black rounded-xl border-2 transition-all bg-brand-500/10 text-brand-700 border-brand-500 dark:text-brand-400 dark:bg-brand-950/20 shadow-sm scale-[1.02]";
+                } else {
+                    btn.className = "era-btn px-3 py-2 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-all text-left";
+                }
+            });
+        }
+
+        function setEra(year) {
+            state.startYear = parseInt(year);
+            const selectEl = document.getElementById('year-select');
+            if (selectEl) {
+                selectEl.value = year;
+            }
+            const rangeEl = document.getElementById('year-range');
+            if (rangeEl) {
+                rangeEl.value = year;
+            }
+            document.getElementById('year-display').innerText = year;
+
+            highlightPresetButton(year);
+            calculate();
         }
 
         function handleAmountInput(el) {
@@ -322,6 +412,7 @@
             state.startYear = parseInt(val);
             document.getElementById('year-display').innerText = state.startYear;
             document.getElementById('year-range').value = state.startYear;
+            highlightPresetButton(state.startYear);
             calculate();
         }
 
@@ -334,8 +425,102 @@
                 state.startYear = parseInt(val);
                 document.getElementById('year-select').value = state.startYear;
                 document.getElementById('year-display').innerText = state.startYear;
+                highlightPresetButton(state.startYear);
             }
             calculate();
+        }
+
+        function runShredder() {
+            calculate();
+            const resultCard = document.getElementById('screenshot-area');
+            if (resultCard) {
+                const offset = 85;
+                const bodyRect = document.body.getBoundingClientRect().top;
+                const elementRect = resultCard.getBoundingClientRect().top;
+                const elementPosition = elementRect - bodyRect;
+                const offsetPosition = elementPosition - offset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+
+                resultCard.classList.add('ring-4', 'ring-brand-500/50', 'scale-[1.01]');
+                setTimeout(() => {
+                    resultCard.classList.remove('ring-4', 'ring-brand-500/50', 'scale-[1.01]');
+                }, 1500);
+            }
+        }
+
+        function selectGridYear(year) {
+            const cells = document.querySelectorAll('#inflation-by-year-grid > div');
+            cells.forEach(c => {
+                c.classList.remove('border-brand-500', 'ring-4', 'ring-brand-500/30', 'scale-105');
+            });
+
+            const activeCell = document.querySelector(`.year-cell-${year}`);
+            if (activeCell) {
+                activeCell.classList.add('border-brand-500', 'ring-4', 'ring-brand-500/30', 'scale-105');
+            }
+
+            const factCard = document.getElementById('micro-fact-card');
+            const factTitle = document.getElementById('micro-fact-title');
+            const factDesc = document.getElementById('micro-fact-desc');
+            const factVal = document.getElementById('micro-fact-val');
+
+            const facts = {
+                2000: "Век начался с двузначной инфляции в 20.2%. Страна оправлялась от дефолта 1998 года, цены росли стремительно, но начинался сырьевой суперцикл.",
+                2001: "Инфляция 18.6%. Экономика росла быстрыми темпами на фоне дорожающей нефти, однако структурные реформы еще не успели обуздать рост цен.",
+                2002: "Инфляция 15.1%. Постепенное замедление роста цен. Потребительский сектор рос взрывными темпами, рубль укреплялся.",
+                2003: "Инфляция 12.0%. Рубль стал укрепляться к доллару, начался приток иностранных инвестиций, экономика росла более чем на 7% в год.",
+                2004: "Инфляция 11.7%. Высокие цены на энергоносители поддерживали бюджет, но потребительский бум продолжал разгонять цены.",
+                2005: "Инфляция 10.9%. Банковский сектор расцвел, кредитование населения росло трехзначными темпами, импорт дешевел.",
+                2006: "Инфляция 9.0%. Впервые за новейшую историю России инфляция опустилась ниже 10%. Настоящая золотая эпоха потребительского спроса.",
+                2007: "Инфляция 11.9%. Мировой продовольственный кризис и избыток ликвидности вернули инфляцию в двузначную зону.",
+                2008: "Инфляция 13.3%. Мировой финансовый кризис. Валютный шок в конце года привел к падению рубля и резкому росту цен на импорт.",
+                2009: "Инфляция 8.8%. Глубокая рецессия заставила продавцов снижать цены. Снижение потребительского спроса сбило инфляцию до исторического минимума.",
+                2010: "Инфляция 8.8%. Аномальная летняя жара и засуха уничтожили значительную часть урожая, вызвав резкий скачок цен на базовые товары.",
+                2011: "Инфляция 6.1%. Рекордное замедление темпов роста цен на фоне жесткой монетарной политики ЦБ и хорошего урожая.",
+                2012: "Инфляция 6.6%. Стабильные мировые цены и умеренный внутренний спрос удерживали инфляцию в рамках комфортных значений.",
+                2013: "Инфляция 6.5%. Экономический рост замедлился до стагнации, но инфляция оставалась стабильной перед будущими потрясениями.",
+                2014: "Инфляция 11.4%. Крымская весна, введение первых масштабных санкций, обвал цен на нефть и двукратное падение курса рубля к концу года.",
+                2015: "Инфляция 12.9%. Пик валютного кризиса. Переход ЦБ к плавающему курсу рубля и ключевая ставка в 17% помогли остановить гиперинфляцию, но цены выросли на шестую часть.",
+                2016: "Инфляция 5.4%. Эффект высокой базы прошел, жесткая политика Эльвиры Набиуллиной начала приносить плоды, цены начали стабилизироваться.",
+                2017: "Инфляция 2.5%. Исторический минимум инфляции в РФ за всю историю! Рекордный урожай и стабильный рубль временно приблизили нас к европейским стандартам.",
+                2018: "Инфляция 4.3%. Небольшое ускорение на фоне объявленного повышения НДС до 20% с января следующего года и новых пакетов санкций.",
+                2019: "Инфляция 3.0%. Слабый потребительский спрос компенсировал повышение НДС, инфляция оказалась ниже целевого ориентира ЦБ (4%).",
+                2020: "Инфляция 4.9%. Пандемия COVID-19. Закрытие границ, разрыв логистических цепочек и масштабное вливание ликвидности мировыми центробанками разогнали цены.",
+                2021: "Инфляция 8.4%. Постковидное восстановление спроса столкнулось с глобальным дефицитом сырья и чипов. Цены на металл, стройматериалы и авто взлетели.",
+                2022: "Инфляция 11.9%. Начало СВО, беспрецедентные санкции, уход сотен зарубежных брендов. Логистический шок привел к резкому росту цен весной, но сильный рубль летом стабилизировал годовой итог.",
+                2023: "Инфляция 7.4%. Дефицит рабочей силы, рекордные госрасходы и ослабление рубля разогнали потребительский спрос, вынудив ЦБ поднять ставку до 16%.",
+                2024: "Инфляция 8.5%. Продолжающийся перегрев экономики, санкции на платежи и высокая индексация тарифов ЖКХ удерживали инфляцию на высоком уровне.",
+                2025: "Инфляция 6.8%. Сверхвысокая ключевая ставка ЦБ (выше 21%) охладила кредитование, но цены продолжили расти из-за роста издержек производителей."
+            };
+
+            const rate = inflationData[year];
+            if (factCard && factTitle && factDesc && factVal && facts[year]) {
+                factTitle.innerText = `Исторический факт: ${year} год`;
+                factVal.innerText = `${rate.toFixed(1)}%`;
+                factDesc.innerText = facts[year];
+
+                factCard.classList.remove('hidden', 'opacity-0', 'scale-95');
+                factCard.classList.add('opacity-100', 'scale-100');
+            }
+
+            if (chartInstance) {
+                const dataIndex = chartInstance.data.labels.indexOf(String(year));
+                if (dataIndex !== -1) {
+                    chartInstance.setActiveElements([{
+                        datasetIndex: 0,
+                        index: dataIndex
+                    }]);
+                    chartInstance.tooltip.setActiveElements([{
+                        datasetIndex: 0,
+                        index: dataIndex
+                    }], { x: 0, y: 0 });
+                    chartInstance.update();
+                }
+            }
         }
 
         function calculate() {
@@ -345,9 +530,6 @@
             let cumulativeInflation = 1;
             const years = [];
             const purchasingPower = [];
-
-            // Начинаем с 1000 для графика покупательной способности
-            let power = 1000;
 
             for (let year = state.startYear; year < state.currentYear; year++) {
                 const rate = inflationData[year] || 0;
@@ -361,8 +543,13 @@
 
             // Обновление индексов
             const ratio = currentEquivalent / state.amount;
-            document.getElementById('coffee-index-text').innerText = `В ${state.startYear} году вы могли купить 100 чашек, а сегодня — только ${Math.round(100 / ratio)}.`;
+            document.getElementById('coffee-index-text').innerText = `В ${state.startYear} году вы могли купить 100 чашек кофе, а сегодня — только ${Math.round(100 / ratio)}.`;
             document.getElementById('burger-index-text').innerText = `Покупательная способность вашей суммы сократилась в ${ratio.toFixed(1)} раза.`;
+
+            // Обновление липких результатов мобильного устройства
+            const lossValue = currentEquivalent - state.amount;
+            document.getElementById('mobile-value').innerText = formatMoney(state.amount / ratio);
+            document.getElementById('mobile-loss').innerText = formatMoney(state.amount - (state.amount / ratio));
 
             // Данные для графика
             const allYears = Object.keys(inflationData).sort((a, b) => a - b);
@@ -396,7 +583,8 @@
                         colorClass = 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-amber-950/20 border-amber-100 dark:border-amber-900/10';
                     }
 
-                    cell.className = `p-2 rounded-xl ${colorClass} flex flex-col items-center justify-center border`;
+                    cell.className = `p-2 rounded-xl ${colorClass} flex flex-col items-center justify-center border cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500/50 year-cell-${year}`;
+                    cell.setAttribute('onclick', `selectGridYear(${year})`);
                     cell.innerHTML = `
                         <span class="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">${year}</span>
                         <span class="font-black text-xs mt-0.5">${rate.toFixed(1)}%</span>
@@ -418,14 +606,16 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Стоимость 1000 рублей из 2000 года',
+                        label: 'Реальная покупательная способность 1000 ₽',
                         data: data,
                         borderColor: '#e11d48',
                         backgroundColor: 'rgba(225, 29, 72, 0.1)',
                         borderWidth: 3,
                         fill: true,
                         tension: 0.4,
-                        pointRadius: 0,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#e11d48',
+                        pointHoverRadius: 7,
                     }]
                 },
                 options: {
@@ -444,7 +634,7 @@
                     scales: {
                         y: {
                             beginAtZero: false,
-                            grid: { color: '#f1f5f9' },
+                            grid: { color: 'rgba(148, 163, 184, 0.1)' },
                             ticks: { font: { size: 10 } }
                         },
                         x: {
