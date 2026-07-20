@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сколько стоит час твоей жизни - Калькулятор реальной стоимости времени</title>
+    <title>Сколько стоит час твоей жизни - Калькулятор реальной стоимости времени — Цена Времени</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- html2canvas CDN -->
@@ -74,11 +74,14 @@
             margin-left: -100px;
             opacity: 0;
             transition: opacity 0.3s;
-            font-size: 11px;
-            font-weight: 500;
+            font-size: 11px !important;
+            font-weight: 500 !important;
             line-height: 1.4;
             pointer-events: none;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            text-transform: none !important;
+            color: #fff !important;
+            letter-spacing: normal !important;
         }
         .tooltip:hover .tooltiptext {
             visibility: visible;
@@ -132,7 +135,7 @@
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-black tracking-tight">Сколько стоит час твоей жизни</h1>
+                    <h1 class="text-2xl font-black tracking-tight">Цена Времени</h1>
                     <p class="text-xs text-brand-200">Переводим цены на товары в часы реальной работы</p>
                 </div>
             </div>
@@ -163,53 +166,95 @@
                     <!-- Рабочие часы -->
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
-                            <label for="hours-input" class="text-sm font-semibold text-slate-700">Официальные рабочие часы в неделю</label>
-                            <span class="text-sm font-bold text-slate-900" id="hours-display">40 ч.</span>
+                            <label for="hours-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Официальные рабочие часы в неделю</label>
+                            <span class="text-sm font-bold text-slate-900 dark:text-white" id="hours-display">40 ч.</span>
                         </div>
                         <div class="relative rounded-lg shadow-sm">
-                            <input type="number" id="hours-input" min="1" max="168" oninput="handleInput('hours', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
+                            <input type="number" id="hours-input" min="1" max="168" oninput="handleInput('hours', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">ч.</div>
                         </div>
-                        <input type="range" id="hours-range" min="1" max="100" step="1" value="40" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer" oninput="syncRange('hours', this.value)">
+                        <input type="range" id="hours-range" min="1" max="100" step="1" value="40" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRange('hours', this.value)">
                     </div>
 
                     <!-- Дорога -->
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
-                            <label for="commute-input" class="text-sm font-semibold text-slate-700">Время на дорогу (туда-обратно) в день</label>
-                            <span class="text-sm font-bold text-slate-900" id="commute-display">2 ч.</span>
+                            <label for="commute-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Время на дорогу (туда-обратно) в день</label>
+                            <span class="text-sm font-bold text-slate-900 dark:text-white" id="commute-display">2 ч.</span>
                         </div>
                         <div class="relative rounded-lg shadow-sm">
-                            <input type="number" id="commute-input" min="0" max="24" step="0.5" oninput="handleInput('commute', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
+                            <input type="number" id="commute-input" min="0" max="24" step="0.5" oninput="handleInput('commute', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">ч.</div>
                         </div>
-                        <input type="range" id="commute-range" min="0" max="12" step="0.5" value="2" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer" oninput="syncRange('commute', this.value)">
+                        <input type="range" id="commute-range" min="0" max="12" step="0.5" value="2" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRange('commute', this.value)">
                     </div>
 
                     <!-- Переработки -->
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
-                            <label for="overtime-input" class="text-sm font-semibold text-slate-700">Неоплачиваемые переработки в неделю</label>
-                            <span class="text-sm font-bold text-slate-900" id="overtime-display">5 ч.</span>
+                            <label for="overtime-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Неоплачиваемые переработки в неделю</label>
+                            <span class="text-sm font-bold text-slate-900 dark:text-white" id="overtime-display">5 ч.</span>
                         </div>
                         <div class="relative rounded-lg shadow-sm">
-                            <input type="number" id="overtime-input" min="0" max="100" oninput="handleInput('overtime', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
+                            <input type="number" id="overtime-input" min="0" max="100" oninput="handleInput('overtime', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">ч.</div>
                         </div>
-                        <input type="range" id="overtime-range" min="0" max="40" step="1" value="5" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer" oninput="syncRange('overtime', this.value)">
+                        <input type="range" id="overtime-range" min="0" max="40" step="1" value="5" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRange('overtime', this.value)">
                     </div>
 
                     <!-- Покупка -->
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
-                            <label for="purchase-input" class="text-sm font-semibold text-slate-700">Стоимость желаемой покупки</label>
-                            <span class="text-sm font-bold text-slate-900" id="purchase-display">150 000 ₽</span>
+                            <label for="purchase-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Стоимость желаемой покупки</label>
+                            <span class="text-sm font-bold text-slate-900 dark:text-white" id="purchase-display">150 000 ₽</span>
                         </div>
                         <div class="relative rounded-lg shadow-sm">
-                            <input type="text" id="purchase-input" oninput="handleInput('purchase', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800">
+                            <input type="text" id="purchase-input" oninput="handleInput('purchase', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                         </div>
-                        <input type="range" id="purchase-range" min="1000" max="2000000" step="1000" value="150000" class="w-full accent-brand-600 h-1.5 bg-slate-100 rounded-lg cursor-pointer" oninput="syncRange('purchase', this.value)">
+                        <input type="range" id="purchase-range" min="1000" max="2000000" step="1000" value="150000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRange('purchase', this.value)">
+                    </div>
+
+                    <!-- Quick Icon Presets -->
+                    <div class="space-y-2 border-t dark:border-slate-800 pt-4">
+                        <label class="block text-xs font-black text-slate-400 uppercase tracking-widest">Популярные покупки</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="setPurchasePreset(160000, 'iPhone 17 Pro Max')" class="flex items-center gap-2 p-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-900/25 rounded-xl border border-transparent hover:border-brand-500 transition text-left text-xs font-bold text-slate-700 dark:text-slate-300">
+                                <span>📱</span>
+                                <div class="flex flex-col">
+                                    <span class="truncate">iPhone 17 Pro</span>
+                                    <span class="text-[10px] text-slate-400">160k ₽</span>
+                                </div>
+                            </button>
+                            <button onclick="setPurchasePreset(350, 'Чашка кофе')" class="flex items-center gap-2 p-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-900/25 rounded-xl border border-transparent hover:border-brand-500 transition text-left text-xs font-bold text-slate-700 dark:text-slate-300">
+                                <span>☕</span>
+                                <div class="flex flex-col">
+                                    <span>Чашка кофе</span>
+                                    <span class="text-[10px] text-slate-400">350 ₽</span>
+                                </div>
+                            </button>
+                            <button onclick="setPurchasePreset(250000, 'Поездка на море')" class="flex items-center gap-2 p-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-900/25 rounded-xl border border-transparent hover:border-brand-500 transition text-left text-xs font-bold text-slate-700 dark:text-slate-300">
+                                <span>🏖️</span>
+                                <div class="flex flex-col">
+                                    <span>Поездка на море</span>
+                                    <span class="text-[10px] text-slate-400">250k ₽</span>
+                                </div>
+                            </button>
+                            <button onclick="setPurchasePreset(4500000, 'Квартира-студия')" class="flex items-center gap-2 p-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-900/25 rounded-xl border border-transparent hover:border-brand-500 transition text-left text-xs font-bold text-slate-700 dark:text-slate-300">
+                                <span>🏢</span>
+                                <div class="flex flex-col">
+                                    <span>Студия</span>
+                                    <span class="text-[10px] text-slate-400">4.5M ₽</span>
+                                </div>
+                            </button>
+                            <button onclick="setPurchasePreset(6000, 'Ужин в ресторане')" class="col-span-2 flex items-center gap-2 p-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-900/25 rounded-xl border border-transparent hover:border-brand-500 transition text-left text-xs font-bold text-slate-700 dark:text-slate-300">
+                                <span>🍣</span>
+                                <div class="flex flex-col">
+                                    <span>Премиальный ужин в ресторане</span>
+                                    <span class="text-[10px] text-slate-400">6 000 ₽</span>
+                                </div>
+                            </button>
+                        </div>
                     </div>
 
                 </div>
@@ -247,21 +292,35 @@
                     </div>
                 </div>
 
-                <!-- Отрезвляющий вердикт -->
-                <div id="verdict-block" class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-start gap-4 transition-all duration-300">
-                    <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <!-- Отрезвляющий вердикт (с динамическим blood-red эффектом) -->
+                <div id="verdict-block" class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm flex items-start gap-4 transition-all duration-500">
+                    <div id="verdict-icon-container" class="w-12 h-12 bg-amber-50 dark:bg-amber-900/25 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg id="verdict-icon" class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                     </div>
                     <div>
-                        <h3 class="text-lg font-black text-slate-900 mb-1">Отрезвляющий итог</h3>
-                        <p id="verdict-text" class="text-slate-600 text-sm leading-relaxed">
-                            Эта покупка обойдется вам в <span class="font-bold text-slate-900" id="hours-cost">0</span> часов реальной работы (или <span class="font-bold text-slate-900" id="days-cost">0</span> полных рабочих дней). Точно берем?
+                        <h3 id="verdict-title" class="text-lg font-black text-slate-900 dark:text-white mb-1">Отрезвляющий итог</h3>
+                        <p id="verdict-text" class="text-slate-600 dark:text-slate-350 text-sm leading-relaxed">
+                            Эта покупка обойдется вам в <span class="font-bold text-slate-900 dark:text-white" id="hours-cost">0</span> часов реальной работы (или <span class="font-bold text-slate-900 dark:text-white" id="days-cost">0</span> полных рабочих дней). Точно берем?
                         </p>
                     </div>
                 </div>
 
-                <!-- Мотивационный блок -->
-                <div class="bg-brand-50 dark:bg-brand-900/20 rounded-2xl p-6 border border-brand-100 dark:border-brand-800 space-y-4">
+                <!-- Мотивационный блок / Психологическая Поддержка -->
+                <div class="bg-brand-50 dark:bg-brand-900/20 rounded-2xl p-6 border border-brand-100 dark:border-brand-800/50 space-y-4">
+                    <h4 class="text-xs font-black text-brand-600 dark:text-brand-400 uppercase tracking-wider">Осознанное потребление</h4>
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center text-xl shadow-sm shrink-0">🧘</div>
+                        <div class="space-y-1">
+                            <p class="text-sm font-bold text-slate-850 dark:text-white">Это не значит, что нельзя себя радовать.</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                                Это значит, что каждая покупка должна быть осознанной. Понимание реальной цены времени уберегает от импульсивных трат и долговых ям, возвращая вам контроль над вашей жизнью.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Динамический оптимизатор стоимости (Как купить быстрее) -->
+                <div class="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
                     <h4 class="text-xs font-black text-brand-600 dark:text-brand-400 uppercase tracking-wider">Как купить это быстрее?</h4>
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center text-xl shadow-sm">🚀</div>
@@ -292,7 +351,7 @@
 
                 <!-- Кнопки -->
                 <div class="grid grid-cols-2 gap-4">
-                    <button onclick="shareLink()" class="flex items-center justify-center gap-2 py-4 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-2xl border border-slate-200 transition-all shadow-sm active:scale-[0.98]">
+                    <button onclick="shareLink()" class="flex items-center justify-center gap-2 py-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 transition-all shadow-sm active:scale-[0.98]">
                         <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
                         Ссылка
                     </button>
@@ -321,7 +380,7 @@
     </div>
     </main>
 
-    <footer class="max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-400 border-t border-slate-100">
+    <footer class="max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-400 border-t border-slate-100 dark:border-slate-800">
         <p>© 2026 Финансовый Хаб. Помните: время — единственный невосполнимый ресурс.</p>
     </footer>
 
@@ -372,6 +431,17 @@
             update();
         }
 
+        function setPurchasePreset(price, name) {
+            state.purchase = price;
+            const input = document.getElementById('purchase-input');
+            const range = document.getElementById('purchase-range');
+            if (input) input.value = formatNumber(price);
+            if (range) range.value = price;
+
+            showToast(`Установлена стоимость: ${name}`);
+            update();
+        }
+
         function update() {
             // Displays
             document.getElementById('income-display').innerText = formatMoney(state.income);
@@ -400,18 +470,53 @@
             document.getElementById('official-hourly-rate').innerText = formatMoney(officialHourlyRate) + ' / час';
             document.getElementById('rate-diff').innerText = '-' + Math.round(rateDiff) + '%';
 
-            document.getElementById('hours-cost').innerText = formatNumber(Math.round(hoursCost));
-            document.getElementById('days-cost').innerText = formatNumber(Math.round(daysCost));
+            const hCostRound = Math.round(hoursCost);
+            const dCostRound = Math.round(daysCost);
+
+            document.getElementById('hours-cost').innerText = formatNumber(hCostRound);
+            document.getElementById('days-cost').innerText = formatNumber(dCostRound);
 
             document.getElementById('total-monthly-hours').innerText = Math.round(totalRealHours) + ' ч.';
             document.getElementById('monthly-commute-hours').innerText = Math.round(monthlyCommuteHours) + ' ч.';
             document.getElementById('monthly-overtime-hours').innerText = Math.round(monthlyOvertimeHours) + ' ч.';
 
+            // Blood red & Metaphors
+            const verdictBlock = document.getElementById('verdict-block');
+            const verdictIconContainer = document.getElementById('verdict-icon-container');
+            const verdictIcon = document.getElementById('verdict-icon');
+            const verdictTitle = document.getElementById('verdict-title');
+            const verdictText = document.getElementById('verdict-text');
+
+            // If a purchase takes more than 15 complete working days or 120 working hours of life, mark as highly irrational/blood-red
+            const isIrrational = dCostRound > 15;
+
+            if (isIrrational) {
+                // Blood Red Overrides
+                verdictBlock.className = "bg-rose-50 dark:bg-rose-950/40 rounded-2xl p-6 border-2 border-rose-500 shadow-md flex items-start gap-4 transition-all duration-500";
+                verdictIconContainer.className = "w-12 h-12 bg-rose-100 dark:bg-rose-900/45 rounded-xl flex items-center justify-center flex-shrink-0 animate-bounce";
+                verdictIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>`;
+                verdictIcon.setAttribute('class', 'w-6 h-6 text-rose-600 dark:text-rose-400');
+                verdictTitle.innerText = "🛑 Критический уровень трат времени!";
+                verdictTitle.className = "text-lg font-black text-rose-700 dark:text-rose-400 mb-1";
+
+                verdictText.innerHTML = `Ради этой покупки вы будете просыпаться по будильнику в 7 утра ровно <span class="font-black text-rose-700 dark:text-rose-400 text-base underline decoration-rose-500 decoration-2">${dCostRound} ${getDaysWord(dCostRound)}</span>. Вы действительно готовы отдать этот значительный кусок своей единственной и неповторимой жизни за обычный гаджет или услугу?`;
+            } else {
+                // Standard visual styling
+                verdictBlock.className = "bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm flex items-start gap-4 transition-all duration-500";
+                verdictIconContainer.className = "w-12 h-12 bg-amber-50 dark:bg-amber-900/25 rounded-xl flex items-center justify-center flex-shrink-0";
+                verdictIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>`;
+                verdictIcon.setAttribute('class', 'w-6 h-6 text-amber-600 dark:text-amber-400');
+                verdictTitle.innerText = "Отрезвляющий итог";
+                verdictTitle.className = "text-lg font-black text-slate-900 dark:text-white mb-1";
+
+                verdictText.innerHTML = `Эта покупка заберет у вас ровно <span class="font-bold text-slate-900 dark:text-white">${hCostRound} ${getHoursWord(hCostRound)}</span> чистой, непрерывной концентрации на работе (что эквивалентно <span class="font-bold text-brand-600">${dCostRound} ${getDaysWord(dCostRound)}</span> сборов по утрам и дороги). Подумайте, стоит ли вещь этих усилий?`;
+            }
+
             // Mobile sticky
             const mobileRate = document.getElementById('mobile-rate');
             const mobileDays = document.getElementById('mobile-days');
             if (mobileRate) mobileRate.innerText = formatMoney(realHourlyRate);
-            if (mobileDays) mobileDays.innerText = Math.round(daysCost) + ' дн.';
+            if (mobileDays) mobileDays.innerText = dCostRound + ' дн.';
 
             const timeReductionFactor = 0.15;
             const targetHours = hoursCost * (1 - timeReductionFactor);
@@ -420,6 +525,24 @@
 
             document.getElementById('needed-hourly-increase').innerText = formatMoney(increase);
             document.getElementById('saved-days-on-boost').innerText = Math.round(daysCost * timeReductionFactor) + ' дн.';
+        }
+
+        function getDaysWord(days) {
+            const n = Math.abs(days) % 100;
+            const n1 = n % 10;
+            if (n > 10 && n < 20) return 'дней';
+            if (n1 > 1 && n1 < 5) return 'дня';
+            if (n1 === 1) return 'день';
+            return 'дней';
+        }
+
+        function getHoursWord(hours) {
+            const n = Math.abs(hours) % 100;
+            const n1 = n % 10;
+            if (n > 10 && n < 20) return 'часов';
+            if (n1 > 1 && n1 < 5) return 'часа';
+            if (n1 === 1) return 'час';
+            return 'часов';
         }
 
         window.onload = function() {

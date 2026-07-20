@@ -152,45 +152,105 @@
                     </div>
                 </div>
 
-                <!-- Ползунки расходов -->
+                <!-- Life Situation Modifiers -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-4">
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-2">Жизненные модификаторы</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Включите факторы, которые напрямую влияют на итоговую стоимость воспитания ребенка.</p>
+
+                    <div class="grid grid-cols-1 gap-3">
+                        <!-- Grandma Modifier -->
+                        <label class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-850 transition">
+                            <div class="flex items-center gap-3">
+                                <span class="text-xl">👵</span>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-slate-800 dark:text-white">Бабушка помогает</span>
+                                    <span class="text-[10px] text-slate-400">-15% к расходам 0–7 лет</span>
+                                </div>
+                            </div>
+                            <input type="checkbox" id="mod-grandma" onchange="updateAll()" class="w-5 h-5 accent-brand-600 rounded">
+                        </label>
+
+                        <!-- Private Nursery Modifier -->
+                        <label class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-850 transition">
+                            <div class="flex items-center gap-3">
+                                <span class="text-xl">🧸</span>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-slate-800 dark:text-white">Частный детский сад</span>
+                                    <span class="text-[10px] text-slate-400">+25k ₽ в месяц на этапе 3–7 лет</span>
+                                </div>
+                            </div>
+                            <input type="checkbox" id="mod-nursery" onchange="updateAll()" class="w-5 h-5 accent-brand-600 rounded">
+                        </label>
+
+                        <!-- Breastfeeding Modifier -->
+                        <label class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-850 transition">
+                            <div class="flex items-center gap-3">
+                                <span class="text-xl">🍼</span>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-slate-800 dark:text-white">Грудное вскармливание</span>
+                                    <span class="text-[10px] text-slate-400">-8k ₽ в месяц на этапе 0–3 года</span>
+                                </div>
+                            </div>
+                            <input type="checkbox" id="mod-breastfeeding" onchange="updateAll()" class="w-5 h-5 accent-brand-600 rounded">
+                        </label>
+
+                        <!-- Tutor Modifier -->
+                        <label class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-850 transition">
+                            <div class="flex items-center gap-3">
+                                <span class="text-xl">🎓</span>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-slate-800 dark:text-white">Репетиторы для ЕГЭ</span>
+                                    <span class="text-[10px] text-slate-400">+20k ₽ в месяц на этапе 12–18 лет</span>
+                                </div>
+                            </div>
+                            <input type="checkbox" id="mod-tutors" onchange="updateAll()" class="w-5 h-5 accent-brand-600 rounded">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Ежемесячные траты по возрастам -->
                 <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
                     <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-2">Ежемесячные траты по возрастам</h2>
 
-                    <div class="space-y-4">
-                        <!-- Малыш -->
-                        <div class="space-y-2">
+                    <div class="space-y-6">
+                        <!-- Малыш 0-3 -->
+                        <div class="space-y-2 p-4 bg-sky-50/40 dark:bg-sky-950/20 border border-sky-100 dark:border-sky-900/35 rounded-2xl">
                             <div class="flex justify-between items-center">
-                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">👶 Малыш (0–3 года)</label>
-                                <span class="text-sm font-bold text-brand-600" id="val-toddler">30 000 ₽</span>
+                                <label class="text-sm font-bold text-sky-850 dark:text-sky-300">👶 Младенец (0–3 года)</label>
+                                <span class="text-sm font-black text-sky-600 dark:text-sky-400" id="val-toddler">30 000 ₽</span>
                             </div>
-                            <input type="range" id="range-toddler" min="5000" max="500000" step="1000" value="30000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                            <p class="text-[10px] text-slate-400 leading-normal">Питание, подгузники, коляска, первая одежда, базовые педиатрические чекапы.</p>
+                            <input type="range" id="range-toddler" min="5000" max="500000" step="1000" value="30000" class="w-full accent-sky-500 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
                         </div>
 
-                        <!-- Дошкольник -->
-                        <div class="space-y-2">
+                        <!-- Дошкольник 3-7 -->
+                        <div class="space-y-2 p-4 bg-amber-50/40 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/35 rounded-2xl">
                             <div class="flex justify-between items-center">
-                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">🧒 Дошкольник (4–6 лет)</label>
-                                <span class="text-sm font-bold text-brand-600" id="val-preschooler">35 000 ₽</span>
+                                <label class="text-sm font-bold text-amber-850 dark:text-amber-300">🧒 Дошкольник (3–7 лет)</label>
+                                <span class="text-sm font-black text-amber-600 dark:text-amber-400" id="val-preschooler">35 000 ₽</span>
                             </div>
-                            <input type="range" id="range-preschooler" min="5000" max="500000" step="1000" value="35000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                            <p class="text-[10px] text-slate-400 leading-normal">Детский сад, развивающие кружки, игрушки, сезонная одежда и обувь.</p>
+                            <input type="range" id="range-preschooler" min="5000" max="500000" step="1000" value="35000" class="w-full accent-amber-500 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
                         </div>
 
-                        <!-- Школьник -->
-                        <div class="space-y-2">
+                        <!-- Школьник 7-12 -->
+                        <div class="space-y-2 p-4 bg-emerald-50/40 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/35 rounded-2xl">
                             <div class="flex justify-between items-center">
-                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">🎒 Школьник (7–14 лет)</label>
-                                <span class="text-sm font-bold text-brand-600" id="val-schooler">45 000 ₽</span>
+                                <label class="text-sm font-bold text-emerald-850 dark:text-emerald-300">🎒 Школьник (7–12 лет)</label>
+                                <span class="text-sm font-black text-emerald-600 dark:text-emerald-400" id="val-schooler">45 000 ₽</span>
                             </div>
-                            <input type="range" id="range-schooler" min="5000" max="500000" step="1000" value="45000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                            <p class="text-[10px] text-slate-400 leading-normal">Школьные принадлежности, форма, спортивные секции, первый смартфон, питание.</p>
+                            <input type="range" id="range-schooler" min="5000" max="500000" step="1000" value="45000" class="w-full accent-emerald-500 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
                         </div>
 
-                        <!-- Подросток -->
-                        <div class="space-y-2">
+                        <!-- Подросток 12-18 -->
+                        <div class="space-y-2 p-4 bg-indigo-50/40 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/35 rounded-2xl">
                             <div class="flex justify-between items-center">
-                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">🎸 Подросток (15–18 лет)</label>
-                                <span class="text-sm font-bold text-brand-600" id="val-teenager">60 000 ₽</span>
+                                <label class="text-sm font-bold text-indigo-850 dark:text-indigo-300">🎸 Подросток (12–18 лет)</label>
+                                <span class="text-sm font-black text-indigo-600 dark:text-indigo-400" id="val-teenager">60 000 ₽</span>
                             </div>
-                            <input type="range" id="range-teenager" min="5000" max="500000" step="1000" value="60000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                            <p class="text-[10px] text-slate-400 leading-normal">Подготовка к ОГЭ/ЕГЭ, репетиторы, карманные расходы, взрослая одежда, девайсы.</p>
+                            <input type="range" id="range-teenager" min="5000" max="500000" step="1000" value="60000" class="w-full accent-indigo-500 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
                         </div>
                     </div>
                 </div>
@@ -225,16 +285,29 @@
                         </div>
                         <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">Ваш общий родительский капитал за 18 лет:</h3>
                         <div id="total-with-inflation" class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-2 leading-tight">... ₽</div>
-                        <div class="text-sm font-medium text-slate-500">
+                        <div class="text-sm font-medium text-slate-500 mb-4">
                             (В ценах сегодняшнего дня без учета инфляции это было бы <span id="total-without-inflation">...</span> ₽)
                         </div>
 
-                        <div class="mt-8 pt-8 border-t dark:border-slate-800">
+                        <!-- Supportive Reassuring Microcopy -->
+                        <div class="bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-700/50 p-4 rounded-2xl text-xs text-slate-600 dark:text-slate-350 leading-relaxed font-medium mb-6">
+                            👼 <span class="font-bold text-slate-900 dark:text-white">Дети — это дорого, но расходы распределены на 18 лет.</span> В среднем это всего <span id="monthly-average-stat" class="font-black text-brand-600">... ₽</span> в месяц — вполне подъемная сумма для семьи.
+                        </div>
+
+                        <div class="pt-6 border-t dark:border-slate-800">
                             <div class="p-4 bg-brand-50 dark:bg-brand-900/20 rounded-2xl border border-brand-100 dark:border-brand-800">
                                 <p class="text-sm text-brand-800 dark:text-brand-300 italic">
                                     «Для понимания масштаба: эта сумма эквивалентна покупке <span id="equiv-apartments" class="font-bold text-brand-600">...</span> или <span id="equiv-cars" class="font-bold text-brand-600">...</span>. Но помните: инвестиция в счастливое детство вашего ребенка — это самый высокодоходный проект в жизни! ❤️»
                                 </p>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Breakdown (Donut Chart) -->
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+                        <h3 class="text-sm font-black text-slate-800 dark:text-slate-200 mb-4 uppercase tracking-wider text-center">Куда уходят деньги (структура расходов)</h3>
+                        <div class="h-64 relative flex items-center justify-center">
+                            <canvas id="categoryBreakdownChart"></canvas>
                         </div>
                     </div>
 
@@ -301,6 +374,7 @@
         };
 
         let chartInstance = null;
+        let categoryChartInstance = null;
 
         // Инициализация
         window.onload = async () => {
@@ -360,39 +434,68 @@
         }
 
         function calculate() {
+            // Apply Life Situation Modifiers to local calculation
+            const grandmaHelping = document.getElementById('mod-grandma')?.checked;
+            const privateNursery = document.getElementById('mod-nursery')?.checked;
+            const breastFeeding = document.getElementById('mod-breastfeeding')?.checked;
+            const hasTutors = document.getElementById('mod-tutors')?.checked;
+
+            let finalToddler = state.toddler;
+            let finalPreschooler = state.preschooler;
+            let finalSchooler = state.schooler;
+            let finalTeenager = state.teenager;
+
+            // Apply breast feeding to toddler
+            if (breastFeeding) {
+                finalToddler = Math.max(2000, finalToddler - 8000);
+            }
+            // Apply Grandma
+            if (grandmaHelping) {
+                finalToddler = finalToddler * 0.85;
+                finalPreschooler = finalPreschooler * 0.85;
+            }
+            // Apply Private nursery to stage 3-7 (preschooler)
+            if (privateNursery) {
+                finalPreschooler = finalPreschooler + 25000;
+            }
+            // Apply tutors to teenager
+            if (hasTutors) {
+                finalTeenager = finalTeenager + 20000;
+            }
+
             let totalNoInf = 0;
             let totalWithInf = 0;
             const stages = [];
 
             // 0-3 года (3 года = 36 месяцев)
-            let stageToddlerNoInf = state.toddler * 12 * 3;
+            let stageToddlerNoInf = finalToddler * 12 * 3;
             let stageToddlerWithInf = 0;
             for (let y = 1; y <= 3; y++) {
-                stageToddlerWithInf += state.toddler * 12 * Math.pow(1 + state.avgInflation, y);
+                stageToddlerWithInf += finalToddler * 12 * Math.pow(1 + state.avgInflation, y);
             }
-            stages.push({ label: 'Малыш', noInf: stageToddlerNoInf, withInf: stageToddlerWithInf });
+            stages.push({ label: 'Младенец', noInf: stageToddlerNoInf, withInf: stageToddlerWithInf });
 
-            // 4-6 лет (3 года = 36 месяцев)
-            let stagePreschoolerNoInf = state.preschooler * 12 * 3;
+            // 3-7 лет (4 года = 48 месяцев) -> updated according to explicit specs (3-7, 7-12, 12-18)
+            let stagePreschoolerNoInf = finalPreschooler * 12 * 4;
             let stagePreschoolerWithInf = 0;
-            for (let y = 4; y <= 6; y++) {
-                stagePreschoolerWithInf += state.preschooler * 12 * Math.pow(1 + state.avgInflation, y);
+            for (let y = 4; y <= 7; y++) {
+                stagePreschoolerWithInf += finalPreschooler * 12 * Math.pow(1 + state.avgInflation, y);
             }
             stages.push({ label: 'Дошкольник', noInf: stagePreschoolerNoInf, withInf: stagePreschoolerWithInf });
 
-            // 7-14 лет (8 лет = 96 месяцев)
-            let stageSchoolerNoInf = state.schooler * 12 * 8;
+            // 7-12 лет (5 лет = 60 месяцев) -> updated according to explicit specs
+            let stageSchoolerNoInf = finalSchooler * 12 * 5;
             let stageSchoolerWithInf = 0;
-            for (let y = 7; y <= 14; y++) {
-                stageSchoolerWithInf += state.schooler * 12 * Math.pow(1 + state.avgInflation, y);
+            for (let y = 8; y <= 12; y++) {
+                stageSchoolerWithInf += finalSchooler * 12 * Math.pow(1 + state.avgInflation, y);
             }
             stages.push({ label: 'Школьник', noInf: stageSchoolerNoInf, withInf: stageSchoolerWithInf });
 
-            // 15-18 лет (4 года = 48 месяцев)
-            let stageTeenagerNoInf = state.teenager * 12 * 4;
+            // 12-18 лет (6 лет = 72 месяцев) -> updated according to explicit specs
+            let stageTeenagerNoInf = finalTeenager * 12 * 6;
             let stageTeenagerWithInf = 0;
-            for (let y = 15; y <= 18; y++) {
-                stageTeenagerWithInf += state.teenager * 12 * Math.pow(1 + state.avgInflation, y);
+            for (let y = 13; y <= 18; y++) {
+                stageTeenagerWithInf += finalTeenager * 12 * Math.pow(1 + state.avgInflation, y);
             }
             stages.push({ label: 'Подросток', noInf: stageTeenagerNoInf, withInf: stageTeenagerWithInf });
 
@@ -418,7 +521,11 @@
             const impact = ((result.totalWithInf / result.totalNoInf - 1) * 100).toFixed(0);
             document.getElementById('mobile-inflation-impact').innerText = `+${impact}%`;
 
-            // Масштаб (примерные цены 2026: квартира 12м, машина 3м)
+            // Supportive reassurance microcopy dynamic calculation (X рублей в месяц)
+            const averageMonthlyCost = Math.round(result.totalWithInf / (18 * 12));
+            document.getElementById('monthly-average-stat').innerText = formatMoney(averageMonthlyCost);
+
+            // Масштаб (примерные цены 2026: квартира 10м, машина 3.5м)
             const aptCount = (result.totalWithInf / 10000000).toFixed(1);
             const carCount = (result.totalWithInf / 3500000).toFixed(1);
 
@@ -426,6 +533,7 @@
             document.getElementById('equiv-cars').innerText = `${carCount} ${getCarWord(carCount)}`;
 
             updateChart(result.stages);
+            updateCategoryChart(result.totalWithInf);
         }
 
         function getAptWord(val) {
@@ -438,6 +546,62 @@
             const n = parseFloat(val);
             if (n === 1) return 'технологичного электромобиля';
             return 'новых электромобилей';
+        }
+
+        function updateCategoryChart(totalValue) {
+            const ctx = document.getElementById('categoryBreakdownChart').getContext('2d');
+
+            // Standard children cost ratios based on demographic statistics:
+            // Образование: 25%, Еда: 35%, Одежда: 20%, Медицина: 20%
+            const educationCost = totalValue * 0.25;
+            const foodCost = totalValue * 0.35;
+            const clothesCost = totalValue * 0.20;
+            const medicineCost = totalValue * 0.20;
+
+            if (categoryChartInstance) {
+                categoryChartInstance.destroy();
+            }
+
+            categoryChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Образование', 'Еда', 'Одежда', 'Медицина'],
+                    datasets: [{
+                        data: [educationCost, foodCost, clothesCost, medicineCost],
+                        backgroundColor: [
+                            '#3b82f6', // blue
+                            '#10b981', // emerald
+                            '#f59e0b', // amber
+                            '#ef4444'  // red
+                        ],
+                        borderWidth: 2,
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 10, weight: 'bold' },
+                                padding: 12,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    const value = context.raw;
+                                    const percentage = ((value / totalValue) * 100).toFixed(0);
+                                    return ` ${context.label}: ${formatMoney(value)} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         function updateChart(stages) {
