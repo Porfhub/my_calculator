@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Насколько вы богаты? - Калькулятор зарплат</title>
+    <title>Насколько вы богаты? - Калькулятор зарплат — Рентген Доходов</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- html2canvas CDN -->
@@ -85,11 +85,14 @@
             margin-left: -100px;
             opacity: 0;
             transition: opacity 0.3s;
-            font-size: 11px;
-            font-weight: 500;
+            font-size: 11px !important;
+            font-weight: 500 !important;
             line-height: 1.4;
             pointer-events: none;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            text-transform: none !important;
+            color: #fff !important;
+            letter-spacing: normal !important;
         }
         .tooltip:hover .tooltiptext {
             visibility: visible;
@@ -140,12 +143,13 @@
             </a>
             <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
             <div class="flex items-center space-x-3">
-            <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            </div>
-            <div>
-                <h1 class="text-2xl font-black tracking-tight">Рентген Доходов</h1>
-                <p class="text-xs text-brand-200">Сравните свою зарплату с доходами жителей РФ</p>
+                <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-tight">Рентген Доходов</h1>
+                    <p class="text-xs text-brand-200">Сравните свою зарплату с доходами жителей РФ</p>
+                </div>
             </div>
         </div>
     </header>
@@ -156,6 +160,11 @@
             <div class="text-center mb-8">
                 <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-2">Насколько вы богаты?</h2>
                 <p class="text-slate-500 dark:text-slate-400 text-sm">Официальная оценка на основе данных 2026 года</p>
+                <!-- Trust Anchor -->
+                <p class="text-xs text-slate-400 dark:text-slate-500 mt-2 font-medium flex items-center justify-center gap-1.5">
+                    <svg class="w-4 h-4 text-brand-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a.75.75 0 00-.708-.523H4.5a2 2 0 00-2 2v1.5a.75.75 0 00.325.62l1.5 1a.75.75 0 00.85 0l1.5-1A.75.75 0 007 5.93V4.5a.75.75 0 00-.733-.715zM4 11.25a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75a.75.75 0 01-.75-.75zm.75 3.25a.75.75 0 000 1.5h10.5a.75.75 0 000-1.5H4.75z" clip-rule="evenodd"></path><path d="M10.75 3a.75.75 0 00-.75.75v1.5a.75.75 0 001.5 0v-1.5A.75.75 0 0010.75 3zm5.483.455a.75.75 0 00-.708-.523H14.5a2 2 0 00-2 2v1.5a.75.75 0 00.325.62l1.5 1a.75.75 0 00.85 0l1.5-1A.75.75 0 0017 5.93V4.5a.75.75 0 00-.733-.715z"></svg>
+                    <span>Данные верифицированы по официальным базам Росстата и прогрессивной шкале НДФЛ на 2026 год</span>
+                </p>
             </div>
 
             <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-900/50 p-4 mb-8 rounded-xl flex gap-3 items-start">
@@ -166,13 +175,38 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div class="space-y-2">
-                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Ваша зарплата (Оклад полностью)</label>
-                    <div class="relative">
-                        <input type="text" id="grossSalary" placeholder="Например: 100 000" oninput="handleSalaryInput(this)" class="w-full pl-4 pr-12 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
-                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
+                <!-- Ввод Зарплаты -->
+                <div class="space-y-4">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Ваша зарплата (Оклад полностью)</label>
+                        <div class="relative">
+                            <input type="text" id="grossSalary" placeholder="Например: 100 000" oninput="handleSalaryInput(this)" class="w-full pl-4 pr-12 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
+                        </div>
+                        <div id="netSalaryDisplay" class="text-xs font-bold text-slate-400 dark:text-slate-500 ml-1 hidden">На руки: <span id="netSalaryValue" class="text-brand-600">0 ₽</span></div>
                     </div>
-                    <div id="netSalaryDisplay" class="text-xs font-bold text-slate-400 dark:text-slate-500 ml-1 hidden">На руки: <span id="netSalaryValue" class="text-brand-600">0 ₽</span></div>
+
+                    <!-- Range Slider -->
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Интерактивный ползунок</label>
+                        <input type="range" id="grossSalaryRange" min="15000" max="1500000" step="5000" value="100000" oninput="handleRangeInput(this)" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                        <div class="flex justify-between text-[10px] text-slate-400 font-bold">
+                            <span>15k ₽</span>
+                            <span>500k ₽</span>
+                            <span>1M ₽</span>
+                            <span>1.5M ₽</span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Presets -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Быстрые пресеты для РФ</label>
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button" onclick="setPresetSalary(70000)" class="px-3 py-2 text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl hover:bg-brand-50 dark:hover:bg-brand-900/30 hover:text-brand-600 transition duration-150 active:scale-95">🚲 Курьер (70k ₽)</button>
+                            <button type="button" onclick="setPresetSalary(120000)" class="px-3 py-2 text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl hover:bg-brand-50 dark:hover:bg-brand-900/30 hover:text-brand-600 transition duration-150 active:scale-95">💻 Джуниор (120k ₽)</button>
+                            <button type="button" onclick="setPresetSalary(650000)" class="px-3 py-2 text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl hover:bg-brand-50 dark:hover:bg-brand-900/30 hover:text-brand-600 transition duration-150 active:scale-95">💼 Топ-менеджер (650k ₽)</button>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="space-y-2">
@@ -200,64 +234,89 @@
             <div id="resultsDashboard" class="hidden opacity-0 transition-opacity duration-700 space-y-6">
                 
                 <div class="space-y-6">
+                <!-- Status Card -->
                 <div id="status-card" class="bg-white dark:bg-slate-900 rounded-3xl p-6 md:p-8 border border-brand-100 dark:border-slate-800 shadow-xl relative overflow-hidden transition-colors duration-500">
                     <div class="relative z-10">
                         <h2 class="text-sm uppercase tracking-wide font-black text-slate-400 mb-2">Ваше место среди работающих:</h2>
                         <div class="flex flex-wrap items-baseline gap-3 mb-4">
                             <span class="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-brand-900" id="percentileLabor">0%</span>
-                            <span class="text-sm text-slate-600 font-medium">людей получают меньше вас</span>
+                            <span class="text-sm text-slate-600 dark:text-slate-400 font-medium">людей получают меньше вас</span>
                         </div>
-                        <div class="w-full bg-slate-100 rounded-full h-2.5 mb-4 overflow-hidden">
+                        <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2.5 mb-4 overflow-hidden">
                             <div id="progressBarLabor" class="bg-brand-500 h-2.5 rounded-full progress-bar-fill" style="width: 0%"></div>
                         </div>
-                        <p class="text-xs text-slate-500 border-t border-slate-100 pt-4" id="populationComparison">
+                        <p class="text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-4" id="populationComparison">
                             А если взять вообще всех жителей (включая детей и пенсионеров), то вы богаче 0% населения.
                         </p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center gap-1.5 mb-1">
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Медиана</span>
-                                <span class="tooltip text-[10px] bg-slate-200 text-slate-500 w-3.5 h-3.5 flex items-center justify-center rounded-full">?
-                                    <span class="tooltiptext uppercase tracking-normal">Значение, которое делит всех работающих ровно пополам: 50% получают меньше, 50% больше.</span>
-                                </span>
-                            </div>
-                            <p class="text-[11px] text-slate-500 mt-1 mb-3 leading-snug">Половина людей в регионе получает меньше этой суммы, а половина — больше.</p>
-                            <p class="text-xl font-black text-slate-900" id="medianRatio">в 0 раз больше</p>
+                <!-- Progressive NDFL Stacked Visual Scale -->
+                <div class="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-4">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Визуализация прогрессивной шкалы НДФЛ (налог в месяц)</h3>
+                    <div class="space-y-3">
+                        <!-- Horizontal Stacked Bar -->
+                        <div class="h-8 w-full rounded-xl bg-slate-200 dark:bg-slate-800 overflow-hidden flex shadow-inner" id="taxStackedBar">
+                            <!-- Injected dynamically -->
                         </div>
-                        <p class="text-xs font-semibold text-slate-400 mt-4 border-t border-slate-200 pt-3" id="medianText">Сама медиана: 0 руб.</p>
-                    </div>
-
-                    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
-                        <div>
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Официальная средняя</span>
-                            <p class="text-[11px] text-slate-500 mt-1 mb-3 leading-snug">Завышена, так как включает гигантские доходы топ-менеджеров.</p>
-                            <p class="text-xl font-black text-slate-900" id="avgDiff">на 0 руб. меньше</p>
+                        <!-- Color Key Legend with Breakdown -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3" id="taxLegend">
+                            <!-- Legend items with dynamic values -->
                         </div>
-                        <p class="text-xs font-semibold text-slate-400 mt-4 border-t border-slate-200 pt-3" id="avgText">Средняя ЗП: 0 руб.</p>
-                    </div>
-
-                    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center gap-1.5 mb-1">
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Ваш доход в МРОТ</span>
-                                <span class="tooltip text-[10px] bg-slate-200 text-slate-500 w-3.5 h-3.5 flex items-center justify-center rounded-full">?
-                                    <span class="tooltiptext uppercase tracking-normal">Минимальный размер оплаты труда. Ниже этой суммы работодатель не имеет права платить за полный день.</span>
-                                </span>
-                            </div>
-                            <p class="text-[11px] text-slate-500 mt-1 mb-3 leading-snug">Сколько "минималок" (минимальный размер оплаты труда) вмещается в ваш оклад.</p>
-                            <p class="text-xl font-black text-slate-900" id="mrotRatio">0 МРОТ</p>
-                        </div>
-                        <p class="text-xs font-semibold text-slate-400 mt-4 border-t border-slate-200 pt-3" id="mrotText">1 МРОТ = 0 руб.</p>
                     </div>
                 </div>
 
-                <!-- Кнопка Поделиться -->
+                <!-- Social Comparison Class Block -->
+                <div class="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-4">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Где вы на социальной лестнице РФ?</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Объективное деление общества на слои в соответствии с вашим доходом.</p>
+                    <div id="socialStrataGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        <!-- Dynamic struts injected here -->
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-5 border border-slate-100 dark:border-slate-850 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-1.5 mb-1">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Медиана</span>
+                                <span class="tooltip text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-500 w-3.5 h-3.5 flex items-center justify-center rounded-full">?
+                                    <span class="tooltiptext uppercase tracking-normal">Значение, которое делит всех работающих ровно пополам: 50% получают меньше, 50% больше.</span>
+                                </span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-450 mt-1 mb-3 leading-snug">Половина людей в регионе получает меньше этой суммы, а половина — больше.</p>
+                            <p class="text-xl font-black text-slate-900 dark:text-white" id="medianRatio">в 0 раз больше</p>
+                        </div>
+                        <p class="text-xs font-semibold text-slate-400 mt-4 border-t border-slate-200 dark:border-slate-800 pt-3" id="medianText">Сама медиана: 0 руб.</p>
+                    </div>
+
+                    <div class="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-5 border border-slate-100 dark:border-slate-850 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Официальная средняя</span>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-455 mt-1 mb-3 leading-snug">Завышена, так как включает гигантские доходы топ-менеджеров.</p>
+                            <p class="text-xl font-black text-slate-900 dark:text-white" id="avgDiff">на 0 руб. меньше</p>
+                        </div>
+                        <p class="text-xs font-semibold text-slate-400 mt-4 border-t border-slate-200 dark:border-slate-800 pt-3" id="avgText">Средняя ЗП: 0 руб.</p>
+                    </div>
+
+                    <div class="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-5 border border-slate-100 dark:border-slate-850 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-1.5 mb-1">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Ваш доход в МРОТ</span>
+                                <span class="tooltip text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-500 w-3.5 h-3.5 flex items-center justify-center rounded-full">?
+                                    <span class="tooltiptext uppercase tracking-normal">Минимальный размер оплаты труда. Ниже этой суммы работодатель не имеет права платить за полный день.</span>
+                                </span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-450 mt-1 mb-3 leading-snug">Сколько "минималок" (минимальный размер оплаты труда) вмещается в ваш оклад.</p>
+                            <p class="text-xl font-black text-slate-900 dark:text-white" id="mrotRatio">0 МРОТ</p>
+                        </div>
+                        <p class="text-xs font-semibold text-slate-400 mt-4 border-t border-slate-200 dark:border-slate-800 pt-3" id="mrotText">1 МРОТ = 0 руб.</p>
+                    </div>
+                </div>
+
+                <!-- Кнопки Поделиться -->
                 <div class="grid grid-cols-2 gap-4 mt-6">
-                    <button onclick="shareCalculation()" class="flex items-center justify-center gap-2 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-2xl border border-slate-200 transition-all shadow-sm active:scale-[0.98]">
+                    <button onclick="shareCalculation()" class="flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 transition-all shadow-sm active:scale-[0.98]">
                         <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
                         Ссылка
                     </button>
@@ -309,6 +368,9 @@
             if (regionsData.length > 0) {
                 setRegion(regionsData[0].id);
             }
+
+            // Sync initial state
+            setPresetSalary(100000);
         }
 
         function populateRegions() {
@@ -341,7 +403,32 @@
 
         function handleSalaryInput(input) {
             const salary = formatInputField(input, input.value);
+            const slider = document.getElementById('grossSalaryRange');
+            if (slider) {
+                slider.value = Math.min(slider.max, Math.max(slider.min, salary));
+            }
             updateNetDisplay(salary);
+        }
+
+        function handleRangeInput(slider) {
+            const salary = parseInt(slider.value);
+            const input = document.getElementById('grossSalary');
+            if (input) {
+                input.value = new Intl.NumberFormat('ru-RU').format(salary);
+            }
+            updateNetDisplay(salary);
+        }
+
+        function setPresetSalary(value) {
+            const input = document.getElementById('grossSalary');
+            const slider = document.getElementById('grossSalaryRange');
+            if (input) {
+                input.value = new Intl.NumberFormat('ru-RU').format(value);
+            }
+            if (slider) {
+                slider.value = value;
+            }
+            updateNetDisplay(value);
         }
 
         function updateNetDisplay(gross) {
@@ -387,6 +474,138 @@
             return Math.round((annualGross - annualTax) / 12);
         }
 
+        function renderTaxProgressiveVisualization(gross) {
+            const annualGross = gross * 12;
+
+            // Calculate annual tier bases
+            const base13 = Math.min(annualGross, 2400000);
+            const base15 = Math.max(0, Math.min(annualGross, 5000000) - 2400000);
+            const base18 = Math.max(0, Math.min(annualGross, 20000000) - 5000000);
+            const base20 = Math.max(0, Math.min(annualGross, 50000000) - 20000000);
+            const base22 = Math.max(0, annualGross - 50000000);
+
+            // Annual tax per tier
+            const tax13 = base13 * 0.13;
+            const tax15 = base15 * 0.15;
+            const tax18 = base18 * 0.18;
+            const tax20 = base20 * 0.20;
+            const tax22 = base22 * 0.22;
+
+            // Monthly tax per tier
+            const mTax13 = tax13 / 12;
+            const mTax15 = tax15 / 12;
+            const mTax18 = tax18 / 12;
+            const mTax20 = tax20 / 12;
+            const mTax22 = tax22 / 12;
+
+            const totalMonthlyTax = mTax13 + mTax15 + mTax18 + mTax20 + mTax22;
+            const monthlyNet = gross - totalMonthlyTax;
+
+            // Stacked bar widths
+            const pctNet = (monthlyNet / gross) * 100;
+            const pct13 = (mTax13 / gross) * 100;
+            const pct15 = (mTax15 / gross) * 100;
+            const pct18 = (mTax18 / gross) * 100;
+            const pct20 = (mTax20 / gross) * 100;
+            const pct22 = (mTax22 / gross) * 100;
+
+            const barContainer = document.getElementById('taxStackedBar');
+            barContainer.innerHTML = '';
+
+            const createSegment = (width, bgColor, label) => {
+                if (width <= 0) return;
+                const div = document.createElement('div');
+                div.className = `${bgColor} h-full transition-all duration-500 relative group flex items-center justify-center text-[10px] text-white font-bold`;
+                div.style.width = `${width}%`;
+                div.innerHTML = `
+                    <span class="hidden sm:inline opacity-80 group-hover:opacity-100">${label}</span>
+                    <span class="absolute bottom-full mb-1 bg-slate-900 text-white rounded text-[10px] px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-20">
+                        ${label}: ${width.toFixed(1)}% дохода
+                    </span>
+                `;
+                barContainer.appendChild(div);
+            };
+
+            createSegment(pctNet, 'bg-emerald-500', 'Чистыми');
+            createSegment(pct13, 'bg-teal-600', '13%');
+            createSegment(pct15, 'bg-cyan-600', '15%');
+            createSegment(pct18, 'bg-blue-600', '18%');
+            createSegment(pct20, 'bg-indigo-600', '20%');
+            createSegment(pct22, 'bg-violet-600', '22%');
+
+            // Render legend
+            const legendContainer = document.getElementById('taxLegend');
+            legendContainer.innerHTML = '';
+
+            const addLegendItem = (color, title, value) => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-2 p-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700/50 shadow-sm';
+                div.innerHTML = `
+                    <span class="w-3 h-3 rounded-full ${color} shrink-0"></span>
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">${title}</span>
+                        <span class="text-xs font-black text-slate-800 dark:text-white">${formatMoney(value)}</span>
+                    </div>
+                `;
+                legendContainer.appendChild(div);
+            };
+
+            addLegendItem('bg-emerald-500', 'Чистый доход', monthlyNet);
+            if (mTax13 > 0) addLegendItem('bg-teal-600', 'Ставка 13%', mTax13);
+            if (mTax15 > 0) addLegendItem('bg-cyan-600', 'Ставка 15%', mTax15);
+            if (mTax18 > 0) addLegendItem('bg-blue-600', 'Ставка 18%', mTax18);
+            if (mTax20 > 0) addLegendItem('bg-indigo-600', 'Ставка 20%', mTax20);
+            if (mTax22 > 0) addLegendItem('bg-violet-600', 'Ставка 22%', mTax22);
+        }
+
+        function renderSocialStrata(percentile) {
+            // Strata list:
+            const strata = [
+                { minP: 0, maxP: 15, title: 'Крайняя бедность', icon: '🥶', desc: 'Доходы едва покрывают базовую еду. Выживание.' },
+                { minP: 15, maxP: 40, title: 'Ниже среднего', icon: '🛒', desc: 'Базовые траты закрыты, но крупные покупки требуют кредитов.' },
+                { minP: 40, maxP: 75, title: 'Средний класс', icon: '☕', desc: 'Стабильность. Качественная еда, авто, отпуск, накопления.' },
+                { minP: 75, maxP: 90, title: 'Обеспеченные', icon: '✈️', desc: 'Высокий комфорт. Свободные покупки, платная медицина, путешествия.' },
+                { minP: 90, maxP: 97, title: 'Состоятельные', icon: '💎', desc: 'Бизнес-класс. Премиум авто, инвестиции, элитный уровень жизни.' },
+                { minP: 97, maxP: 100, title: 'Финансовая элита', icon: '👑', desc: 'Топ-3% страны. Полная финансовая свобода и влияние на экономику.' }
+            ];
+
+            const grid = document.getElementById('socialStrataGrid');
+            grid.innerHTML = '';
+
+            strata.forEach(item => {
+                const isActive = (percentile >= item.minP && percentile < item.maxP) || (percentile === 100 && item.maxP === 100);
+                const block = document.createElement('div');
+
+                if (isActive) {
+                    block.className = 'p-5 bg-gradient-to-br from-brand-50 to-brand-100/50 dark:from-brand-950/40 dark:to-slate-900 rounded-2xl border-2 border-brand-500 shadow-lg relative overflow-hidden transition-all duration-300 scale-[1.02] transform ring-4 ring-brand-500/10';
+                    block.innerHTML = `
+                        <div class="absolute right-3 top-3 bg-brand-500 text-white font-bold text-[9px] uppercase px-2 py-0.5 rounded-full shadow-sm animate-pulse">Ваш класс</div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-3xl">${item.icon}</span>
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Страта</span>
+                                <span class="text-base font-black text-brand-700 dark:text-brand-400">${item.title}</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-350 leading-relaxed font-medium">${item.desc}</p>
+                    `;
+                } else {
+                    block.className = 'p-5 bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-100 dark:border-slate-800/80 transition-all duration-300 opacity-60 hover:opacity-80';
+                    block.innerHTML = `
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-3xl filter grayscale">${item.icon}</span>
+                            <div class="flex flex-col">
+                                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wide">Страта</span>
+                                <span class="text-sm font-bold text-slate-700 dark:text-slate-300">${item.title}</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">${item.desc}</p>
+                    `;
+                }
+                grid.appendChild(block);
+            });
+        }
+
         function calculateWealth() {
             const grossInput = document.getElementById('grossSalary');
             const gross = parseCleanNumber(grossInput.value);
@@ -427,6 +646,12 @@
             const popPercentile = Math.max(0, percentile - (currentRegion.popOffset || 10));
             document.getElementById('populationComparison').innerHTML =
                 `А если взять вообще всех жителей (включая детей и пенсионеров), то вы богаче <b>${popPercentile}%</b> населения.`;
+
+            // Render tax progressive visual
+            renderTaxProgressiveVisualization(gross);
+
+            // Render strata
+            renderSocialStrata(percentile);
 
             // Median Ratio
             const medianRatio = (gross / currentRegion.median).toFixed(1);
