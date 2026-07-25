@@ -486,7 +486,13 @@
                         </div>
                         <div class="grid grid-cols-3 gap-4 pt-4 border-t border-slate-800">
                             <div>
-                                <span class="text-[10px] font-bold text-slate-400 block mb-1">Обязательный платёж</span>
+                                <span class="text-[10px] font-bold text-slate-400 block mb-1 flex items-center gap-1">
+                                    Обязательный платёж
+                                    <span class="tooltip">
+                                        <svg class="w-3.5 h-3.5 text-slate-400 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <span class="tooltiptext">💡 <strong>Совет:</strong> Вносите досрочные платежи строго в день обязательного платежа. В этот день списываются все накопленные проценты за месяц, поэтому 100% вашей досрочки уйдет на уменьшение основного долга.</span>
+                                    </span>
+                                </span>
                                 <span id="res-monthly-payment" class="text-base sm:text-lg font-extrabold text-slate-100">0 ₽</span>
                             </div>
                             <div>
@@ -532,7 +538,7 @@
                                 <span id="ratio-interest-text" class="text-sm font-bold text-slate-900 dark:text-white">50%</span>
                             </div>
                         </div>
-                        <p id="ratio-text" class="text-[11px] text-slate-400 dark:text-slate-500 leading-normal italic">Тело кредита к начисленным процентам.</p>
+                        <p id="ratio-text" class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-semibold mt-2"></p>
                     </div>
                     <div class="relative w-24 h-24 md:w-28 md:h-28 shrink-0 flex items-center justify-center">
                         <canvas id="ratioDonutChart" class="absolute inset-0 w-full h-full"></canvas>
@@ -544,35 +550,27 @@
                 </div>
 
                 <div id="screenshot-area" class="space-y-6 bg-slate-50 dark:bg-slate-950 p-4 -m-4 rounded-3xl">
-                    <div id="savings-card" class="bg-gradient-to-br from-brand-900 to-emerald-850 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300">
-                        <div class="relative z-10 space-y-4">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs uppercase font-black bg-brand-600 px-3 py-1 rounded-full text-brand-50" id="saving-badge">Экономия</span>
-                                <span class="text-xs text-brand-200">за счет переплат</span>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <p class="text-xs text-brand-200" id="label-saved-interest">Сбережем процентов</p>
-                                    <p id="saving-money" class="text-2xl font-black text-emerald-200">0 ₽</p>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-brand-200">Сократим срок на</p>
-                                    <p id="saving-months" class="text-2xl font-black text-emerald-200">0 мес.</p>
-                                </div>
-                            </div>
-                            <div class="border-t border-brand-800/60 pt-3 text-[11px] text-brand-200 flex flex-col sm:flex-row sm:justify-between gap-2">
-                                <span>Итого выплатим банку: <strong id="res-total-paid" class="text-white">0 ₽</strong></span>
-                                <span>Досрочный капитал: <strong id="res-total-prepaid" class="text-emerald-300">0 ₽</strong></span>
-                            </div>
-                        </div>
+                    <div id="savings-card" class="bg-emerald-950 border border-emerald-800/30 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300">
+                        <!-- Content is populated dynamically via updateCalculations() to show either stats or empty-state encouraging microcopy -->
                     </div>
 
-                    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between h-[280px]">
-                        <div class="flex justify-between items-center mb-2">
+                    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between h-[310px]">
+                        <div class="flex justify-between items-center mb-1">
                             <h3 class="text-sm font-bold text-slate-800 dark:text-white" id="chart-title">Динамика остатка долга</h3>
                         </div>
-                        <div class="relative flex-1 h-full">
+                        <div class="relative flex-1 h-full min-h-[200px]">
                             <canvas id="balanceChart"></canvas>
+                        </div>
+                        <!-- Subtle, high-contrast legend explaining the lines -->
+                        <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-1 text-[11px] text-slate-600 dark:text-slate-400">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3.5 h-0.5 bg-[#10b981] inline-block rounded"></span>
+                                <span><strong class="text-slate-900 dark:text-white font-bold">Зеленая линия (сплошная):</strong> Прогноз с учетом ваших досрочных платежей.</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-3.5 h-0 border-t-2 border-dashed border-slate-400 dark:border-slate-600 inline-block"></span>
+                                <span><strong class="text-slate-900 dark:text-white font-bold">Серая линия (пунктир):</strong> Базовый график банка без досрочного погашения.</span>
+                            </div>
                         </div>
                     </div>
 
@@ -625,7 +623,7 @@
             </div>
             <div class="grid grid-cols-2 gap-2">
                 <button onclick="openLeadModal()" class="w-full py-2.5 bg-brand-600 text-white font-black rounded-xl text-xs shadow-md">🔥 Заявка под 0.3%</button>
-                <button onclick="shareLinkCustom('Ипотечный Расчет — CalcHub', 'Я рассчитал идеальный ипотечный план в ИпотекаПро! Экономия на процентах составила ' + document.getElementById('saving-money').innerText + '. Рассчитай и ты свой сценарий!')" class="w-full py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-bold rounded-xl text-xs border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1">
+                <button onclick="shareLinkCustom('Ипотечный Расчет — CalcHub', 'Я рассчитал идеальный ипотечный план в ИпотекаПро! Экономия на процентах составила ' + (document.getElementById('saving-money') ? document.getElementById('saving-money').innerText : '0 ₽') + '. Рассчитай и ты свой сценарий!')" class="w-full py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-bold rounded-xl text-xs border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
                     Поделиться
                 </button>
@@ -1144,29 +1142,30 @@
             const prepayCounter = document.getElementById('custom-prepayments-counter');
             if (prepayCounter) prepayCounter.innerText = `Спецплатежей: ${Object.keys(state.customPrepayments).length}`;
 
-            Object.keys(years).forEach(y => {
-                const yNum = parseInt(y);
-                
-                // If PRO is locked, do not render years past 3 to prevent clutter and position paywall high up!
-                if (!state.isProUnlocked && yNum > 3) {
-                    return;
+            const sortedYears = Object.keys(years).map(Number).sort((a,b)=>a-b);
+
+            sortedYears.forEach(yNum => {
+                if (!state.isProUnlocked && yNum > 4) {
+                    return; // Do not render Years 5+ in the DOM at all while locked
                 }
                 
-                const isLocked = !state.isProUnlocked && yNum > 2;
-                const yData = years[y]; const yearId = `year-${y}`;
+                const isYear4Teaser = !state.isProUnlocked && yNum === 4;
+                const isLocked = isYear4Teaser; // Year 1, 2, 3 are 100% free. Year 4 is the teaser.
+
+                const yData = years[yNum]; const yearId = `year-${yNum}`;
 
                 let yPaid = 0, yInt = 0, yPrep = 0;
                 yData.forEach(m => { yPaid += m.payment; yInt += m.interest; yPrep += m.prepayment; });
                 const lastBal = yData[yData.length - 1].balance;
 
                 const header = document.createElement('div');
-                header.className = `bg-slate-50 border border-slate-150 hover:bg-slate-100 dark:bg-slate-800/50 dark:border-slate-700 rounded-xl transition p-4 flex flex-col lg:grid lg:grid-cols-12 gap-3 items-start lg:items-center ${isLocked ? 'blur-[3px] pointer-events-none opacity-40 select-none' : 'cursor-pointer'}`;
+                header.className = `bg-slate-50 border border-slate-150 hover:bg-slate-100 dark:bg-slate-800/50 dark:border-slate-700 rounded-xl transition p-4 flex flex-col lg:grid lg:grid-cols-12 gap-3 items-start lg:items-center ${isLocked ? 'blur-sm opacity-50 select-none pointer-events-none' : 'cursor-pointer'}`;
                 if (!isLocked) header.onclick = () => toggleYearAccordion(yearId);
 
                 header.innerHTML = `
                     <div class="col-span-2 flex items-center space-x-2">
-                        <span class="p-1 bg-brand-600 text-white rounded text-xs font-bold w-6 h-6 flex items-center justify-center">${y}</span>
-                        <span class="font-bold text-slate-800 dark:text-slate-200 text-sm">${y}-й год</span>
+                        <span class="p-1 bg-brand-600 text-white rounded text-xs font-bold w-6 h-6 flex items-center justify-center">${yNum}</span>
+                        <span class="font-bold text-slate-800 dark:text-slate-200 text-sm">${yNum}-й год</span>
                     </div>
                     <div class="col-span-2 text-right"><span class="text-xs font-bold text-slate-700 dark:text-slate-300">${localFormatMoney(yPaid)}</span></div>
                     <div class="col-span-2 text-right"><span class="text-xs font-bold text-rose-600">${localFormatMoney(yInt)}</span></div>
@@ -1178,69 +1177,71 @@
                 `;
 
                 let mHtml = '';
-                if (!isLocked) {
-                    yData.forEach(m => {
-                        mHtml += `
-                            <div data-month="${m.month}" class="grid grid-cols-1 lg:grid-cols-12 gap-4 px-4 py-2 bg-white dark:bg-slate-900 border-b dark:border-slate-800 items-center">
-                                <div class="col-span-2 text-xs text-slate-400">Месяц ${m.month}</div>
-                                <div class="col-span-2 text-right text-xs font-semibold">${localFormatMoney(m.payment)}</div>
-                                <div class="col-span-2 text-right text-xs font-semibold text-rose-500">${localFormatMoney(m.interest)}</div>
-                                <div class="col-span-2 text-right text-xs font-semibold text-slate-600">${localFormatMoney(m.principal)}</div>
-                                <div class="col-span-2 text-center">
-                                    <input type="text" value="${state.customPrepayments[m.month] ? localFormatNumber(state.customPrepayments[m.month]) : ''}" oninput="formatTableInputVisual(this)" class="w-20 text-center py-0.5 bg-brand-50 dark:bg-slate-800 border rounded font-bold text-xs outline-none text-slate-900 dark:text-white">
-                                </div>
-                                <div class="col-span-2 text-right text-xs font-bold">${localFormatMoney(m.balance)}</div>
+                // For Year 4 teaser, we render only first 3 rows (months) with blur-sm opacity-50 select-none pointer-events-none
+                const visibleMonths = isYear4Teaser ? yData.slice(0, 3) : yData;
+
+                visibleMonths.forEach(m => {
+                    mHtml += `
+                        <div data-month="${m.month}" class="grid grid-cols-1 lg:grid-cols-12 gap-4 px-4 py-2 bg-white dark:bg-slate-900 border-b dark:border-slate-800 items-center ${isYear4Teaser ? 'blur-sm opacity-50 select-none' : ''}">
+                            <div class="col-span-2 text-xs text-slate-400">Месяц ${m.month}</div>
+                            <div class="col-span-2 text-right text-xs font-semibold">${localFormatMoney(m.payment)}</div>
+                            <div class="col-span-2 text-right text-xs font-semibold text-rose-500">${localFormatMoney(m.interest)}</div>
+                            <div class="col-span-2 text-right text-xs font-semibold text-slate-600">${localFormatMoney(m.principal)}</div>
+                            <div class="col-span-2 text-center">
+                                <input type="text" ${isYear4Teaser ? 'disabled' : ''} value="${state.customPrepayments[m.month] ? localFormatNumber(state.customPrepayments[m.month]) : ''}" oninput="formatTableInputVisual(this)" class="w-20 text-center py-0.5 bg-brand-50 dark:bg-slate-800 border rounded font-bold text-xs outline-none text-slate-900 dark:text-white">
                             </div>
-                        `;
-                    });
-                }
+                            <div class="col-span-2 text-right text-xs font-bold">${localFormatMoney(m.balance)}</div>
+                        </div>
+                    `;
+                });
 
                 const content = document.createElement('div'); content.id = `content-${yearId}`;
-                content.className = "hidden border-x border-b dark:border-slate-800 rounded-b-xl p-1 bg-slate-50 dark:bg-slate-900";
+                content.className = `${isYear4Teaser ? '' : 'hidden'} border-x border-b dark:border-slate-800 rounded-b-xl p-1 bg-slate-50 dark:bg-slate-900`;
                 content.innerHTML = mHtml;
 
-                const wrap = document.createElement('div'); wrap.appendChild(header); wrap.appendChild(content); container.appendChild(wrap);
-            });
+                const wrap = document.createElement('div'); wrap.appendChild(header); wrap.appendChild(content);
+                container.appendChild(wrap);
 
-            // Если доступ PRO не разблокирован и лет больше 2, показываем оверлей PRO-пейволла прямо поверх заблокированного года
-            if (!state.isProUnlocked && Object.keys(years).length > 2) {
-                const paywallDiv = document.createElement('div');
-                paywallDiv.id = "pro-paywall-overlay";
-                paywallDiv.className = "absolute inset-x-0 bottom-0 z-20 flex flex-col items-center justify-center pb-8 pt-12 bg-gradient-to-b from-white/90 via-white/98 to-white dark:from-slate-950/90 dark:via-slate-950/98 dark:to-slate-950 backdrop-blur-[4px] min-h-[480px]";
-                paywallDiv.innerHTML = `
-                    <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-2xl border-2 border-brand-500/30 dark:border-brand-500/20 text-center max-w-lg mx-auto transition-transform scale-100 hover:scale-[1.01] space-y-4">
-                        <div class="w-14 h-14 bg-gradient-to-br from-amber-400 to-brand-500 text-white rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-brand-500/20 animate-pulse">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">👑 Раскройте полную силу досрочки</h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-md mx-auto">
-                                Детальный расчет графика на 3-й год и далее доступен только в **PRO версии**. Узнайте, как спецплатежи могут сэкономить вам дополнительные **миллионы рублей**!
-                            </p>
-                        </div>
-                        
-                        <!-- Premium Code Verification Form -->
-                        <form onsubmit="checkProPassword(event)" class="bg-slate-50 dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 text-left space-y-4 max-w-sm mx-auto">
-                            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
-                                <span class="text-xs font-bold text-slate-800 dark:text-white">Активация PRO-доступа</span>
-                                <span class="text-xs font-extrabold text-brand-600">Спецкод</span>
+                // Directly below Year 3, insert a static beautifully styled "PRO Activation" card inside natural DOM flow
+                if (!state.isProUnlocked && yNum === 3) {
+                    const paywallDiv = document.createElement('div');
+                    paywallDiv.id = "pro-paywall-overlay";
+                    paywallDiv.className = "relative block w-full my-4 z-20";
+                    paywallDiv.innerHTML = `
+                        <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-2xl border-2 border-brand-500/30 dark:border-brand-500/20 text-center max-w-lg mx-auto transition-transform scale-100 hover:scale-[1.01] space-y-4">
+                            <div class="w-14 h-14 bg-gradient-to-br from-amber-400 to-brand-500 text-white rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-brand-500/20 animate-pulse">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">👑 Раскройте полную силу досрочки</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-md mx-auto">
+                                    Детальный расчет графика на 4-й год и далее доступен только в **PRO версии**. Узнайте, как спецплатежи могут сэкономить вам дополнительные **миллионы рублей**!
+                                </p>
                             </div>
                             
-                            <div class="space-y-1">
-                                <label class="text-[9px] font-bold uppercase tracking-wider text-slate-400 block">Введите пароль доступа</label>
-                                <input type="text" id="pro-password-input" required placeholder="Например: PORF" class="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-lg outline-none focus:ring-2 focus:ring-brand-500 text-xs font-semibold text-slate-800 dark:text-white uppercase">
-                            </div>
-                            
-                            <button type="submit" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center">
-                                ✨ Активировать PRO
-                            </button>
-                            
-                            <span class="text-[8px] text-slate-400 block text-center">Используйте тестовый код для полной разблокировки таблицы</span>
-                        </form>
-                    </div>
-                `;
-                container.appendChild(paywallDiv);
-            }
+                            <!-- Premium Code Verification Form -->
+                            <form onsubmit="checkProPassword(event)" class="bg-slate-50 dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 text-left space-y-4 max-w-sm mx-auto">
+                                <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+                                    <span class="text-xs font-bold text-slate-800 dark:text-white">Активация PRO-доступа</span>
+                                    <span class="text-xs font-extrabold text-brand-600">Спецкод</span>
+                                </div>
+
+                                <div class="space-y-1">
+                                    <label class="text-[9px] font-bold uppercase tracking-wider text-slate-400 block">Введите пароль доступа</label>
+                                    <input type="text" id="pro-password-input" required placeholder="Например: PORF" class="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-lg outline-none focus:ring-2 focus:ring-brand-500 text-xs font-semibold text-slate-800 dark:text-white uppercase">
+                                </div>
+
+                                <button type="submit" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center">
+                                    ✨ Активировать PRO
+                                </button>
+
+                                <span class="text-[8px] text-slate-400 block text-center">Используйте тестовый код для полной разблокировки таблицы</span>
+                            </form>
+                        </div>
+                    `;
+                    container.appendChild(paywallDiv);
+                }
+            });
         }
 
         function formatTableInputVisual(input) {
@@ -1298,7 +1299,7 @@
                                 ticks: { 
                                     font: { size: 9 }, 
                                     maxTicksLimit: 5,
-                                    callback: v => (v / 1000000).toFixed(1) + 'м' 
+                                    callback: v => (v / 1000000).toFixed(1) + ' млн ₽'
                                 } 
                             }, 
                             x: { 
@@ -1306,7 +1307,16 @@
                                 ticks: { 
                                     font: { size: 9 },
                                     maxTicksLimit: 4
-                                } 
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Срок кредита (годы)',
+                                    color: isDark ? '#94a3b8' : '#475569',
+                                    font: {
+                                        size: 10,
+                                        weight: 'bold'
+                                    }
+                                }
                             } 
                         } 
                     } 
@@ -1331,13 +1341,49 @@
             document.getElementById('res-total-interest').innerText = localFormatMoney(preRes.totalInterest + preRes.totalInsurance);
             document.getElementById('res-total-paid').innerText = localFormatMoney(preRes.totalPaid);
             document.getElementById('res-total-prepaid').innerText = localFormatMoney(preRes.totalPrepaid);
-            document.getElementById('saving-money').innerText = localFormatMoney(savedInt > 0 ? savedInt : 0);
-            document.getElementById('saving-months').innerText = `${savedM > 0 ? savedM : 0} мес.`;
             document.getElementById('mobile-payment').innerText = localFormatMoney(monthlyPmt);
             
             const mobileOverpay = document.getElementById('mobile-overpayment');
             if (mobileOverpay) {
                 mobileOverpay.innerText = localFormatMoney(preRes.totalInterest + preRes.totalInsurance);
+            }
+
+            // Populate the newly redesigned solid Savings Card
+            const savingsCard = document.getElementById('savings-card');
+            if (savingsCard) {
+                if (savedInt <= 0 && savedM <= 0) {
+                    savingsCard.innerHTML = `
+                        <div class="relative z-10 flex flex-col items-center justify-center text-center py-4 space-y-2">
+                            <span class="text-3xl">🔥</span>
+                            <p class="text-sm font-black text-emerald-300 leading-relaxed max-w-sm">
+                                Добавьте регулярную доплату, чтобы увидеть сбереженные миллионы!
+                            </p>
+                        </div>
+                    `;
+                } else {
+                    savingsCard.innerHTML = `
+                        <div class="relative z-10 space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs uppercase font-black bg-brand-600 px-3 py-1 rounded-full text-brand-50" id="saving-badge">Экономия</span>
+                                <span class="text-xs text-emerald-300 font-semibold">за счет переплат</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-xs text-emerald-400 font-semibold" id="label-saved-interest">Сбережем процентов</p>
+                                    <p id="saving-money" class="text-2xl font-black text-white">${localFormatMoney(savedInt > 0 ? savedInt : 0)}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-emerald-400 font-semibold">Сократим срок на</p>
+                                    <p id="saving-months" class="text-2xl font-black text-white">${savedM > 0 ? savedM : 0} мес.</p>
+                                </div>
+                            </div>
+                            <div class="border-t border-emerald-800/60 pt-3 text-[11px] text-emerald-300 flex flex-col sm:flex-row sm:justify-between gap-2">
+                                <span>Итого выплатим банку: <strong id="res-total-paid" class="text-white">${localFormatMoney(preRes.totalPaid)}</strong></span>
+                                <span>Досрочный капитал: <strong id="res-total-prepaid" class="text-emerald-400 font-extrabold">${localFormatMoney(preRes.totalPrepaid)}</strong></span>
+                            </div>
+                        </div>
+                    `;
+                }
             }
 
             const valM = document.getElementById('mobile-saving'); const ctaM = document.getElementById('mobile-cta-text');
@@ -1365,7 +1411,7 @@
                 donutEff.innerText = `${Math.round(bPct)}%`;
             }
 
-            document.getElementById('ratio-text').innerText = `Вы выплачиваете ${localFormatMoney(loanAmount)} тела долга и ${localFormatMoney(preRes.totalInterest)} процентов за весь срок кредита.`;
+            document.getElementById('ratio-text').innerHTML = `Вы выплачиваете <strong class="text-slate-900 dark:text-white font-extrabold bg-emerald-100 dark:bg-emerald-950/50 px-1.5 py-0.5 rounded border border-emerald-500/20">${localFormatMoney(loanAmount)}</strong> тела долга и <strong class="text-slate-900 dark:text-white font-extrabold bg-rose-100 dark:bg-rose-950/50 px-1.5 py-0.5 rounded border border-rose-500/20">${localFormatMoney(preRes.totalInterest)}</strong> процентов за весь срок кредита.`;
 
             // Render/Update the Donut Chart
             const donutCanvas = document.getElementById('ratioDonutChart');
