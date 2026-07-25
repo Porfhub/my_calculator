@@ -308,161 +308,161 @@
             <!-- ПРАВАЯ КОЛОНКА: Результаты -->
             <div class="lg:col-span-5 space-y-6">
 
-                <div id="screenshot-area" class="space-y-6 lg:bg-transparent bg-slate-50 dark:bg-slate-950 p-0 lg:p-0 rounded-3xl">
-
-                    <!-- СТОИМОСТЬ 1 КМ ПУТИ (MASSIVE HERO METRIC) -->
-                    <div class="bg-gradient-to-br from-brand-600 to-emerald-800 text-white p-6 rounded-3xl shadow-lg border border-brand-500 relative overflow-hidden transition-all duration-300">
-                        <!-- Abstract glow backgrounds -->
-                        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
-                        <div class="absolute -left-10 -top-10 w-32 h-32 bg-brand-400/20 rounded-full blur-xl"></div>
-
-                        <div class="relative z-10 text-center">
-                            <span class="text-[10px] font-black uppercase tracking-widest text-brand-100 opacity-90 block mb-1">Реальная стоимость 1 км на машине</span>
-                            <div class="flex items-baseline justify-center gap-1.5 py-2">
-                                <span id="km-cost-main" class="text-5xl md:text-6xl font-black tracking-tight drop-shadow-md transition-all duration-300">...</span>
-                                <span class="text-xl font-bold opacity-90">₽/км</span>
-                            </div>
-                            <!-- Comparison pill -->
-                            <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-xs font-semibold mt-1">
-                                <span>На такси:</span>
-                                <span id="km-cost-taxi" class="font-extrabold text-brand-200">... ₽/км</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- EMOTIONAL TRIGGER BLOCK (Depreciation Loss While Sleeping) -->
-                    <div class="bg-gradient-to-br from-slate-900 to-slate-950 text-slate-100 p-6 rounded-3xl border border-indigo-950 shadow-xl transition-all duration-300 relative overflow-hidden">
-                        <!-- Starry night visual elements -->
-                        <div class="absolute right-4 top-4 text-2xl opacity-40 animate-pulse">🌙</div>
-                        <div class="absolute right-12 bottom-6 w-1 h-1 bg-white rounded-full opacity-60"></div>
-                        <div class="absolute left-1/3 top-8 w-0.5 h-0.5 bg-white rounded-full opacity-40"></div>
-                        <div class="absolute right-1/4 top-16 w-0.5 h-0.5 bg-white rounded-full opacity-50"></div>
-
-                        <div class="relative z-10 flex flex-col items-center text-center">
-                            <h4 class="text-xs font-black uppercase tracking-widest text-indigo-400 mb-2">Невидимые потери капитала</h4>
-                            <p class="text-sm font-medium text-slate-300 leading-relaxed max-w-sm">
-                                Ваша машина теряет <span id="nightly-depreciation" class="font-black text-amber-400 text-lg">... ₽</span> каждую ночь, пока вы спите.
-                            </p>
-                            <span class="text-[9px] text-slate-500 font-bold mt-2 uppercase tracking-tight">Это годовая амортизация, разделенная на 365 дней</span>
-                        </div>
-                    </div>
-
-                    <!-- Упущенная выгода от депозита (Smart passive income visual block) -->
-                    <div id="lost-opportunity-card" class="bg-gradient-to-br from-blue-900/40 to-indigo-950/40 dark:from-blue-950/20 dark:to-slate-900 border border-blue-200 dark:border-blue-900/50 p-6 rounded-3xl shadow-lg transition-all duration-300 hidden">
-                        <div class="flex items-start gap-3">
-                            <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold text-lg shrink-0">📈</div>
-                            <div>
-                                <h4 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider mb-1">Альтернатива: Вклад</h4>
-                                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                                    Если не покупать машину за <span id="lost-opp-price" class="font-bold">... ₽</span>, а положить эти деньги на вклад под <span id="lost-opp-rate" class="font-bold text-brand-600">...%</span> годовых, вы бы получали:
-                                </p>
-                                <div class="grid grid-cols-2 gap-4 mt-3">
-                                    <div class="bg-white/50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800/40">
-                                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tight">В месяц</p>
-                                        <p id="lost-opp-monthly" class="text-base font-black text-brand-600 dark:text-brand-400">... ₽</p>
-                                    </div>
-                                    <div class="bg-white/50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800/40">
-                                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tight">В год</p>
-                                        <p id="lost-opp-annual" class="text-base font-black text-brand-600 dark:text-brand-400">... ₽</p>
-                                    </div>
-                                </div>
-                                <p class="text-[9px] text-slate-400 dark:text-slate-500 mt-2 italic">Эта сумма показана информативно и не суммируется напрямую с расходами на обслуживание авто.</p>
-                            </div>
-                        </div>
-                    </div>
+                <div id="screenshot-area" class="space-y-4 lg:bg-transparent bg-slate-50 dark:bg-slate-950 p-0 lg:p-0 rounded-3xl">
 
                     <!-- Главный вердикт -->
-                    <div id="verdict-card" class="p-8 rounded-3xl transition-all duration-500 flex flex-col items-center text-center space-y-4 shadow-xl border">
-                        <div id="verdict-icon" class="w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-2">🚗</div>
-                        <div>
-                            <h3 id="verdict-title" class="text-2xl font-black mb-2">Выгоднее на машине</h3>
-                            <p id="verdict-description" class="text-sm opacity-80 leading-relaxed px-4">С учетом всех расходов, включая потерю стоимости авто, владение машиной обходится дешевле такси.</p>
+                    <div id="verdict-card" class="p-5 md:p-6 rounded-2xl transition-all duration-500 flex flex-col items-center text-center space-y-3 shadow-md border">
+                        <div class="flex items-center gap-3">
+                            <div id="verdict-icon" class="w-12 h-12 rounded-full flex items-center justify-center text-3xl shrink-0">🚗</div>
+                            <div class="text-left">
+                                <h3 id="verdict-title" class="text-xl font-black leading-tight text-slate-900 dark:text-white">Выгоднее на машине</h3>
+                                <p id="verdict-description" class="text-xs text-slate-600 dark:text-slate-300 opacity-90 leading-normal max-w-sm">С учетом всех расходов, включая потерю стоимости авто, владение машиной обходится дешевле такси.</p>
+                            </div>
                         </div>
-                        <div class="w-full pt-6 border-t border-black/5 mt-2">
-                            <p class="text-xs font-bold uppercase tracking-wider opacity-60 mb-1">Разница в месяц</p>
-                            <p id="monthly-diff" class="text-4xl font-black">0 ₽</p>
-                        </div>
-                    </div>
-
-                    <!-- БАЛАНС СИЛ / TUG OF WAR -->
-                    <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-md border border-slate-100 dark:border-slate-800 space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-black uppercase tracking-widest text-slate-400">Баланс сил (в месяц)</span>
-                            <span id="tug-of-war-verdict" class="text-xs font-bold text-slate-600 dark:text-slate-400">...</span>
-                        </div>
-                        <div class="relative w-full h-4 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex">
-                            <div id="tug-car-bar" class="h-full bg-emerald-500 transition-all duration-500" style="width: 50%"></div>
-                            <div id="tug-taxi-bar" class="h-full bg-amber-500 transition-all duration-500" style="width: 50%"></div>
-                        </div>
-                        <div class="flex justify-between items-center text-[10px] font-bold text-slate-400">
-                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>Машина <span id="tug-car-pct">50%</span></span>
-                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span>Такси <span id="tug-taxi-pct">50%</span></span>
+                        <div class="w-full pt-4 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center px-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Разница в месяц:</span>
+                            <span id="monthly-diff" class="text-2xl font-black">0 ₽</span>
                         </div>
                     </div>
 
                     <!-- 2x2 СЕТКА СРАВНЕНИЯ: МЕСЯЦ И ГОД -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <!-- В МЕСЯЦ: Машина -->
-                        <div class="bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/20 dark:to-slate-900 border border-emerald-100 dark:border-emerald-900/50 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+                        <div class="bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/20 dark:to-slate-900 border border-emerald-100 dark:border-emerald-900/50 p-4 rounded-xl shadow-sm flex flex-col justify-between">
                             <div>
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="text-lg">🚗</span>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-base">🚗</span>
                                     <span class="text-[10px] font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">Машина / Месяц</span>
                                 </div>
-                                <p id="grid-car-monthly" class="text-2xl font-black text-slate-900 dark:text-white">0 ₽</p>
+                                <p id="grid-car-monthly" class="text-xl font-black text-slate-900 dark:text-white">0 ₽</p>
                             </div>
-                            <div class="mt-4 pt-3 border-t border-emerald-100/50 dark:border-emerald-900/30 text-[10px] text-slate-500 dark:text-slate-400 space-y-1">
+                            <div class="mt-3 pt-2 border-t border-emerald-100/50 dark:border-emerald-900/30 text-[10px] text-slate-500 dark:text-slate-400 space-y-1">
                                 <div class="flex justify-between"><span>Топливо:</span><span id="car-monthly-fuel" class="font-bold">0 ₽</span></div>
-                                <div class="flex justify-between"><span>ТО + Страховка:</span><span id="car-monthly-fixed" class="font-bold">0 ₽</span></div>
+                                <div class="flex justify-between"><span>ТО + ОСАГО:</span><span id="car-monthly-fixed" class="font-bold">0 ₽</span></div>
                                 <div class="flex justify-between"><span>Амортизация:</span><span id="car-monthly-depr" class="font-bold">0 ₽</span></div>
                             </div>
                         </div>
 
                         <!-- В МЕСЯЦ: Такси -->
-                        <div class="bg-gradient-to-br from-amber-50 to-white dark:from-amber-950/20 dark:to-slate-900 border border-amber-100 dark:border-amber-900/50 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+                        <div class="bg-gradient-to-br from-amber-50 to-white dark:from-amber-950/20 dark:to-slate-900 border border-amber-100 dark:border-amber-900/50 p-4 rounded-xl shadow-sm flex flex-col justify-between">
                             <div>
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="text-lg">🚕</span>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-base">🚕</span>
                                     <span class="text-[10px] font-black text-amber-700 dark:text-amber-400 uppercase tracking-wider">Такси / Месяц</span>
                                 </div>
-                                <p id="grid-taxi-monthly" class="text-2xl font-black text-slate-900 dark:text-white">0 ₽</p>
+                                <p id="grid-taxi-monthly" class="text-xl font-black text-slate-900 dark:text-white">0 ₽</p>
                             </div>
-                            <div class="mt-4 pt-3 border-t border-amber-100/50 dark:border-amber-900/30 text-[10px] text-slate-500 dark:text-slate-400 space-y-1">
-                                <div class="flex justify-between"><span>Поездок в мес:</span><span id="taxi-monthly-trips" class="font-bold">0</span></div>
-                                <div class="flex justify-between"><span>Цена за поездку:</span><span id="taxi-monthly-rate" class="font-bold">0 ₽</span></div>
-                                <div class="flex justify-between"><span>Всего поездок:</span><span class="font-bold">100%</span></div>
+                            <div class="mt-3 pt-2 border-t border-amber-100/50 dark:border-amber-900/30 text-[10px] text-slate-500 dark:text-slate-400 space-y-1">
+                                <div class="flex justify-between"><span>Поездок:</span><span id="taxi-monthly-trips" class="font-bold">0</span></div>
+                                <div class="flex justify-between"><span>За поездку:</span><span id="taxi-monthly-rate" class="font-bold">0 ₽</span></div>
+                                <div class="flex justify-between"><span>Итого:</span><span class="font-bold">100%</span></div>
                             </div>
                         </div>
 
                         <!-- В ГОД: Машина -->
-                        <div class="bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/20 dark:to-slate-900 border border-emerald-100 dark:border-emerald-900/50 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+                        <div class="bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/20 dark:to-slate-900 border border-emerald-100 dark:border-emerald-900/50 p-4 rounded-xl shadow-sm flex flex-col justify-between">
                             <div>
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="text-lg">🚗</span>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-base">🚗</span>
                                     <span class="text-[10px] font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">Машина / Год</span>
                                 </div>
-                                <p id="grid-car-annual" class="text-2xl font-black text-slate-900 dark:text-white">0 ₽</p>
+                                <p id="grid-car-annual" class="text-xl font-black text-slate-900 dark:text-white">0 ₽</p>
                             </div>
-                            <div class="mt-4 pt-3 border-t border-emerald-100/50 dark:border-emerald-900/30 text-[10px] text-slate-500 dark:text-slate-400 space-y-1">
-                                <div class="flex justify-between"><span>Топливо в год:</span><span id="car-annual-fuel" class="font-bold">0 ₽</span></div>
-                                <div class="flex justify-between"><span>ТО + Страховка:</span><span id="car-annual-fixed" class="font-bold">0 ₽</span></div>
+                            <div class="mt-3 pt-2 border-t border-emerald-100/50 dark:border-emerald-900/30 text-[10px] text-slate-500 dark:text-slate-400 space-y-1">
+                                <div class="flex justify-between"><span>Топливо:</span><span id="car-annual-fuel" class="font-bold">0 ₽</span></div>
+                                <div class="flex justify-between"><span>ТО + ОСАГО:</span><span id="car-annual-fixed" class="font-bold">0 ₽</span></div>
                                 <div class="flex justify-between"><span>Амортизация:</span><span id="car-annual-depr" class="font-bold">0 ₽</span></div>
                             </div>
                         </div>
 
                         <!-- В ГОД: Такси -->
-                        <div class="bg-gradient-to-br from-amber-50 to-white dark:from-amber-950/20 dark:to-slate-900 border border-amber-100 dark:border-amber-900/50 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+                        <div class="bg-gradient-to-br from-amber-50 to-white dark:from-amber-950/20 dark:to-slate-900 border border-amber-100 dark:border-amber-900/50 p-4 rounded-xl shadow-sm flex flex-col justify-between">
                             <div>
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="text-lg">🚕</span>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-base">🚕</span>
                                     <span class="text-[10px] font-black text-amber-700 dark:text-amber-400 uppercase tracking-wider">Такси / Год</span>
                                 </div>
-                                <p id="grid-taxi-annual" class="text-2xl font-black text-slate-900 dark:text-white">0 ₽</p>
+                                <p id="grid-taxi-annual" class="text-xl font-black text-slate-900 dark:text-white">0 ₽</p>
                             </div>
-                            <div class="mt-4 pt-3 border-t border-amber-100/50 dark:border-amber-900/30 text-[10px] text-slate-500 dark:text-slate-400 space-y-1">
+                            <div class="mt-3 pt-2 border-t border-amber-100/50 dark:border-amber-900/30 text-[10px] text-slate-500 dark:text-slate-400 space-y-1">
                                 <div class="flex justify-between"><span>Поездок в год:</span><span id="taxi-annual-trips" class="font-bold">0</span></div>
-                                <div class="flex justify-between"><span>Затраты на год:</span><span id="taxi-annual-total-detail" class="font-bold">0 ₽</span></div>
-                                <div class="flex justify-between"><span>Инфляция тарифов:</span><span class="font-bold">Оценка</span></div>
+                                <div class="flex justify-between"><span>Затраты:</span><span id="taxi-annual-total-detail" class="font-bold">0 ₽</span></div>
+                                <div class="flex justify-between"><span>Тарифы:</span><span class="font-bold">Оценка</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- БАЛАНС СИЛ / TUG OF WAR -->
+                    <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Баланс сил (в месяц)</span>
+                            <span id="tug-of-war-verdict" class="text-xs font-bold text-slate-700 dark:text-slate-300">...</span>
+                        </div>
+                        <div class="relative w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex">
+                            <div id="tug-car-bar" class="h-full bg-emerald-500 transition-all duration-500" style="width: 50%"></div>
+                            <div id="tug-taxi-bar" class="h-full bg-amber-500 transition-all duration-500" style="width: 50%"></div>
+                        </div>
+                        <div class="flex justify-between items-center text-[9px] font-bold text-slate-400 dark:text-slate-500">
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>Машина <span id="tug-car-pct">50%</span></span>
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span>Такси <span id="tug-taxi-pct">50%</span></span>
+                        </div>
+                    </div>
+
+                    <!-- СТОИМОСТЬ 1 КМ ПУТИ (COMPACT VERSION) -->
+                    <div class="bg-gradient-to-br from-brand-600 to-emerald-800 text-white p-4 rounded-2xl shadow-md border border-brand-500 relative overflow-hidden transition-all duration-300">
+                        <!-- Abstract glow backgrounds -->
+                        <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+                        <div class="absolute -left-10 -top-10 w-24 h-24 bg-brand-400/20 rounded-full blur-xl"></div>
+
+                        <div class="relative z-10 flex items-center justify-between">
+                            <div class="text-left">
+                                <span class="text-[9px] font-black uppercase tracking-widest text-brand-100 opacity-90 block">Цена 1 км на машине</span>
+                                <div class="flex items-baseline gap-1 mt-0.5">
+                                    <span id="km-cost-main" class="text-3xl font-black tracking-tight drop-shadow-md">...</span>
+                                    <span class="text-sm font-bold opacity-90">₽/км</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[9px] font-black uppercase tracking-widest text-brand-100 opacity-90 block">Цена 1 км на такси</span>
+                                <span id="km-cost-taxi" class="text-base font-extrabold text-brand-200 mt-1 block">... ₽/км</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- EMOTIONAL TRIGGER BLOCK (COMPACT VERSION) -->
+                    <div class="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100 p-4 rounded-2xl border border-indigo-950/80 shadow-md transition-all duration-300 relative overflow-hidden">
+                        <div class="absolute right-3 top-3 text-xl opacity-30">🌙</div>
+                        <div class="relative z-10 flex items-center gap-3">
+                            <span class="text-2xl shrink-0">💸</span>
+                            <div class="text-left">
+                                <h4 class="text-[10px] font-black uppercase tracking-widest text-indigo-400">Потери капитала</h4>
+                                <p class="text-xs font-medium text-slate-300 leading-normal mt-0.5">
+                                    Машина дешевеет на <span id="nightly-depreciation" class="font-black text-amber-400 text-sm">... ₽</span> каждую ночь, пока вы спите.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Альтернатива: Депозит (HIGH-CONTRAST PREMIUM VERSION) -->
+                    <div id="lost-opportunity-card" class="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-slate-900 dark:to-indigo-950/40 border border-blue-300 dark:border-indigo-900/60 p-4 rounded-2xl shadow-md transition-all duration-300 hidden">
+                        <div class="flex items-start gap-3">
+                            <div class="w-9 h-9 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-base shrink-0 shadow-md">📈</div>
+                            <div class="flex-1 min-w-0">
+                                <h4 class="text-xs font-black text-indigo-950 dark:text-blue-300 uppercase tracking-wider">Альтернатива: Депозит</h4>
+                                <p class="text-[11px] text-slate-800 dark:text-slate-100 leading-relaxed mt-1">
+                                    Если вместо покупки авто за <span id="lost-opp-price" class="font-extrabold text-slate-950 dark:text-white">... ₽</span> открыть вклад под <span id="lost-opp-rate" class="font-extrabold text-emerald-700 dark:text-emerald-400">...%</span> годовых, ваш пассивный доход составит:
+                                </p>
+                                <div class="grid grid-cols-2 gap-3 mt-2.5">
+                                    <div class="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-blue-200 dark:border-slate-700/60 shadow-sm">
+                                        <p class="text-[9px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-tight">В месяц</p>
+                                        <p id="lost-opp-monthly" class="text-sm font-black text-emerald-700 dark:text-emerald-400">... ₽</p>
+                                    </div>
+                                    <div class="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-blue-200 dark:border-slate-700/60 shadow-sm">
+                                        <p class="text-[9px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-tight">В год</p>
+                                        <p id="lost-opp-annual" class="text-sm font-black text-emerald-700 dark:text-emerald-400">... ₽</p>
+                                    </div>
+                                </div>
+                                <p class="text-[9px] text-slate-700 dark:text-slate-300 mt-2.5 italic leading-tight">Расчет основан на ставке ЦБ РФ (<span id="actual-cb-rate-display" class="font-bold text-blue-700 dark:text-blue-400">...%</span>) за вычетом 2%. Этот доход упущен при покупке авто.</p>
                             </div>
                         </div>
                     </div>
@@ -478,71 +478,104 @@
             </div>
         </div>
 
-        <!-- МЯГКИЕ ФАКТОРЫ: ВЕСЫ СТИЛЯ ЖИЗНИ -->
-        <div class="mt-12 bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-100 dark:border-slate-800 shadow-sm space-y-6">
-            <div class="text-center max-w-xl mx-auto space-y-2">
-                <h3 class="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">Весы стиля жизни: Что выбрать помимо денег?</h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400">Сравнение эмоциональных факторов. Отметьте то, что важно именно вам, чтобы получить ментальный вердикт.</p>
-            </div>
+        <!-- МЯГКИЕ ФАКТОРЫ: ВЕСЫ СТИЛЯ ЖИЗНИ (PREMIUM OPTIONAL WIDGET) -->
+        <div class="mt-12 bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden transition-all duration-300">
+            <!-- Header/CTA trigger -->
+            <button onclick="toggleLifestyleWidget()" class="w-full flex flex-col md:flex-row justify-between items-center p-6 sm:p-8 bg-gradient-to-r from-emerald-50/40 via-slate-50/20 to-amber-50/40 dark:from-emerald-950/10 dark:via-slate-900 dark:to-amber-950/10 hover:opacity-95 transition text-left gap-4 active:scale-[0.995]">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-amber-500 text-white flex items-center justify-center text-2xl shadow-md shrink-0">⚖️</div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-black uppercase tracking-widest text-brand-600 dark:text-brand-400">Интерактивный тест</span>
+                            <span class="px-2 py-0.5 text-[9px] font-bold uppercase bg-amber-500 text-white rounded-full animate-pulse">Новинка</span>
+                        </div>
+                        <h3 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight mt-0.5">Весы стиля жизни: Что выбрать помимо денег?</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">Оцените свои эмоциональные потребности, желания и скрытые боли, чтобы получить персональный ментальный вердикт.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                    <span id="lifestyle-toggle-btn" class="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-black uppercase rounded-xl shadow-sm text-slate-700 dark:text-slate-300 transition-all hover:bg-slate-50">Открыть тест</span>
+                </div>
+            </button>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Плюсы и минусы Личного Авто -->
-                <div class="bg-emerald-50/30 dark:bg-emerald-950/5 p-6 rounded-2xl border border-emerald-100/50 dark:border-emerald-900/30 space-y-4">
-                    <h4 class="text-sm font-black text-emerald-800 dark:text-emerald-400 uppercase tracking-wider flex items-center gap-2">
-                        <span>🚗</span> Личный Автомобиль
-                    </h4>
-                    <div class="space-y-3">
-                        <label class="flex items-start gap-3 cursor-pointer group">
-                            <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 dark:bg-slate-800 dark:border-slate-700" value="car_freedom" onchange="calculateLifestyle()">
-                            <span class="text-xs text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition">Полная свобода передвижения, поездки за город и путешествия в любой момент</span>
-                        </label>
-                        <label class="flex items-start gap-3 cursor-pointer group">
-                            <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 dark:bg-slate-800 dark:border-slate-700" value="car_status" onchange="calculateLifestyle()">
-                            <span class="text-xs text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition">Статус, личное приватное пространство, хорошая музыка и комфортная температура</span>
-                        </label>
-                        <label class="flex items-start gap-3 cursor-pointer group">
-                            <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 dark:bg-slate-800 dark:border-slate-700" value="car_heavy_load" onchange="calculateLifestyle()">
-                            <span class="text-xs text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition">Удобно возить тяжелые вещи, покупки, детей в садик, кружки или домашних питомцев</span>
-                        </label>
-                        <label class="flex items-start gap-3 cursor-pointer group">
-                            <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 dark:bg-slate-800 dark:border-slate-700" value="car_noparking" onchange="calculateLifestyle()">
-                            <span class="text-xs text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-400 transition">Ненавижу искать парковку по 20 минут у дома и в центре города (минус авто)</span>
-                        </label>
+            <!-- Collapsible content -->
+            <div id="lifestyle-widget-content" class="hidden border-t border-slate-100 dark:border-slate-800 p-6 sm:p-8 space-y-6 bg-slate-50/30 dark:bg-slate-900/30">
+                <!-- Grid of checkboxes -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Плюсы и минусы Личного Авто -->
+                    <div class="bg-emerald-50/30 dark:bg-emerald-950/5 p-6 rounded-2xl border border-emerald-100/50 dark:border-emerald-900/30 space-y-4 shadow-sm">
+                        <h4 class="text-sm font-black text-emerald-800 dark:text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+                            <span>🚗</span> Свобода и Боли Личного Авто
+                        </h4>
+                        <div class="space-y-3">
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 dark:bg-slate-800 dark:border-slate-700" value="car_freedom" onchange="calculateLifestyle()">
+                                <span class="text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-medium">Спонтанность: поездки на дачу, природу или в другие города на выходных без долгого планирования</span>
+                            </label>
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 dark:bg-slate-800 dark:border-slate-700" value="car_kids" onchange="calculateLifestyle()">
+                                <span class="text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-medium">Комфорт и безопасность детей: детские кресла всегда установлены, нет стресса с вещами в багажнике</span>
+                            </label>
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 dark:bg-slate-800 dark:border-slate-700" value="car_privacy" onchange="calculateLifestyle()">
+                                <span class="text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-medium">Приватность и антистресс: личное пространство, где можно побыть в тишине или громко слушать любимую музыку</span>
+                            </label>
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 dark:bg-slate-800 dark:border-slate-700" value="car_heavy_load" onchange="calculateLifestyle()">
+                                <span class="text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-medium">Крупные покупки: удобно возить тяжелые вещи, покупки из супермаркетов или домашних питомцев</span>
+                            </label>
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 dark:bg-slate-800 dark:border-slate-700" value="car_noparking" onchange="calculateLifestyle()">
+                                <span class="text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition font-medium">Ненавижу искать парковку по 20 минут у дома и платить за неё бешеные деньги в центре (минус авто)</span>
+                            </label>
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 dark:bg-slate-800 dark:border-slate-700" value="car_maintenance_stress" onchange="calculateLifestyle()">
+                                <span class="text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition font-medium">Бытовая рутина: шиномонтаж, регулярные мойки, замена масла и страховка вызывают у меня стресс (минус авто)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Плюсы и минусы Такси -->
+                    <div class="bg-amber-50/30 dark:bg-amber-950/5 p-6 rounded-2xl border border-amber-100/50 dark:border-amber-900/30 space-y-4 shadow-sm">
+                        <h4 class="text-sm font-black text-amber-800 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                            <span>🚕</span> Свобода и Боли Такси
+                        </h4>
+                        <div class="space-y-3">
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-amber-300 text-amber-600 focus:ring-amber-500 dark:bg-slate-800 dark:border-slate-700" value="taxi_productivity" onchange="calculateLifestyle()">
+                                <span class="text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-medium">Время для себя: в поездке можно спокойно работать в ноутбуке, читать или отвечать на сообщения</span>
+                            </label>
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-amber-300 text-amber-600 focus:ring-amber-500 dark:bg-slate-800 dark:border-slate-700" value="taxi_no_worries" onchange="calculateLifestyle()">
+                                <span class="text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-medium">Ноль забот: забыл про штрафы, налоги, КАСКО, ТО, зимнюю резину и чистку снега морозным утром</span>
+                            </label>
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-amber-300 text-amber-600 focus:ring-amber-500 dark:bg-slate-800 dark:border-slate-700" value="taxi_rest" onchange="calculateLifestyle()">
+                                <span class="text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-medium">Вечеринки и встречи: приехал в гости, выпил бокал вина и не думаешь, как оставить машину у ресторана</span>
+                            </label>
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-amber-300 text-amber-600 focus:ring-amber-500 dark:bg-slate-800 dark:border-slate-700" value="taxi_always_clean" onchange="calculateLifestyle()">
+                                <span class="text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-medium">Чистый салон каждый день, вежливый водитель и отсутствие стресса от дорожных конфликтов</span>
+                            </label>
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-amber-300 text-amber-600 focus:ring-amber-500 dark:bg-slate-800 dark:border-slate-700" value="taxi_surged" onchange="calculateLifestyle()">
+                                <span class="text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition font-medium">Бесит повышенный спрос: ждать машину по 25 минут и переплачивать х3 тариф в дождь или снегопад (минус такси)</span>
+                            </label>
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-amber-300 text-amber-600 focus:ring-amber-500 dark:bg-slate-800 dark:border-slate-700" value="taxi_human_factor" onchange="calculateLifestyle()">
+                                <span class="text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition font-medium">Человеческий фактор: неприятные запахи, навязчивые разговоры или плохой стиль вождения водителей (минус такси)</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Плюсы и минусы Такси -->
-                <div class="bg-amber-50/30 dark:bg-amber-950/5 p-6 rounded-2xl border border-amber-100/50 dark:border-amber-900/30 space-y-4">
-                    <h4 class="text-sm font-black text-amber-800 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
-                        <span>🚕</span> Поездки на Такси
-                    </h4>
-                    <div class="space-y-3">
-                        <label class="flex items-start gap-3 cursor-pointer group">
-                            <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-amber-300 text-amber-600 focus:ring-amber-500 dark:bg-slate-800 dark:border-slate-700" value="taxi_rest" onchange="calculateLifestyle()">
-                            <span class="text-xs text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition">Ноль стресса за рулем: можно читать, работать или отдыхать на заднем сиденье</span>
-                        </label>
-                        <label class="flex items-start gap-3 cursor-pointer group">
-                            <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-amber-300 text-amber-600 focus:ring-amber-500 dark:bg-slate-800 dark:border-slate-700" value="taxi_nomaintenance" onchange="calculateLifestyle()">
-                            <span class="text-xs text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition">Никаких забот о ТО, зимней резине, страховках, парковке, штрафах и заправках</span>
-                        </label>
-                        <label class="flex items-start gap-3 cursor-pointer group">
-                            <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-amber-300 text-amber-600 focus:ring-amber-500 dark:bg-slate-800 dark:border-slate-700" value="taxi_always_clean" onchange="calculateLifestyle()">
-                            <span class="text-xs text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition">Чистый салон каждый раз, не нужно чистить снег зимой и греть двигатель в мороз</span>
-                        </label>
-                        <label class="flex items-start gap-3 cursor-pointer group">
-                            <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-amber-300 text-amber-600 focus:ring-amber-500 dark:bg-slate-800 dark:border-slate-700" value="taxi_surged" onchange="calculateLifestyle()">
-                            <span class="text-xs text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-400 transition">Бесит ждать машину и платить х3 тариф во время дождя или снегопада (минус такси)</span>
-                        </label>
+                <!-- ИНТЕРАКТИВНЫЙ МЕНТАЛЬНЫЙ ВЕРДИКТ -->
+                <div class="pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col items-center text-center space-y-3">
+                    <span class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block">Ваш ментальный выбор</span>
+                    <div id="lifestyle-verdict-box" class="px-6 py-4 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm rounded-2xl max-w-lg transition-all duration-300">
+                        <p id="lifestyle-verdict-title" class="text-sm font-black text-slate-900 dark:text-white">Отметьте важные факторы выше</p>
+                        <p id="lifestyle-verdict-desc" class="text-xs text-slate-500 dark:text-slate-400 mt-1">Калькулятор сопоставит ваши приоритеты и даст персональную рекомендацию по стилю жизни.</p>
                     </div>
-                </div>
-            </div>
-
-            <!-- ИНТЕРАКТИВНЫЙ МЕНТАЛЬНЫЙ ВЕРДИКТ -->
-            <div class="pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col items-center text-center space-y-3">
-                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Ваш ментальный выбор</span>
-                <div id="lifestyle-verdict-box" class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl max-w-lg transition-all duration-300">
-                    <p id="lifestyle-verdict-title" class="text-sm font-black text-slate-900 dark:text-white">Отметьте важные факторы выше</p>
-                    <p id="lifestyle-verdict-desc" class="text-xs text-slate-500 dark:text-slate-400 mt-1">Калькулятор сопоставит ваши приоритеты и даст персональную рекомендацию по стилю жизни.</p>
                 </div>
             </div>
         </div>
@@ -647,7 +680,7 @@
         function setTripsPreset(trips) {
             state.tripsPerMonth = trips;
             document.getElementById('trips-per-month').value = trips;
-
+            
             resetTripsPresetHighlight();
             const activeBtn = document.getElementById(`preset-trips-${trips}`);
             if (activeBtn) {
@@ -791,7 +824,7 @@
                 carPct = Math.round((totalTaxiMonthly / sumMonthly) * 100);
                 taxiPct = 100 - carPct;
             }
-
+            
             document.getElementById('tug-car-bar').style.width = carPct + '%';
             document.getElementById('tug-taxi-bar').style.width = taxiPct + '%';
             document.getElementById('tug-car-pct').innerText = carPct + '%';
@@ -889,7 +922,25 @@
             if (displayEl) {
                 displayEl.innerText = depositRate + '%';
             }
+            const actualCbEl = document.getElementById('actual-cb-rate-display');
+            if (actualCbEl) {
+                actualCbEl.innerText = Math.floor(state.cbRate) + '%';
+            }
             calculate();
+        }
+
+        function toggleLifestyleWidget() {
+            const content = document.getElementById('lifestyle-widget-content');
+            const btn = document.getElementById('lifestyle-toggle-btn');
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                btn.innerText = 'Свернуть тест';
+                btn.classList.add('bg-brand-600', 'text-white', 'border-brand-600', 'dark:bg-brand-600');
+            } else {
+                content.classList.add('hidden');
+                btn.innerText = 'Открыть тест';
+                btn.classList.remove('bg-brand-600', 'text-white', 'border-brand-600', 'dark:bg-brand-600');
+            }
         }
 
         function calculateLifestyle() {
@@ -900,14 +951,18 @@
             checkboxes.forEach(cb => {
                 if (cb.checked) {
                     if (cb.value === 'car_freedom') carPoints += 2;
-                    if (cb.value === 'car_status') carPoints += 1.5;
-                    if (cb.value === 'car_heavy_load') carPoints += 2;
-                    if (cb.value === 'car_noparking') carPoints -= 2; // Минус авто снижает очки машины
+                    if (cb.value === 'car_kids') carPoints += 2;
+                    if (cb.value === 'car_privacy') carPoints += 1.5;
+                    if (cb.value === 'car_heavy_load') carPoints += 1.5;
+                    if (cb.value === 'car_noparking') carPoints -= 2;
+                    if (cb.value === 'car_maintenance_stress') carPoints -= 2;
 
-                    if (cb.value === 'taxi_rest') taxiPoints += 2;
-                    if (cb.value === 'taxi_nomaintenance') taxiPoints += 2;
+                    if (cb.value === 'taxi_productivity') taxiPoints += 2;
+                    if (cb.value === 'taxi_no_worries') taxiPoints += 2;
+                    if (cb.value === 'taxi_rest') taxiPoints += 1.5;
                     if (cb.value === 'taxi_always_clean') taxiPoints += 1.5;
-                    if (cb.value === 'taxi_surged') taxiPoints -= 2; // Минус такси снижает очки такси
+                    if (cb.value === 'taxi_surged') taxiPoints -= 2;
+                    if (cb.value === 'taxi_human_factor') taxiPoints -= 2;
                 }
             });
 
@@ -918,7 +973,7 @@
             if (carPoints === 0 && taxiPoints === 0) {
                 verdictTitle.innerText = "Отметьте важные факторы выше";
                 verdictDesc.innerText = "Калькулятор сопоставит ваши приоритеты и даст персональную рекомендацию по стилю жизни.";
-                verdictBox.className = "px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl max-w-lg transition-all duration-300";
+                verdictBox.className = "px-6 py-4 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-750 rounded-2xl max-w-lg transition-all duration-300";
                 return;
             }
 
