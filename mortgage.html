@@ -339,7 +339,29 @@
                 </div>
 
                 <div id="panel-existing" class="space-y-6 hidden">
-                    <div class="space-y-2">
+                    <!-- Toggle 'I know my monthly payment' -->
+                    <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-150 dark:border-slate-800">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Я знаю свой ежемесячный платеж</span>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">Авторасчет срока и будущих процентов</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="existing-know-payment-toggle" onchange="toggleExistingKnowPayment()" class="sr-only peer">
+                            <div class="w-10 h-5 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-brand-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all"></div>
+                        </label>
+                    </div>
+
+                    <!-- Input for Monthly Payment (only shown when toggle is true) -->
+                    <div id="active-payment-container" class="space-y-2 hidden">
+                        <label for="active-payment-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Фактический ежемесячный платеж</label>
+                        <div class="relative rounded-lg shadow-sm">
+                            <input type="text" id="active-payment-input" oninput="handleActivePaymentInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
+                        </div>
+                    </div>
+
+                    <!-- Original Loan Input (hidden when toggle is true) -->
+                    <div id="active-amount-container" class="space-y-2">
                         <label for="active-amount-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Сколько взяли в кредит первоначально</label>
                         <div class="relative rounded-lg shadow-sm">
                             <input type="text" id="active-amount-input" oninput="handleActiveAmountInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
@@ -355,21 +377,42 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <!-- Upgraded Term selector (hidden when toggle is true) -->
+                    <div id="active-term-container" class="space-y-4">
                         <div class="space-y-2">
-                            <label class="text-xs font-bold text-slate-400 uppercase">Срок (лет)</label>
-                            <input type="number" id="active-term-input" oninput="recalcAndSyncBalance()" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold text-slate-850 dark:text-white">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Первоначальный срок кредита (лет)</label>
+                            <input type="number" id="active-term-input" oninput="recalcAndSyncBalance()" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold text-slate-800 dark:text-white">
                         </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold text-slate-400 uppercase">Уже плачу (мес)</label>
-                            <input type="number" id="active-paid-months-input" oninput="recalcAndSyncBalance()" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold text-slate-850 dark:text-white">
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-xs font-bold text-slate-400 uppercase">Осталось платить</label>
+                                <div class="grid grid-cols-2 gap-1">
+                                    <div class="relative">
+                                        <input type="number" id="active-remaining-years" oninput="handleRemainingTermChange()" placeholder="Лет" class="w-full pl-2 pr-6 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold text-xs text-slate-800 dark:text-white">
+                                        <span class="absolute right-1 top-2.5 text-[8px] text-slate-400">лет</span>
+                                    </div>
+                                    <div class="relative">
+                                        <input type="number" id="active-remaining-months" oninput="handleRemainingTermChange()" placeholder="Мес" class="w-full pl-2 pr-6 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold text-xs text-slate-800 dark:text-white">
+                                        <span class="absolute right-1 top-2.5 text-[8px] text-slate-400">мес</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-xs font-bold text-slate-400 uppercase">Уже выплачено</label>
+                                <div class="relative">
+                                    <input type="number" id="active-paid-months-input" oninput="handlePaidMonthsChange()" placeholder="Месяцев" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold text-xs text-slate-800 dark:text-white">
+                                    <span class="absolute right-3 top-2.5 text-[8px] text-slate-400">мес</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
+                    <!-- Current Balance Card -->
                     <div class="space-y-2 bg-brand-50/50 dark:bg-brand-900/10 p-4 rounded-xl border border-brand-100 dark:border-brand-900/30">
                         <div class="flex justify-between items-center">
                             <label class="text-xs font-bold text-brand-800 dark:text-brand-400 uppercase">Текущий остаток долга</label>
-                            <button onclick="calcTheoreticalBalance()" class="text-[11px] text-brand-700 dark:text-brand-400 underline font-semibold">По графику</button>
+                            <button id="btn-calc-theoretical" onclick="calcTheoreticalBalance()" class="text-[11px] text-brand-700 dark:text-brand-400 underline font-semibold">По графику</button>
                         </div>
                         <div class="relative shadow-sm">
                             <input type="text" id="active-balance-input" oninput="handleActiveBalanceInput(this)" class="w-full pl-4 pr-12 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-extrabold text-lg text-slate-900 dark:text-white shadow-inner">
@@ -554,6 +597,10 @@
                         <!-- Content is populated dynamically via updateCalculations() to show either stats or empty-state encouraging microcopy -->
                     </div>
 
+                    <div id="existing-history-card" class="bg-slate-900 border border-slate-800 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300 hidden">
+                        <!-- Content is populated dynamically via updateCalculations() -->
+                    </div>
+
                     <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between h-[310px]">
                         <div class="flex justify-between items-center mb-1">
                             <h3 class="text-sm font-bold text-slate-800 dark:text-white" id="chart-title">Динамика остатка долга</h3>
@@ -736,11 +783,65 @@
             includeInsurance: false,
             includeTaxDeduction: false,
             taxDeductionStrategy: 'pocket',
-            isProUnlocked: false
+            isProUnlocked: false,
+            isExistingKnowPayment: false,
+            activePayment: 100000
         };
 
         let chartInstance = null;
         let ratioDonutInstance = null;
+
+        function toggleExistingKnowPayment() {
+            state.isExistingKnowPayment = document.getElementById('existing-know-payment-toggle').checked;
+
+            const payContainer = document.getElementById('active-payment-container');
+            const amtContainer = document.getElementById('active-amount-container');
+            const termContainer = document.getElementById('active-term-container');
+            const theoreticalBtn = document.getElementById('btn-calc-theoretical');
+
+            if (state.isExistingKnowPayment) {
+                if (payContainer) payContainer.classList.remove('hidden');
+                if (amtContainer) amtContainer.classList.add('hidden');
+                if (termContainer) termContainer.classList.add('hidden');
+                if (theoreticalBtn) theoreticalBtn.classList.add('hidden');
+            } else {
+                if (payContainer) payContainer.classList.add('hidden');
+                if (amtContainer) amtContainer.classList.remove('hidden');
+                if (termContainer) termContainer.classList.remove('hidden');
+                if (theoreticalBtn) theoreticalBtn.classList.remove('hidden');
+            }
+            updateCalculations();
+        }
+
+        function handleActivePaymentInput(el) {
+            state.activePayment = formatInputField(el, el.value);
+            updateCalculations();
+        }
+
+        function handleRemainingTermChange() {
+            const remYears = parseInt(document.getElementById('active-remaining-years').value) || 0;
+            const remMonths = parseInt(document.getElementById('active-remaining-months').value) || 0;
+            const remainingTotalMonths = remYears * 12 + remMonths;
+
+            state.activePaidMonths = Math.max(0, (state.activeOriginalTermYears * 12) - remainingTotalMonths);
+            if (document.getElementById('active-paid-months-input')) {
+                document.getElementById('active-paid-months-input').value = state.activePaidMonths;
+            }
+            updateCalculations();
+        }
+
+        function handlePaidMonthsChange() {
+            state.activePaidMonths = parseInt(document.getElementById('active-paid-months-input').value) || 0;
+
+            const remainingTotalMonths = Math.max(0, (state.activeOriginalTermYears * 12) - state.activePaidMonths);
+            if (document.getElementById('active-remaining-years')) {
+                document.getElementById('active-remaining-years').value = Math.floor(remainingTotalMonths / 12) || '';
+            }
+            if (document.getElementById('active-remaining-months')) {
+                document.getElementById('active-remaining-months').value = (remainingTotalMonths % 12) || '';
+            }
+            updateCalculations();
+        }
 
         function openLeadModal() {
             const modal = document.getElementById('lead-modal');
@@ -1092,6 +1193,13 @@
                 currentPmt = state.targetPayment;
                 if (currentPmt <= balance * mRate) currentPmt = Math.ceil(balance * mRate) + 1000;
                 plannedMonths = mRate > 0 ? Math.ceil(Math.log(currentPmt / (currentPmt - balance * mRate)) / Math.log(1 + mRate)) : Math.ceil(balance / currentPmt);
+            } else if (activeTab === 'existing' && state.isExistingKnowPayment) {
+                currentPmt = Number(state.activePayment) || 0;
+                const minPmt = balance * mRate;
+                if (currentPmt <= minPmt) {
+                    currentPmt = Math.ceil(minPmt) + 1000;
+                }
+                plannedMonths = mRate > 0 ? Math.ceil(Math.log(currentPmt / (currentPmt - balance * mRate)) / Math.log(1 + mRate)) : Math.ceil(balance / currentPmt);
             } else {
                 currentPmt = mRate === 0 ? (balance / plannedMonths) : (balance * (mRate * Math.pow(1 + mRate, plannedMonths)) / (Math.pow(1 + mRate, plannedMonths) - 1));
             }
@@ -1132,6 +1240,28 @@
         function renderAmortizationTable(schedule) {
             const container = document.getElementById('years-accordion-container');
             if (!container) return;
+
+            // Save open accordion states and focused input before wiping the container
+            let openYearIds = [];
+            const contents = container.querySelectorAll('div[id^="content-year-"]');
+            contents.forEach(content => {
+                if (!content.classList.contains('hidden')) {
+                    openYearIds.push(content.id);
+                }
+            });
+
+            let focusedMonth = null;
+            let cursorStart = 0;
+            let cursorEnd = 0;
+            if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+                const parentRow = document.activeElement.closest('[data-month]');
+                if (parentRow) {
+                    focusedMonth = parseInt(parentRow.getAttribute('data-month'));
+                    cursorStart = document.activeElement.selectionStart;
+                    cursorEnd = document.activeElement.selectionEnd;
+                }
+            }
+
             container.innerHTML = ''; if (!schedule.length) return;
 
             let years = {};
@@ -1242,6 +1372,29 @@
                     container.appendChild(paywallDiv);
                 }
             });
+
+            // Restore open accordion states
+            openYearIds.forEach(id => {
+                const content = document.getElementById(id);
+                if (content) {
+                    content.classList.remove('hidden');
+                    const yearId = id.replace('content-', '');
+                    const arrow = document.getElementById(`arrow-${yearId}`);
+                    if (arrow) arrow.classList.add('rotate-180');
+                }
+            });
+
+            // Restore input focus and cursor selection
+            if (focusedMonth !== null) {
+                const targetRow = document.querySelector(`[data-month="${focusedMonth}"]`);
+                if (targetRow) {
+                    const targetInput = targetRow.querySelector('input');
+                    if (targetInput) {
+                        targetInput.focus();
+                        targetInput.setSelectionRange(cursorStart, cursorEnd);
+                    }
+                }
+            }
         }
 
         function formatTableInputVisual(input) {
@@ -1411,6 +1564,65 @@
 
             document.getElementById('ratio-text').innerHTML = `Вы выплачиваете <strong class="text-slate-900 dark:text-white font-extrabold bg-emerald-100 dark:bg-emerald-950/50 px-1.5 py-0.5 rounded border border-emerald-500/20">${localFormatMoney(loanAmount)}</strong> тела долга и <strong class="text-slate-900 dark:text-white font-extrabold bg-rose-100 dark:bg-rose-950/50 px-1.5 py-0.5 rounded border border-rose-500/20">${localFormatMoney(preRes.totalInterest)}</strong> процентов за весь срок кредита.`;
 
+            // Existing History Card
+            const historyCard = document.getElementById('existing-history-card');
+            if (historyCard) {
+                if (activeTab === 'existing') {
+                    historyCard.classList.remove('hidden');
+                    if (state.isExistingKnowPayment) {
+                        historyCard.innerHTML = `
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs uppercase font-black bg-brand-600 px-3 py-1 rounded-full text-brand-50">Уже выплачено</span>
+                                    <span class="text-xs text-slate-400">история по кредиту</span>
+                                </div>
+                                <p class="text-xs text-slate-300 leading-relaxed font-semibold">
+                                    💡 Для отображения детальной разбивки уже выплаченных банку денег (тело и проценты), введите первоначальные параметры кредита (выключив тумблер платежа).
+                                </p>
+                            </div>
+                        `;
+                    } else {
+                        const originalLoan = Number(state.activeOriginalLoan) || 0;
+                        const balance = Number(state.activeCurrentBalance) || 0;
+                        const paidMonths = Number(state.activePaidMonths) || 0;
+                        const rate = Number(state.activeRate) || 0;
+                        const termMonths = Number(state.activeOriginalTermYears * 12) || 12;
+
+                        let paidBody = Math.max(0, originalLoan - balance);
+                        // Theoretical annuity payment in the past
+                        const mRate = rate / 12 / 100;
+                        const pmt = mRate === 0 ? (originalLoan / termMonths) : (originalLoan * (mRate * Math.pow(1 + mRate, termMonths)) / (Math.pow(1 + mRate, termMonths) - 1));
+
+                        let totalPaidPast = pmt * paidMonths;
+                        let paidInterest = Math.max(0, totalPaidPast - paidBody);
+
+                        historyCard.innerHTML = `
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs uppercase font-black bg-brand-600 px-3 py-1 rounded-full text-brand-50">Уже выплачено банку за прошедшее время</span>
+                                    <span class="text-xs text-slate-400">реальный прогресс</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-xs text-slate-400 font-semibold">Погашено тела долга</p>
+                                        <p class="text-2xl font-black text-emerald-400">${localFormatMoney(paidBody)}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-slate-400 font-semibold">Выплачено процентов</p>
+                                        <p class="text-2xl font-black text-rose-400">${localFormatMoney(paidInterest)}</p>
+                                    </div>
+                                </div>
+                                <div class="border-t border-slate-800 pt-3 text-[11px] text-slate-400">
+                                    Всего выплачено за ${paidMonths} мес: <strong class="text-white">${localFormatMoney(totalPaidPast)}</strong>
+                                </div>
+                            </div>
+                        `;
+                    }
+                } else {
+                    historyCard.classList.add('hidden');
+                }
+            }
+
             // Render/Update the Donut Chart
             const donutCanvas = document.getElementById('ratioDonutChart');
             if (donutCanvas) {
@@ -1471,6 +1683,21 @@
             document.getElementById('active-term-input').value = state.activeOriginalTermYears; document.getElementById('active-paid-months-input').value = state.activePaidMonths;
             document.getElementById('active-balance-input').value = localFormatNumber(state.activeCurrentBalance);
             document.getElementById('recurring-input').value = localFormatNumber(state.recurringPrepayment);
+
+            if (document.getElementById('active-payment-input')) {
+                document.getElementById('active-payment-input').value = localFormatNumber(state.activePayment);
+            }
+            if (document.getElementById('existing-know-payment-toggle')) {
+                document.getElementById('existing-know-payment-toggle').checked = state.isExistingKnowPayment;
+            }
+
+            const remainingTotalMonths = Math.max(0, (state.activeOriginalTermYears * 12) - state.activePaidMonths);
+            if (document.getElementById('active-remaining-years')) {
+                document.getElementById('active-remaining-years').value = Math.floor(remainingTotalMonths / 12) || '';
+            }
+            if (document.getElementById('active-remaining-months')) {
+                document.getElementById('active-remaining-months').value = (remainingTotalMonths % 12) || '';
+            }
         }
 
         async function loadLiveRates() {
