@@ -1076,9 +1076,9 @@
         }
 
         function simulateMortgage(withPrepayments = true) {
-            let balance = activeTab === 'new' ? (state.cost - state.downPayment) : state.activeCurrentBalance;
-            let rate = activeTab === 'new' ? state.rate : state.activeRate;
-            let plannedMonths = activeTab === 'new' ? (state.termYears * 12) : ((state.activeOriginalTermYears * 12) - state.activePaidMonths);
+            let balance = Number(activeTab === 'new' ? (state.cost - state.downPayment) : state.activeCurrentBalance) || 0;
+            let rate = Number(activeTab === 'new' ? state.rate : state.activeRate) || 0;
+            let plannedMonths = Number(activeTab === 'new' ? (state.termYears * 12) : ((state.activeOriginalTermYears * 12) - state.activePaidMonths)) || 0;
             
             if (plannedMonths <= 0) plannedMonths = 12;
             if (balance <= 0) return { schedule: [], totalInterest: 0, totalPaid: 0, totalPrepaid: 0, realTerm: 0, totalInsurance: 0 };
@@ -1339,8 +1339,6 @@
             document.getElementById('res-real-term').innerText = `${preRes.realTerm} мес.`;
             // Переплата и Итого выплатим банку должны включать расходы на страховку (totalInsurance)
             document.getElementById('res-total-interest').innerText = localFormatMoney(preRes.totalInterest + preRes.totalInsurance);
-            document.getElementById('res-total-paid').innerText = localFormatMoney(preRes.totalPaid);
-            document.getElementById('res-total-prepaid').innerText = localFormatMoney(preRes.totalPrepaid);
             document.getElementById('mobile-payment').innerText = localFormatMoney(monthlyPmt);
             
             const mobileOverpay = document.getElementById('mobile-overpayment');
@@ -1476,6 +1474,14 @@
         }
 
         async function loadLiveRates() {
+            // Set initial dynamic fallback values immediately in case the API is slow or offline
+            if (document.getElementById('cb-rate-display')) document.getElementById('cb-rate-display').innerText = '21.0%';
+            if (document.getElementById('rate-sber')) document.getElementById('rate-sber').innerText = '25.0%';
+            if (document.getElementById('rate-vtb')) document.getElementById('rate-vtb').innerText = '25.2%';
+            if (document.getElementById('rate-alfa')) document.getElementById('rate-alfa').innerText = '25.5%';
+            if (document.getElementById('rate-tbank')) document.getElementById('rate-tbank').innerText = '24.9%';
+            if (document.getElementById('rate-sovcom')) document.getElementById('rate-sovcom').innerText = '25.1%';
+
             if (typeof fetchRates === 'function') {
                 try {
                     const data = await fetchRates();
