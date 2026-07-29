@@ -473,9 +473,7 @@
             const hCostRound = Math.round(hoursCost);
             const dCostRound = Math.round(daysCost);
 
-            document.getElementById('hours-cost').innerText = formatNumber(hCostRound);
-            document.getElementById('days-cost').innerText = formatNumber(dCostRound);
-
+            // Avoid setting innerText here as we re-render the HTML template below which overwrites these elements and defines their IDs dynamically
             document.getElementById('total-monthly-hours').innerText = Math.round(totalRealHours) + ' ч.';
             document.getElementById('monthly-commute-hours').innerText = Math.round(monthlyCommuteHours) + ' ч.';
             document.getElementById('monthly-overtime-hours').innerText = Math.round(monthlyOvertimeHours) + ' ч.';
@@ -499,7 +497,7 @@
                 verdictTitle.innerText = "🛑 Критический уровень трат времени!";
                 verdictTitle.className = "text-lg font-black text-rose-700 dark:text-rose-400 mb-1";
 
-                verdictText.innerHTML = `Ради этой покупки вы будете просыпаться по будильнику в 7 утра ровно <span class="font-black text-rose-700 dark:text-rose-400 text-base underline decoration-rose-500 decoration-2">${dCostRound} ${getDaysWord(dCostRound)}</span>. Вы действительно готовы отдать этот значительный кусок своей единственной и неповторимой жизни за обычный гаджет или услугу?`;
+                verdictText.innerHTML = `Ради этой покупки вы будете просыпаться по будильнику в 7 утра ровно <span class="font-black text-rose-700 dark:text-rose-400 text-base underline decoration-rose-500 decoration-2" id="days-cost">${dCostRound}</span> <span id="days-word">${getDaysWord(dCostRound)}</span>. Вы действительно готовы отдать этот значительный кусок своей единственной и неповторимой жизни за обычный гаджет или услугу?`;
             } else {
                 // Standard visual styling
                 verdictBlock.className = "bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm flex items-start gap-4 transition-all duration-500";
@@ -509,7 +507,7 @@
                 verdictTitle.innerText = "Отрезвляющий итог";
                 verdictTitle.className = "text-lg font-black text-slate-900 dark:text-white mb-1";
 
-                verdictText.innerHTML = `Эта покупка заберет у вас ровно <span class="font-bold text-slate-900 dark:text-white">${hCostRound} ${getHoursWord(hCostRound)}</span> чистой, непрерывной концентрации на работе (что эквивалентно <span class="font-bold text-brand-600">${dCostRound} ${getDaysWord(dCostRound)}</span> сборов по утрам и дороги). Подумайте, стоит ли вещь этих усилий?`;
+                verdictText.innerHTML = `Эта покупка заберет у вас ровно <span class="font-bold text-slate-900 dark:text-white" id="hours-cost">${formatNumber(hCostRound)}</span> <span id="hours-word">${getHoursWord(hCostRound)}</span> чистой, непрерывной концентрации на работе (что эквивалентно <span class="font-bold text-brand-600" id="days-cost">${dCostRound}</span> <span id="days-word-normal">${getDaysWord(dCostRound)}</span> сборов по утрам и дороги). Подумайте, стоит ли вещь этих усилий?`;
             }
 
             // Mobile sticky

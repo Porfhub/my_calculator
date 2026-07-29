@@ -658,17 +658,22 @@
         }
 
         function calculate() {
-            const freeCash = state.monthlyIncome - state.monthlyExpenses;
-            const monthlyRate = state.interestRate / 12 / 100;
+            const goalSum = Math.max(100, state.goalSum);
+            const currentSavings = Math.max(0, state.currentSavings);
+            const monthlyIncome = Math.max(0, state.monthlyIncome);
+            const monthlyExpenses = Math.max(0, state.monthlyExpenses);
+            const freeCash = Math.max(0, monthlyIncome - monthlyExpenses);
+            const interestRate = Math.max(0, state.interestRate);
+            const monthlyRate = interestRate / 12 / 100;
 
-            let balance = state.currentSavings;
+            let balance = currentSavings;
             let month = 0;
             let totalInterest = 0;
-            let totalInvested = state.currentSavings;
+            let totalInvested = currentSavings;
 
             const history = [{ month: 0, balance: balance }];
 
-            if (balance >= state.goalSum) {
+            if (balance >= goalSum) {
                 return { months: 0, totalInterest: 0, totalInvested: balance, history, unreachable: false };
             }
 
@@ -683,14 +688,14 @@
 
             const maxMonths = 1200; // 100 лет лимит
 
-            while (balance < state.goalSum && month < maxMonths) {
+            while (balance < goalSum && month < maxMonths) {
                 month++;
                 const interest = balance * monthlyRate;
                 balance += interest + freeCash;
                 totalInterest += interest;
                 totalInvested += freeCash;
 
-                if (month % 12 === 0 || balance >= state.goalSum) {
+                if (month % 12 === 0 || balance >= goalSum) {
                     history.push({ month, balance });
                 }
             }

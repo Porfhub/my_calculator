@@ -749,26 +749,38 @@
         }
 
         function calculate() {
+            // Safe clamping of inputs to prevent negative/zero division bugs
+            const annualMileage = Math.max(0, state.annualMileage);
+            const fuelConsumption = Math.max(0, state.fuelConsumption);
+            const fuelPrice = Math.max(0, state.fuelPrice);
+            const carPrice = Math.max(0, state.carPrice);
+            const depreciation = Math.max(0, state.depreciation);
+            const insurance = Math.max(0, state.insurance);
+            const maintenance = Math.max(0, state.maintenance);
+            const tripsPerMonth = Math.max(0, state.tripsPerMonth);
+            const tripPrice = Math.max(0, state.tripPrice);
+            const cbRate = Math.max(0, state.cbRate);
+
             // Машина
-            const fuelCostAnnual = (state.annualMileage / 100) * state.fuelConsumption * state.fuelPrice;
-            const depreciationAnnual = state.carPrice * (state.depreciation / 100);
-            const totalCarAnnual = fuelCostAnnual + state.insurance + state.maintenance + depreciationAnnual;
+            const fuelCostAnnual = (annualMileage / 100) * fuelConsumption * fuelPrice;
+            const depreciationAnnual = carPrice * (depreciation / 100);
+            const totalCarAnnual = fuelCostAnnual + insurance + maintenance + depreciationAnnual;
             const totalCarMonthly = totalCarAnnual / 12;
 
             // Такси
-            const totalTaxiMonthly = state.tripsPerMonth * state.tripPrice;
+            const totalTaxiMonthly = tripsPerMonth * tripPrice;
             const totalTaxiAnnual = totalTaxiMonthly * 12;
 
             // Стоимость 1 км пути
-            const costPerKm = state.annualMileage > 0 ? (totalCarAnnual / state.annualMileage) : 0;
-            const costPerKmTaxi = state.annualMileage > 0 ? (totalTaxiAnnual / state.annualMileage) : 0;
+            const costPerKm = annualMileage > 0 ? (totalCarAnnual / annualMileage) : 0;
+            const costPerKmTaxi = annualMileage > 0 ? (totalTaxiAnnual / annualMileage) : 0;
 
             // Потеря стоимости за 1 ночь
             const nightlyDeprVal = Math.round(depreciationAnnual / 365);
 
             // Упущенная выгода
-            const depositRatePct = Math.max(1, Math.floor(state.cbRate) - 2);
-            const lostOppAnnual = state.carPrice * (depositRatePct / 100);
+            const depositRatePct = Math.max(1, Math.floor(cbRate) - 2);
+            const lostOppAnnual = carPrice * (depositRatePct / 100);
             const lostOppMonthly = lostOppAnnual / 12;
 
             // Обновление упущенной выгоды
@@ -779,7 +791,7 @@
                 const rEl = document.getElementById('lost-opp-rate');
                 const mEl = document.getElementById('lost-opp-monthly');
                 const aEl = document.getElementById('lost-opp-annual');
-                if (pEl) pEl.innerText = formatNumber(state.carPrice);
+                if (pEl) pEl.innerText = formatNumber(carPrice);
                 if (rEl) rEl.innerText = depositRatePct + '%';
                 if (mEl) mEl.innerText = formatMoney(lostOppMonthly);
                 if (aEl) aEl.innerText = formatMoney(lostOppAnnual);
@@ -800,18 +812,18 @@
 
             // Детализация в Месяц
             document.getElementById('car-monthly-fuel').innerText = formatMoney(fuelCostAnnual / 12);
-            document.getElementById('car-monthly-fixed').innerText = formatMoney((state.insurance + state.maintenance) / 12);
+            document.getElementById('car-monthly-fixed').innerText = formatMoney((insurance + maintenance) / 12);
             document.getElementById('car-monthly-depr').innerText = formatMoney(depreciationAnnual / 12);
 
-            document.getElementById('taxi-monthly-trips').innerText = state.tripsPerMonth;
-            document.getElementById('taxi-monthly-rate').innerText = formatMoney(state.tripPrice);
+            document.getElementById('taxi-monthly-trips').innerText = tripsPerMonth;
+            document.getElementById('taxi-monthly-rate').innerText = formatMoney(tripPrice);
 
             // Детализация в Год
             document.getElementById('car-annual-fuel').innerText = formatMoney(fuelCostAnnual);
-            document.getElementById('car-annual-fixed').innerText = formatMoney(state.insurance + state.maintenance);
+            document.getElementById('car-annual-fixed').innerText = formatMoney(insurance + maintenance);
             document.getElementById('car-annual-depr').innerText = formatMoney(depreciationAnnual);
 
-            document.getElementById('taxi-annual-trips').innerText = state.tripsPerMonth * 12;
+            document.getElementById('taxi-annual-trips').innerText = tripsPerMonth * 12;
             document.getElementById('taxi-annual-total-detail').innerText = formatMoney(totalTaxiAnnual);
 
             // Баланс сил / Tug of War
