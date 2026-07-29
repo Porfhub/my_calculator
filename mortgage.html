@@ -235,6 +235,8 @@
                         <button id="btn-rate-sovcom" onclick="toggleBankRateButton('sovcom', 'Совкомбанка')" class="btn-bank-rate px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700">Применить</button>
                     </div>
                 </div>
+                <!-- Trailing spacer for correct mobile scrolling in overflow-x flexbox -->
+                <div class="w-4 shrink-0 md:hidden"></div>
             </div>
             </div>
         </div>
@@ -1336,7 +1338,7 @@
                 if (!state.isProUnlocked && yNum === 3) {
                     const paywallDiv = document.createElement('div');
                     paywallDiv.id = "pro-paywall-overlay";
-                    paywallDiv.className = "relative block w-full my-4 z-20";
+                    paywallDiv.className = "relative block w-full mt-4 mb-24 md:mb-4 z-20";
                     paywallDiv.innerHTML = `
                         <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-2xl border-2 border-brand-500/30 dark:border-brand-500/20 text-center max-w-lg mx-auto transition-transform scale-100 hover:scale-[1.01] space-y-4">
                             <div class="w-14 h-14 bg-gradient-to-br from-amber-400 to-brand-500 text-white rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-brand-500/20 animate-pulse">
