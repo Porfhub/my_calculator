@@ -52,6 +52,21 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        /* Premium Soft Diffused Shadows (Stripe / Tinkoff inspired) */
+        .premium-card {
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.01);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .premium-card:hover {
+            box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.06), 0 4px 12px rgba(0, 0, 0, 0.02);
+        }
+        .dark .premium-card {
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        .dark .premium-card:hover {
+            box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.12), 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
     </style>
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
@@ -129,21 +144,21 @@
                     Что вы хотите сделать? Выберите для быстрого фокуса
                 </h3>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3.5">
-                    <button onclick="scrollToCategory('mortgage')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 border border-slate-100 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-900/60 transition-all duration-300 group shadow-sm">
+                    <button id="btn-scenario-mortgage" onclick="scrollToCategory('mortgage')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 border border-slate-100 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-900/60 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-all duration-300 group shadow-sm">
                         <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">🏠</span>
-                        <span class="text-[11px] sm:text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 text-center sm:text-left">Купить квартиру</span>
+                        <span class="text-[11px] sm:text-sm font-bold text-center sm:text-left">Купить квартиру</span>
                     </button>
-                    <button onclick="scrollToCategory('credits')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-teal-50 dark:hover:bg-teal-950/20 border border-slate-100 dark:border-slate-800 hover:border-teal-300 dark:hover:border-teal-900/60 transition-all duration-300 group shadow-sm">
+                    <button id="btn-scenario-credits" onclick="scrollToCategory('credits')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-teal-50 dark:hover:bg-teal-950/20 border border-slate-100 dark:border-slate-800 hover:border-teal-300 dark:hover:border-teal-900/60 text-slate-700 dark:text-slate-300 hover:text-teal-700 dark:hover:text-teal-400 transition-all duration-300 group shadow-sm">
                         <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">💳</span>
-                        <span class="text-[11px] sm:text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-teal-700 dark:group-hover:text-teal-400 text-center sm:text-left">Проверить кредит</span>
+                        <span class="text-[11px] sm:text-sm font-bold text-center sm:text-left">Проверить кредит</span>
                     </button>
-                    <button onclick="scrollToCategory('savings')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-amber-50 dark:hover:bg-amber-950/20 border border-slate-100 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-900/60 transition-all duration-300 group shadow-sm">
+                    <button id="btn-scenario-savings" onclick="scrollToCategory('savings')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-amber-50 dark:hover:bg-amber-950/20 border border-slate-100 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-900/60 text-slate-700 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-500 transition-all duration-300 group shadow-sm">
                         <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">💰</span>
-                        <span class="text-[11px] sm:text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-amber-700 dark:group-hover:text-amber-500 text-center sm:text-left">Копить сбережения</span>
+                        <span class="text-[11px] sm:text-sm font-bold text-center sm:text-left">Копить сбережения</span>
                     </button>
-                    <button onclick="scrollToCategory('life')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-blue-50 dark:hover:bg-blue-950/20 border border-slate-100 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-900/60 transition-all duration-300 group shadow-sm">
+                    <button id="btn-scenario-life" onclick="scrollToCategory('life')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-blue-50 dark:hover:bg-blue-950/20 border border-slate-100 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-900/60 text-slate-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-blue-400 transition-all duration-300 group shadow-sm">
                         <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">🌱</span>
-                        <span class="text-[11px] sm:text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-blue-700 dark:group-hover:text-blue-400 text-center sm:text-left">Управлять бюджетом</span>
+                        <span class="text-[11px] sm:text-sm font-bold text-center sm:text-left">Управлять бюджетом</span>
                     </button>
                 </div>
             </div>
@@ -154,25 +169,6 @@
                     <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
                         <span class="text-brand-600">⚡</span> Независимые Экспертные Калькуляторы
                     </h2>
-
-                    <!-- Beautiful interactive category switcher -->
-                    <div class="flex gap-1.5 overflow-x-auto scrollbar-hide py-1 border-b border-slate-200/40 dark:border-slate-800/40 md:border-none">
-                        <button onclick="filterCatalog('all')" id="tab-all" class="px-4 py-2 text-xs font-extrabold rounded-xl transition-all duration-300 shrink-0 bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md">
-                            Все калькуляторы
-                        </button>
-                        <button onclick="filterCatalog('mortgage')" id="tab-mortgage" class="px-4 py-2 text-xs font-extrabold rounded-xl transition-all duration-300 shrink-0 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-850">
-                            🏠 Ипотека
-                        </button>
-                        <button onclick="filterCatalog('credits')" id="tab-credits" class="px-4 py-2 text-xs font-extrabold rounded-xl transition-all duration-300 shrink-0 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-850">
-                            💳 Кредиты
-                        </button>
-                        <button onclick="filterCatalog('savings')" id="tab-savings" class="px-4 py-2 text-xs font-extrabold rounded-xl transition-all duration-300 shrink-0 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-850">
-                            💰 Сбережения
-                        </button>
-                        <button onclick="filterCatalog('life')" id="tab-life" class="px-4 py-2 text-xs font-extrabold rounded-xl transition-all duration-300 shrink-0 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-850">
-                            🌱 Личные Финансы
-                        </button>
-                    </div>
                 </div>
 
                 <!-- Dynamically populated calculator grid with spacing and premium design -->
@@ -181,33 +177,33 @@
                 </div>
             </div>
 
-            <!-- Trust / Manifest Block (replaces banking CPA) -->
-            <div class="mb-14 bg-gradient-to-b from-slate-900 via-slate-850 to-slate-900 text-white rounded-3xl p-8 sm:p-10 border border-slate-850 shadow-xl relative overflow-hidden">
-                <div class="absolute -right-20 -top-20 w-56 h-56 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <!-- Trust / Manifest Block (Redesigned for light/glassmorphic high consistency) -->
+            <div class="mb-14 bg-emerald-50/40 dark:bg-slate-900/40 border border-emerald-100 dark:border-slate-800/80 text-slate-900 dark:text-slate-100 rounded-3xl p-8 sm:p-10 shadow-md relative overflow-hidden">
+                <div class="absolute -right-20 -top-20 w-56 h-56 bg-brand-500/5 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="absolute -left-20 -bottom-20 w-56 h-56 bg-teal-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
                 <div class="relative z-10 max-w-4xl mx-auto">
                     <div class="text-center mb-8">
-                        <span class="px-3 py-1 bg-brand-600/30 text-brand-400 text-xs uppercase font-extrabold tracking-wider rounded-full border border-brand-500/20">Манифест Финансового Хаба</span>
-                        <h3 class="text-2xl sm:text-3xl font-black tracking-tight mt-3">Почему нам доверяют миллионы пользователей?</h3>
-                        <p class="text-slate-400 text-sm mt-2 max-w-2xl mx-auto">Мы создали полностью независимый сервис без внешнего финансирования, рекламы и уловок.</p>
+                        <span class="px-3.5 py-1.5 bg-emerald-100/60 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-300 text-xs uppercase font-extrabold tracking-wider rounded-full border border-emerald-200/50 dark:border-emerald-900/50">Манифест Финансового Хаба</span>
+                        <h3 class="text-2xl sm:text-3xl font-black tracking-tight mt-3 text-slate-900 dark:text-white">Почему нам доверяют миллионы пользователей?</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 max-w-2xl mx-auto leading-relaxed">Мы создали полностью независимый сервис без внешнего финансирования, рекламы и уловок.</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                        <div class="p-5 rounded-2xl bg-slate-800/40 border border-slate-800 hover:border-slate-700/60 transition-all">
+                        <div class="p-5 rounded-2xl bg-white/85 dark:bg-slate-950/40 border border-emerald-100/60 dark:border-slate-800/60 shadow-sm hover:shadow-md transition-all hover:border-emerald-200 dark:hover:border-slate-700">
                             <div class="text-2xl mb-3">🛡️</div>
-                            <h4 class="font-extrabold text-slate-100 mb-1.5 text-base">100% Конфиденциально</h4>
-                            <p class="text-xs text-slate-400 leading-relaxed">Все расчеты происходят локально прямо в вашем браузере. Ваши доходы, накопления и параметры сделок никогда не передаются на внешние серверы.</p>
+                            <h4 class="font-extrabold text-slate-900 dark:text-white mb-1.5 text-base">100% Конфиденциально</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Все расчеты происходят локально прямо в вашем браузере. Ваши доходы, накопления и параметры сделок никогда не передаются на внешние серверы.</p>
                         </div>
-                        <div class="p-5 rounded-2xl bg-slate-800/40 border border-slate-800 hover:border-slate-700/60 transition-all">
+                        <div class="p-5 rounded-2xl bg-white/85 dark:bg-slate-950/40 border border-emerald-100/60 dark:border-slate-800/60 shadow-sm hover:shadow-md transition-all hover:border-emerald-200 dark:hover:border-slate-700">
                             <div class="text-2xl mb-3">🚫</div>
-                            <h4 class="font-extrabold text-slate-100 mb-1.5 text-base">Без скрытой рекламы</h4>
-                            <p class="text-xs text-slate-400 leading-relaxed">Мы не получаем комиссий от банков за выдачу кредитов или ипотек. У нас нет скрытых коммерческих партнерств, продвигающих невыгодные условия.</p>
+                            <h4 class="font-extrabold text-slate-900 dark:text-white mb-1.5 text-base">Без скрытой рекламы</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Мы не получаем комиссий от банков за выдачу кредитов или ипотек. У нас нет скрытых коммерческих партнерств, продвигающих невыгодные условия.</p>
                         </div>
-                        <div class="p-5 rounded-2xl bg-slate-800/40 border border-slate-800 hover:border-slate-700/60 transition-all">
+                        <div class="p-5 rounded-2xl bg-white/85 dark:bg-slate-950/40 border border-emerald-100/60 dark:border-slate-800/60 shadow-sm hover:shadow-md transition-all hover:border-emerald-200 dark:hover:border-slate-700">
                             <div class="text-2xl mb-3">🏛️</div>
-                            <h4 class="font-extrabold text-slate-100 mb-1.5 text-base">Точность и ГОСТы ЦБ</h4>
-                            <p class="text-xs text-slate-400 leading-relaxed">Наши формулы полностью соответствуют стандартам Центрального Банка РФ для расчета ПСК, а макроданные по ставкам и инфляции обновляются автоматически.</p>
+                            <h4 class="font-extrabold text-slate-900 dark:text-white mb-1.5 text-base">Точность и ГОСТы ЦБ</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Наши формулы полностью соответствуют стандартам Центрального Банка РФ для расчета ПСК, а макроданные по ставкам и инфляции обновляются автоматически.</p>
                         </div>
                     </div>
                 </div>
@@ -442,9 +438,9 @@
                     arrowColor = 'text-blue-500 group-hover:translate-x-1.5';
                 }
 
-                // Complete premium card rendering with isolated BG layer & Fitts's Law absolute overlay
+                // Complete premium card rendering with isolated BG layer, soft shadows & Fitts's Law absolute overlay
                 const cardHtml = `
-                    <div id="${calc.id}" class="group relative bg-white dark:bg-slate-900 p-6 md:p-8 rounded-3xl shadow-sm border border-slate-200/80 dark:border-slate-800/80 transition-all duration-300 hover:shadow-lg ${borderHoverColor} overflow-hidden flex flex-col h-full transform hover:scale-[1.01]">
+                    <div id="${calc.id}" class="group premium-card relative bg-white dark:bg-slate-900 p-8 md:p-10 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 transition-all duration-300 ${borderHoverColor} overflow-hidden flex flex-col h-full transform hover:scale-[1.01]">
 
                         <!-- Absolute isolated background layer with controlled scale/z-index -->
                         <div class="absolute -right-6 -bottom-6 opacity-5 dark:opacity-[0.03] transition-transform group-hover:scale-110 duration-500 z-0 pointer-events-none">
@@ -469,24 +465,15 @@
                                 </a>
                             </h3>
 
-                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-12">
                                 ${calc.description}
                             </p>
 
-                            <!-- Custom teaser block at bottom of the card content -->
-                            <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800/60 flex flex-col gap-3 relative z-20">
-                                <div class="text-[11px] font-bold ${teaserBg} px-3 py-2 rounded-xl flex items-center justify-between shadow-sm">
-                                    <span>${calc.teaser}</span>
-                                    <span class="underline decoration-dotted text-[10px] font-extrabold uppercase tracking-wider shrink-0 ml-2">Открыть</span>
-                                </div>
-
-                                <!-- Fitts's Law Full-width comfortable button plates -->
-                                <div class="w-full py-3 ${btnColor} font-extrabold text-xs text-center rounded-2xl transition duration-300 flex items-center justify-center gap-1.5 shadow-sm">
-                                    <span>${calc.cta}</span>
-                                    <svg class="w-3.5 h-3.5 ${arrowColor} transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                                    </svg>
-                                </div>
+                            <!-- Minimalist visual anchor - emerald arrow pointing to next page -->
+                            <div class="absolute bottom-6 right-6 md:bottom-8 md:right-8 text-[#10b981] transition-transform duration-300 group-hover:translate-x-1.5 pointer-events-none z-20">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                </svg>
                             </div>
                         </div>
                     </div>
@@ -495,29 +482,51 @@
             });
         }
 
-        // Fast filtering of the catalog with beautiful active indicator shifts
+        // Fast filtering of the catalog and highlighting selected scenario cards
         function filterCatalog(category) {
             currentFilter = category;
 
-            // Manage class triggers for button tabs
-            const tabs = ['all', 'mortgage', 'credits', 'savings', 'life'];
-            tabs.forEach(t => {
-                const tabEl = document.getElementById(`tab-${t}`);
-                if (!tabEl) return;
+            // Manage scenario buttons highlighting
+            const categories = ['mortgage', 'credits', 'savings', 'life'];
+            categories.forEach(cat => {
+                const btn = document.getElementById(`btn-scenario-${cat}`);
+                if (!btn) return;
 
-                if (t === category) {
-                    tabEl.className = "px-4 py-2 text-xs font-extrabold rounded-xl transition-all duration-300 shrink-0 bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md";
+                if (cat === category) {
+                    // Apply visual active state based on category theme
+                    if (cat === 'mortgage') {
+                        btn.className = "flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-emerald-50/80 dark:bg-emerald-950/30 border-emerald-500 dark:border-emerald-400 ring-2 ring-emerald-500/20 text-emerald-700 dark:text-emerald-400 transition-all duration-300 group shadow-md";
+                    } else if (cat === 'credits') {
+                        btn.className = "flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-teal-50/80 dark:bg-teal-950/30 border-teal-500 dark:border-teal-400 ring-2 ring-teal-500/20 text-teal-700 dark:text-teal-400 transition-all duration-300 group shadow-md";
+                    } else if (cat === 'savings') {
+                        btn.className = "flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border-amber-500 dark:border-amber-400 ring-2 ring-amber-500/20 text-amber-700 dark:text-amber-500 transition-all duration-300 group shadow-md";
+                    } else if (cat === 'life') {
+                        btn.className = "flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-blue-50/80 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 ring-2 ring-blue-500/20 text-blue-700 dark:text-blue-400 transition-all duration-300 group shadow-md";
+                    }
                 } else {
-                    tabEl.className = "px-4 py-2 text-xs font-extrabold rounded-xl transition-all duration-300 shrink-0 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-850";
+                    // Inactive base state with proper hover colors
+                    if (cat === 'mortgage') {
+                        btn.className = "flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 border-slate-100 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-900/60 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-all duration-300 group shadow-sm";
+                    } else if (cat === 'credits') {
+                        btn.className = "flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-teal-50 dark:hover:bg-teal-950/20 border-slate-100 dark:border-slate-800 hover:border-teal-300 dark:hover:border-teal-900/60 text-slate-700 dark:text-slate-300 hover:text-teal-700 dark:hover:text-teal-400 transition-all duration-300 group shadow-sm";
+                    } else if (cat === 'savings') {
+                        btn.className = "flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-amber-50 dark:hover:bg-amber-950/20 border-slate-100 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-900/60 text-slate-700 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-500 transition-all duration-300 group shadow-sm";
+                    } else if (cat === 'life') {
+                        btn.className = "flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-blue-50 dark:hover:bg-blue-950/20 border-slate-100 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-900/60 text-slate-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-blue-400 transition-all duration-300 group shadow-sm";
+                    }
                 }
             });
 
             renderCalculators();
         }
 
-        // Smooth scroll to category catalog tab
+        // Smooth scroll to category catalog and toggling behavior
         function scrollToCategory(category) {
-            filterCatalog(category);
+            let targetCategory = category;
+            if (currentFilter === category) {
+                targetCategory = 'all';
+            }
+            filterCatalog(targetCategory);
 
             // Goal registration in metrics
             reachGoal('goal_category_' + category);
