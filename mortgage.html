@@ -44,6 +44,9 @@
                 bottom: 0;
                 left: 0;
                 right: 0;
+                width: 100%;
+                max-width: 100vw;
+                box-sizing: border-box;
                 z-index: 45;
                 background: white;
                 box-shadow: 0 -10px 25px -5px rgba(0, 0, 0, 0.15);
@@ -158,89 +161,6 @@
         </div>
     </header>
 
-    <section class="max-w-7xl mx-auto px-4 pt-6 sm:px-6 lg:px-8">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm space-y-3">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
-                <div class="space-y-1">
-                    <div class="flex flex-wrap items-center gap-2">
-                        <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                            <span class="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse"></span>
-                            Мониторинг рыночных ставок ТОП-5 банков РФ
-                        </h3>
-                        <span class="inline-flex items-center gap-1 text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-400 px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">
-                            Ключевая ставка ЦБ: <strong id="cb-rate-display" class="text-slate-900 dark:text-white">...</strong>
-                        </span>
-                    </div>
-                    <p class="text-[11px] text-slate-400 dark:text-slate-500">Нажмите «Применить» для подстановки актуальной рыночной ставки банка в расчетные поля.</p>
-                </div>
-            </div>
-
-            <!-- Стрелочки навигации для мобильного каруселя ставок -->
-            <div class="relative group">
-                <button onclick="scrollRates('left')" id="btn-scroll-left" class="absolute -left-2 top-1/2 -translate-y-1/2 z-15 p-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full shadow-md text-slate-600 dark:text-slate-300 hover:scale-110 active:scale-95 transition-all md:hidden hidden">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
-                </button>
-                <button onclick="scrollRates('right')" id="btn-scroll-right" class="absolute -right-2 top-1/2 -translate-y-1/2 z-15 p-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full shadow-md text-slate-600 dark:text-slate-300 hover:scale-110 active:scale-95 transition-all md:hidden">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
-                </button>
-
-            <div id="rates-container" onscroll="handleRatesScroll()" class="flex md:grid md:grid-cols-5 gap-3 overflow-x-auto pb-2 md:pb-0 snap-x snap-mandatory scrollbar-hide scroll-smooth">
-                <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition min-w-[145px] sm:min-w-0 snap-start shrink-0">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 rounded-full bg-green-600 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">СБ</div>
-                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Сбербанк</span>
-                    </div>
-                    <div class="flex items-baseline justify-between gap-1">
-                        <span class="text-base font-black text-slate-950 dark:text-white" id="rate-sber">...</span>
-                        <button id="btn-rate-sber" onclick="toggleBankRateButton('sberbank', 'Сбербанка')" class="btn-bank-rate px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700">Применить</button>
-                    </div>
-                </div>
-                <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition min-w-[145px] sm:min-w-0 snap-start shrink-0">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">ВТБ</div>
-                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">ВТБ</span>
-                    </div>
-                    <div class="flex items-baseline justify-between gap-1">
-                        <span class="text-base font-black text-slate-950 dark:text-white" id="rate-vtb">...</span>
-                        <button id="btn-rate-vtb" onclick="toggleBankRateButton('vtb', 'ВТБ')" class="btn-bank-rate px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700">Применить</button>
-                    </div>
-                </div>
-                <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition min-w-[145px] sm:min-w-0 snap-start shrink-0">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 rounded-full bg-red-600 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">АБ</div>
-                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Альфа-Банк</span>
-                    </div>
-                    <div class="flex items-baseline justify-between gap-1">
-                        <span class="text-base font-black text-slate-950 dark:text-white" id="rate-alfa">...</span>
-                        <button id="btn-rate-alfa" onclick="toggleBankRateButton('alfa', 'Альфа-Банка')" class="btn-bank-rate px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700">Применить</button>
-                    </div>
-                </div>
-                <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition min-w-[145px] sm:min-w-0 snap-start shrink-0">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 rounded-full bg-yellow-500 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">ТБ</div>
-                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Т-Банк</span>
-                    </div>
-                    <div class="flex items-baseline justify-between gap-1">
-                        <span class="text-base font-black text-slate-950 dark:text-white" id="rate-tbank">...</span>
-                        <button id="btn-rate-tbank" onclick="toggleBankRateButton('tbank', 'Т-Банка')" class="btn-bank-rate px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700">Применить</button>
-                    </div>
-                </div>
-                <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 hover:border-slate-200 dark:hover:border-slate-700 transition min-w-[145px] sm:min-w-0 snap-start shrink-0">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 rounded-full bg-blue-700 flex items-center justify-center text-[9px] font-bold text-white shadow-inner">СК</div>
-                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Совкомбанк</span>
-                    </div>
-                    <div class="flex items-baseline justify-between gap-1">
-                        <span class="text-base font-black text-slate-950 dark:text-white" id="rate-sovcom">...</span>
-                        <button id="btn-rate-sovcom" onclick="toggleBankRateButton('sovcom', 'Совкомбанка')" class="btn-bank-rate px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700">Применить</button>
-                    </div>
-                </div>
-                <!-- Trailing spacer for correct mobile scrolling in overflow-x flexbox -->
-                <div class="w-4 shrink-0 md:hidden"></div>
-            </div>
-            </div>
-        </div>
-    </section>
 
     <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
@@ -291,6 +211,41 @@
                             <button onclick="applyDownpaymentPercentPreset(15)" class="flex-1 py-1 px-2 bg-slate-100 hover:bg-brand-50 dark:bg-slate-800 hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-lg text-[11px] font-bold text-slate-600 dark:text-slate-400 transition-all">15%</button>
                             <button onclick="applyDownpaymentPercentPreset(20)" class="flex-1 py-1 px-2 bg-slate-100 hover:bg-brand-50 dark:bg-slate-800 hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-lg text-[11px] font-bold text-slate-600 dark:text-slate-400 transition-all">20%</button>
                             <button onclick="applyDownpaymentPercentPreset(30)" class="flex-1 py-1 px-2 bg-slate-100 hover:bg-brand-50 dark:bg-slate-800 hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-lg text-[11px] font-bold text-slate-600 dark:text-slate-400 transition-all">30%</button>
+                        </div>
+                    </div>
+
+                    <!-- Compact Bank Rate Chips Container and Key CBR Rate Badge -->
+                    <div class="space-y-2 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200/60 dark:border-slate-800">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
+                                Ставки банков РФ
+                            </span>
+                            <span class="inline-flex items-center gap-1 text-[10px] font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-400 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">
+                                ЦБ: <strong id="cb-rate-display" class="text-slate-900 dark:text-white">...</strong>
+                            </span>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5">
+                            <button id="btn-rate-sber" onclick="toggleBankRateButton('sberbank', 'Сбербанка')" class="btn-bank-rate flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 hover:bg-brand-50 dark:hover:bg-slate-800 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 transition border border-slate-200 dark:border-slate-700">
+                                <span class="w-2 h-2 rounded-full bg-green-600 shrink-0"></span>
+                                <span>Сбер <strong id="rate-sber" class="font-bold">...</strong></span>
+                            </button>
+                            <button id="btn-rate-vtb" onclick="toggleBankRateButton('vtb', 'ВТБ')" class="btn-bank-rate flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 hover:bg-brand-50 dark:hover:bg-slate-800 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 transition border border-slate-200 dark:border-slate-700">
+                                <span class="w-2 h-2 rounded-full bg-blue-600 shrink-0"></span>
+                                <span>ВТБ <strong id="rate-vtb" class="font-bold">...</strong></span>
+                            </button>
+                            <button id="btn-rate-alfa" onclick="toggleBankRateButton('alfa', 'Альфа-Банка')" class="btn-bank-rate flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 hover:bg-brand-50 dark:hover:bg-slate-800 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 transition border border-slate-200 dark:border-slate-700">
+                                <span class="w-2 h-2 rounded-full bg-red-600 shrink-0"></span>
+                                <span>Альфа <strong id="rate-alfa" class="font-bold">...</strong></span>
+                            </button>
+                            <button id="btn-rate-tbank" onclick="toggleBankRateButton('tbank', 'Т-Банка')" class="btn-bank-rate flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 hover:bg-brand-50 dark:hover:bg-slate-800 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 transition border border-slate-200 dark:border-slate-700">
+                                <span class="w-2 h-2 rounded-full bg-yellow-500 shrink-0"></span>
+                                <span>Т-Банк <strong id="rate-tbank" class="font-bold">...</strong></span>
+                            </button>
+                            <button id="btn-rate-sovcom" onclick="toggleBankRateButton('sovcom', 'Совкомбанка')" class="btn-bank-rate flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 hover:bg-brand-50 dark:hover:bg-slate-800 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 transition border border-slate-200 dark:border-slate-700">
+                                <span class="w-2 h-2 rounded-full bg-blue-700 shrink-0"></span>
+                                <span>Совком <strong id="rate-sovcom" class="font-bold">...</strong></span>
+                            </button>
                         </div>
                     </div>
 
@@ -519,7 +474,7 @@
                 </div>
             </div>
 
-            <div class="lg:col-span-7 flex flex-col space-y-6" id="results-panel">
+            <div class="lg:col-span-7 lg:sticky lg:top-6 self-start flex flex-col space-y-6" id="results-panel">
                 <!-- Hero Results Card with Premium Overpayment Focus -->
                 <div class="bg-gradient-to-br from-slate-900 to-slate-950 dark:from-slate-900 dark:to-black text-white rounded-3xl p-6 shadow-xl border border-slate-800 relative overflow-hidden flex flex-col justify-between">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -552,19 +507,6 @@
                     </div>
                 </div>
 
-                <!-- Premium Bank Lead Generation CTA -->
-                <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border-2 border-brand-500/20 dark:border-brand-500/10 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-brand-100 dark:bg-brand-950/50 text-brand-600 rounded-xl flex items-center justify-center shrink-0">
-                            <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                        </div>
-                        <div>
-                            <h4 class="text-sm font-bold text-slate-900 dark:text-white">Одобрение со скидкой 0.3%</h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Заполните одну анкету и отправьте в ТОП-5 банков со скидкой к ставке</p>
-                        </div>
-                    </div>
-                    <button onclick="openLeadModal()" class="w-full sm:w-auto px-5 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl transition-all shadow-md hover:shadow-brand-500/20 active:scale-[0.98] whitespace-nowrap">Отправить заявку в банки со скидкой 0.3%</button>
-                </div>
 
                 <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-150 dark:border-slate-800 shadow-sm flex flex-col md:flex-row items-center gap-6 justify-between">
                     <div class="flex-1 space-y-3 w-full text-center md:text-left">
@@ -655,19 +597,19 @@
         </div>
 
         <div class="lg:hidden mobile-sticky-results">
-            <div class="flex items-center justify-between gap-3 mb-2.5">
-                <div class="flex flex-col">
-                    <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Переплата</span>
-                    <span id="mobile-overpayment" class="text-base font-black text-rose-600 dark:text-rose-500">0 ₽</span>
+            <div class="flex items-center justify-between gap-3 mb-2.5 w-full">
+                <div class="flex-1 min-w-0">
+                    <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block truncate">Переплата</span>
+                    <span id="mobile-overpayment" class="text-base font-black text-rose-600 dark:text-rose-500 block truncate">0 ₽</span>
                 </div>
-                <div class="flex flex-col text-center">
-                    <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Платёж</span>
-                    <span id="mobile-payment" class="text-sm font-black text-slate-900 dark:text-white">0 ₽</span>
+                <div class="flex-1 min-w-0 text-center">
+                    <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block truncate">Платёж</span>
+                    <span id="mobile-payment" class="text-sm font-black text-slate-900 dark:text-white block truncate">0 ₽</span>
                 </div>
-                <div class="text-right" id="mobile-saving-container">
-                    <p class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Экономия</p>
-                    <p id="mobile-saving" class="text-sm font-black text-brand-600">0 ₽</p>
-                    <span id="mobile-cta-text" class="text-[10px] font-bold text-rose-500 dark:text-rose-400 animate-pulse hidden">🔥 Досрочно +5к</span>
+                <div class="flex-1 min-w-0 text-right" id="mobile-saving-container">
+                    <p class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider truncate">Экономия</p>
+                    <p id="mobile-saving" class="text-sm font-black text-brand-600 truncate">0 ₽</p>
+                    <span id="mobile-cta-text" class="text-[10px] font-bold text-rose-500 dark:text-rose-400 animate-pulse hidden truncate">🔥 Досрочно +5к</span>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-2">
@@ -951,7 +893,10 @@
             } else {
                 resetBankButtonsHighlight();
                 selectedActiveBankKey = bankKey;
-                if (btn) btn.className = "btn-bank-rate px-2 py-0.5 bg-brand-600 text-white shadow-md rounded-lg text-[10px] font-bold transition border border-brand-600";
+                if (btn) {
+                    btn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300', 'hover:bg-brand-50', 'dark:hover:bg-slate-800');
+                    btn.classList.add('bg-brand-600', 'text-white', 'shadow-md', 'border-brand-600');
+                }
                 applyRateValue(screenRate, bankName);
             }
         }
@@ -959,7 +904,8 @@
         function resetBankButtonsHighlight() {
             selectedActiveBankKey = null;
             document.querySelectorAll('.btn-bank-rate').forEach(b => {
-                b.className = "btn-bank-rate px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-brand-600 hover:text-white rounded-lg text-[10px] font-bold text-slate-600 dark:text-slate-400 transition border border-slate-200 dark:border-slate-700";
+                b.classList.remove('bg-brand-600', 'text-white', 'shadow-md', 'border-brand-600');
+                b.classList.add('bg-white', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300', 'hover:bg-brand-50', 'dark:hover:bg-slate-800');
             });
         }
 
@@ -1505,15 +1451,9 @@
             const savingsCard = document.getElementById('savings-card');
             if (savingsCard) {
                 if (savedInt <= 0 && savedM <= 0) {
-                    savingsCard.innerHTML = `
-                        <div class="relative z-10 flex flex-col items-center justify-center text-center py-4 space-y-2">
-                            <span class="text-3xl">🔥</span>
-                            <p class="text-sm font-black text-emerald-300 leading-relaxed max-w-sm">
-                                Добавьте регулярную доплату, чтобы увидеть сбереженные миллионы!
-                            </p>
-                        </div>
-                    `;
+                    savingsCard.classList.add('hidden');
                 } else {
+                    savingsCard.classList.remove('hidden');
                     savingsCard.innerHTML = `
                         <div class="relative z-10 space-y-4">
                             <div class="flex items-center justify-between">
@@ -1730,41 +1670,9 @@
             updateCalculations();
         }
 
-        function scrollRates(direction) {
-            const container = document.getElementById('rates-container');
-            if (!container) return;
-            const scrollAmount = 160;
-            if (direction === 'left') {
-                container.scrollLeft -= scrollAmount;
-            } else {
-                container.scrollLeft += scrollAmount;
-            }
-            setTimeout(handleRatesScroll, 200);
-        }
-
-        function handleRatesScroll() {
-            const container = document.getElementById('rates-container');
-            const leftBtn = document.getElementById('btn-scroll-left');
-            const rightBtn = document.getElementById('btn-scroll-right');
-            if (!container) return;
-
-            if (container.scrollLeft > 5) {
-                leftBtn.classList.remove('hidden');
-            } else {
-                leftBtn.classList.add('hidden');
-            }
-
-            if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 5) {
-                rightBtn.classList.add('hidden');
-            } else {
-                rightBtn.classList.remove('hidden');
-            }
-        }
-
         window.onload = function() {
             if (typeof initTheme === 'function') initTheme();
             calcTheoreticalBalance(); updateInputsDOM(); switchMainTab('new'); loadLiveRates();
-            setTimeout(handleRatesScroll, 500);
         };
     </script>
 </body>
