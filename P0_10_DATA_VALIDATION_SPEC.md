@@ -63,12 +63,13 @@ JSON Schema является проверкой формы, а не единст
 | `dataset_id` | string enum | `key_rate`, `inflation_annual` или `regional_income`. |
 | `status` | string enum | Только `ok`, `stale`, `unavailable`. |
 | `status_reason` | string/null | `null` только при `ok`; иначе код из закрытого enum. |
-| `source_name` | non-empty string | Человекочитаемое имя официального поставщика. Для composite-набора — имя основной системы и `sources[]`. |
-| `source_url` | HTTPS URL | Стабильная официальная страница показателя; hostname входит в allowlist набора. |
-| `source_export_url` | HTTPS URL/null | Точный фактически загруженный ресурс последнего успеха. `null` допустим только при `unavailable`. |
-| `source_checksum_sha256` | 64 hex/null | SHA-256 байтов фактически загруженного источника. `null` допустим только при `unavailable`. |
+| `source_name` | non-empty string | Человекочитаемое имя основного официального поставщика. |
+| `source_url` | HTTPS URL | Стабильная официальная landing page основного показателя; hostname входит в allowlist набора. |
+| `source_export_url` | HTTPS URL/null | Для single-source набора — точный ресурс последнего успеха. Для composite-набора равен `null`, а точные URL обязательны в `sources[]`. |
+| `source_checksum_sha256` | 64 hex/null | Для single-source набора — SHA-256 исходных байтов. Для composite-набора равен `null`, а checksum обязателен в каждом `sources[]`. |
 | `payload_checksum_sha256` | 64 hex/null | SHA-256 канонизированного предметного payload. Защищает локальный snapshot от незаметного изменения. |
-| `source_published_at` | ISO date/null | Дата публикации источника, если она предоставляется официальным набором. |
+| `source_published_at` | ISO date/null | Дата публикации single-source набора; для composite-набора даты находятся в `sources[]`. |
+| `sources` | array/null | Обязательный непустой массив source descriptors для composite-набора; `null` для single-source. |
 | `last_successful_fetch_at` | ISO-8601 UTC/null | Момент последней успешной загрузки и полной проверки. |
 | `last_attempt_at` | ISO-8601 UTC | Момент последней попытки обновления, включая неуспешную. |
 
@@ -123,6 +124,7 @@ JSON Schema является проверкой формы, а не единст
     "source_checksum_sha256": "<sha256 SOAP response>",
     "payload_checksum_sha256": "<sha256 canonical data>",
     "source_published_at": null,
+    "sources": null,
     "last_successful_fetch_at": "2026-08-31T03:00:00Z",
     "last_attempt_at": "2026-08-31T03:00:00Z"
   },
@@ -167,7 +169,25 @@ JSON Schema является проверкой формы, а не единст
     "status_reason": null,
     "source_name": "Росстат",
     "source_url": "https://rosstat.gov.ru/labor_market_employment_salaries",
-    "sources": [],
+    "source_export_url": null,
+    "source_checksum_sha256": null,
+    "source_published_at": null,
+    "sources": [
+      {
+        "source_id": "average_salary",
+        "source_name": "Росстат",
+        "source_url": "https://rosstat.gov.ru/labor_market_employment_salaries",
+        "source_export_url": "<exact official export URL>",
+        "source_published_at": "<ISO date>",
+        "fetched_at": "2026-08-31T03:00:00Z",
+        "source_checksum_sha256": "<sha256 official file>",
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "metrics": ["average_salary"],
+        "reference_period": "<official period>",
+        "geography": "Российская Федерация и субъекты Российской Федерации",
+        "coverage": "<official coverage>"
+      }
+    ],
     "last_successful_fetch_at": "2026-08-31T03:00:00Z",
     "last_attempt_at": "2026-08-31T03:00:00Z",
     "payload_checksum_sha256": "<sha256 canonical regions>"
@@ -175,6 +195,8 @@ JSON Schema является проверкой формы, а не единст
   "regions": []
 }
 ```
+
+Угловые placeholders и сокращенный пустой `regions` в примере показывают форму, но не являются допустимым `ok` fixture. Реальный `ok` fixture обязан содержать полный roster регионов и descriptors всех required metrics с точными официальными export URL, периодами, coverage и checksum.
 
 Каждая запись региона содержит:
 
@@ -236,9 +258,9 @@ LLM, поисковая выдача и второй LLM-«аудитор» не
 
 Общие:
 
-- при `ok`: `status_reason === null`, payload непустой, source/checksum/last-success обязательны;
+- при `ok`: `status_reason === null`, payload непустой, last-success обязателен; single-source metadata либо каждый descriptor composite `sources[]` содержит export URL и checksum;
 - при `stale`: payload идентичен последнему валидному snapshot, `status_reason !== null`, `last_successful_fetch_at` не меняется;
-- при `unavailable`: финансовые значения отсутствуют, source-export/checksum/last-success равны `null`, `status_reason !== null`;
+- при `unavailable`: финансовые значения отсутствуют, successful export/checksum/last-success равны `null`, composite `sources[]` не содержит descriptors успешной загрузки, `status_reason !== null`;
 - `last_attempt_at >= last_successful_fetch_at`;
 - `source_published_at <= last_successful_fetch_at <= now + clock_skew`;
 - recomputed `payload_checksum_sha256` совпадает с metadata.
