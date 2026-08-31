@@ -367,7 +367,7 @@
                                     Реальная покупательная способность накопленной суммы составит <span id="real-purchasing-power" class="font-extrabold text-amber-600 dark:text-amber-400 text-base">... ₽</span>
                                 </p>
                                 <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-normal">
-                                    Значение скорректировано на основе исторической средней инфляции в РФ за последние 15 лет (<span id="inflation-percent-text">7.8%</span>), полученной из официального архива.
+                                    Значение скорректировано на основе исторической средней инфляции в РФ за последние 15 лет (<span id="inflation-percent-text">...</span>), полученной из официального архива.
                                 </p>
                             </div>
                         </div>
@@ -481,7 +481,7 @@
             monthlyExpenses: 70000,
             interestRate: 16,
             goalSum: 1000000,
-            avgInflation: 0.078 // Default ~7.8% historical average
+            avgInflation: null
         };
 
         let chartInstance = null;
@@ -565,11 +565,16 @@
 
             // Загрузка исторической инфляции для reality check
             const inflationData = await fetchInflation();
-            if (inflationData) {
-                const values = Object.values(inflationData).slice(-15);
-                const product = values.reduce((acc, r) => acc * (1 + r / 100), 1);
-                state.avgInflation = Math.pow(product, 1 / values.length) - 1;
+            state.avgInflation = getAverageInflationRate(inflationData);
+            if (Number.isFinite(state.avgInflation)) {
                 document.getElementById('inflation-percent-text').innerText = (state.avgInflation * 100).toFixed(1) + '%';
+            } else {
+                document.getElementById('inflation-percent-text').innerText = 'данные временно недоступны';
+            }
+
+            const inflationStatusMessage = getInflationStatusMessage(inflationData);
+            if (inflationStatusMessage) {
+                showToast(inflationStatusMessage);
             }
 
             // Установка даты рождения по умолчанию (25 лет назад)
@@ -789,9 +794,13 @@
             investedDisplay.innerText = formatMoney(result.totalInvested);
 
             // Calculate purchasing power in future value (adjusted for inflation)
-            const yearsToGoal = result.months / 12;
-            const purchasingPower = state.goalSum / Math.pow(1 + state.avgInflation, yearsToGoal);
-            realPurchasingPowerEl.innerText = formatMoney(purchasingPower);
+            if (Number.isFinite(state.avgInflation)) {
+                const yearsToGoal = result.months / 12;
+                const purchasingPower = state.goalSum / Math.pow(1 + state.avgInflation, yearsToGoal);
+                realPurchasingPowerEl.innerText = formatMoney(purchasingPower);
+            } else {
+                realPurchasingPowerEl.innerText = '—';
+            }
 
             // Совет
             if (result.months <= 0) {

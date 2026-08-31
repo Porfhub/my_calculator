@@ -491,7 +491,7 @@
         let state = {
             cbRate: 16.0,
             depositRate: 14.0, // Used as Expected Yield Rate
-            avgInflation: 0.08,
+            avgInflation: null,
             currentMonthIndex: new Date().getMonth(),
             currentYear: new Date().getFullYear(),
             passiveMode: 'simple',
@@ -650,14 +650,17 @@
 
             // Fetch inflation data
             const inflationData = await fetchInflation();
-            if (inflationData) {
-                const values = Object.values(inflationData).slice(-15);
-                if (values.length > 0) {
-                    const product = values.reduce((acc, r) => acc * (1 + r / 100), 1);
-                    state.avgInflation = Math.pow(product, 1 / values.length) - 1;
-                }
+            state.avgInflation = getAverageInflationRate(inflationData);
+            if (Number.isFinite(state.avgInflation)) {
+                document.getElementById('inflation-rate-val').innerText = (state.avgInflation * 100).toFixed(1) + '%';
+            } else {
+                document.getElementById('inflation-rate-val').innerText = 'данные временно недоступны';
             }
-            document.getElementById('inflation-rate-val').innerText = (state.avgInflation * 100).toFixed(1) + '%';
+
+            const inflationStatusMessage = getInflationStatusMessage(inflationData);
+            if (inflationStatusMessage) {
+                showToast(inflationStatusMessage);
+            }
 
             // Initial calculation
             calculateFreedom();
@@ -665,6 +668,11 @@
 
         // Core math and simulation loop
         function calculateFreedom() {
+            if (!Number.isFinite(state.avgInflation)) {
+                setFreedomUnavailableState();
+                return;
+            }
+
             const savings = parseCleanNumber(document.getElementById('savings-input').value);
             
             let passiveIncome = 0;
@@ -863,6 +871,27 @@
             renderChart(chartDatasets);
 
             reachGoal("calculate_success");
+        }
+
+        function setFreedomUnavailableState() {
+            ['survival', 'comfort', 'luxury'].forEach((scenario) => {
+                const badge = document.getElementById(`tab-${scenario}-badge`);
+                if (badge) badge.innerText = '—';
+            });
+
+            document.getElementById('freedom-date-hero').innerText = 'Данные временно недоступны';
+            document.getElementById('freedom-duration-hero').innerText = 'Расчёт с инфляцией не выполнен';
+            document.getElementById('freedom-verdict-comment').innerText = 'Не удалось получить официальные данные инфляции. Попробуйте обновить страницу позже.';
+
+            const mobileDuration = document.getElementById('mobile-comfort-duration');
+            const mobileDate = document.getElementById('mobile-comfort-date');
+            if (mobileDuration) mobileDuration.innerText = '—';
+            if (mobileDate) mobileDate.innerText = 'Данные недоступны';
+
+            if (decayChart) {
+                decayChart.destroy();
+                decayChart = null;
+            }
         }
 
         function renderChart(datasets) {
