@@ -1,28 +1,156 @@
 {
-  "2000": 20.2,
-  "2001": 18.6,
-  "2002": 15.1,
-  "2003": 12,
-  "2004": 11.7,
-  "2005": 10.9,
-  "2006": 9,
-  "2007": 11.9,
-  "2008": 13.3,
-  "2009": 8.8,
-  "2010": 8.8,
-  "2011": 6.1,
-  "2012": 6.6,
-  "2013": 6.5,
-  "2014": 11.4,
-  "2015": 12.9,
-  "2016": 5.4,
-  "2017": 2.5,
-  "2018": 4.3,
-  "2019": 3,
-  "2020": 4.9,
-  "2021": 8.4,
-  "2022": 11.9,
-  "2023": 7.4,
-  "2024": 8.5,
-  "2025": 6.8
+  "metadata": {
+    "schema_version": 2,
+    "status": "ok",
+    "source_name": "Росстат / ЕМИСС",
+    "source_url": "https://www.fedstat.ru/indicator/31074",
+    "source_landing_url": "https://rosstat.gov.ru/statistics/price",
+    "source_export_url": "https://rosstat.gov.ru/storage/mediabank/ipc_mes_07-2026.xlsx",
+    "source_checksum_sha256": "ace8990fe8358173f743987a256eaef71501b06b5c4e5fe865b28046776ea412",
+    "indicator_id": "31074",
+    "showcase_indicator_id": "11521100300010200001",
+    "indicator_name": "Индекс потребительских цен на товары и услуги",
+    "geography": "Российская Федерация",
+    "coverage": "Все товары и услуги",
+    "measure": "декабрь к декабрю предыдущего года",
+    "unit": "percent",
+    "frequency": "annual",
+    "data_through": 2025,
+    "source_published_at": "2026-08-12",
+    "last_successful_fetch_at": "2026-08-31T16:26:31.831Z",
+    "last_attempt_at": "2026-08-31T16:26:31.831Z",
+    "status_reason": null
+  },
+  "annual": [
+    {
+      "year": 2000,
+      "cpi_index": 120.18,
+      "inflation_percent": 20.18
+    },
+    {
+      "year": 2001,
+      "cpi_index": 118.58,
+      "inflation_percent": 18.58
+    },
+    {
+      "year": 2002,
+      "cpi_index": 115.06,
+      "inflation_percent": 15.06
+    },
+    {
+      "year": 2003,
+      "cpi_index": 111.99,
+      "inflation_percent": 11.99
+    },
+    {
+      "year": 2004,
+      "cpi_index": 111.73,
+      "inflation_percent": 11.73
+    },
+    {
+      "year": 2005,
+      "cpi_index": 110.92,
+      "inflation_percent": 10.92
+    },
+    {
+      "year": 2006,
+      "cpi_index": 109,
+      "inflation_percent": 9
+    },
+    {
+      "year": 2007,
+      "cpi_index": 111.87,
+      "inflation_percent": 11.87
+    },
+    {
+      "year": 2008,
+      "cpi_index": 113.28,
+      "inflation_percent": 13.28
+    },
+    {
+      "year": 2009,
+      "cpi_index": 108.8,
+      "inflation_percent": 8.8
+    },
+    {
+      "year": 2010,
+      "cpi_index": 108.78,
+      "inflation_percent": 8.78
+    },
+    {
+      "year": 2011,
+      "cpi_index": 106.1,
+      "inflation_percent": 6.1
+    },
+    {
+      "year": 2012,
+      "cpi_index": 106.57,
+      "inflation_percent": 6.57
+    },
+    {
+      "year": 2013,
+      "cpi_index": 106.47,
+      "inflation_percent": 6.47
+    },
+    {
+      "year": 2014,
+      "cpi_index": 111.35,
+      "inflation_percent": 11.35
+    },
+    {
+      "year": 2015,
+      "cpi_index": 112.91,
+      "inflation_percent": 12.91
+    },
+    {
+      "year": 2016,
+      "cpi_index": 105.39,
+      "inflation_percent": 5.39
+    },
+    {
+      "year": 2017,
+      "cpi_index": 102.51,
+      "inflation_percent": 2.51
+    },
+    {
+      "year": 2018,
+      "cpi_index": 104.26,
+      "inflation_percent": 4.26
+    },
+    {
+      "year": 2019,
+      "cpi_index": 103.04,
+      "inflation_percent": 3.04
+    },
+    {
+      "year": 2020,
+      "cpi_index": 104.91,
+      "inflation_percent": 4.91
+    },
+    {
+      "year": 2021,
+      "cpi_index": 108.39,
+      "inflation_percent": 8.39
+    },
+    {
+      "year": 2022,
+      "cpi_index": 111.94,
+      "inflation_percent": 11.94
+    },
+    {
+      "year": 2023,
+      "cpi_index": 107.42,
+      "inflation_percent": 7.42
+    },
+    {
+      "year": 2024,
+      "cpi_index": 109.52,
+      "inflation_percent": 9.52
+    },
+    {
+      "year": 2025,
+      "cpi_index": 105.59,
+      "inflation_percent": 5.59
+    }
+  ]
 }
