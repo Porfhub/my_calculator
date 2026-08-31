@@ -364,7 +364,7 @@
             preschooler: 35000,
             schooler: 45000,
             teenager: 60000,
-            avgInflation: 0.08
+            avgInflation: null
         };
 
         const presets = {
@@ -382,12 +382,16 @@
 
             // Загрузка инфляции
             const inflationData = await fetchInflation();
-            if (inflationData) {
-                // Берем данные за последние 15 лет для более актуального прогноза (ок. 7.5-8%)
-                const values = Object.values(inflationData).slice(-15);
-                const product = values.reduce((acc, r) => acc * (1 + r / 100), 1);
-                state.avgInflation = Math.pow(product, 1 / values.length) - 1;
+            state.avgInflation = getAverageInflationRate(inflationData);
+            if (Number.isFinite(state.avgInflation)) {
                 document.getElementById('inflation-val-text').innerText = (state.avgInflation * 100).toFixed(1) + '%';
+            } else {
+                document.getElementById('inflation-val-text').innerText = 'данные временно недоступны';
+            }
+
+            const inflationStatusMessage = getInflationStatusMessage(inflationData);
+            if (inflationStatusMessage) {
+                showToast(inflationStatusMessage);
             }
 
             setupEventListeners();
@@ -434,6 +438,8 @@
         }
 
         function calculate() {
+            if (!Number.isFinite(state.avgInflation)) return null;
+
             // Apply Life Situation Modifiers to local calculation
             const grandmaHelping = document.getElementById('mod-grandma')?.checked;
             const privateNursery = document.getElementById('mod-nursery')?.checked;
@@ -514,6 +520,11 @@
 
             const result = calculate();
 
+            if (!result) {
+                setGeneticWealthUnavailableState();
+                return;
+            }
+
             document.getElementById('total-with-inflation').innerText = formatMoney(result.totalWithInf);
             document.getElementById('total-without-inflation').innerText = formatNumber(Math.round(result.totalNoInf));
             document.getElementById('mobile-total').innerText = formatMoney(result.totalWithInf);
@@ -534,6 +545,29 @@
 
             updateChart(result.stages);
             updateCategoryChart(result.totalWithInf);
+        }
+
+        function setGeneticWealthUnavailableState() {
+            [
+                'total-with-inflation',
+                'total-without-inflation',
+                'mobile-total',
+                'mobile-inflation-impact',
+                'monthly-average-stat',
+                'equiv-apartments',
+                'equiv-cars'
+            ].forEach((id) => {
+                document.getElementById(id).innerText = '—';
+            });
+
+            if (chartInstance) {
+                chartInstance.destroy();
+                chartInstance = null;
+            }
+            if (categoryChartInstance) {
+                categoryChartInstance.destroy();
+                categoryChartInstance = null;
+            }
         }
 
         function getAptWord(val) {

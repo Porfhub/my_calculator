@@ -277,7 +277,7 @@
                             <span class="text-[10px] bg-brand-50 dark:bg-brand-950/20 text-brand-700 dark:text-brand-400 px-2.5 py-0.5 rounded-full font-black border border-brand-200/50">Росстат</span>
                         </div>
                         <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                            Официальный индекс инфляции по годам (с <span id="inflation-start-year" class="font-bold text-brand-600 dark:text-brand-400">2016</span> по <span class="font-bold text-slate-700 dark:text-slate-300">2025</span> г.). <span class="text-brand-600 dark:text-brand-400 font-bold">Нажмите на любой год</span> для просмотра микро-факта:
+                            Официальный индекс инфляции по годам (с <span id="inflation-start-year" class="font-bold text-brand-600 dark:text-brand-400">2016</span> по <span id="inflation-end-year" class="font-bold text-slate-700 dark:text-slate-300">...</span> г.). <span class="text-brand-600 dark:text-brand-400 font-bold">Нажмите на любой год</span> для просмотра микро-факта:
                         </p>
 
                         <div id="inflation-by-year-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 pt-1 text-center text-xs font-semibold">
@@ -333,24 +333,29 @@
     </div>
 
     <script>
+        let inflationDataset = null;
         let inflationData = {};
         let chartInstance = null;
 
         const state = {
             amount: 1000,
             startYear: 2016,
-            currentYear: new Date().getFullYear()
+            dataThrough: null
         };
 
         async function init() {
-            inflationData = await fetchInflation();
-            if (inflationData) {
+            inflationDataset = await fetchInflation();
+            inflationData = getInflationByYear(inflationDataset);
+
+            if (inflationDataset.metadata.status !== 'unavailable') {
+                state.dataThrough = Number(inflationDataset.metadata.data_through);
+
                 // Настройка выпадающего списка лет
                 const yearSelect = document.getElementById('year-select');
-                const years = Object.keys(inflationData).sort((a, b) => b - a);
+                const years = Object.keys(inflationData).map(Number).sort((a, b) => b - a);
 
-                // Ограничиваем выбор до текущий год - 1
-                const validYears = years.filter(y => y < state.currentYear).sort((a, b) => a - b);
+                const validYears = years.filter(y => y <= state.dataThrough).sort((a, b) => a - b);
+                if (!validYears.includes(state.startYear)) state.startYear = validYears[0];
 
                 yearSelect.innerHTML = '';
                 validYears.forEach(year => {
@@ -364,13 +369,34 @@
                 document.getElementById('year-range').min = validYears[0];
                 document.getElementById('year-range').max = validYears[validYears.length - 1];
                 document.getElementById('year-range').value = state.startYear;
+                document.getElementById('year-display').innerText = state.startYear;
+                document.getElementById('inflation-end-year').innerText = state.dataThrough;
 
                 calculate();
 
                 // Highlight default preset button
                 highlightPresetButton(state.startYear);
             } else {
-                showToast('Ошибка загрузки данных');
+                setInflationShredderUnavailableState();
+            }
+
+            const inflationStatusMessage = getInflationStatusMessage(inflationDataset);
+            if (inflationStatusMessage) showToast(inflationStatusMessage);
+        }
+
+        function setInflationShredderUnavailableState() {
+            document.getElementById('equivalent-amount').innerText = '—';
+            document.getElementById('inflation-summary').innerText = 'Данные инфляции временно недоступны. Расчёт не выполнен.';
+            document.getElementById('coffee-index-text').innerText = 'Для расчёта нужны актуальные официальные данные инфляции.';
+            document.getElementById('burger-index-text').innerText = 'Попробуйте обновить страницу позже.';
+            document.getElementById('mobile-value').innerText = '—';
+            document.getElementById('mobile-loss').innerText = '—';
+            document.getElementById('inflation-end-year').innerText = '—';
+            document.getElementById('inflation-by-year-grid').innerHTML = '';
+
+            if (chartInstance) {
+                chartInstance.destroy();
+                chartInstance = null;
             }
         }
 
@@ -431,7 +457,10 @@
         }
 
         function runShredder() {
-            calculate();
+            if (!calculate()) {
+                showToast(getInflationStatusMessage(inflationDataset) || 'Данные инфляции за выбранный период временно недоступны.');
+                return;
+            }
             const resultCard = document.getElementById('screenshot-area');
             if (resultCard) {
                 const offset = 85;
@@ -469,39 +498,39 @@
             const factVal = document.getElementById('micro-fact-val');
 
             const facts = {
-                2000: "Век начался с двузначной инфляции в 20.2%. Страна оправлялась от дефолта 1998 года, цены росли стремительно, но начинался сырьевой суперцикл.",
-                2001: "Инфляция 18.6%. Экономика росла быстрыми темпами на фоне дорожающей нефти, однако структурные реформы еще не успели обуздать рост цен.",
-                2002: "Инфляция 15.1%. Постепенное замедление роста цен. Потребительский сектор рос взрывными темпами, рубль укреплялся.",
-                2003: "Инфляция 12.0%. Рубль стал укрепляться к доллару, начался приток иностранных инвестиций, экономика росла более чем на 7% в год.",
-                2004: "Инфляция 11.7%. Высокие цены на энергоносители поддерживали бюджет, но потребительский бум продолжал разгонять цены.",
-                2005: "Инфляция 10.9%. Банковский сектор расцвел, кредитование населения росло трехзначными темпами, импорт дешевел.",
-                2006: "Инфляция 9.0%. Впервые за новейшую историю России инфляция опустилась ниже 10%. Настоящая золотая эпоха потребительского спроса.",
-                2007: "Инфляция 11.9%. Мировой продовольственный кризис и избыток ликвидности вернули инфляцию в двузначную зону.",
-                2008: "Инфляция 13.3%. Мировой финансовый кризис. Валютный шок в конце года привел к падению рубля и резкому росту цен на импорт.",
-                2009: "Инфляция 8.8%. Глубокая рецессия заставила продавцов снижать цены. Снижение потребительского спроса сбило инфляцию до исторического минимума.",
-                2010: "Инфляция 8.8%. Аномальная летняя жара и засуха уничтожили значительную часть урожая, вызвав резкий скачок цен на базовые товары.",
-                2011: "Инфляция 6.1%. Рекордное замедление темпов роста цен на фоне жесткой монетарной политики ЦБ и хорошего урожая.",
-                2012: "Инфляция 6.6%. Стабильные мировые цены и умеренный внутренний спрос удерживали инфляцию в рамках комфортных значений.",
-                2013: "Инфляция 6.5%. Экономический рост замедлился до стагнации, но инфляция оставалась стабильной перед будущими потрясениями.",
-                2014: "Инфляция 11.4%. Крымская весна, введение первых масштабных санкций, обвал цен на нефть и двукратное падение курса рубля к концу года.",
-                2015: "Инфляция 12.9%. Пик валютного кризиса. Переход ЦБ к плавающему курсу рубля и ключевая ставка в 17% помогли остановить гиперинфляцию, но цены выросли на шестую часть.",
-                2016: "Инфляция 5.4%. Эффект высокой базы прошел, жесткая политика Эльвиры Набиуллиной начала приносить плоды, цены начали стабилизироваться.",
-                2017: "Инфляция 2.5%. Исторический минимум инфляции в РФ за всю историю! Рекордный урожай и стабильный рубль временно приблизили нас к европейским стандартам.",
-                2018: "Инфляция 4.3%. Небольшое ускорение на фоне объявленного повышения НДС до 20% с января следующего года и новых пакетов санкций.",
-                2019: "Инфляция 3.0%. Слабый потребительский спрос компенсировал повышение НДС, инфляция оказалась ниже целевого ориентира ЦБ (4%).",
-                2020: "Инфляция 4.9%. Пандемия COVID-19. Закрытие границ, разрыв логистических цепочек и масштабное вливание ликвидности мировыми центробанками разогнали цены.",
-                2021: "Инфляция 8.4%. Постковидное восстановление спроса столкнулось с глобальным дефицитом сырья и чипов. Цены на металл, стройматериалы и авто взлетели.",
-                2022: "Инфляция 11.9%. Начало СВО, беспрецедентные санкции, уход сотен зарубежных брендов. Логистический шок привел к резкому росту цен весной, но сильный рубль летом стабилизировал годовой итог.",
-                2023: "Инфляция 7.4%. Дефицит рабочей силы, рекордные госрасходы и ослабление рубля разогнали потребительский спрос, вынудив ЦБ поднять ставку до 16%.",
-                2024: "Инфляция 8.5%. Продолжающийся перегрев экономики, санкции на платежи и высокая индексация тарифов ЖКХ удерживали инфляцию на высоком уровне.",
-                2025: "Инфляция 6.8%. Сверхвысокая ключевая ставка ЦБ (выше 21%) охладила кредитование, но цены продолжили расти из-за роста издержек производителей."
+                2000: "Страна оправлялась от дефолта 1998 года, цены росли стремительно, но начинался сырьевой суперцикл.",
+                2001: "Экономика росла быстрыми темпами на фоне дорожающей нефти, однако структурные реформы еще не успели обуздать рост цен.",
+                2002: "Постепенное замедление роста цен. Потребительский сектор рос взрывными темпами, рубль укреплялся.",
+                2003: "Рубль стал укрепляться к доллару, начался приток иностранных инвестиций, экономика росла более чем на 7% в год.",
+                2004: "Высокие цены на энергоносители поддерживали бюджет, но потребительский бум продолжал разгонять цены.",
+                2005: "Банковский сектор расцвел, кредитование населения росло трехзначными темпами, импорт дешевел.",
+                2006: "Впервые за новейшую историю России инфляция опустилась ниже 10%. Настоящая золотая эпоха потребительского спроса.",
+                2007: "Мировой продовольственный кризис и избыток ликвидности вернули инфляцию в двузначную зону.",
+                2008: "Мировой финансовый кризис. Валютный шок в конце года привел к падению рубля и резкому росту цен на импорт.",
+                2009: "Глубокая рецессия заставила продавцов снижать цены. Снижение потребительского спроса сбило инфляцию до исторического минимума.",
+                2010: "Аномальная летняя жара и засуха уничтожили значительную часть урожая, вызвав резкий скачок цен на базовые товары.",
+                2011: "Рекордное замедление темпов роста цен на фоне жесткой монетарной политики ЦБ и хорошего урожая.",
+                2012: "Стабильные мировые цены и умеренный внутренний спрос удерживали инфляцию в рамках комфортных значений.",
+                2013: "Экономический рост замедлился до стагнации, но инфляция оставалась стабильной перед будущими потрясениями.",
+                2014: "Крымская весна, введение первых масштабных санкций, обвал цен на нефть и двукратное падение курса рубля к концу года.",
+                2015: "Пик валютного кризиса. Переход ЦБ к плавающему курсу рубля и ключевая ставка в 17% помогли остановить гиперинфляцию, но цены выросли на шестую часть.",
+                2016: "Эффект высокой базы прошел, жесткая политика Эльвиры Набиуллиной начала приносить плоды, цены начали стабилизироваться.",
+                2017: "Исторический минимум инфляции в РФ за всю историю! Рекордный урожай и стабильный рубль временно приблизили нас к европейским стандартам.",
+                2018: "Небольшое ускорение на фоне объявленного повышения НДС до 20% с января следующего года и новых пакетов санкций.",
+                2019: "Слабый потребительский спрос компенсировал повышение НДС, инфляция оказалась ниже целевого ориентира ЦБ (4%).",
+                2020: "Пандемия COVID-19. Закрытие границ, разрыв логистических цепочек и масштабное вливание ликвидности мировыми центробанками разогнали цены.",
+                2021: "Постковидное восстановление спроса столкнулось с глобальным дефицитом сырья и чипов. Цены на металл, стройматериалы и авто взлетели.",
+                2022: "Начало СВО, беспрецедентные санкции, уход сотен зарубежных брендов. Логистический шок привел к резкому росту цен весной, но сильный рубль летом стабилизировал годовой итог.",
+                2023: "Дефицит рабочей силы, рекордные госрасходы и ослабление рубля разогнали потребительский спрос, вынудив ЦБ поднять ставку до 16%.",
+                2024: "Продолжающийся перегрев экономики, санкции на платежи и высокая индексация тарифов ЖКХ удерживали инфляцию на высоком уровне.",
+                2025: "Сверхвысокая ключевая ставка ЦБ охладила кредитование, но цены продолжили расти из-за роста издержек производителей."
             };
 
             const rate = inflationData[year];
-            if (factCard && factTitle && factDesc && factVal && facts[year]) {
+            if (factCard && factTitle && factDesc && factVal && facts[year] && Number.isFinite(rate)) {
                 factTitle.innerText = `Исторический факт: ${year} год`;
                 factVal.innerText = `${rate.toFixed(1)}%`;
-                factDesc.innerText = facts[year];
+                factDesc.innerText = `Инфляция ${rate.toFixed(1)}%. ${facts[year]}`;
 
                 factCard.classList.remove('hidden', 'opacity-0', 'scale-95');
                 factCard.classList.add('opacity-100', 'scale-100');
@@ -524,15 +553,16 @@
         }
 
         function calculate() {
-            if (!inflationData || Object.keys(inflationData).length === 0) return;
+            if (!inflationDataset || inflationDataset.metadata.status === 'unavailable' || Object.keys(inflationData).length === 0) return false;
 
             let currentEquivalent = state.amount;
             let cumulativeInflation = 1;
             const years = [];
             const purchasingPower = [];
 
-            for (let year = state.startYear; year < state.currentYear; year++) {
-                const rate = inflationData[year] || 0;
+            for (let year = state.startYear; year <= state.dataThrough; year++) {
+                const rate = inflationData[year];
+                if (!Number.isFinite(rate)) return false;
                 cumulativeInflation *= (1 + rate / 100);
             }
 
@@ -552,13 +582,13 @@
             document.getElementById('mobile-loss').innerText = formatMoney(state.amount - (state.amount / ratio));
 
             // Данные для графика
-            const allYears = Object.keys(inflationData).sort((a, b) => a - b);
+            const allYears = Object.keys(inflationData).map(Number).sort((a, b) => a - b);
             const filteredYears = allYears.filter(y => y >= state.startYear);
             let currentPower = 1000;
             filteredYears.forEach(year => {
                 years.push(year);
                 purchasingPower.push(currentPower);
-                const rate = inflationData[year] || 0;
+                const rate = inflationData[year];
                 currentPower /= (1 + rate / 100);
             });
 
@@ -592,6 +622,8 @@
                     grid.appendChild(cell);
                 });
             }
+
+            return true;
         }
 
         function updateChart(labels, data) {
