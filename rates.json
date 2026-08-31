@@ -1,9 +1,7 @@
 {
-  "cb_rate": 14.25,
-  "sberbank": 15.9,
-  "vtb": 16.2,
-  "alfa": 16.7,
-  "tbank": 16.9,
-  "sovcom": 18,
-  "last_updated": "31.08.2026, 12:01"
+  "cb_rate": 14,
+  "source_url": "https://www.cbr.ru/DailyInfoWebServ/DailyInfo.asmx?op=KeyRateXML",
+  "effective_from": "2026-07-27",
+  "fetched_at": "2026-08-31T15:12:19.675Z",
+  "status": "ok"
 }

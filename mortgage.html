@@ -214,38 +214,16 @@
                         </div>
                     </div>
 
-                    <!-- Compact Bank Rate Chips Container and Key CBR Rate Badge -->
+                    <!-- Official Bank of Russia key rate -->
                     <div class="space-y-2 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200/60 dark:border-slate-800">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
                                 <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
-                                Ставки банков РФ
+                                Ключевая ставка Банка России
                             </span>
                             <span class="inline-flex items-center gap-1 text-[10px] font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-400 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">
-                                ЦБ: <strong id="cb-rate-display" class="text-slate-900 dark:text-white">...</strong>
+                                ЦБ: <strong id="cb-rate-display" class="text-slate-900 dark:text-white">данные загружаются</strong>
                             </span>
-                        </div>
-                        <div class="flex flex-wrap gap-1.5">
-                            <button id="btn-rate-sber" onclick="toggleBankRateButton('sberbank', 'Сбербанка')" class="btn-bank-rate flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 hover:bg-brand-50 dark:hover:bg-slate-800 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 transition border border-slate-200 dark:border-slate-700">
-                                <span class="w-2 h-2 rounded-full bg-green-600 shrink-0"></span>
-                                <span>Сбер <strong id="rate-sber" class="font-bold">...</strong></span>
-                            </button>
-                            <button id="btn-rate-vtb" onclick="toggleBankRateButton('vtb', 'ВТБ')" class="btn-bank-rate flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 hover:bg-brand-50 dark:hover:bg-slate-800 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 transition border border-slate-200 dark:border-slate-700">
-                                <span class="w-2 h-2 rounded-full bg-blue-600 shrink-0"></span>
-                                <span>ВТБ <strong id="rate-vtb" class="font-bold">...</strong></span>
-                            </button>
-                            <button id="btn-rate-alfa" onclick="toggleBankRateButton('alfa', 'Альфа-Банка')" class="btn-bank-rate flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 hover:bg-brand-50 dark:hover:bg-slate-800 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 transition border border-slate-200 dark:border-slate-700">
-                                <span class="w-2 h-2 rounded-full bg-red-600 shrink-0"></span>
-                                <span>Альфа <strong id="rate-alfa" class="font-bold">...</strong></span>
-                            </button>
-                            <button id="btn-rate-tbank" onclick="toggleBankRateButton('tbank', 'Т-Банка')" class="btn-bank-rate flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 hover:bg-brand-50 dark:hover:bg-slate-800 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 transition border border-slate-200 dark:border-slate-700">
-                                <span class="w-2 h-2 rounded-full bg-yellow-500 shrink-0"></span>
-                                <span>Т-Банк <strong id="rate-tbank" class="font-bold">...</strong></span>
-                            </button>
-                            <button id="btn-rate-sovcom" onclick="toggleBankRateButton('sovcom', 'Совкомбанка')" class="btn-bank-rate flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 hover:bg-brand-50 dark:hover:bg-slate-800 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 transition border border-slate-200 dark:border-slate-700">
-                                <span class="w-2 h-2 rounded-full bg-blue-700 shrink-0"></span>
-                                <span>Совком <strong id="rate-sovcom" class="font-bold">...</strong></span>
-                            </button>
                         </div>
                     </div>
 
@@ -666,9 +644,6 @@
         }
 
         let activeTab = 'new';
-        let liveRatesData = null;
-        let selectedActiveBankKey = null;
-
         let state = {
             cost: 10000000,
             downPayment: 2000000,
@@ -749,7 +724,6 @@
 
         function switchMainTab(tab) {
             activeTab = tab;
-            resetBankButtonsHighlight();
             state.customPrepayments = {};
 
             const tNew = document.getElementById('tab-new');
@@ -799,60 +773,13 @@
             document.getElementById('active-balance-range').value = state.activeCurrentBalance;
         }
 
-        function toggleBankRateButton(bankKey, bankName) {
-            const shortKey = bankKey === 'sberbank' ? 'sber' : (bankKey === 'sovcombank' ? 'sovcom' : bankKey);
-            const btn = document.getElementById(`btn-rate-${shortKey}`);
-            const textElem = document.getElementById(`rate-${shortKey}`);
-            if (!textElem) return;
-
-            const screenRate = parseFloat(textElem.innerText.replace('%', '')) || (activeTab === 'new' ? 16.0 : 12.0);
-
-            if (selectedActiveBankKey === bankKey) {
-                resetBankButtonsHighlight();
-                applyRateValue(activeTab === 'new' ? 16.0 : 12.0, "Базовая");
-            } else {
-                resetBankButtonsHighlight();
-                selectedActiveBankKey = bankKey;
-                if (btn) {
-                    btn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300', 'hover:bg-brand-50', 'dark:hover:bg-slate-800');
-                    btn.classList.add('bg-brand-600', 'text-white', 'shadow-md', 'border-brand-600');
-                }
-                applyRateValue(screenRate, bankName);
-            }
-        }
-
-        function resetBankButtonsHighlight() {
-            selectedActiveBankKey = null;
-            document.querySelectorAll('.btn-bank-rate').forEach(b => {
-                b.classList.remove('bg-brand-600', 'text-white', 'shadow-md', 'border-brand-600');
-                b.classList.add('bg-white', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300', 'hover:bg-brand-50', 'dark:hover:bg-slate-800');
-            });
-        }
-
-        function applyRateValue(val, bankName) {
-            if (activeTab === 'new') {
-                state.rate = val; document.getElementById('rate-input').value = val; document.getElementById('rate-range').value = val;
-            } else {
-                state.activeRate = val; document.getElementById('active-rate-input').value = val; calcTheoreticalBalance();
-            }
-            updateCalculations();
-            if (typeof showToast === 'function') showToast(`Применена ставка ${val}% от ${bankName}`);
-        }
-
         function handleRateInput(el) {
-            if (selectedActiveBankKey !== null) {
-                if (typeof showToast === 'function') {
-                    showToast("⚠️ Пресет выбранного банка сброшен из-за ручного изменения ставки.");
-                }
-            }
-            resetBankButtonsHighlight();
             let val = parseFloat(el.value) || 0; state.rate = Math.min(50, val);
             document.getElementById('rate-range').value = state.rate;
             updateCalculations();
         }
 
         function handleActiveRateInput(el) {
-            resetBankButtonsHighlight();
             let val = parseFloat(el.value) || 0; state.activeRate = Math.min(50, val);
             calcTheoreticalBalance();
             updateCalculations();
@@ -901,12 +828,7 @@
             } else if (field === 'downpayment') {
                 state.downPayment = v; if (state.downPayment > state.cost) state.downPayment = state.cost;
             } else if (field === 'rate') {
-                if (selectedActiveBankKey !== null) {
-                    if (typeof showToast === 'function') {
-                        showToast("⚠️ Пресет выбранного банка сброшен из-за ручного изменения ставки.");
-                    }
-                }
-                resetBankButtonsHighlight(); state.rate = v;
+                state.rate = v;
             } else if (field === 'term') {
                 state.termYears = v;
             } else if (field === 'payment') {
@@ -1562,29 +1484,35 @@
             }
         }
 
+        function formatOfficialRateDisplay(data) {
+            const unavailableText = 'данные временно недоступны';
+            const rate = Number(data && data.cb_rate);
+            const hasOfficialRate = Number.isFinite(rate) && rate > 0;
+
+            if (data && data.status === 'ok' && hasOfficialRate) {
+                return rate.toFixed(2) + '%';
+            }
+
+            return hasOfficialRate
+                ? `${rate.toFixed(2)}% · ${unavailableText}`
+                : unavailableText;
+        }
+
         async function loadLiveRates() {
-            // Set initial dynamic fallback values immediately in case the API is slow or offline
-            if (document.getElementById('cb-rate-display')) document.getElementById('cb-rate-display').innerText = '21.0%';
-            if (document.getElementById('rate-sber')) document.getElementById('rate-sber').innerText = '25.0%';
-            if (document.getElementById('rate-vtb')) document.getElementById('rate-vtb').innerText = '25.2%';
-            if (document.getElementById('rate-alfa')) document.getElementById('rate-alfa').innerText = '25.5%';
-            if (document.getElementById('rate-tbank')) document.getElementById('rate-tbank').innerText = '24.9%';
-            if (document.getElementById('rate-sovcom')) document.getElementById('rate-sovcom').innerText = '25.1%';
+            const rateDisplay = document.getElementById('cb-rate-display');
+
+            if (rateDisplay) rateDisplay.innerText = formatOfficialRateDisplay(null);
 
             if (typeof fetchRates === 'function') {
                 try {
                     const data = await fetchRates();
-                    if (data) {
-                        liveRatesData = data;
-                        if (data.cb_rate && document.getElementById('cb-rate-display')) document.getElementById('cb-rate-display').innerText = data.cb_rate.toFixed(2) + '%';
-                        if (data.sberbank && document.getElementById('rate-sber')) document.getElementById('rate-sber').innerText = data.sberbank.toFixed(1) + '%';
-                        if (data.vtb && document.getElementById('rate-vtb')) document.getElementById('rate-vtb').innerText = data.vtb.toFixed(1) + '%';
-                        if (data.alfa && document.getElementById('rate-alfa')) document.getElementById('rate-alfa').innerText = data.alfa.toFixed(1) + '%';
-                        if (data.tbank && document.getElementById('rate-tbank')) document.getElementById('rate-tbank').innerText = data.tbank.toFixed(1) + '%';
-                        if (data.sovcom && document.getElementById('rate-sovcom')) document.getElementById('rate-sovcom').innerText = data.sovcom.toFixed(1) + '%';
+                    if (rateDisplay) rateDisplay.innerText = formatOfficialRateDisplay(data);
+
+                    if (rateDisplay && data && data.effective_from) {
+                        rateDisplay.title = `Действует с ${data.effective_from}`;
                     }
                 } catch (err) {
-                    console.error("Failed to map fetched rates:", err);
+                    console.error('Не удалось отобразить ключевую ставку Банка России:', err);
                 }
             }
             updateCalculations();

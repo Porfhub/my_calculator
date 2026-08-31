@@ -550,19 +550,20 @@
             fetch('rates.json')
                 .then(response => response.json())
                 .then(data => {
-                    // Success render
-                    let formattedDate = 'сегодня';
-                    if (data.last_updated) {
-                        formattedDate = data.last_updated.split(',')[0];
-                        const time = data.last_updated.split(',')[1] || '';
-                        formattedDate += ` в ${time.trim()} МСК`;
+                    if (data.status !== 'ok') {
+                        freshnessTextEl.innerHTML = 'Данные ЦБ РФ временно недоступны';
+                        return;
                     }
 
-                    freshnessTextEl.innerHTML = `Актуальные данные ЦБ РФ на сегодня (синхронизировано: ${formattedDate})`;
+                    const fetchedAt = data.fetched_at ? new Date(data.fetched_at) : null;
+                    const formattedDate = fetchedAt && !Number.isNaN(fetchedAt.getTime())
+                        ? fetchedAt.toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' })
+                        : 'сегодня';
+
+                    freshnessTextEl.innerHTML = `Актуальные данные ЦБ РФ (синхронизировано: ${formattedDate} МСК)`;
                 })
                 .catch(() => {
-                    // Fallback
-                    freshnessTextEl.innerHTML = `Актуальные данные ЦБ РФ на сегодня (обновлено: 06:00 МСК)`;
+                    freshnessTextEl.innerHTML = 'Данные ЦБ РФ временно недоступны';
                 });
         }
 
