@@ -556,9 +556,8 @@
 
             // Загрузка актуальных ставок
             const rates = await fetchRates();
-            if (rates) {
-                const avgRate = (rates.sberbank + rates.vtb + rates.alfa + rates.tbank + rates.sovcom) / 5;
-                state.interestRate = parseFloat(avgRate.toFixed(1));
+            if (rates && Number.isFinite(Number(rates.cb_rate)) && Number(rates.cb_rate) > 0) {
+                state.interestRate = Number(rates.cb_rate);
                 document.getElementById('interest-rate').value = state.interestRate;
                 document.getElementById('rate-range').value = state.interestRate;
             }

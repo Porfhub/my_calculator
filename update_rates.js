@@ -1,65 +1,157 @@
 const fs = require('fs');
+const path = require('path');
 
-function cleanNum(val, fallbackVal) {
-    if (val === undefined || val === null) return fallbackVal;
-    const strVal = String(val).replace(',', '.').replace(/[^0-9.]/g, '');
-    const num = Number(strVal);
-    return (isNaN(num) || num === 0) ? fallbackVal : num;
+const API_URL = 'https://www.cbr.ru/DailyInfoWebServ/DailyInfo.asmx';
+const SOURCE_URL = 'https://www.cbr.ru/DailyInfoWebServ/DailyInfo.asmx?op=KeyRateXML';
+const RATES_PATH = path.join(__dirname, 'rates.json');
+const KEY_RATE_HISTORY_START = '2013-09-01';
+
+function parseKeyRateXml(xmlText) {
+    const entries = [];
+    const entryPattern = /<KR>\s*<DT>([^<]+)<\/DT>\s*<Rate>([^<]+)<\/Rate>\s*<\/KR>/g;
+    let match;
+
+    while ((match = entryPattern.exec(xmlText)) !== null) {
+        const effectiveDate = match[1].slice(0, 10);
+        const rate = Number(match[2].replace(',', '.'));
+
+        if (/^\d{4}-\d{2}-\d{2}$/.test(effectiveDate) && Number.isFinite(rate) && rate > 0) {
+            entries.push({ effectiveDate, rate });
+        }
+    }
+
+    if (entries.length === 0) {
+        throw new Error('Ответ Банка России не содержит данных ключевой ставки');
+    }
+
+    entries.sort((a, b) => b.effectiveDate.localeCompare(a.effectiveDate));
+    const latest = entries[0];
+    let effectiveFrom = latest.effectiveDate;
+
+    for (const entry of entries) {
+        if (entry.rate !== latest.rate) break;
+        effectiveFrom = entry.effectiveDate;
+    }
+
+    return {
+        cb_rate: latest.rate,
+        effective_from: effectiveFrom
+    };
 }
 
-async function fetchRates() {
-    let cbRateActual = 14.25; // Базовый fallback
-
-    // ШАГ 1: GET-запрос к официальному веб-сервису ЦБ РФ (DailyInfo)
+function readSavedRates(ratesPath = RATES_PATH) {
     try {
-        console.log('Запрашиваем актуальную ключевую ставку через DailyInfo API (HTTP GET)...');
-        const nowIso = new Date().toISOString().split('T')[0];
-        const urlCbr = `https://www.cbr.ru/DailyInfoWebServ/DailyInfo.asmx/GetKeyRate?fromDate=${nowIso}`;
-        
-        const cbrResponse = await fetch(urlCbr, {
+        return JSON.parse(fs.readFileSync(ratesPath, 'utf8'));
+    } catch (error) {
+        return null;
+    }
+}
+
+function hasSavedOfficialRate(data) {
+    return Boolean(
+        data &&
+        Number.isFinite(Number(data.cb_rate)) &&
+        Number(data.cb_rate) > 0 &&
+        data.source_url &&
+        data.effective_from &&
+        data.fetched_at &&
+        (data.status === 'ok' || data.status === 'stale')
+    );
+}
+
+function buildSoapRequest(toDate) {
+    return [
+        '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">',
+        '<soap:Body>',
+        '<KeyRateXML xmlns="http://web.cbr.ru/">',
+        `<fromDate>${KEY_RATE_HISTORY_START}</fromDate>`,
+        `<ToDate>${toDate}</ToDate>`,
+        '</KeyRateXML>',
+        '</soap:Body>',
+        '</soap:Envelope>'
+    ].join('');
+}
+
+async function fetchOfficialRate(fetchImpl = fetch, now = new Date()) {
+    const toDate = now.toISOString().slice(0, 10);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+    try {
+        const response = await fetchImpl(API_URL, {
+            method: 'POST',
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            }
+                'Content-Type': 'text/xml; charset=utf-8',
+                SOAPAction: 'http://web.cbr.ru/KeyRateXML',
+                'User-Agent': 'CalcHub rates updater'
+            },
+            body: buildSoapRequest(toDate),
+            signal: controller.signal
         });
 
-        if (cbrResponse.ok) {
-            const xmlText = await cbrResponse.text();
-            const rateMatches = xmlText.match(/<KeyRate[^>]*>([\s\S]*?)<\/KeyRate>/g);
-            
-            if (rateMatches && rateMatches.length > 0) {
-                const lastRateBlock = rateMatches[rateMatches.length - 1];
-                const valueMatch = lastRateBlock.match(/<KeyRate[^>]*>([0-9.,]+)<\/KeyRate>/);
-                if (valueMatch && valueMatch[1]) {
-                    cbRateActual = cleanNum(valueMatch[1], 14.25);
-                    console.log('Данные успешно получены напрямую из ЦБ РФ! Текущая ставка:', cbRateActual);
-                }
-            } else {
-                const singleMatch = xmlText.match(/<KeyRate[^>]*>([0-9.,]+)<\/KeyRate>/);
-                if (singleMatch && singleMatch[1]) {
-                    cbRateActual = cleanNum(singleMatch[1], 14.25);
-                }
-            }
-        } else {
-            console.log(`Ошибка сервера ЦБ (Статус: ${cbrResponse.status}), применен внутренний расчет.`);
+        if (!response.ok) {
+            throw new Error(`Банк России вернул HTTP ${response.status}`);
         }
-    } catch (e) {
-        console.log('Не удалось выполнить парсинг через веб-сервис ЦБ, ошибка:', e.message);
+
+        return parseKeyRateXml(await response.text());
+    } finally {
+        clearTimeout(timeoutId);
     }
-    
-    // ШАГ 2: Автоматический расчет коммерческих ставок на основе твоих точных спредов
-    const now = new Date();
-    const finalData = {
-        cb_rate: cbRateActual,
-        sberbank: Number((cbRateActual + 1.65).toFixed(2)),
-        vtb: Number((cbRateActual + 1.95).toFixed(2)),
-        alfa: Number((cbRateActual + 2.45).toFixed(2)),
-        tbank: Number((cbRateActual + 2.65).toFixed(2)),
-        sovcom: Number((cbRateActual + 3.75).toFixed(2)),
-        last_updated: now.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' })
-    };
-    
-    fs.writeFileSync('rates.json', JSON.stringify(finalData, null, 2));
-    console.log('Готово! База rates.json перезаписана с новыми спредами:', finalData);
 }
 
-fetchRates();
+async function buildRatesData(options = {}) {
+    const now = options.now || new Date();
+    const previousData = options.previousData === undefined
+        ? readSavedRates(options.ratesPath)
+        : options.previousData;
+
+    try {
+        const officialRate = await fetchOfficialRate(options.fetchImpl || fetch, now);
+        return {
+            cb_rate: officialRate.cb_rate,
+            source_url: SOURCE_URL,
+            effective_from: officialRate.effective_from,
+            fetched_at: now.toISOString(),
+            status: 'ok'
+        };
+    } catch (error) {
+        console.error('Не удалось получить актуальную ключевую ставку:', error.message);
+
+        if (hasSavedOfficialRate(previousData)) {
+            return {
+                cb_rate: Number(previousData.cb_rate),
+                source_url: previousData.source_url,
+                effective_from: previousData.effective_from,
+                fetched_at: previousData.fetched_at,
+                status: 'stale'
+            };
+        }
+
+        return {
+            cb_rate: null,
+            source_url: SOURCE_URL,
+            effective_from: null,
+            fetched_at: null,
+            status: 'unavailable'
+        };
+    }
+}
+
+async function updateRates() {
+    const finalData = await buildRatesData({ ratesPath: RATES_PATH });
+    fs.writeFileSync(RATES_PATH, `${JSON.stringify(finalData, null, 2)}\n`);
+    console.log('rates.json обновлен:', finalData);
+}
+
+if (require.main === module) {
+    updateRates().catch(error => {
+        console.error('Не удалось обновить rates.json:', error);
+        process.exitCode = 1;
+    });
+}
+
+module.exports = {
+    SOURCE_URL,
+    buildRatesData,
+    parseKeyRateXml
+};
