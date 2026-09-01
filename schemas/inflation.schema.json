@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://calchub.local/schemas/inflation.schema.json",
+  "title": "CalcHub annual inflation dataset schema v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["metadata", "annual"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "status",
+        "source_name",
+        "source_url",
+        "source_landing_url",
+        "source_export_url",
+        "source_checksum_sha256",
+        "indicator_id",
+        "showcase_indicator_id",
+        "indicator_name",
+        "geography",
+        "coverage",
+        "measure",
+        "unit",
+        "frequency",
+        "data_through",
+        "source_published_at",
+        "last_successful_fetch_at",
+        "last_attempt_at",
+        "status_reason"
+      ],
+      "properties": {
+        "schema_version": { "const": 2 },
+        "status": { "$ref": "common-metadata.schema.json#/$defs/status" },
+        "source_name": { "type": "string", "minLength": 1 },
+        "source_url": { "$ref": "common-metadata.schema.json#/$defs/httpsUrl" },
+        "source_landing_url": { "$ref": "common-metadata.schema.json#/$defs/httpsUrl" },
+        "source_export_url": {
+          "anyOf": [
+            { "$ref": "common-metadata.schema.json#/$defs/httpsUrl" },
+            { "type": "null" }
+          ]
+        },
+        "source_checksum_sha256": { "$ref": "common-metadata.schema.json#/$defs/nullableChecksum" },
+        "indicator_id": { "type": "string", "minLength": 1 },
+        "showcase_indicator_id": { "type": "string", "minLength": 1 },
+        "indicator_name": { "type": "string", "minLength": 1 },
+        "geography": { "type": "string", "minLength": 1 },
+        "coverage": { "type": "string", "minLength": 1 },
+        "measure": { "type": "string", "minLength": 1 },
+        "unit": { "type": "string", "minLength": 1 },
+        "frequency": { "type": "string", "minLength": 1 },
+        "data_through": { "type": ["integer", "null"], "minimum": 2000 },
+        "source_published_at": { "$ref": "common-metadata.schema.json#/$defs/nullableDate" },
+        "last_successful_fetch_at": { "$ref": "common-metadata.schema.json#/$defs/nullableDateTime" },
+        "last_attempt_at": { "$ref": "common-metadata.schema.json#/$defs/nullableDateTime" },
+        "status_reason": { "$ref": "common-metadata.schema.json#/$defs/statusReason" }
+      }
+    },
+    "annual": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["year", "cpi_index", "inflation_percent"],
+        "properties": {
+          "year": { "type": "integer", "minimum": 2000 },
+          "cpi_index": { "type": "number", "exclusiveMinimum": 0, "maximum": 1000 },
+          "inflation_percent": { "type": "number", "exclusiveMinimum": -100, "maximum": 900 }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "calchub-data-validation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fail-closed validation for CalcHub financial datasets",
+  "scripts": {
+    "test": "node --test tests/data-validation/*.test.js",
+    "validate:data": "node data_validation/validate.js --all --mode publish"
+  },
+  "dependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1"
+  }
+}

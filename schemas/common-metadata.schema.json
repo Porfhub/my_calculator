@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://calchub.local/schemas/common-metadata.schema.json",
+  "$defs": {
+    "status": {
+      "type": "string",
+      "enum": ["ok", "stale", "unavailable"]
+    },
+    "statusReason": {
+      "type": ["string", "null"],
+      "enum": [
+        null,
+        "fetch_failed",
+        "timeout",
+        "http_error",
+        "tls_error",
+        "source_format_changed",
+        "schema_validation_failed",
+        "semantic_validation_failed",
+        "freshness_exceeded",
+        "jump_requires_review",
+        "partial_dataset",
+        "no_saved_dataset"
+      ]
+    },
+    "httpsUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "checksum": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "nullableChecksum": {
+      "anyOf": [
+        { "$ref": "#/$defs/checksum" },
+        { "type": "null" }
+      ]
+    },
+    "nullableDate": {
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "nullableDateTime": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    }
+  }
+}

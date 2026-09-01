@@ -3,6 +3,13 @@ const fs = require('fs');
 const https = require('https');
 const path = require('path');
 const zlib = require('zlib');
+const {
+    DataValidationError,
+    atomicWriteJson,
+    buildFailureState,
+    parseJsonStrict,
+    validateDataset
+} = require('./data_validation/validate');
 
 const OUTPUT_PATH = path.join(__dirname, 'inflation.json');
 const SOURCE_LANDING_URL = 'https://rosstat.gov.ru/statistics/price';
@@ -131,7 +138,7 @@ function requestBuffer(url, { accept, maxBytes = MAX_RESPONSE_BYTES, redirects =
 
             if (response.statusCode !== 200) {
                 response.resume();
-                reject(new DataSourceError('fetch_failed', `Официальный источник вернул HTTP ${response.statusCode}`));
+                reject(new DataSourceError('http_error', `Официальный источник вернул HTTP ${response.statusCode}`));
                 return;
             }
 
@@ -376,10 +383,12 @@ function validateAnnual(annual, expectedLastYear) {
         if (record.year !== expectedYear) {
             throw new DataSourceError('validation_failed', `Нарушена последовательность годов около ${expectedYear}`);
         }
-        if (!Number.isFinite(record.cpi_index) || record.cpi_index < 50 || record.cpi_index > 300) {
+        if (!Number.isFinite(record.cpi_index) || record.cpi_index <= 0 || record.cpi_index > 1000) {
             throw new DataSourceError('validation_failed', `Недопустимый ИПЦ за ${record.year} год`);
         }
-        if (!Number.isFinite(record.inflation_percent) || Math.abs(record.inflation_percent - (record.cpi_index - 100)) > 1e-6) {
+        if (!Number.isFinite(record.inflation_percent) || record.inflation_percent <= -100
+            || record.inflation_percent > 900
+            || Math.abs(record.inflation_percent - (record.cpi_index - 100)) > 1e-6) {
             throw new DataSourceError('validation_failed', `Несогласованные значения за ${record.year} год`);
         }
     });
@@ -453,16 +462,10 @@ function baseMetadata() {
     };
 }
 
-function isValidStoredDataset(value) {
+function isValidStoredDataset(value, now = new Date()) {
     try {
-        if (!value || value.metadata?.schema_version !== 2 || !['ok', 'stale'].includes(value.metadata.status)) return false;
-        if (!isOfficialRosstatUrl(value.metadata.source_export_url)) return false;
-        if (!/^[0-9a-f]{64}$/i.test(value.metadata.source_checksum_sha256 || '')) return false;
-        if (!value.metadata.last_successful_fetch_at) return false;
-        if (!Number.isInteger(value.metadata.data_through)) return false;
-        validateAnnual(value.annual, value.metadata.data_through);
-        if (value.annual.at(-1)?.year !== value.metadata.data_through) return false;
-        return true;
+        validateDataset('inflation', value, { now, skipFreshness: true });
+        return value.metadata.status === 'ok' || value.metadata.status === 'stale';
     } catch {
         return false;
     }
@@ -470,7 +473,7 @@ function isValidStoredDataset(value) {
 
 function readJson(outputPath) {
     try {
-        return JSON.parse(fs.readFileSync(outputPath, 'utf8'));
+        return parseJsonStrict(fs.readFileSync(outputPath, 'utf8'), outputPath);
     } catch {
         return null;
     }
@@ -484,18 +487,12 @@ function sameOfficialData(previous, official) {
         && JSON.stringify(previous.annual) === JSON.stringify(official.annual);
 }
 
-function writeJsonAtomic(outputPath, value) {
-    const temporaryPath = path.join(path.dirname(outputPath), `.inflation.${process.pid}.tmp`);
-    try {
-        fs.writeFileSync(temporaryPath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
-        fs.renameSync(temporaryPath, outputPath);
-    } finally {
-        if (fs.existsSync(temporaryPath)) fs.unlinkSync(temporaryPath);
-    }
-}
-
 function statusReason(error) {
-    if (error instanceof DataSourceError) return error.code;
+    if (error instanceof DataValidationError) return error.reason;
+    if (error instanceof DataSourceError) {
+        return error.code === 'validation_failed' ? 'semantic_validation_failed' : error.code;
+    }
+    if (error?.code?.startsWith('ERR_TLS') || ['CERT_HAS_EXPIRED', 'UNABLE_TO_VERIFY_LEAF_SIGNATURE'].includes(error?.code)) return 'tls_error';
     if (error?.code === 'ETIMEDOUT' || error?.code === 'UND_ERR_CONNECT_TIMEOUT') return 'timeout';
     if (error instanceof SyntaxError || error instanceof RangeError) return 'source_format_changed';
     return 'fetch_failed';
@@ -525,10 +522,11 @@ async function loadOfficialData() {
 
 async function updateInflation(options = {}) {
     const outputPath = options.outputPath || OUTPUT_PATH;
-    const attemptAt = options.now || new Date().toISOString();
+    const now = options.now instanceof Date ? options.now : new Date(options.now || Date.now());
+    const attemptAt = now.toISOString();
     const loader = options.loader || loadOfficialData;
     const storedState = readJson(outputPath);
-    const previous = isValidStoredDataset(storedState) ? storedState : null;
+    const previous = isValidStoredDataset(storedState, now) ? storedState : null;
     let result;
 
     try {
@@ -539,7 +537,7 @@ async function updateInflation(options = {}) {
             result = previous;
             console.log(`Росстат: официальный ряд по ${dataThrough} год не изменился.`);
         } else {
-            result = {
+            const candidate = {
                 metadata: {
                     ...baseMetadata(),
                     status: 'ok',
@@ -553,47 +551,26 @@ async function updateInflation(options = {}) {
                 },
                 annual: official.annual
             };
+            result = candidate;
             console.log(`Росстат: получен официальный ряд за ${MIN_YEAR}–${dataThrough} годы.`);
         }
+        // Freshness must be checked even when the official bytes are unchanged.
+        // Keeping this inside try guarantees the same fail-closed transition path.
+        validateDataset('inflation', result, { now, previous });
     } catch (error) {
         const reason = statusReason(error);
         console.error(`Не удалось обновить официальный ряд (${reason}): ${error.message}`);
 
-        if (previous) {
-            result = previous.metadata.status === 'stale' && previous.metadata.status_reason === reason
-                ? previous
-                : {
-                    metadata: {
-                        ...previous.metadata,
-                        status: 'stale',
-                        last_attempt_at: attemptAt,
-                        status_reason: reason
-                    },
-                    annual: previous.annual
-                };
+        result = buildFailureState('inflation', previous, reason, now);
+        if (result.metadata.status === 'stale') {
             console.log(`Сохранен последний успешный ряд по ${previous.metadata.data_through} год.`);
         } else {
-            const unchangedUnavailable = storedState?.metadata?.schema_version === 2
-                && storedState.metadata.status === 'unavailable'
-                && storedState.metadata.status_reason === 'no_saved_dataset'
-                && Array.isArray(storedState.annual)
-                && storedState.annual.length === 0;
-            result = unchangedUnavailable
-                ? storedState
-                : {
-                    metadata: {
-                        ...baseMetadata(),
-                        status: 'unavailable',
-                        last_attempt_at: attemptAt,
-                        status_reason: 'no_saved_dataset'
-                    },
-                    annual: []
-                };
             console.log('Последний успешный официальный ряд отсутствует; данные временно недоступны.');
         }
     }
 
-    writeJsonAtomic(outputPath, result);
+    validateDataset('inflation', result, { now, previous });
+    atomicWriteJson('inflation', outputPath, result, { now, previous });
     return result;
 }
 
