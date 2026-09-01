@@ -119,6 +119,7 @@
     <!-- /Yandex.Metrika counter -->
     <script src="js/theme.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/calculator-state.js"></script>
     <script src="js/api.js"></script>
     <script src="js/ui-utils.js"></script>
 </head>
@@ -348,6 +349,8 @@
             <div class="lg:col-span-7 space-y-6">
                 <div id="screenshot-area" class="bg-slate-100 dark:bg-slate-900/50 p-4 -m-4 rounded-3xl space-y-6">
 
+                    <p id="freedom-state-message" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
+
                     <!-- Massive Hero Focal Card (CRO Overhaul) -->
                     <div id="freedom-hero-card" class="bg-gradient-to-br from-emerald-600 to-teal-800 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden transition-all duration-500">
                         <div class="absolute -right-6 -top-6 opacity-10">
@@ -490,9 +493,9 @@
 
         // State Management
         let state = {
-            cbRate: 16.0,
-            depositRate: 14.0, // Used as Expected Yield Rate
-            avgInflation: 0.08,
+            cbRate: null,
+            depositRate: null, // Used as Expected Yield Rate
+            avgInflation: null,
             currentMonthIndex: new Date().getMonth(),
             currentYear: new Date().getFullYear(),
             passiveMode: 'simple',
@@ -501,6 +504,32 @@
         };
 
         let decayChart = null;
+        let externalDataReady = false;
+        let externalDataLoading = true;
+
+        const freedomStateController = CalculatorState.createController({
+            root: 'screenshot-area',
+            messageElement: 'freedom-state-message',
+            resultElements: [
+                'freedom-date-hero',
+                'freedom-duration-hero',
+                'freedom-verdict-comment',
+                'tab-survival-badge',
+                'tab-comfort-badge',
+                'tab-luxury-badge',
+                'active-scenario-expense',
+                'mobile-scenario-label',
+                'mobile-comfort-duration',
+                'mobile-comfort-date',
+                'dep-calculated-income-text'
+            ],
+            onClear: () => {
+                if (decayChart) {
+                    decayChart.destroy();
+                    decayChart = null;
+                }
+            }
+        });
 
         const monthNamesRU = [
             "январь", "февраль", "март", "апрель", "май", "июнь",
@@ -568,9 +597,13 @@
         function syncRangeToInput(field, val) {
             if (field === 'yield-rate') {
                 state.depositRate = parseFloat(val) || 0;
-                document.getElementById('yield-rate-display').innerText = state.depositRate.toFixed(1) + '%';
+                CalculatorState.writeSafeText('yield-rate-display', `${state.depositRate.toFixed(1)}%`);
             } else if (field === 'dep-rate') {
-                document.getElementById('dep-rate-display').innerText = parseFloat(val).toFixed(1) + '%';
+                const depositRate = Number(val);
+                CalculatorState.writeSafeText(
+                    'dep-rate-display',
+                    Number.isFinite(depositRate) ? `${depositRate.toFixed(1)}%` : null
+                );
             } else {
                 const input = document.getElementById(`${field}-input`);
                 if (input) {
@@ -634,38 +667,100 @@
         // Initialize rates and inflation
         window.onload = async () => {
             initTheme();
+            freedomStateController.transition(CalculatorState.STATES.LOADING);
 
-            // Fetch central bank rate
-            const ratesData = await fetchRates();
-            if (ratesData && ratesData.cb_rate) {
-                state.cbRate = parseFloat(ratesData.cb_rate);
+            const [ratesData, inflationData] = await Promise.all([fetchRates(), fetchInflation()]);
+            const centralBankRate = getCentralBankRate(ratesData);
+            const averageInflation = getAverageInflationRate(inflationData);
+
+            if (Number.isFinite(centralBankRate)) {
+                state.cbRate = centralBankRate;
+                state.depositRate = Math.round(state.cbRate - 2);
+                CalculatorState.writeSafeText('cb-rate-val', `${state.cbRate.toFixed(2)}%`);
+                CalculatorState.writeSafeText('cb-minus-two-text', `${state.depositRate.toFixed(1)}%`);
+
+                document.getElementById('yield-rate-range').value = state.depositRate;
+                CalculatorState.writeSafeText('yield-rate-display', `${state.depositRate.toFixed(1)}%`);
             }
-            state.depositRate = Math.round(state.cbRate - 2);
 
-            document.getElementById('cb-rate-val').innerText = state.cbRate.toFixed(2) + '%';
-            document.getElementById('cb-minus-two-text').innerText = state.depositRate.toFixed(1) + '%';
-
-            // Set initial state for expected yield rate range slider
-            document.getElementById('yield-rate-range').value = state.depositRate;
-            document.getElementById('yield-rate-display').innerText = state.depositRate.toFixed(1) + '%';
-
-            // Fetch inflation data
-            const inflationData = await fetchInflation();
-            if (inflationData) {
-                const values = Object.values(inflationData).slice(-15);
-                if (values.length > 0) {
-                    const product = values.reduce((acc, r) => acc * (1 + r / 100), 1);
-                    state.avgInflation = Math.pow(product, 1 / values.length) - 1;
-                }
+            if (Number.isFinite(averageInflation)) {
+                state.avgInflation = averageInflation;
+                CalculatorState.writeSafeText('inflation-rate-val', `${(state.avgInflation * 100).toFixed(1)}%`);
             }
-            document.getElementById('inflation-rate-val').innerText = (state.avgInflation * 100).toFixed(1) + '%';
+
+            externalDataReady = Number.isFinite(centralBankRate) && Number.isFinite(averageInflation);
+            externalDataLoading = false;
 
             // Initial calculation
             calculateFreedom();
         };
 
-        // Core math and simulation loop
         function calculateFreedom() {
+            const outcome = freedomStateController.runCalculation({
+                isLoading: externalDataLoading,
+                input: collectFreedomInputs(),
+                data: { ready: externalDataReady },
+                validateInput: validateFreedomInputs,
+                validateData: (data) => data.ready,
+                calculate: computeFreedomResult,
+                validateResult: validateFreedomResult,
+                render: renderFreedomResult,
+                invalidInputMessage: 'Проверьте сумму накоплений, расходы и пассивный доход.',
+                impossibleMessage: 'Расчёт невозможен при текущих параметрах.',
+                onError: (error) => console.error('Financial freedom calculation failed:', error)
+            });
+
+            if (outcome.ok) reachGoal("calculate_success");
+        }
+
+        function collectFreedomInputs() {
+            const moneyInputIds = ['savings-input', 'survival-input', 'comfort-input', 'luxury-input'];
+            if (state.hasPassiveIncome) {
+                moneyInputIds.push(state.passiveMode === 'deposit' ? 'dep-amount-input' : 'income-input');
+            }
+
+            return {
+                moneyValues: moneyInputIds.map((id) => {
+                    const rawValue = document.getElementById(id).value;
+                    return { rawValue, value: parseCleanNumber(rawValue) };
+                }),
+                depositRate: state.passiveMode === 'deposit'
+                    ? Number(document.getElementById('dep-rate-range').value)
+                    : null,
+                activeScenario: state.activeScenario
+            };
+        }
+
+        function validateFreedomInputs(input) {
+            const moneyValuesAreValid = input.moneyValues.every(({ rawValue, value }) => {
+                const compactValue = String(rawValue).replace(/\s+/g, '');
+                return /^\d+(?:[.,]\d+)?$/.test(compactValue)
+                    && Number.isFinite(value)
+                    && value >= 0;
+            });
+            const depositRateIsValid = input.depositRate === null
+                || (Number.isFinite(input.depositRate) && input.depositRate >= 0);
+            const scenarioIsValid = ['survival', 'comfort', 'luxury'].includes(input.activeScenario);
+            return moneyValuesAreValid && depositRateIsValid && scenarioIsValid;
+        }
+
+        function validateFreedomResult(result) {
+            return Number.isFinite(result.passiveIncome)
+                && Array.isArray(result.scenarios)
+                && result.scenarios.length === 3
+                && result.scenarios.every((scenario) =>
+                    Number.isFinite(scenario.monthsRemaining)
+                    && Number.isFinite(scenario.baseExpense)
+                    && typeof scenario.dateString === 'string'
+                    && scenario.dateString.length > 0
+                    && Array.isArray(scenario.points)
+                    && scenario.points.every((point) => Number.isFinite(point.x) && Number.isFinite(point.y))
+                )
+                && Array.isArray(result.chartDatasets);
+        }
+
+        // Core math and simulation loop
+        function computeFreedomResult() {
             const savings = parseCleanNumber(document.getElementById('savings-input').value);
             
             let passiveIncome = 0;
@@ -674,7 +769,6 @@
                     const depAmount = parseCleanNumber(document.getElementById('dep-amount-input').value);
                     const depRate = parseFloat(document.getElementById('dep-rate-range').value) || 0;
                     passiveIncome = (depAmount * (depRate / 100)) / 12;
-                    document.getElementById('dep-calculated-income-text').innerText = `~${localFormatMoney(Math.round(passiveIncome))}/мес.`;
                 } else {
                     passiveIncome = parseCleanNumber(document.getElementById('income-input').value);
                 }
@@ -793,6 +887,19 @@
                 });
             });
 
+            return { scenarios, chartDatasets, passiveIncome };
+        }
+
+        function renderFreedomResult(result) {
+            const { scenarios, chartDatasets, passiveIncome } = result;
+
+            if (state.hasPassiveIncome && state.passiveMode === 'deposit') {
+                CalculatorState.writeSafeText(
+                    'dep-calculated-income-text',
+                    `~${localFormatMoney(Math.round(passiveIncome))}/мес.`
+                );
+            }
+
             // Update tab badges & active styles dynamically
             scenarios.forEach(sc => {
                 let badgeText = `${sc.monthsRemaining} ${getMonthWord(sc.monthsRemaining)}`;
@@ -862,7 +969,6 @@
             // Render Chart
             renderChart(chartDatasets);
 
-            reachGoal("calculate_success");
         }
 
         function renderChart(datasets) {

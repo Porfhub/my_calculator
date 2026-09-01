@@ -4,7 +4,7 @@
   "private": true,
   "description": "Fail-closed validation for CalcHub financial datasets",
   "scripts": {
-    "test": "node --test tests/data-validation/*.test.js",
+    "test": "node --test tests/data-validation/*.test.js tests/ui-state/*.test.js",
     "validate:data": "node data_validation/validate.js --all --mode publish"
   },
   "dependencies": {

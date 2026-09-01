@@ -157,6 +157,7 @@
 <!-- /Yandex.Metrika counter -->
     <script src="js/theme.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/calculator-state.js"></script>
     <script src="js/api.js"></script>
     <script src="js/ui-utils.js"></script>
 </head>
@@ -327,6 +328,8 @@
             <div class="lg:col-span-7 space-y-6" id="results-container">
                 <div id="screenshot-area" class="bg-slate-100 dark:bg-slate-900/40 p-4 -m-4 rounded-3xl space-y-6">
 
+                    <p id="millionaire-state-message" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
+
                     <!-- TEAR-OFF CALENDAR LEAF COMPONENT -->
                     <div class="relative p-1">
                         <div class="calendar-ring-left"></div>
@@ -480,11 +483,36 @@
             monthlyExpenses: 70000,
             interestRate: 16,
             goalSum: 1000000,
-            avgInflation: 0.078 // Default ~7.8% historical average
+            avgInflation: null
         };
 
         let chartInstance = null;
         let confettiAnimationId = null;
+        let externalDataReady = false;
+        let externalDataLoading = true;
+
+        const millionaireStateController = CalculatorState.createController({
+            root: 'screenshot-area',
+            messageElement: 'millionaire-state-message',
+            resultElements: [
+                'calendar-date',
+                'calendar-time-remaining',
+                'target-date-main',
+                'age-at-target',
+                'total-interest',
+                'total-invested',
+                'mobile-target-date',
+                'mobile-interest',
+                'real-purchasing-power',
+                'advice-text'
+            ],
+            onClear: () => {
+                if (chartInstance) {
+                    chartInstance.destroy();
+                    chartInstance = null;
+                }
+            }
+        });
 
         // CONFETTI CELEBRATION SYSTEM
         function triggerCelebration() {
@@ -552,23 +580,25 @@
         // Инициализация
         window.onload = async () => {
             initTheme();
+            millionaireStateController.transition(CalculatorState.STATES.LOADING);
 
-            // Загрузка актуальных ставок
-            const rates = await fetchRates();
-            if (rates && Number.isFinite(Number(rates.cb_rate)) && Number(rates.cb_rate) > 0) {
-                state.interestRate = Number(rates.cb_rate);
+            const [rates, inflationData] = await Promise.all([fetchRates(), fetchInflation()]);
+            const centralBankRate = getCentralBankRate(rates);
+            const averageInflation = getAverageInflationRate(inflationData);
+
+            if (Number.isFinite(centralBankRate)) {
+                state.interestRate = centralBankRate;
                 document.getElementById('interest-rate').value = state.interestRate;
                 document.getElementById('rate-range').value = state.interestRate;
             }
 
-            // Загрузка исторической инфляции для reality check
-            const inflationData = await fetchInflation();
-            if (inflationData) {
-                const values = Object.values(inflationData).slice(-15);
-                const product = values.reduce((acc, r) => acc * (1 + r / 100), 1);
-                state.avgInflation = Math.pow(product, 1 / values.length) - 1;
-                document.getElementById('inflation-percent-text').innerText = (state.avgInflation * 100).toFixed(1) + '%';
+            if (Number.isFinite(averageInflation)) {
+                state.avgInflation = averageInflation;
+                CalculatorState.writeSafeText('inflation-percent-text', `${(state.avgInflation * 100).toFixed(1)}%`);
             }
+
+            externalDataReady = Number.isFinite(centralBankRate) && Number.isFinite(averageInflation);
+            externalDataLoading = false;
 
             // Установка даты рождения по умолчанию (25 лет назад)
             const d = new Date();
@@ -709,14 +739,51 @@
 
         function updateAll() {
             const freeCash = state.monthlyIncome - state.monthlyExpenses;
-            document.getElementById('savings-display').innerText = formatMoney(state.currentSavings);
-            document.getElementById('income-display').innerText = formatMoney(state.monthlyIncome);
-            document.getElementById('expenses-display').innerText = formatMoney(state.monthlyExpenses);
-            document.getElementById('free-cash-display').innerText = formatMoney(freeCash);
-            document.getElementById('rate-display').innerText = state.interestRate + '%';
-            document.getElementById('goal-display').innerText = formatMoney(state.goalSum);
+            CalculatorState.writeSafeText('savings-display', formatMoney(state.currentSavings));
+            CalculatorState.writeSafeText('income-display', formatMoney(state.monthlyIncome));
+            CalculatorState.writeSafeText('expenses-display', formatMoney(state.monthlyExpenses));
+            CalculatorState.writeSafeText('free-cash-display', formatMoney(freeCash));
+            CalculatorState.writeSafeText('rate-display', `${state.interestRate}%`);
+            CalculatorState.writeSafeText('goal-display', formatMoney(state.goalSum));
 
-            const result = calculate();
+            millionaireStateController.runCalculation({
+                isLoading: externalDataLoading,
+                input: state,
+                data: { ready: externalDataReady },
+                validateInput: (input) => {
+                    const numericValues = [
+                        input.currentSavings,
+                        input.monthlyIncome,
+                        input.monthlyExpenses,
+                        input.interestRate,
+                        input.goalSum,
+                        input.currentAge
+                    ];
+                    const birthDate = new Date(input.birthDate);
+                    const birthDateIsValid = input.birthDate === ''
+                        || (!Number.isNaN(birthDate.getTime()) && birthDate <= new Date());
+                    return numericValues.every(Number.isFinite)
+                        && numericValues.every((value) => value >= 0)
+                        && input.goalSum > 0
+                        && input.currentAge <= 120
+                        && input.monthlyExpenses <= input.monthlyIncome
+                        && birthDateIsValid;
+                },
+                validateData: (data) => data.ready,
+                calculate,
+                validateResult: (result) => !result.unreachable
+                    && Number.isFinite(result.months)
+                    && Number.isFinite(result.totalInterest)
+                    && Number.isFinite(result.totalInvested)
+                    && Array.isArray(result.history),
+                render: renderMillionaireResult,
+                invalidInputMessage: 'Проверьте доходы, расходы, цель и дату рождения.',
+                impossibleMessage: 'Цель недостижима при текущих доходах и расходах.',
+                onError: (error) => console.error('Millionaire calculation failed:', error)
+            });
+        }
+
+        function renderMillionaireResult(result) {
             const targetMain = document.getElementById('target-date-main');
             const ageDisplay = document.getElementById('age-at-target');
             const interestDisplay = document.getElementById('total-interest');
@@ -730,18 +797,6 @@
 
             // Reality check element
             const realPurchasingPowerEl = document.getElementById('real-purchasing-power');
-
-            if (result.unreachable) {
-                calDate.innerText = "ЦЕЛЬ НЕДОСТИЖИМА";
-                calTimeRemaining.innerText = "Измените параметры трат/доходов";
-                targetMain.innerText = "—";
-                ageDisplay.innerText = "—";
-                interestDisplay.innerText = "0 ₽";
-                investedDisplay.innerText = "0 ₽";
-                realPurchasingPowerEl.innerText = "0 ₽";
-                document.getElementById('advice-text').innerText = "Упс, с текущими тратами цель недостижима. Попробуйте уменьшить расходы или увеличить доходы!";
-                return;
-            }
 
             const now = new Date();
             const targetDate = new Date(now.getFullYear(), now.getMonth() + result.months, 1);
