@@ -375,35 +375,11 @@
                                 <div class="w-10 h-5 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-brand-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all"></div>
                             </label>
                         </div>
-                        <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-150 dark:border-slate-800">
-                            <div class="flex flex-col">
-                                <span class="text-[10px] font-bold text-slate-500 uppercase flex items-center gap-1">
-                                    Нал. вычет
-                                    <span class="tooltip">
-                                        <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                        <span class="tooltiptext">Государственный налоговый вычет. До 260 000 ₽ за покупку жилья и до 390 000 ₽ за выплаченные проценты по ипотеке (суммарно до 650 000 ₽).</span>
-                                    </span>
-                                </span>
-                                <span class="text-[9px] text-slate-400">до 650к ₽</span>
+                        <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-150 dark:border-slate-800">
+                            <div class="flex flex-col gap-1">
+                                <span class="text-[10px] font-bold text-slate-500 uppercase">Налоговый вычет — на переработке</span>
+                                <span class="text-[9px] text-slate-400">Расчёт временно отключён. Функция вернётся после полной реализации с учётом требований ФНС и индивидуальных условий налогоплательщика.</span>
                             </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" id="tax-toggle" onchange="toggleTaxDeduction()" class="sr-only peer">
-                                <div class="w-10 h-5 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-brand-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all"></div>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div id="tax-strategy-block" class="hidden p-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-150 dark:border-slate-800 rounded-xl space-y-2">
-                        <span class="text-xs font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
-                            Куда направить налоговый вычет?
-                            <span class="tooltip">
-                                <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <span class="tooltiptext">«В карман» — вычет остается у вас как личные накопления (виртуальная скидка на проценты). «В досрочку» — деньги ежегодно автоматически направляются на досрочное погашение ипотеки в 12-й месяц, резко уменьшая итоговую переплату.</span>
-                            </span>
-                        </span>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <button id="tax-strat-pocket" onclick="setTaxStrategy('pocket')" class="py-2.5 px-3 text-xs font-bold rounded-xl transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-slate-600 text-left sm:text-center flex items-center justify-center gap-1">💰 Тратить на себя (уменьшить платеж)</button>
-                            <button id="tax-strat-reinvest" onclick="setTaxStrategy('reinvest')" class="py-2.5 px-3 text-xs font-bold rounded-xl transition-all text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-left sm:text-center flex items-center justify-center gap-1">🚀 Досрочное погашение (быстрее закрыть долг)</button>
                         </div>
                     </div>
 
@@ -660,8 +636,6 @@
             recurringPrepayment: 0,
             customPrepayments: {},
             includeInsurance: false,
-            includeTaxDeduction: false,
-            taxDeductionStrategy: 'pocket',
             isProUnlocked: false,
             isExistingKnowPayment: false,
             activePayment: 100000
@@ -858,25 +832,6 @@
         }
 
         function toggleInsurance() { state.includeInsurance = document.getElementById('insurance-toggle').checked; updateCalculations(); }
-        function toggleTaxDeduction() {
-            state.includeTaxDeduction = document.getElementById('tax-toggle').checked;
-            const b = document.getElementById('tax-strategy-block');
-            if (state.includeTaxDeduction) b.classList.remove('hidden'); else b.classList.add('hidden');
-            updateCalculations();
-        }
-
-        function setTaxStrategy(strat) {
-            state.taxDeductionStrategy = strat;
-            const p = document.getElementById('tax-strat-pocket'); const r = document.getElementById('tax-strat-reinvest');
-            if (strat === 'pocket') {
-                p.className = "py-2.5 px-3 text-xs font-bold rounded-xl transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-slate-600 text-left sm:text-center flex items-center justify-center gap-1";
-                r.className = "py-2.5 px-3 text-xs font-bold rounded-xl transition-all text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-left sm:text-center flex items-center justify-center gap-1";
-            } else {
-                r.className = "py-2.5 px-3 text-xs font-bold rounded-xl transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-slate-600 text-left sm:text-center flex items-center justify-center gap-1";
-                p.className = "py-2.5 px-3 text-xs font-bold rounded-xl transition-all text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-left sm:text-center flex items-center justify-center gap-1";
-            }
-            updateCalculations();
-        }
 
         function switchCalculationMode(mode) {
             state.mode = mode;
@@ -944,9 +899,9 @@
         function resetAll() {
             state.cost = 10000000; state.downPayment = 2000000; state.rate = 16.0; state.mode = 'term'; state.termYears = 20; state.targetPayment = 100000;
             state.activeOriginalLoan = 8000000; state.activeRate = 12.0; state.activeOriginalTermYears = 20; state.activePaidMonths = 36;
-            state.recurringPrepayment = 0; state.customPrepayments = {}; state.includeInsurance = false; state.includeTaxDeduction = false;
-            document.getElementById('insurance-toggle').checked = false; document.getElementById('tax-toggle').checked = false;
-            document.getElementById('strategy-toggle').checked = false; toggleTaxDeduction(); calcTheoreticalBalance(); updateInputsDOM(); updateCalculations();
+            state.recurringPrepayment = 0; state.customPrepayments = {}; state.includeInsurance = false;
+            document.getElementById('insurance-toggle').checked = false;
+            document.getElementById('strategy-toggle').checked = false; calcTheoreticalBalance(); updateInputsDOM(); updateCalculations();
         }
 
         function checkProPassword(e) {
@@ -1008,9 +963,6 @@
                 if (withPrepayments) {
                     prepay += state.customPrepayments[m] || 0;
                     if (state.recurringPrepayment > 0) prepay += state.recurringPrepayment;
-                    if (state.includeTaxDeduction && state.taxDeductionStrategy === 'reinvest' && m % 12 === 0) {
-                        prepay += Math.min(40000, interest * 0.13); 
-                    }
                 }
 
                 prepay = Math.min(prepay, balance - principal);
@@ -1274,8 +1226,6 @@
             let loanAmount = activeTab === 'new' ? (state.cost - state.downPayment) : state.activeCurrentBalance;
             let monthlyPmt = preRes.schedule.length > 0 ? preRes.schedule[0].payment : 0;
             let savedInt = baseRes.totalInterest - preRes.totalInterest; let savedM = baseRes.realTerm - preRes.realTerm;
-
-            if (state.includeTaxDeduction && state.taxDeductionStrategy === 'pocket') { savedInt += Math.min(390000, preRes.totalInterest * 0.13); }
 
             document.getElementById('res-loan-amount').innerText = localFormatMoney(loanAmount);
             document.getElementById('res-monthly-payment').innerText = localFormatMoney(monthlyPmt);
