@@ -414,6 +414,9 @@
             }
         });
 
+        window.canExportCalculation = () =>
+            geneticStateController.getState() === CalculatorState.STATES.READY;
+
         // Инициализация
         window.onload = async () => {
             initTheme();

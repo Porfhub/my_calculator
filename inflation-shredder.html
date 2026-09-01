@@ -363,6 +363,9 @@
             onClear: clearHistoricalOutputs
         });
 
+        window.canExportCalculation = () =>
+            shredderStateController.getState() === CalculatorState.STATES.READY;
+
         async function init() {
             initTheme();
             shredderStateController.transition(CalculatorState.STATES.LOADING);

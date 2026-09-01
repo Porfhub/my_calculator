@@ -414,6 +414,9 @@
             ]
         });
 
+        window.canExportCalculation = () =>
+            timeStateController.getState() === CalculatorState.STATES.READY;
+
         function isValidTimeState() {
             return Number.isFinite(state.income) && state.income > 0 && state.income <= 1000000
                 && Number.isFinite(state.hours) && state.hours > 0 && state.hours <= 100

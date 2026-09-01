@@ -516,6 +516,9 @@
             }
         });
 
+        window.canExportCalculation = () =>
+            millionaireStateController.getState() === CalculatorState.STATES.READY;
+
         // CONFETTI CELEBRATION SYSTEM
         function triggerCelebration() {
             const canvas = document.getElementById('confetti-canvas');

@@ -670,6 +670,9 @@
             }
         });
 
+        window.canExportCalculation = () =>
+            mortgageStateController.getState() === CalculatorState.STATES.READY;
+
         function mortgageValidationMessage() {
             if (activeTab === 'new') {
                 if (!Number.isFinite(state.cost) || state.cost <= 0) return 'Укажите положительную стоимость недвижимости.';

@@ -533,6 +533,9 @@
             }
         });
 
+        window.canExportCalculation = () =>
+            freedomStateController.getState() === CalculatorState.STATES.READY;
+
         const monthNamesRU = [
             "январь", "февраль", "март", "апрель", "май", "июнь",
             "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"

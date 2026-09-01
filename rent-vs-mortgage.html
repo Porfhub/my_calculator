@@ -482,6 +482,9 @@
             }
         });
 
+        window.canExportCalculation = () =>
+            rentStateController.getState() === CalculatorState.STATES.READY;
+
         function isValidRentState() {
             return Number.isFinite(state.cost) && state.cost > 0
                 && Number.isFinite(state.rate) && state.rate >= 0 && state.rate <= 50

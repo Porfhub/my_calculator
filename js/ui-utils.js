@@ -24,7 +24,22 @@ function reachGoal(goalId) {
     }
 }
 
+function canExportCurrentCalculation() {
+    if (typeof window === 'undefined' || typeof window.canExportCalculation !== 'function') {
+        return true;
+    }
+
+    if (window.canExportCalculation()) {
+        return true;
+    }
+
+    showToast('Сначала выполните корректный расчёт.');
+    return false;
+}
+
 async function takeScreenshot(elementId = 'screenshot-area', filename = 'calculation.png') {
+    if (!canExportCurrentCalculation()) return;
+
     const element = document.getElementById(elementId);
     if (!element) {
         console.error('Screenshot element not found:', elementId);
@@ -66,6 +81,8 @@ async function takeScreenshot(elementId = 'screenshot-area', filename = 'calcula
 }
 
 function shareLink() {
+    if (!canExportCurrentCalculation()) return;
+
     reachGoal("share_click");
     const url = window.location.href;
     navigator.clipboard.writeText(url).then(() => {
@@ -76,6 +93,8 @@ function shareLink() {
 }
 
 function shareLinkCustom(title, text) {
+    if (!canExportCurrentCalculation()) return;
+
     reachGoal("share_click");
     const url = window.location.href;
     if (navigator.share) {
