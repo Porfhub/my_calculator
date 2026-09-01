@@ -72,6 +72,7 @@
     </style>
     <script src="js/theme.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/calculator-state.js"></script>
     <script src="js/ui-utils.js"></script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -249,6 +250,7 @@
 
             <!-- Results Panel (Right Column) -->
             <div class="lg:col-span-7 space-y-6">
+                <p id="rent-state-message" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
                 <!-- Verdict Card -->
                 <div id="verdict-card" class="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-100 dark:border-slate-800 shadow-xl relative overflow-hidden transition-all duration-500">
                     <!-- Screenshot wrapper -->
@@ -464,6 +466,32 @@
         };
 
         let chart = null;
+        const rentStateController = CalculatorState.createController({
+            root: 'screenshot-area',
+            messageElement: 'rent-state-message',
+            resultElements: ['final-buy', 'final-rent', 'verdict-title', 'verdict-percent', 'verdict-desc'],
+            onClear: () => {
+                if (chart) {
+                    chart.destroy();
+                    chart = null;
+                }
+            },
+            onStateChange: (nextState) => {
+                const card = document.getElementById('verdict-card');
+                if (card) card.hidden = nextState !== CalculatorState.STATES.READY;
+            }
+        });
+
+        function isValidRentState() {
+            return Number.isFinite(state.cost) && state.cost > 0
+                && Number.isFinite(state.rate) && state.rate >= 0 && state.rate <= 50
+                && Number.isFinite(state.dpPercent) && state.dpPercent >= 0 && state.dpPercent < 1
+                && Number.isFinite(state.rent) && state.rent > 0
+                && Number.isFinite(state.investRate) && state.investRate >= 0 && state.investRate <= 50
+                && Number.isFinite(state.growthRE) && state.growthRE >= -50 && state.growthRE <= 50
+                && Number.isFinite(state.growthRent) && state.growthRent >= -50 && state.growthRent <= 50
+                && Number.isInteger(state.years) && state.years >= 1 && state.years <= 30;
+        }
 
         function toggleExpertMode(isExpert) {
             state.expertMode = isExpert;
@@ -527,6 +555,25 @@
         }
 
         function calculate() {
+            if (!isValidRentState()) {
+                rentStateController.transition(CalculatorState.STATES.INVALID_INPUT, {
+                    message: 'Проверьте стоимость жилья, первоначальный взнос, ставки, аренду и горизонт расчёта.'
+                });
+                return;
+            }
+
+            try {
+                calculateRentCore();
+                rentStateController.transition(CalculatorState.STATES.READY, { clearResults: false });
+            } catch (error) {
+                console.error('Rent versus mortgage calculation failed:', error);
+                rentStateController.transition(CalculatorState.STATES.CALCULATION_IMPOSSIBLE, {
+                    message: 'При этих рыночных предположениях нельзя построить корректное сравнение.'
+                });
+            }
+        }
+
+        function calculateRentCore() {
             const loanAmount = state.cost * (1 - state.dpPercent);
             const monthlyRate = state.rate / 12 / 100;
             const months = state.years * 12;
@@ -582,7 +629,13 @@
                 }
             }
 
-            updateUI(dataBuy[dataBuy.length-1], dataRent[dataRent.length-1]);
+            const buyFinal = dataBuy[dataBuy.length - 1];
+            const rentFinal = dataRent[dataRent.length - 1];
+            if (!Number.isFinite(buyFinal) || !Number.isFinite(rentFinal) || buyFinal <= 0 || rentFinal <= 0) {
+                throw new Error('Invalid comparison outcome');
+            }
+
+            updateUI(buyFinal, rentFinal);
             updateChart(labels, dataBuy, dataRent);
         }
 

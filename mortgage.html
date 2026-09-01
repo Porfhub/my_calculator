@@ -119,6 +119,7 @@
     <script src="js/theme.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/api.js"></script>
+    <script src="js/calculator-state.js"></script>
     <script src="js/ui-utils.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
@@ -429,6 +430,7 @@
             </div>
 
             <div class="lg:col-span-7 lg:sticky lg:top-6 self-start flex flex-col space-y-6" id="results-panel">
+                <p id="mortgage-state-message" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
                 <!-- Hero Results Card with Premium Overpayment Focus -->
                 <div class="bg-gradient-to-br from-slate-900 to-slate-950 dark:from-slate-900 dark:to-black text-white rounded-3xl p-6 shadow-xl border border-slate-800 relative overflow-hidden flex flex-col justify-between">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -484,7 +486,7 @@
                     <div class="relative w-24 h-24 md:w-28 md:h-28 shrink-0 flex items-center justify-center">
                         <canvas id="ratioDonutChart" class="absolute inset-0 w-full h-full"></canvas>
                         <div class="absolute text-center">
-                            <span class="text-[10px] font-bold text-slate-400 uppercase block tracking-tighter leading-none">КПД</span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase block tracking-tighter leading-none">Тело долга</span>
                             <span id="donut-efficiency" class="text-base font-black text-emerald-500 leading-none">50%</span>
                         </div>
                     </div>
@@ -599,6 +601,10 @@
 
         // Твоя функция форматирования полей ввода из utils.js
         function formatInputField(input, val) {
+            if (String(val).trim().startsWith('-')) {
+                input.value = val;
+                return NaN;
+            }
             let cursorPosition = input.selectionStart;
             let originalLength = input.value.length;
             let cleanVal = val.toString().replace(/\s+/g, '').replace(/\D/g, '');
@@ -643,6 +649,50 @@
 
         let chartInstance = null;
         let ratioDonutInstance = null;
+        const mortgageStateController = CalculatorState.createController({
+            root: 'screenshot-area',
+            messageElement: 'mortgage-state-message',
+            resultElements: [
+                'res-total-interest', 'res-monthly-payment', 'res-loan-amount', 'res-real-term',
+                'mobile-overpayment', 'mobile-payment', 'ratio-body-text', 'ratio-interest-text',
+                'ratio-text', 'donut-efficiency', 'cost-display', 'downpayment-percent',
+                'rate-display', 'term-display', 'payment-display', 'recurring-display'
+            ],
+            onClear: () => {
+                if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+                if (ratioDonutInstance) { ratioDonutInstance.destroy(); ratioDonutInstance = null; }
+                const savings = document.getElementById('savings-card');
+                if (savings) savings.classList.add('hidden');
+                const history = document.getElementById('existing-history-card');
+                if (history) history.classList.add('hidden');
+                const schedule = document.getElementById('years-accordion-container');
+                if (schedule) schedule.innerHTML = '';
+            }
+        });
+
+        function mortgageValidationMessage() {
+            if (activeTab === 'new') {
+                if (!Number.isFinite(state.cost) || state.cost <= 0) return 'Укажите положительную стоимость недвижимости.';
+                if (!Number.isFinite(state.downPayment) || state.downPayment < 0 || state.downPayment >= state.cost) return 'Первоначальный взнос должен быть меньше стоимости недвижимости.';
+                if (!Number.isFinite(state.rate) || state.rate < 0 || state.rate > 50) return 'Укажите допустимую ставку по ипотеке.';
+                if (state.mode === 'term' && (!Number.isInteger(state.termYears) || state.termYears < 1 || state.termYears > 50)) return 'Укажите срок ипотеки от 1 до 50 лет.';
+                if (state.mode === 'payment') {
+                    const minimum = (state.cost - state.downPayment) * (state.rate / 1200);
+                    if (!Number.isFinite(state.targetPayment) || state.targetPayment <= minimum) return 'Желаемый платёж не покрывает ежемесячные проценты. Увеличьте его или измените параметры кредита.';
+                }
+            } else {
+                if (!Number.isFinite(state.activeCurrentBalance) || state.activeCurrentBalance <= 0) return 'Укажите положительный остаток долга.';
+                if (!Number.isFinite(state.activeRate) || state.activeRate < 0 || state.activeRate > 50) return 'Укажите допустимую ставку действующей ипотеки.';
+                if (state.isExistingKnowPayment) {
+                    const minimum = state.activeCurrentBalance * (state.activeRate / 1200);
+                    if (!Number.isFinite(state.activePayment) || state.activePayment <= minimum) return 'Введённый платёж не покрывает ежемесячные проценты. Расчёт невозможен.';
+                } else if (!Number.isInteger(state.activeOriginalTermYears) || state.activeOriginalTermYears < 1 || state.activePaidMonths < 0 || state.activePaidMonths >= state.activeOriginalTermYears * 12) {
+                    return 'Проверьте первоначальный срок и количество уже выплаченных месяцев.';
+                }
+            }
+            if (!Number.isFinite(state.recurringPrepayment) || state.recurringPrepayment < 0) return 'Досрочный платёж не может быть отрицательным.';
+            return null;
+        }
 
         function toggleExistingKnowPayment() {
             state.isExistingKnowPayment = document.getElementById('existing-know-payment-toggle').checked;
@@ -748,25 +798,24 @@
         }
 
         function handleRateInput(el) {
-            let val = parseFloat(el.value) || 0; state.rate = Math.min(50, val);
+            let val = parseFloat(el.value); state.rate = val;
             document.getElementById('rate-range').value = state.rate;
             updateCalculations();
         }
 
         function handleActiveRateInput(el) {
-            let val = parseFloat(el.value) || 0; state.activeRate = Math.min(50, val);
+            let val = parseFloat(el.value); state.activeRate = val;
             calcTheoreticalBalance();
             updateCalculations();
         }
 
         function handleCostInput(el) {
             state.cost = formatInputField(el, el.value); document.getElementById('cost-range').value = state.cost;
-            if (state.downPayment > state.cost) state.downPayment = state.cost; updateCalculations();
+            updateCalculations();
         }
 
         function handleDownpaymentInput(el) {
             state.downPayment = formatInputField(el, el.value);
-            if (state.downPayment > state.cost) state.downPayment = state.cost;
             document.getElementById('downpayment-range').value = state.downPayment; updateCalculations();
         }
 
@@ -776,7 +825,7 @@
         }
 
         function handleTermInput(el) {
-            state.termYears = Math.min(50, parseInt(el.value) || 0);
+            state.termYears = /^\d+$/.test(String(el.value).trim()) ? Number(el.value) : NaN;
             document.getElementById('term-range').value = state.termYears; updateCalculations();
         }
 
@@ -798,9 +847,9 @@
         function syncRangeToInput(field, val) {
             let v = parseFloat(val);
             if (field === 'cost') {
-                state.cost = v; if (state.downPayment > state.cost) state.downPayment = state.cost;
+                state.cost = v;
             } else if (field === 'downpayment') {
-                state.downPayment = v; if (state.downPayment > state.cost) state.downPayment = state.cost;
+                state.downPayment = v;
             } else if (field === 'rate') {
                 state.rate = v;
             } else if (field === 'term') {
@@ -936,14 +985,9 @@
 
             if (activeTab === 'new' && state.mode === 'payment') {
                 currentPmt = state.targetPayment;
-                if (currentPmt <= balance * mRate) currentPmt = Math.ceil(balance * mRate) + 1000;
                 plannedMonths = mRate > 0 ? Math.ceil(Math.log(currentPmt / (currentPmt - balance * mRate)) / Math.log(1 + mRate)) : Math.ceil(balance / currentPmt);
             } else if (activeTab === 'existing' && state.isExistingKnowPayment) {
                 currentPmt = Number(state.activePayment) || 0;
-                const minPmt = balance * mRate;
-                if (currentPmt <= minPmt) {
-                    currentPmt = Math.ceil(minPmt) + 1000;
-                }
                 plannedMonths = mRate > 0 ? Math.ceil(Math.log(currentPmt / (currentPmt - balance * mRate)) / Math.log(1 + mRate)) : Math.ceil(balance / currentPmt);
             } else {
                 currentPmt = mRate === 0 ? (balance / plannedMonths) : (balance * (mRate * Math.pow(1 + mRate, plannedMonths)) / (Math.pow(1 + mRate, plannedMonths) - 1));
@@ -1222,10 +1266,21 @@
         }
 
         function updateCalculations() {
+            const validationError = mortgageValidationMessage();
+            if (validationError) {
+                mortgageStateController.transition(CalculatorState.STATES.INVALID_INPUT, { message: validationError });
+                return;
+            }
+
+            try {
             const baseRes = simulateMortgage(false); const preRes = simulateMortgage(true);
             let loanAmount = activeTab === 'new' ? (state.cost - state.downPayment) : state.activeCurrentBalance;
             let monthlyPmt = preRes.schedule.length > 0 ? preRes.schedule[0].payment : 0;
             let savedInt = baseRes.totalInterest - preRes.totalInterest; let savedM = baseRes.realTerm - preRes.realTerm;
+            if (![loanAmount, monthlyPmt, savedInt, savedM, preRes.totalInterest, preRes.totalInsurance, preRes.totalPaid].every(Number.isFinite)
+                || loanAmount <= 0 || monthlyPmt <= 0 || preRes.realTerm <= 0) {
+                throw new Error('Invalid mortgage outcome');
+            }
 
             document.getElementById('res-loan-amount').innerText = localFormatMoney(loanAmount);
             document.getElementById('res-monthly-payment').innerText = localFormatMoney(monthlyPmt);
@@ -1290,7 +1345,7 @@
             if (bodyTxt) bodyTxt.innerText = `${Math.round(bPct)}%`;
             if (intTxt) intTxt.innerText = `${Math.round(iPct)}%`;
 
-            // Update КПД percentage
+            // Доля выплат, которая погашает тело кредита. Это не показатель эффективности.
             const donutEff = document.getElementById('donut-efficiency');
             if (donutEff) {
                 donutEff.innerText = `${Math.round(bPct)}%`;
@@ -1403,6 +1458,13 @@
             document.getElementById('recurring-display').innerText = localFormatMoney(state.recurringPrepayment);
 
             renderAmortizationTable(preRes.schedule); updateChart(preRes.schedule, baseRes.schedule);
+            mortgageStateController.transition(CalculatorState.STATES.READY, { clearResults: false });
+            } catch (error) {
+                console.error('Mortgage calculation failed:', error);
+                mortgageStateController.transition(CalculatorState.STATES.CALCULATION_IMPOSSIBLE, {
+                    message: 'При текущих параметрах невозможно построить корректный ипотечный график.'
+                });
+            }
         }
 
         function updateInputsDOM() {
