@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Купить или Снимать? - Честный поединок | CalcHub</title>
+    <title>Покупка или аренда — сравнение сценариев | CalcHub</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
@@ -118,8 +118,8 @@
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-black tracking-tight">Рент-vs-Ипотека</h1>
-                    <p class="text-xs text-brand-200 font-medium">Честный математический поединок: владение против аренды</p>
+                    <h1 class="text-2xl font-black tracking-tight">Покупка или аренда</h1>
+                    <p class="text-xs text-brand-200 font-medium">Сравнение сценариев владения и аренды</p>
                 </div>
             </div>
         </div>
@@ -294,7 +294,7 @@
 
                             <div class="flex-1">
                                 <div class="flex items-center gap-2">
-                                    <span id="verdict-tag" class="text-[10px] uppercase font-black bg-brand-500 text-white px-2.5 py-1 rounded-full tracking-wider">Математический лидер</span>
+                        <span id="verdict-tag" class="text-[10px] uppercase font-black bg-brand-500 text-white px-2.5 py-1 rounded-full tracking-wider">Результат сценария</span>
                                     <span id="verdict-percent" class="text-sm font-black text-slate-900 dark:text-white">8%</span>
                                 </div>
                                 <h2 class="text-3xl font-black text-slate-900 dark:text-white mt-2 mb-2" id="verdict-title">Ипотека выгоднее</h2>
@@ -341,10 +341,10 @@
                 <!-- Блок простого объяснения "На пальцах" -->
                 <div class="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 space-y-4 shadow-inner">
                     <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                        <span>💡 Разбор «на пальцах»: что такое чистый капитал?</span>
+                        <span>💡 Как читать результат: чистый капитал</span>
                     </h3>
                     <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                        Этот калькулятор не просто сравнивает ежемесячные траты. Он находит ответ на главный вопрос: <strong>кто окажется богаче через <span id="explain-years" class="text-brand-600 dark:text-brand-400 font-extrabold">20</span> лет</strong> — покупатель квартиры или арендатор? Мы сравниваем их <em>Чистый Капитал (Net Worth)</em>:
+                        Калькулятор сравнивает чистый капитал через <span id="explain-years" class="text-brand-600 dark:text-brand-400 font-extrabold">20</span> лет при заданных условиях. Это стоимость активов за вычетом обязательств в каждом сценарии:
                     </p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
                         <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl space-y-2 border border-slate-200/50 dark:border-slate-700/50">
@@ -401,36 +401,36 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-lg font-black text-slate-900 dark:text-white">Развенчиватель мифов (Myth Buster)</h3>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Разбираем популярные финансовые заблуждения с точки зрения жесткой математики</p>
+                        <h3 class="text-lg font-black text-slate-900 dark:text-white">Что важно учесть</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Сравнение чувствительно к ставке, росту цен, аренде и горизонту расчёта.</p>
                         </div>
                     </div>
 
                     <div class="space-y-4">
                         <!-- Myth 1 -->
                         <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-2">
-                            <span class="text-[9px] font-extrabold uppercase bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-400 px-2 py-0.5 rounded-full">Миф №1</span>
-                            <h4 class="text-xs font-black text-slate-900 dark:text-white mt-1">"Аренда — это деньги, выброшенные на ветер"</h4>
+                            <span class="text-[9px] font-extrabold uppercase bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-400 px-2 py-0.5 rounded-full">Расходы</span>
+                            <h4 class="text-xs font-black text-slate-900 dark:text-white mt-1">Аренда и владение включают разные виды расходов</h4>
                             <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                                <strong>Реальность:</strong> Проценты банку по ипотеке, налог на имущество, страховка квартиры и ежегодный ремонт — это точно такие же «выброшенные на ветер» расходы. В первые 10 лет ипотеки ваши платежи почти полностью уходят на проценты банку, а не на покупку тела кредита. Аренда часто позволяет экономить до 50% стоимости ипотечного платежа и вкладывать эту дельту в сложные проценты.
+                                В ипотечном сценарии учитываются проценты, обслуживание и долг. В сценарии аренды — арендные платежи и инвестиции разницы. Сверьте предположения с вашей ситуацией.
                             </p>
                         </div>
 
                         <!-- Myth 2 -->
                         <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-2">
-                            <span class="text-[9px] font-extrabold uppercase bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-400 px-2 py-0.5 rounded-full">Миф №2</span>
-                            <h4 class="text-xs font-black text-slate-900 dark:text-white mt-1">"Своя квартира гарантирует финансовую свободу"</h4>
+                            <span class="text-[9px] font-extrabold uppercase bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-400 px-2 py-0.5 rounded-full">Ликвидность</span>
+                            <h4 class="text-xs font-black text-slate-900 dark:text-white mt-1">Форма капитала влияет на доступность денег</h4>
                             <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                                <strong>Реальность:</strong> Квартира — это неликвидный актив. Её нельзя быстро продать без потери стоимости в кризис, она приковывает вас к одному городу и работе. Инвестиционный портфель из акций и высокодоходных депозитов обладает 100% ликвидностью и может генерировать пассивный доход, превышающий стоимость аренды жилья.
+                                Недвижимость и финансовые активы отличаются скоростью продажи, расходами и риском. Калькулятор не оценивает эти факторы за вас.
                             </p>
                         </div>
 
                         <!-- Myth 3 -->
                         <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-2">
-                            <span class="text-[9px] font-extrabold uppercase bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-400 px-2 py-0.5 rounded-full">Миф №3</span>
-                            <h4 class="text-xs font-black text-slate-900 dark:text-white mt-1">"Недвижимость всегда обгоняет инфляцию"</h4>
+                            <span class="text-[9px] font-extrabold uppercase bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-400 px-2 py-0.5 rounded-full">Допущения</span>
+                            <h4 class="text-xs font-black text-slate-900 dark:text-white mt-1">Доходность и рост цен не гарантированы</h4>
                             <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                                <strong>Реальность:</strong> В долгосрочной перспективе (от 20 лет) реальный исторический рост цен на квартиры за вычетом инфляции составляет всего 1-2% годовых. Фондовый рынок исторически растет на 5-7% выше инфляции. Покупая недвижимость, вы ставите всё своё состояние на один конкретный дом в одном районе — это максимальная концентрация риска.
+                                Результат зависит от введённых темпов роста, ставки и срока. Измените их, чтобы увидеть чувствительность сравнения.
                             </p>
                         </div>
                     </div>

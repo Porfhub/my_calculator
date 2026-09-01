@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Насколько вы богаты? - Калькулятор зарплат — Рентген Доходов</title>
+    <title>Сравнение дохода с региональной статистикой — CalcHub</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- html2canvas CDN -->
@@ -147,8 +147,8 @@
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-black tracking-tight">Рентген Доходов</h1>
-                    <p class="text-xs text-brand-200">Сравните свою зарплату с доходами жителей РФ</p>
+                    <h1 class="text-2xl font-black tracking-tight">Сравнение дохода</h1>
+                    <p class="text-xs text-brand-200">Сравните доход с доступной региональной статистикой</p>
                 </div>
             </div>
         </div>
@@ -158,12 +158,12 @@
         <div class="max-w-4xl w-full bg-white dark:bg-slate-900 rounded-3xl p-6 md:p-10 shadow-sm border border-slate-100 dark:border-slate-800">
             
             <div class="text-center mb-8">
-                <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-2">Насколько вы богаты?</h2>
-                <p class="text-slate-500 dark:text-slate-400 text-sm">Официальная оценка на основе данных 2026 года</p>
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-2">Как доход соотносится с региональной статистикой?</h2>
+                <p class="text-slate-500 dark:text-slate-400 text-sm">Ориентировочное сравнение на основе доступных данных</p>
                 <!-- Trust Anchor -->
                 <p class="text-xs text-slate-400 dark:text-slate-500 mt-2 font-medium flex items-center justify-center gap-1.5">
                     <svg class="w-4 h-4 text-brand-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a.75.75 0 00-.708-.523H4.5a2 2 0 00-2 2v1.5a.75.75 0 00.325.62l1.5 1a.75.75 0 00.85 0l1.5-1A.75.75 0 007 5.93V4.5a.75.75 0 00-.733-.715zM4 11.25a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75a.75.75 0 01-.75-.75zm.75 3.25a.75.75 0 000 1.5h10.5a.75.75 0 000-1.5H4.75z" clip-rule="evenodd"></path><path d="M10.75 3a.75.75 0 00-.75.75v1.5a.75.75 0 001.5 0v-1.5A.75.75 0 0010.75 3zm5.483.455a.75.75 0 00-.708-.523H14.5a2 2 0 00-2 2v1.5a.75.75 0 00.325.62l1.5 1a.75.75 0 00.85 0l1.5-1A.75.75 0 0017 5.93V4.5a.75.75 0 00-.733-.715z"></svg>
-                    <span>Данные верифицированы по официальным базам Росстата и прогрессивной шкале НДФЛ на 2026 год</span>
+                    <span>Для сравнения используются доступные данные Росстата; расчёт НДФЛ и результат носят ориентировочный характер</span>
                 </p>
             </div>
 
@@ -227,7 +227,7 @@
             </div>
 
             <button onclick="calculateWealth()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-4 rounded-xl transition-all shadow-md hover:shadow-lg text-lg mb-8 active:scale-[0.98]">
-                Узнать правду
+                Рассчитать сравнение
             </button>
 
             <!-- Блок результатов -->
@@ -268,8 +268,8 @@
 
                 <!-- Social Comparison Class Block -->
                 <div class="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-4">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Где вы на социальной лестнице РФ?</h3>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Объективное деление общества на слои в соответствии с вашим доходом.</p>
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Сравнение с распределением доходов</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Ориентировочная группировка по введённому доходу и доступной региональной статистике.</p>
                     <div id="socialStrataGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                         <!-- Dynamic struts injected here -->
                     </div>
@@ -340,14 +340,14 @@
                 <p id="mobile-tax" class="text-lg font-black text-rose-600">0 ₽</p>
             </div>
         </div>
-        <button onclick="shareLinkCustom('Рентген Доходов — CalcHub', 'Я просветил свою зарплату в Рентгене Доходов! Мой чистый доход составляет ' + document.getElementById('mobile-net-income').innerText + ' после вычета прогрессивного НДФЛ. Проверь и ты свой реальный доход!')" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
+        <button onclick="shareLinkCustom('Сравнение дохода — CalcHub', 'Я оценил свой доход в CalcHub. Расчётный доход после НДФЛ: ' + document.getElementById('mobile-net-income').innerText + '. Сравнение носит ориентировочный характер.')" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
             📢 Поделиться расчетом
         </button>
     </div>
     </main>
 
     <footer class="max-w-4xl mx-auto px-4 pb-8 text-center text-xs text-slate-400">
-        <p>© 2026 Рентген Доходов. Все расчеты носят ознакомительный характер.</p>
+        <p>© 2026 CalcHub. Сравнение носит ознакомительный характер.</p>
     </footer>
 
     <!-- Всплывающие уведомления (Toast) -->

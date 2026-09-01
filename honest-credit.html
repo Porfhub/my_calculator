@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор честной стоимости кредита — CalcHub</title>
+    <title>Полная стоимость кредита — CalcHub</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN -->
@@ -147,8 +147,8 @@
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-black tracking-tight">Честная Ставка</h1>
-                        <p class="text-xs text-slate-300">Разоблачение скрытых комиссий и страховок</p>
+                        <h1 class="text-2xl font-black tracking-tight">Полная стоимость кредита</h1>
+                        <p class="text-xs text-slate-300">Ставка, комиссии и страхование в одном расчёте</p>
                     </div>
                 </div>
             </div>
@@ -160,7 +160,7 @@
         <div id="mobile-results" class="lg:hidden mobile-sticky-results hidden">
             <div class="flex items-center justify-between mb-3">
                 <div class="flex flex-col">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase">Честная ставка</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Полная стоимость</span>
                     <span id="mobile-rate" class="font-black text-rose-600">0%</span>
                 </div>
                 <div class="text-right">
@@ -168,7 +168,7 @@
                     <p id="mobile-payment" class="text-lg font-black text-slate-900 dark:text-white">0 ₽</p>
                 </div>
             </div>
-            <button onclick="shareLinkCustom('Калькулятор Честной Ставки — CalcHub', 'Я разоблачил скрытую переплату по кредиту в Честной Ставке! Моя реальная ставка составляет ' + document.getElementById('mobile-rate').innerText + ' вместо рекламной. Проверь свой кредит!')" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg">📢 Поделиться расчетом</button>
+            <button onclick="shareLinkCustom('Полная стоимость кредита — CalcHub', 'Я сравнил заявленную ставку и полную стоимость кредита в CalcHub. Расчётная ставка: ' + document.getElementById('mobile-rate').innerText + '.')" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg">📢 Поделиться расчётом</button>
         </div>
 
         <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
@@ -329,7 +329,7 @@
                                     </span>
                                     Реальная стоимость кредита
                                 </h2>
-                                <span class="text-[10px] bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-400 px-3 py-1 rounded-full font-bold uppercase tracking-wider">Истинный расчет</span>
+                                <span class="text-[10px] bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-400 px-3 py-1 rounded-full font-bold uppercase tracking-wider">Расчёт с учётом услуг</span>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
@@ -348,7 +348,7 @@
                                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
                                         <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
                                     </span>
-                                    <p class="text-xs font-extrabold text-rose-600 dark:text-rose-400 uppercase tracking-widest mb-1.5">Реальная честная ставка</p>
+                                    <p class="text-xs font-extrabold text-rose-600 dark:text-rose-400 uppercase tracking-widest mb-1.5">Расчётная полная ставка</p>
                                     <p id="real-rate-display" class="text-6xl font-black text-rose-600 dark:text-rose-500 drop-shadow-sm">24.5%</p>
                                     <span class="text-[10px] text-rose-600 dark:text-rose-400 font-semibold mt-2">С учётом страховок и комиссий</span>
                                 </div>
@@ -387,7 +387,7 @@
                         <!-- Progress Bar for Air vs Debt Ratio -->
                         <div class="space-y-3.5 border-t dark:border-slate-800 pt-4">
                             <div class="flex justify-between text-xs font-extrabold text-slate-600 dark:text-slate-400">
-                                <span>Чистый кредит + честные %</span>
+                                <span>Основной долг и проценты</span>
                                 <span>"Воздух" (страховки и комиссии)</span>
                             </div>
                             <div class="w-full bg-slate-100 dark:bg-slate-800 h-4 rounded-full overflow-hidden flex">
@@ -445,7 +445,7 @@
     </main>
 
     <footer class="py-8 text-center text-xs text-slate-400 border-t dark:border-slate-800 mt-12">
-        <p>© 2026 Финансовый Хаб. Инструменты честного анализа.</p>
+        <p>© 2026 Финансовый Хаб. Расчёты для сравнения условий кредита.</p>
     </footer>
 
     <script>
@@ -726,7 +726,7 @@
                     rateCard.className = "bg-white dark:bg-slate-900 rounded-3xl shadow-lg border-2 border-orange-500 dark:border-orange-500/80 p-8 text-center space-y-6 overflow-hidden relative";
                     realRateDisplay.className = "text-6xl font-black text-rose-600 dark:text-rose-500 drop-shadow-sm";
                     
-                    const verdictText = `🚨 Внимание: Кредит содержит грабительские скрытые условия! Из-за навязанной нагрузки вы переплачиваете за "воздух" лишние ${formatMoney(diffRub)} (${Math.round(pctOverpayment)}% от запрашиваемой суммы!). Реальная ставка составляет шокирующие ${annualEir.toFixed(1)}% вместо рекламных ${bankRate.toFixed(1)}%. Срочно пересмотрите условия договора или откажитесь от страховки в «период охлаждения»!`;
+                    const verdictText = `Дополнительные услуги увеличивают выплаты на ${formatMoney(diffRub)} (${Math.round(pctOverpayment)}% от запрошенной суммы). Расчётная ставка составляет ${annualEir.toFixed(1)}% при заявленной ставке ${bankRate.toFixed(1)}%. Сверьте эти условия с договором и уточните, какие услуги можно отключить.`;
                     document.getElementById('verdict-text').innerText = verdictText;
                 } else {
                     rateCard.className = "bg-white dark:bg-slate-900 rounded-3xl shadow-lg border-2 border-rose-500 dark:border-rose-800/80 p-8 text-center space-y-6 overflow-hidden relative";
@@ -741,7 +741,7 @@
                 mobileRateDisplay.className = "font-black text-emerald-600 dark:text-emerald-500";
                 rateCard.className = "bg-white dark:bg-slate-900 rounded-3xl shadow-lg border-2 border-emerald-500 dark:border-emerald-800/80 p-8 text-center space-y-6 overflow-hidden relative";
 
-                document.getElementById('verdict-text').innerText = "Честное предложение! У этого кредита отсутствуют скрытые комиссии и навязанные страховки. Вы платите только чистый процент банку.";
+                document.getElementById('verdict-text').innerText = "В выбранных параметрах не указаны дополнительные комиссии или страхование. Проверьте договор и полный перечень услуг перед оформлением кредита.";
             }
 
             // Chart
@@ -771,7 +771,7 @@
             structureChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['На руки', 'Честный %', 'Переплата за воздух'],
+                    labels: ['Сумма на руки', 'Проценты', 'Дополнительные услуги'],
                     datasets: [{
                         data: [received, interest, air],
                         backgroundColor: ['#22c55e', '#64748b', '#f43f5e'],

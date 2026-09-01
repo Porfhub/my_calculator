@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Когда я стану миллионером? — Умный расчет цели</title>
+    <title>Срок достижения финансовой цели — CalcHub</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN -->
@@ -187,8 +187,8 @@
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-brand-200 via-white to-brand-200">Путь к Богатству</h1>
-                        <p class="text-xs text-brand-200">Интерактивный навигатор вашей заветной финансовой свободы</p>
+                        <h1 class="text-2xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-brand-200 via-white to-brand-200">Финансовая цель</h1>
+                        <p class="text-xs text-brand-200">Оценка срока накопления при заданных условиях</p>
                     </div>
                 </div>
             </div>
@@ -293,7 +293,7 @@
                         <div class="grid grid-cols-2 gap-2 pt-1">
                             <button id="btn-goal-1m" onclick="setGoal(1000000, 'btn-goal-1m')" class="goal-preset-btn py-2 px-1 text-[10px] font-black border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:border-brand-500 transition-all uppercase leading-tight active:scale-95 flex flex-col items-center justify-center">
                                 <span>1 000 000 ₽</span>
-                                <span class="opacity-60 font-bold text-[8px] mt-0.5">Первый Рубеж</span>
+                                <span class="opacity-60 font-bold text-[8px] mt-0.5">Пример цели</span>
                             </button>
                             <button id="btn-goal-5m" onclick="setGoal(5000000, 'btn-goal-5m')" class="goal-preset-btn py-2 px-1 text-[10px] font-black border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:border-brand-500 transition-all uppercase leading-tight active:scale-95 flex flex-col items-center justify-center">
                                 <span>5 000 000 ₽</span>
@@ -305,7 +305,7 @@
                             </button>
                             <button id="btn-goal-100m" onclick="setGoal(100000000, 'btn-goal-100m')" class="goal-preset-btn py-2 px-1 text-[10px] font-black border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:border-brand-500 transition-all uppercase leading-tight active:scale-95 flex flex-col items-center justify-center">
                                 <span>100 000 000 ₽</span>
-                                <span class="opacity-60 font-bold text-[8px] mt-0.5">Дольче Вита</span>
+                                <span class="opacity-60 font-bold text-[8px] mt-0.5">Крупная цель</span>
                             </button>
                         </div>
                     </div>
@@ -636,7 +636,10 @@
             if (!statusElement) return;
 
             if (externalDataStatus === 'stale') {
-                statusElement.textContent = 'Используются последние доступные официальные данные.';
+                statusElement.textContent = 'Используются последние доступные значения Банка России и Росстата.';
+                statusElement.hidden = false;
+            } else if (externalDataStatus === 'ok') {
+                statusElement.textContent = 'Источники сценария: ключевая ставка Банка России и годовой ряд инфляции Росстата.';
                 statusElement.hidden = false;
             } else {
                 statusElement.textContent = '';
@@ -828,8 +831,8 @@
                 return;
             }
             shareLinkCustom(
-                'Когда я стану миллионером — CalcHub',
-                `Я рассчитал примерный срок достижения своего первого миллиона: ${document.getElementById('mobile-target-date').innerText}. Рассчитайте ориентировочный срок своей финансовой цели!`
+                'Финансовая цель — CalcHub',
+                `Я оценил примерный срок достижения финансовой цели: ${document.getElementById('mobile-target-date').innerText}. Результат зависит от выбранных параметров и не является гарантией.`
             );
         }
 
