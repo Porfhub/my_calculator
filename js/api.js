@@ -171,6 +171,14 @@ function isDatasetUsable(dataset) {
     return Boolean(dataset) && (status === 'ok' || status === 'stale');
 }
 
+function getCombinedDatasetStatus(datasets) {
+    if (!Array.isArray(datasets) || datasets.length === 0) return 'unavailable';
+
+    const statuses = datasets.map(getDatasetStatus);
+    if (statuses.includes('unavailable')) return 'unavailable';
+    return statuses.includes('stale') ? 'stale' : 'ok';
+}
+
 function getCentralBankRate(dataset) {
     if (!isDatasetUsable(dataset)) return null;
 
@@ -198,6 +206,7 @@ if (typeof module === 'object' && module.exports) {
         fetchInflation,
         getAverageInflationRate,
         getCentralBankRate,
+        getCombinedDatasetStatus,
         getDatasetStatus,
         getInflationRecords,
         getInflationStatusMessage,

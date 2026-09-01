@@ -161,7 +161,7 @@
         <!-- Toast notifications -->
         <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
             <span class="text-emerald-500 font-bold">✓</span>
-            <span id="toast-message" class="text-sm">Данные обновлены</span>
+            <span id="toast-message" class="text-sm"></span>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
@@ -201,9 +201,9 @@
                                         <span class="tooltiptext">Ожидаемый процент годовых, под который вы размещаете свои свободные накопления. Влияет на скорость таяния капитала за счет ежемесячного начисления процентов на остаток подушки.</span>
                                     </span>
                                 </label>
-                                <span id="yield-rate-display" class="text-sm font-bold text-emerald-600">14%</span>
+                                <span id="yield-rate-display" class="text-sm font-bold text-emerald-600">...</span>
                             </div>
-                            <input type="range" id="yield-rate-range" min="1" max="30" step="0.5" value="14" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('yield-rate', this.value)">
+                            <input type="range" id="yield-rate-range" min="1" max="30" step="0.5" value="1" disabled class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('yield-rate', this.value)">
                             <p class="text-[10px] text-slate-400 dark:text-slate-500">Автоматический ориентир (Ключевая ставка ЦБ - 2%): <span id="cb-minus-two-text">...</span></p>
                         </div>
 
@@ -350,6 +350,7 @@
                 <div id="screenshot-area" class="bg-slate-100 dark:bg-slate-900/50 p-4 -m-4 rounded-3xl space-y-6">
 
                     <p id="freedom-state-message" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
+                    <p id="freedom-data-status" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
 
                     <!-- Massive Hero Focal Card (CRO Overhaul) -->
                     <div id="freedom-hero-card" class="bg-gradient-to-br from-emerald-600 to-teal-800 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden transition-all duration-500">
@@ -473,7 +474,7 @@
                     <p id="mobile-comfort-date" class="text-xs font-black text-slate-950 dark:text-white">...</p>
                 </div>
             </div>
-            <button onclick="shareLinkCustom('Таймер Свободы — CalcHub', 'Я рассчитал запас прочности своей финансовой подушки: ' + document.getElementById('mobile-comfort-duration').innerText + '. Оцените свой финансовый резерв!')" class="w-full py-4 bg-brand-600 text-white font-black rounded-2xl text-sm shadow-lg">📢 Поделиться расчетом</button>
+            <button onclick="shareFreedomResult()" class="w-full py-4 bg-brand-600 text-white font-black rounded-2xl text-sm shadow-lg">📢 Поделиться расчетом</button>
         </div>
     </main>
 
@@ -506,6 +507,7 @@
         let decayChart = null;
         let externalDataReady = false;
         let externalDataLoading = true;
+        let externalDataStatus = 'unavailable';
 
         const freedomStateController = CalculatorState.createController({
             root: 'screenshot-area',
@@ -672,28 +674,59 @@
             const [ratesData, inflationData] = await Promise.all([fetchRates(), fetchInflation()]);
             const centralBankRate = getCentralBankRate(ratesData);
             const averageInflation = getAverageInflationRate(inflationData);
+            const combinedStatus = getCombinedDatasetStatus([ratesData, inflationData]);
 
-            if (Number.isFinite(centralBankRate)) {
+            externalDataReady = Number.isFinite(centralBankRate)
+                && Number.isFinite(averageInflation)
+                && combinedStatus !== 'unavailable';
+            externalDataStatus = externalDataReady ? combinedStatus : 'unavailable';
+
+            if (externalDataReady) {
                 state.cbRate = centralBankRate;
                 state.depositRate = Math.round(state.cbRate - 2);
                 CalculatorState.writeSafeText('cb-rate-val', `${state.cbRate.toFixed(2)}%`);
                 CalculatorState.writeSafeText('cb-minus-two-text', `${state.depositRate.toFixed(1)}%`);
 
                 document.getElementById('yield-rate-range').value = state.depositRate;
+                document.getElementById('yield-rate-range').disabled = false;
                 CalculatorState.writeSafeText('yield-rate-display', `${state.depositRate.toFixed(1)}%`);
-            }
-
-            if (Number.isFinite(averageInflation)) {
                 state.avgInflation = averageInflation;
                 CalculatorState.writeSafeText('inflation-rate-val', `${(state.avgInflation * 100).toFixed(1)}%`);
+            } else {
+                state.cbRate = null;
+                state.depositRate = null;
+                state.avgInflation = null;
+                document.getElementById('yield-rate-range').disabled = true;
+                ['cb-rate-val', 'cb-minus-two-text', 'inflation-rate-val', 'yield-rate-display'].forEach((id) => {
+                    CalculatorState.writeSafeText(id, null);
+                });
             }
 
-            externalDataReady = Number.isFinite(centralBankRate) && Number.isFinite(averageInflation);
             externalDataLoading = false;
+            renderFreedomDataStatus();
 
             // Initial calculation
             calculateFreedom();
         };
+
+        function renderFreedomDataStatus() {
+            const statusElement = document.getElementById('freedom-data-status');
+            const root = document.getElementById('screenshot-area');
+            const lifecycleState = externalDataStatus === 'ok'
+                ? 'READY'
+                : externalDataStatus === 'stale' ? 'STALE' : 'DATA_UNAVAILABLE';
+
+            if (root?.dataset) root.dataset.dataStatus = lifecycleState;
+            if (!statusElement) return;
+
+            if (externalDataStatus === 'stale') {
+                statusElement.textContent = 'Используются последние доступные официальные данные.';
+                statusElement.hidden = false;
+            } else {
+                statusElement.textContent = '';
+                statusElement.hidden = true;
+            }
+        }
 
         function calculateFreedom() {
             const outcome = freedomStateController.runCalculation({
@@ -706,11 +739,23 @@
                 validateResult: validateFreedomResult,
                 render: renderFreedomResult,
                 invalidInputMessage: 'Проверьте сумму накоплений, расходы и пассивный доход.',
+                dataUnavailableMessage: 'Ставка Банка России или данные инфляции временно недоступны. Расчёт не выполнен.',
                 impossibleMessage: 'Расчёт невозможен при текущих параметрах.',
                 onError: (error) => console.error('Financial freedom calculation failed:', error)
             });
 
             if (outcome.ok) reachGoal("calculate_success");
+        }
+
+        function shareFreedomResult() {
+            if (freedomStateController.getState() !== CalculatorState.STATES.READY) {
+                showToast('Расчёт пока недоступен.');
+                return;
+            }
+            shareLinkCustom(
+                'Таймер Свободы — CalcHub',
+                `Я рассчитал запас прочности своей финансовой подушки: ${document.getElementById('mobile-comfort-duration').innerText}. Оцените свой финансовый резерв!`
+            );
         }
 
         function collectFreedomInputs() {

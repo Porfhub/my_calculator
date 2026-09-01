@@ -87,6 +87,7 @@
     <script src="js/theme.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/api.js"></script>
+    <script src="js/calculator-state.js"></script>
     <script src="js/ui-utils.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
@@ -127,7 +128,7 @@
         <!-- Всплывающие уведомления (Toast) -->
         <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
             <span class="text-brand-500 font-bold">✓</span>
-            <span id="toast-message" class="text-sm">Данные обновлены</span>
+            <span id="toast-message" class="text-sm"></span>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
@@ -276,8 +277,10 @@
             <!-- ПРАВАЯ КОЛОНКА: Результаты -->
             <div class="lg:col-span-7 space-y-6">
                 <div id="screenshot-area" class="bg-slate-100 dark:bg-slate-900/50 p-4 -m-4 rounded-3xl space-y-6">
+                    <p id="genetic-state-message" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
+                    <p id="genetic-data-status" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
                     <!-- Главный результат -->
-                    <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-sm border border-slate-100 dark:border-slate-800 text-center relative overflow-hidden">
+                    <div id="genetic-result-card" class="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-sm border border-slate-100 dark:border-slate-800 text-center relative overflow-hidden">
                         <div class="absolute -right-12 -top-12 opacity-5">
                             <svg class="w-48 h-48 text-brand-600" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
@@ -304,7 +307,7 @@
                     </div>
 
                     <!-- Category Breakdown (Donut Chart) -->
-                    <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+                    <div id="genetic-category-card" class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
                         <h3 class="text-sm font-black text-slate-800 dark:text-slate-200 mb-4 uppercase tracking-wider text-center">Куда уходят деньги (структура расходов)</h3>
                         <div class="h-64 relative flex items-center justify-center">
                             <canvas id="categoryBreakdownChart"></canvas>
@@ -312,7 +315,7 @@
                     </div>
 
                     <!-- График по эпохам -->
-                    <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+                    <div id="genetic-stage-card" class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
                         <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 mb-4">Распределение трат по этапам взросления</h3>
                         <div class="h-64 relative">
                             <canvas id="stageChart"></canvas>
@@ -335,7 +338,7 @@
         </div>
 
         <!-- Мобильная панель -->
-        <div class="lg:hidden mobile-sticky-results">
+        <div id="genetic-mobile-results" class="lg:hidden mobile-sticky-results">
             <div class="flex items-center justify-between mb-3">
                 <div class="flex flex-col">
                     <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Итог с инфляцией</span>
@@ -346,7 +349,7 @@
                     <p id="mobile-inflation-impact" class="text-lg font-black text-brand-600">...</p>
                 </div>
             </div>
-            <button onclick="shareLinkCustom('Генетическое богатство — CalcHub', 'Я рассчитал честную стоимость воспитания ребенка от 0 до 18 лет! Мой общий родительский капитал составил ' + document.getElementById('mobile-total').innerText + ' с учетом инфляции. Оцени свой бюджет!')" class="w-full py-4 bg-brand-600 text-white font-black rounded-2xl text-sm shadow-lg active:scale-95">
+            <button onclick="shareGeneticResult()" class="w-full py-4 bg-brand-600 text-white font-black rounded-2xl text-sm shadow-lg active:scale-95">
                 📢 Поделиться расчетом
             </button>
         </div>
@@ -364,7 +367,7 @@
             preschooler: 35000,
             schooler: 45000,
             teenager: 60000,
-            avgInflation: 0.08
+            avgInflation: null
         };
 
         const presets = {
@@ -375,24 +378,86 @@
 
         let chartInstance = null;
         let categoryChartInstance = null;
+        let externalDataReady = false;
+        let externalDataLoading = true;
+        let externalDataStatus = 'unavailable';
+
+        const geneticStateController = CalculatorState.createController({
+            root: 'screenshot-area',
+            messageElement: 'genetic-state-message',
+            resultElements: [
+                'total-with-inflation',
+                'total-without-inflation',
+                'monthly-average-stat',
+                'equiv-apartments',
+                'equiv-cars',
+                'mobile-total',
+                'mobile-inflation-impact'
+            ],
+            onClear: () => {
+                if (chartInstance) {
+                    chartInstance.destroy();
+                    chartInstance = null;
+                }
+                if (categoryChartInstance) {
+                    categoryChartInstance.destroy();
+                    categoryChartInstance = null;
+                }
+            },
+            onStateChange: (nextState) => {
+                const hasResult = nextState === CalculatorState.STATES.READY;
+                ['genetic-result-card', 'genetic-category-card', 'genetic-stage-card', 'genetic-mobile-results']
+                    .forEach((id) => {
+                        const element = document.getElementById(id);
+                        if (element) element.hidden = !hasResult;
+                    });
+            }
+        });
 
         // Инициализация
         window.onload = async () => {
             initTheme();
+            geneticStateController.transition(CalculatorState.STATES.LOADING);
 
             // Загрузка инфляции
             const inflationData = await fetchInflation();
-            if (inflationData) {
-                // Берем данные за последние 15 лет для более актуального прогноза (ок. 7.5-8%)
-                const values = Object.values(inflationData).slice(-15);
-                const product = values.reduce((acc, r) => acc * (1 + r / 100), 1);
-                state.avgInflation = Math.pow(product, 1 / values.length) - 1;
-                document.getElementById('inflation-val-text').innerText = (state.avgInflation * 100).toFixed(1) + '%';
+            const averageInflation = getAverageInflationRate(inflationData);
+            const datasetStatus = getCombinedDatasetStatus([inflationData]);
+
+            externalDataReady = Number.isFinite(averageInflation) && datasetStatus !== 'unavailable';
+            externalDataStatus = externalDataReady ? datasetStatus : 'unavailable';
+            state.avgInflation = externalDataReady ? averageInflation : null;
+
+            if (externalDataReady) {
+                CalculatorState.writeSafeText('inflation-val-text', `${(state.avgInflation * 100).toFixed(1)}%`);
+            } else {
+                CalculatorState.writeSafeText('inflation-val-text', null);
             }
 
+            externalDataLoading = false;
+            renderGeneticDataStatus();
             setupEventListeners();
             updateAll();
         };
+
+        function renderGeneticDataStatus() {
+            const statusElement = document.getElementById('genetic-data-status');
+            const root = document.getElementById('screenshot-area');
+            const lifecycleState = externalDataStatus === 'ok'
+                ? 'READY'
+                : externalDataStatus === 'stale' ? 'STALE' : 'DATA_UNAVAILABLE';
+
+            if (root?.dataset) root.dataset.dataStatus = lifecycleState;
+            if (!statusElement) return;
+
+            if (externalDataStatus === 'stale') {
+                statusElement.textContent = 'Используются последние доступные официальные данные.';
+                statusElement.hidden = false;
+            } else {
+                statusElement.textContent = '';
+                statusElement.hidden = true;
+            }
+        }
 
         function setupEventListeners() {
             ['toddler', 'preschooler', 'schooler', 'teenager'].forEach(key => {
@@ -507,33 +572,72 @@
 
         function updateAll() {
             // Update labels
-            document.getElementById('val-toddler').innerText = formatMoney(state.toddler);
-            document.getElementById('val-preschooler').innerText = formatMoney(state.preschooler);
-            document.getElementById('val-schooler').innerText = formatMoney(state.schooler);
-            document.getElementById('val-teenager').innerText = formatMoney(state.teenager);
+            CalculatorState.writeSafeText('val-toddler', formatMoney(state.toddler));
+            CalculatorState.writeSafeText('val-preschooler', formatMoney(state.preschooler));
+            CalculatorState.writeSafeText('val-schooler', formatMoney(state.schooler));
+            CalculatorState.writeSafeText('val-teenager', formatMoney(state.teenager));
 
-            const result = calculate();
+            geneticStateController.runCalculation({
+                isLoading: externalDataLoading,
+                input: state,
+                data: { ready: externalDataReady },
+                validateInput: (input) => [
+                    input.toddler,
+                    input.preschooler,
+                    input.schooler,
+                    input.teenager
+                ].every((value) => Number.isFinite(value) && value >= 0),
+                validateData: (data) => data.ready,
+                calculate,
+                validateResult: (result) => Number.isFinite(result.totalNoInf)
+                    && result.totalNoInf > 0
+                    && Number.isFinite(result.totalWithInf)
+                    && result.totalWithInf >= 0
+                    && Array.isArray(result.stages)
+                    && result.stages.length === 4
+                    && result.stages.every((stage) => Number.isFinite(stage.noInf) && Number.isFinite(stage.withInf)),
+                render: renderGeneticResult,
+                invalidInputMessage: 'Проверьте ежемесячные расходы по всем возрастным этапам.',
+                dataUnavailableMessage: 'Официальные данные инфляции временно недоступны. Расчёт не выполнен.',
+                impossibleMessage: 'Расчёт невозможен при текущих параметрах.',
+                onError: (error) => console.error('Genetic wealth calculation failed:', error)
+            });
+        }
 
-            document.getElementById('total-with-inflation').innerText = formatMoney(result.totalWithInf);
-            document.getElementById('total-without-inflation').innerText = formatNumber(Math.round(result.totalNoInf));
-            document.getElementById('mobile-total').innerText = formatMoney(result.totalWithInf);
-
-            const impact = ((result.totalWithInf / result.totalNoInf - 1) * 100).toFixed(0);
-            document.getElementById('mobile-inflation-impact').innerText = `+${impact}%`;
-
-            // Supportive reassurance microcopy dynamic calculation (X рублей в месяц)
+        function renderGeneticResult(result) {
+            const impact = (result.totalWithInf / result.totalNoInf - 1) * 100;
             const averageMonthlyCost = Math.round(result.totalWithInf / (18 * 12));
-            document.getElementById('monthly-average-stat').innerText = formatMoney(averageMonthlyCost);
+            const aptCount = result.totalWithInf / 10000000;
+            const carCount = result.totalWithInf / 3500000;
 
-            // Масштаб (примерные цены 2026: квартира 10м, машина 3.5м)
-            const aptCount = (result.totalWithInf / 10000000).toFixed(1);
-            const carCount = (result.totalWithInf / 3500000).toFixed(1);
+            if (![impact, averageMonthlyCost, aptCount, carCount].every(Number.isFinite)) {
+                throw new Error('Invalid derived genetic wealth result');
+            }
 
-            document.getElementById('equiv-apartments').innerText = `${aptCount} ${getAptWord(aptCount)}`;
-            document.getElementById('equiv-cars').innerText = `${carCount} ${getCarWord(carCount)}`;
+            CalculatorState.writeSafeText('total-with-inflation', formatMoney(result.totalWithInf));
+            CalculatorState.writeSafeText('total-without-inflation', formatNumber(Math.round(result.totalNoInf)));
+            CalculatorState.writeSafeText('mobile-total', formatMoney(result.totalWithInf));
+            CalculatorState.writeSafeText('mobile-inflation-impact', `+${impact.toFixed(0)}%`);
+            CalculatorState.writeSafeText('monthly-average-stat', formatMoney(averageMonthlyCost));
+
+            const aptCountText = aptCount.toFixed(1);
+            const carCountText = carCount.toFixed(1);
+            CalculatorState.writeSafeText('equiv-apartments', `${aptCountText} ${getAptWord(aptCountText)}`);
+            CalculatorState.writeSafeText('equiv-cars', `${carCountText} ${getCarWord(carCountText)}`);
 
             updateChart(result.stages);
             updateCategoryChart(result.totalWithInf);
+        }
+
+        function shareGeneticResult() {
+            if (geneticStateController.getState() !== CalculatorState.STATES.READY) {
+                showToast('Расчёт пока недоступен.');
+                return;
+            }
+            shareLinkCustom(
+                'Генетическое богатство — CalcHub',
+                `Я рассчитал честную стоимость воспитания ребенка от 0 до 18 лет! Мой общий родительский капитал составил ${document.getElementById('mobile-total').innerText} с учетом инфляции. Оцени свой бюджет!`
+            );
         }
 
         function getAptWord(val) {

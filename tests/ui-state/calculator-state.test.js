@@ -12,6 +12,7 @@ const {
 const {
     getAverageInflationRate,
     getCentralBankRate,
+    getCombinedDatasetStatus,
     getDatasetStatus,
     isDatasetUsable
 } = require('../../js/api.js');
@@ -163,6 +164,20 @@ test('safe DOM writer replaces technical values with a neutral placeholder', () 
     assert.equal(writeSafeText(element, 'undefined ₽'), false);
     assert.equal(element.textContent, '—');
     assert.equal(containsTechnicalValue({ value: -Infinity }), true);
+    assert.equal(containsTechnicalValue('не\u00a0число ₽'), true);
+    assert.equal(containsTechnicalValue('∞ ₽'), true);
+});
+
+test('combined financial status fails closed and preserves stale disclosure', () => {
+    const ok = { metadata: { status: 'ok' } };
+    const stale = { metadata: { status: 'stale' } };
+    const unavailable = { metadata: { status: 'unavailable' } };
+
+    assert.equal(getCombinedDatasetStatus([ok, ok]), 'ok');
+    assert.equal(getCombinedDatasetStatus([ok, stale]), 'stale');
+    assert.equal(getCombinedDatasetStatus([stale, unavailable]), 'unavailable');
+    assert.equal(getCombinedDatasetStatus([ok, null]), 'unavailable');
+    assert.equal(getCombinedDatasetStatus([]), 'unavailable');
 });
 
 test('financial data helpers accept ok/stale datasets and reject unavailable payloads', () => {
