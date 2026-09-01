@@ -32,7 +32,7 @@
     });
 
     const STATE_VALUES = new Set(Object.values(STATES));
-    const TECHNICAL_VALUE_PATTERN = /(?:^|\s|[^a-zа-яё])(NaN|[+-]?Infinity|undefined)(?:$|\s|[^a-zа-яё])/i;
+    const TECHNICAL_VALUE_PATTERN = /(?:^|\s|[^a-zа-яё])(NaN|[+-]?Infinity|undefined|не[\s\u00a0]*число|∞)(?:$|\s|[^a-zа-яё])/i;
 
     function containsTechnicalValue(value, seen = new Set()) {
         if (typeof value === 'number') return !Number.isFinite(value);

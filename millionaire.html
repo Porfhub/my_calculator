@@ -199,7 +199,7 @@
         <!-- Всплывающие уведомления (Toast) -->
         <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
             <span class="text-brand-500 font-bold">✓</span>
-            <span id="toast-message" class="text-sm">Данные успешно обновлены</span>
+            <span id="toast-message" class="text-sm"></span>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
@@ -313,13 +313,13 @@
                     <div class="space-y-2 pt-2">
                         <div class="flex justify-between items-center">
                             <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Ставка по вкладу (% годовых)</label>
-                            <span class="text-sm font-bold text-brand-600 dark:text-brand-400" id="rate-display">16%</span>
+                            <span class="text-sm font-bold text-brand-600 dark:text-brand-400" id="rate-display">...</span>
                         </div>
                         <div class="relative">
-                            <input type="number" id="interest-rate" step="0.1" value="16" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
+                            <input type="number" id="interest-rate" step="0.1" value="" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">%</div>
                         </div>
-                        <input type="range" id="rate-range" min="0" max="30" step="0.1" value="16" class="w-full accent-brand-500 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                        <input type="range" id="rate-range" min="0" max="30" step="0.1" value="0" disabled class="w-full accent-brand-500 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
                     </div>
                 </div>
             </div>
@@ -329,6 +329,7 @@
                 <div id="screenshot-area" class="bg-slate-100 dark:bg-slate-900/40 p-4 -m-4 rounded-3xl space-y-6">
 
                     <p id="millionaire-state-message" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
+                    <p id="millionaire-data-status" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
 
                     <!-- TEAR-OFF CALENDAR LEAF COMPONENT -->
                     <div class="relative p-1">
@@ -369,7 +370,7 @@
                                     Реальная покупательная способность накопленной суммы составит <span id="real-purchasing-power" class="font-extrabold text-amber-600 dark:text-amber-400 text-base">... ₽</span>
                                 </p>
                                 <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-normal">
-                                    Значение скорректировано на основе исторической средней инфляции в РФ за последние 15 лет (<span id="inflation-percent-text">7.8%</span>), полученной из официального архива.
+                                    Значение скорректировано на основе исторической средней инфляции в РФ за последние 15 лет (<span id="inflation-percent-text">...</span>), полученной из официального архива.
                                 </p>
                             </div>
                         </div>
@@ -462,7 +463,7 @@
                     <p id="mobile-interest" class="text-lg font-black text-brand-600 dark:text-brand-400">...</p>
                 </div>
             </div>
-            <button onclick="shareLinkCustom('Когда я стану миллионером — CalcHub', 'Я рассчитал примерный срок достижения своего первого миллиона: ' + document.getElementById('mobile-target-date').innerText + '. Рассчитайте ориентировочный срок своей финансовой цели!')" class="w-full py-4 bg-brand-600 text-white font-black rounded-2xl text-sm shadow-lg active:scale-95">
+            <button onclick="shareMillionaireResult()" class="w-full py-4 bg-brand-600 text-white font-black rounded-2xl text-sm shadow-lg active:scale-95">
                 📢 Поделиться расчетом
             </button>
         </div>
@@ -481,7 +482,7 @@
             currentSavings: 100000,
             monthlyIncome: 150000,
             monthlyExpenses: 70000,
-            interestRate: 16,
+            interestRate: null,
             goalSum: 1000000,
             avgInflation: null
         };
@@ -490,6 +491,7 @@
         let confettiAnimationId = null;
         let externalDataReady = false;
         let externalDataLoading = true;
+        let externalDataStatus = 'unavailable';
 
         const millionaireStateController = CalculatorState.createController({
             root: 'screenshot-area',
@@ -585,20 +587,30 @@
             const [rates, inflationData] = await Promise.all([fetchRates(), fetchInflation()]);
             const centralBankRate = getCentralBankRate(rates);
             const averageInflation = getAverageInflationRate(inflationData);
+            const combinedStatus = getCombinedDatasetStatus([rates, inflationData]);
 
-            if (Number.isFinite(centralBankRate)) {
+            externalDataReady = Number.isFinite(centralBankRate)
+                && Number.isFinite(averageInflation)
+                && combinedStatus !== 'unavailable';
+            externalDataStatus = externalDataReady ? combinedStatus : 'unavailable';
+
+            if (externalDataReady) {
                 state.interestRate = centralBankRate;
                 document.getElementById('interest-rate').value = state.interestRate;
                 document.getElementById('rate-range').value = state.interestRate;
-            }
-
-            if (Number.isFinite(averageInflation)) {
+                document.getElementById('rate-range').disabled = false;
                 state.avgInflation = averageInflation;
                 CalculatorState.writeSafeText('inflation-percent-text', `${(state.avgInflation * 100).toFixed(1)}%`);
+            } else {
+                state.interestRate = null;
+                state.avgInflation = null;
+                document.getElementById('interest-rate').value = '';
+                document.getElementById('rate-range').disabled = true;
+                CalculatorState.writeSafeText('inflation-percent-text', null);
             }
 
-            externalDataReady = Number.isFinite(centralBankRate) && Number.isFinite(averageInflation);
             externalDataLoading = false;
+            renderMillionaireDataStatus();
 
             // Установка даты рождения по умолчанию (25 лет назад)
             const d = new Date();
@@ -609,6 +621,25 @@
             setupEventListeners();
             updateAll();
         };
+
+        function renderMillionaireDataStatus() {
+            const statusElement = document.getElementById('millionaire-data-status');
+            const root = document.getElementById('screenshot-area');
+            const lifecycleState = externalDataStatus === 'ok'
+                ? 'READY'
+                : externalDataStatus === 'stale' ? 'STALE' : 'DATA_UNAVAILABLE';
+
+            if (root?.dataset) root.dataset.dataStatus = lifecycleState;
+            if (!statusElement) return;
+
+            if (externalDataStatus === 'stale') {
+                statusElement.textContent = 'Используются последние доступные официальные данные.';
+                statusElement.hidden = false;
+            } else {
+                statusElement.textContent = '';
+                statusElement.hidden = true;
+            }
+        }
 
         function setupEventListeners() {
             const inputs = [
@@ -743,7 +774,10 @@
             CalculatorState.writeSafeText('income-display', formatMoney(state.monthlyIncome));
             CalculatorState.writeSafeText('expenses-display', formatMoney(state.monthlyExpenses));
             CalculatorState.writeSafeText('free-cash-display', formatMoney(freeCash));
-            CalculatorState.writeSafeText('rate-display', `${state.interestRate}%`);
+            CalculatorState.writeSafeText(
+                'rate-display',
+                Number.isFinite(state.interestRate) ? `${state.interestRate}%` : null
+            );
             CalculatorState.writeSafeText('goal-display', formatMoney(state.goalSum));
 
             millionaireStateController.runCalculation({
@@ -755,7 +789,6 @@
                         input.currentSavings,
                         input.monthlyIncome,
                         input.monthlyExpenses,
-                        input.interestRate,
                         input.goalSum,
                         input.currentAge
                     ];
@@ -764,6 +797,7 @@
                         || (!Number.isNaN(birthDate.getTime()) && birthDate <= new Date());
                     return numericValues.every(Number.isFinite)
                         && numericValues.every((value) => value >= 0)
+                        && (!externalDataReady || (Number.isFinite(input.interestRate) && input.interestRate >= 0))
                         && input.goalSum > 0
                         && input.currentAge <= 120
                         && input.monthlyExpenses <= input.monthlyIncome
@@ -775,12 +809,25 @@
                     && Number.isFinite(result.months)
                     && Number.isFinite(result.totalInterest)
                     && Number.isFinite(result.totalInvested)
-                    && Array.isArray(result.history),
+                    && Array.isArray(result.history)
+                    && result.history.every((point) => Number.isFinite(point.month) && Number.isFinite(point.balance)),
                 render: renderMillionaireResult,
                 invalidInputMessage: 'Проверьте доходы, расходы, цель и дату рождения.',
+                dataUnavailableMessage: 'Ставка Банка России или данные инфляции временно недоступны. Расчёт не выполнен.',
                 impossibleMessage: 'Цель недостижима при текущих доходах и расходах.',
                 onError: (error) => console.error('Millionaire calculation failed:', error)
             });
+        }
+
+        function shareMillionaireResult() {
+            if (millionaireStateController.getState() !== CalculatorState.STATES.READY) {
+                showToast('Расчёт пока недоступен.');
+                return;
+            }
+            shareLinkCustom(
+                'Когда я стану миллионером — CalcHub',
+                `Я рассчитал примерный срок достижения своего первого миллиона: ${document.getElementById('mobile-target-date').innerText}. Рассчитайте ориентировочный срок своей финансовой цели!`
+            );
         }
 
         function renderMillionaireResult(result) {
@@ -834,7 +881,10 @@
             // Calculate purchasing power in future value (adjusted for inflation)
             const yearsToGoal = result.months / 12;
             const purchasingPower = state.goalSum / Math.pow(1 + state.avgInflation, yearsToGoal);
-            realPurchasingPowerEl.innerText = formatMoney(purchasingPower);
+            CalculatorState.writeSafeText(
+                realPurchasingPowerEl,
+                Number.isFinite(purchasingPower) ? formatMoney(purchasingPower) : null
+            );
 
             // Совет
             if (result.months <= 0) {
@@ -844,7 +894,9 @@
                 state.monthlyExpenses -= 5000;
                 const fasterResult = calculate();
                 state.monthlyExpenses += 5000;
-                const monthsSaved = result.months - fasterResult.months;
+                const monthsSaved = Number.isFinite(fasterResult?.months)
+                    ? result.months - fasterResult.months
+                    : 0;
 
                 if (monthsSaved > 0) {
                     document.getElementById('advice-text').innerText = `Отличный темп! Если вы уменьшите ежемесячные траты всего на 5 000 руб., то приблизите цель на ${monthsSaved} ${getMonthWord(monthsSaved)} быстрее!`;

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fin-hub-cache-v2';
+const CACHE_NAME = 'fin-hub-cache-v3';
 const EXTERNAL_LIBS = [
     'https://cdn.tailwindcss.com',
     'https://cdn.jsdelivr.net/npm/chart.js',
