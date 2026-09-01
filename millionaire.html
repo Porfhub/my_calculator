@@ -338,21 +338,20 @@
 
                             <!-- Header ribbon representing the "Tear-off" element -->
                             <div class="bg-gradient-to-r from-red-600 to-rose-700 text-white py-3 px-6 shadow-sm flex flex-col justify-center items-center border-b border-red-700/25">
-                                <span class="text-[10px] font-black uppercase tracking-widest text-red-100">ЗАВЕТНАЯ ДАТА</span>
+                                <span class="text-[10px] font-black uppercase tracking-widest text-red-100">ОРИЕНТИРОВОЧНЫЙ СРОК</span>
                             </div>
 
                             <!-- Calendar interior -->
                             <div class="p-8 space-y-2 relative z-10 flex flex-col justify-center items-center">
-                                <!-- Day of the week representation -->
-                                <span id="calendar-day-name" class="text-sm font-black uppercase tracking-widest text-brand-600 dark:text-brand-400 transition-all duration-300">ПЯТНИЦА</span>
+                                <span class="text-sm font-black uppercase tracking-widest text-brand-600 dark:text-brand-400 transition-all duration-300">ПРИМЕРНЫЙ МЕСЯЦ ДОСТИЖЕНИЯ</span>
 
                                 <!-- Huge dynamic date -->
                                 <div id="calendar-date" class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight my-2 tracking-tight transition-all duration-300">
-                                    15 Июня 2035
+                                    Примерно июнь 2035 года
                                 </div>
 
                                 <!-- Year or secondary helper -->
-                                <span id="calendar-days-remaining" class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 block">... дней ожидания</span>
+                                <span id="calendar-time-remaining" class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 block">...</span>
                             </div>
                         </div>
                     </div>
@@ -452,7 +451,7 @@
         <div class="lg:hidden mobile-sticky-results">
             <div class="flex items-center justify-between mb-3">
                 <div class="flex flex-col">
-                    <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Дата цели</span>
+                    <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Примерный срок</span>
                     <span id="mobile-target-date" class="font-black text-slate-900 dark:text-white">...</span>
                 </div>
                 <div class="text-right">
@@ -460,7 +459,7 @@
                     <p id="mobile-interest" class="text-lg font-black text-brand-600 dark:text-brand-400">...</p>
                 </div>
             </div>
-            <button onclick="shareLinkCustom('Когда я стану миллионером — CalcHub', 'Я рассчитал дату достижения своего первого миллиона! Моя цель будет пробита ' + document.getElementById('mobile-target-date').innerText + '. Рассчитай точную дату своей финансовой цели!')" class="w-full py-4 bg-brand-600 text-white font-black rounded-2xl text-sm shadow-lg active:scale-95">
+            <button onclick="shareLinkCustom('Когда я стану миллионером — CalcHub', 'Я рассчитал примерный срок достижения своего первого миллиона: ' + document.getElementById('mobile-target-date').innerText + '. Рассчитайте ориентировочный срок своей финансовой цели!')" class="w-full py-4 bg-brand-600 text-white font-black rounded-2xl text-sm shadow-lg active:scale-95">
                 📢 Поделиться расчетом
             </button>
         </div>
@@ -725,18 +724,16 @@
             const mobileDate = document.getElementById('mobile-target-date');
             const mobileInterest = document.getElementById('mobile-interest');
 
-            // Tear-off calendar leaf elements
-            const calDayName = document.getElementById('calendar-day-name');
+            // Goal period elements
             const calDate = document.getElementById('calendar-date');
-            const calDaysRemaining = document.getElementById('calendar-days-remaining');
+            const calTimeRemaining = document.getElementById('calendar-time-remaining');
 
             // Reality check element
             const realPurchasingPowerEl = document.getElementById('real-purchasing-power');
 
             if (result.unreachable) {
-                calDayName.innerText = "ОШИБКА";
                 calDate.innerText = "ЦЕЛЬ НЕДОСТИЖИМА";
-                calDaysRemaining.innerText = "Измените параметры трат/доходов";
+                calTimeRemaining.innerText = "Измените параметры трат/доходов";
                 targetMain.innerText = "—";
                 ageDisplay.innerText = "—";
                 interestDisplay.innerText = "0 ₽";
@@ -747,41 +744,33 @@
             }
 
             const now = new Date();
-            const targetDate = new Date(now.getFullYear(), now.getMonth() + result.months, now.getDate());
+            const targetDate = new Date(now.getFullYear(), now.getMonth() + result.months, 1);
+            const targetMonth = targetDate.toLocaleDateString('ru-RU', { month: 'long' });
+            const approximateDate = `Примерно ${targetMonth} ${targetDate.getFullYear()} года`;
+            const yearsRemaining = Math.floor(result.months / 12);
+            const monthsRemaining = result.months % 12;
+            const durationParts = [];
+            if (yearsRemaining > 0) durationParts.push(`${yearsRemaining} ${getYearWord(yearsRemaining)}`);
+            if (monthsRemaining > 0) durationParts.push(`${monthsRemaining} ${getMonthWord(monthsRemaining)}`);
+            const approximateDuration = result.months > 0 ? `Через ${durationParts.join(' и ')}` : "Цель уже достигнута";
 
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            calDate.innerText = targetDate.toLocaleDateString('ru-RU', options);
-            mobileDate.innerText = targetDate.toLocaleDateString('ru-RU', { year: 'numeric', month: 'short' });
-
-            const daysWeek = ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"];
-            calDayName.innerText = daysWeek[targetDate.getDay()];
+            calDate.innerText = approximateDate;
+            mobileDate.innerText = approximateDate;
 
             // Расчет возраста
             if (state.birthDate) {
                 const birth = new Date(state.birthDate);
-                let years = targetDate.getFullYear() - birth.getFullYear();
-                let months = targetDate.getMonth() - birth.getMonth();
-                let days = targetDate.getDate() - birth.getDate();
-
-                if (days < 0) {
-                    months--;
-                    const prevMonth = new Date(targetDate.getFullYear(), targetDate.getMonth(), 0);
-                    days += prevMonth.getDate();
-                }
-                if (months < 0) {
-                    years--;
-                    months += 12;
-                }
-                ageDisplay.innerText = `${years} ${getYearWord(years)}, ${months} ${getMonthWord(months)}`;
+                const totalAgeMonths = (targetDate.getFullYear() - birth.getFullYear()) * 12 + targetDate.getMonth() - birth.getMonth();
+                const years = Math.floor(totalAgeMonths / 12);
+                const months = totalAgeMonths % 12;
+                ageDisplay.innerText = `Примерно ${years} ${getYearWord(years)}, ${months} ${getMonthWord(months)}`;
             } else {
                 const age = state.currentAge + (result.months / 12);
                 ageDisplay.innerText = `~${age.toFixed(1)} ${getYearWord(Math.floor(age))}`;
             }
 
-            const diffTime = Math.abs(targetDate - now);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            calDaysRemaining.innerText = `${formatNumber(diffDays)} дней ожидания`;
-            targetMain.innerText = `${formatNumber(diffDays)} дней`;
+            calTimeRemaining.innerText = approximateDuration;
+            targetMain.innerText = approximateDuration;
 
             interestDisplay.innerText = formatMoney(result.totalInterest);
             mobileInterest.innerText = formatMoney(result.totalInterest);
