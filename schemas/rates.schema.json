@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://calchub.local/schemas/rates.schema.json",
+  "title": "CalcHub key rate dataset schema v2",
+  "$comment": "Top-level cb_rate/source_url/effective_from/fetched_at/status are a temporary compatibility projection for current browser consumers.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "key_rate",
+    "cb_rate",
+    "source_url",
+    "effective_from",
+    "fetched_at",
+    "status"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "dataset_id",
+        "status",
+        "status_reason",
+        "source_name",
+        "source_url",
+        "source_export_url",
+        "source_checksum_sha256",
+        "payload_checksum_sha256",
+        "source_published_at",
+        "sources",
+        "last_successful_fetch_at",
+        "last_attempt_at"
+      ],
+      "properties": {
+        "schema_version": { "const": 2 },
+        "dataset_id": { "const": "key_rate" },
+        "status": { "$ref": "common-metadata.schema.json#/$defs/status" },
+        "status_reason": { "$ref": "common-metadata.schema.json#/$defs/statusReason" },
+        "source_name": { "type": "string", "minLength": 1 },
+        "source_url": { "$ref": "common-metadata.schema.json#/$defs/httpsUrl" },
+        "source_export_url": {
+          "anyOf": [
+            { "$ref": "common-metadata.schema.json#/$defs/httpsUrl" },
+            { "type": "null" }
+          ]
+        },
+        "source_checksum_sha256": { "$ref": "common-metadata.schema.json#/$defs/nullableChecksum" },
+        "payload_checksum_sha256": { "$ref": "common-metadata.schema.json#/$defs/nullableChecksum" },
+        "source_published_at": { "$ref": "common-metadata.schema.json#/$defs/nullableDate" },
+        "sources": { "type": "null" },
+        "last_successful_fetch_at": { "$ref": "common-metadata.schema.json#/$defs/nullableDateTime" },
+        "last_attempt_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "key_rate": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value_percent", "effective_from"],
+          "properties": {
+            "value_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "effective_from": { "type": "string", "format": "date" }
+          }
+        },
+        { "type": "null" }
+      ]
+    },
+    "cb_rate": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+    "source_url": { "$ref": "common-metadata.schema.json#/$defs/httpsUrl" },
+    "effective_from": { "$ref": "common-metadata.schema.json#/$defs/nullableDate" },
+    "fetched_at": { "$ref": "common-metadata.schema.json#/$defs/nullableDateTime" },
+    "status": { "$ref": "common-metadata.schema.json#/$defs/status" }
+  }
+}
