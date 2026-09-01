@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fin-hub-cache-v1';
+const CACHE_NAME = 'fin-hub-cache-v2';
 const EXTERNAL_LIBS = [
     'https://cdn.tailwindcss.com',
     'https://cdn.jsdelivr.net/npm/chart.js',
@@ -14,6 +14,12 @@ const INTERNAL_FILES = [
     '/time-is-money.html',
     '/inflation-shredder.html',
     '/car-vs-taxi.html',
+    '/js/api.js',
+    '/js/calculator-state.js',
+    '/js/inflation-calculator.js',
+    '/js/theme.js',
+    '/js/ui-utils.js',
+    '/js/utils.js',
     '/rates.json',
     '/inflation.json',
     '/regions.json'

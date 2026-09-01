@@ -84,6 +84,8 @@
 <!-- /Yandex.Metrika counter -->
     <script src="js/theme.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/calculator-state.js"></script>
+    <script src="js/inflation-calculator.js"></script>
     <script src="js/api.js"></script>
     <script src="js/ui-utils.js"></script>
 </head>
@@ -136,7 +138,7 @@
                 <!-- Сумма -->
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
-                        <label for="amount-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Сумма в прошлом</label>
+                        <label for="amount-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Сумма в начале выбранного года</label>
                         <span class="text-sm font-bold text-slate-900 dark:text-white" id="amount-display">1 000 ₽</span>
                     </div>
                     <div class="relative rounded-lg shadow-sm">
@@ -149,7 +151,7 @@
                 <!-- Год в прошлом -->
                 <div class="space-y-3">
                     <div class="flex justify-between items-center">
-                        <label for="year-select" class="text-sm font-semibold text-slate-700 dark:text-slate-300">В каком году это было?</label>
+                        <label for="year-select" class="text-sm font-semibold text-slate-700 dark:text-slate-300">В начале какого года?</label>
                         <span class="text-sm font-bold text-brand-700 dark:text-brand-400" id="year-display">2016</span>
                     </div>
                     <div class="relative">
@@ -177,7 +179,7 @@
 
                 <!-- Кнопка "Запустить шредер!" -->
                 <div class="pt-4">
-                    <button onclick="runShredder()" class="w-full py-4 bg-gradient-to-r from-orange-600 to-rose-600 hover:from-orange-500 hover:to-rose-500 text-white font-black rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden group">
+                    <button id="run-shredder-button" onclick="runShredder()" class="w-full py-4 bg-gradient-to-r from-orange-600 to-rose-600 hover:from-orange-500 hover:to-rose-500 text-white font-black rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden group">
                         <span class="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                         <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -219,6 +221,9 @@
                 <!-- БЛОК ДЛЯ СКРИНШОТА -->
                 <div id="screenshot-area" class="space-y-6 bg-slate-50 dark:bg-slate-950 p-4 -m-4 rounded-3xl transition-all duration-300">
 
+                    <p id="shredder-state-message" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
+                    <p id="inflation-data-status" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
+
                     <!-- Главная карточка результата -->
                     <div id="result-card" class="bg-gradient-to-br from-orange-600 to-rose-700 text-white rounded-2xl p-6 shadow-lg relative overflow-hidden transition-all duration-300">
                         <div class="absolute -right-10 -bottom-10 opacity-10">
@@ -226,10 +231,10 @@
                         </div>
                         <div class="relative z-10 space-y-4">
                             <h3 class="text-xs uppercase font-black bg-white/20 inline-block px-3 py-1 rounded-full text-white tracking-wide">Вердикт шредера</h3>
-                            <p class="text-lg font-medium opacity-90">Чтобы купить те же товары сегодня, вам нужно:</p>
-                            <p id="equivalent-amount" class="text-4xl md:text-5xl font-black">0 ₽</p>
+                            <p id="result-period-label" class="text-lg font-medium opacity-90">Загружаем официальный ряд инфляции…</p>
+                            <p id="equivalent-amount" class="text-4xl md:text-5xl font-black">—</p>
                             <div class="pt-2 border-t border-white/20">
-                                <p class="text-sm opacity-80" id="inflation-summary">Суммарная инфляция за этот период составила: <strong>0%</strong></p>
+                                <p class="text-sm opacity-80" id="inflation-summary">Расчёт ещё не выполнен.</p>
                             </div>
                         </div>
                     </div>
@@ -243,8 +248,8 @@
                                 <svg class="w-4 h-4 text-rose-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                             </div>
                             <div>
-                                <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Индекс Кофе</p>
-                                <p class="text-sm text-slate-600 dark:text-slate-300 mt-1 font-medium leading-relaxed" id="coffee-index-text">В 2016 году вы могли купить 100 чашек, а сегодня — только 45.</p>
+                                <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Остаток покупательной способности</p>
+                                <p class="text-sm text-slate-600 dark:text-slate-300 mt-1 font-medium leading-relaxed" id="coffee-index-text">Расчёт появится после загрузки данных.</p>
                             </div>
                         </div>
                         <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col items-center text-center space-y-3">
@@ -254,15 +259,15 @@
                                 <svg class="w-4 h-4 text-rose-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                             </div>
                             <div>
-                                <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Индекс Бургера</p>
-                                <p class="text-sm text-slate-600 dark:text-slate-300 mt-1 font-medium leading-relaxed" id="burger-index-text">Покупательная способность вашей суммы сократилась в 2.2 раза.</p>
+                                <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Изменение уровня цен</p>
+                                <p class="text-sm text-slate-600 dark:text-slate-300 mt-1 font-medium leading-relaxed" id="burger-index-text">Расчёт появится после загрузки данных.</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- График Chart.js -->
                     <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-100 dark:border-slate-800 shadow-sm">
-                        <h3 class="text-sm font-bold text-slate-800 dark:text-white mb-4">Таяние покупательной способности 1000 ₽</h3>
+                        <h3 class="text-sm font-bold text-slate-800 dark:text-white mb-4">Покупательная способность 1 000 ₽ по годам</h3>
                         <div class="h-64">
                             <canvas id="inflationChart"></canvas>
                         </div>
@@ -277,7 +282,7 @@
                             <span class="text-[10px] bg-brand-50 dark:bg-brand-950/20 text-brand-700 dark:text-brand-400 px-2.5 py-0.5 rounded-full font-black border border-brand-200/50">Росстат</span>
                         </div>
                         <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                            Официальный индекс инфляции по годам (с <span id="inflation-start-year" class="font-bold text-brand-600 dark:text-brand-400">2016</span> по <span class="font-bold text-slate-700 dark:text-slate-300">2025</span> г.). <span class="text-brand-600 dark:text-brand-400 font-bold">Нажмите на любой год</span> для просмотра микро-факта:
+                            Официальный индекс инфляции по годам (с <span id="inflation-start-year" class="font-bold text-brand-600 dark:text-brand-400">—</span> по <span id="inflation-end-year" class="font-bold text-slate-700 dark:text-slate-300">—</span> г.). <span class="text-brand-600 dark:text-brand-400 font-bold">Нажмите на любой год</span> для просмотра данных:
                         </p>
 
                         <div id="inflation-by-year-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 pt-1 text-center text-xs font-semibold">
@@ -294,7 +299,7 @@
                             <div class="space-y-1">
                                 <div class="flex items-center justify-between gap-4">
                                     <h4 id="micro-fact-title" class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">Исторический факт</h4>
-                                    <span id="micro-fact-val" class="text-xs font-black bg-brand-100 dark:bg-brand-950/40 text-brand-700 dark:text-brand-400 px-2 py-0.5 rounded-full">0%</span>
+                                    <span id="micro-fact-val" class="text-xs font-black bg-brand-100 dark:bg-brand-950/40 text-brand-700 dark:text-brand-400 px-2 py-0.5 rounded-full">—</span>
                                 </div>
                                 <p id="micro-fact-desc" class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">Кликните на любой год в таблице выше, чтобы получить экономическую историческую справку.</p>
                             </div>
@@ -309,14 +314,14 @@
             <div class="flex items-center justify-between mb-3">
                 <div class="flex flex-col">
                     <span class="text-[10px] font-bold text-slate-400 uppercase">Остаток ценности</span>
-                    <span id="mobile-value" class="font-black text-slate-900 dark:text-white text-lg">0 ₽</span>
+                    <span id="mobile-value" class="font-black text-slate-900 dark:text-white text-lg">—</span>
                 </div>
                 <div class="text-right">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase">Потеряно</p>
-                    <p id="mobile-loss" class="text-lg font-black text-rose-600">0 ₽</p>
+                    <p id="mobile-loss-label" class="text-[10px] font-bold text-slate-400 uppercase">Изменение</p>
+                    <p id="mobile-loss" class="text-lg font-black text-rose-600">—</p>
                 </div>
             </div>
-            <button onclick="shareLinkCustom('Шредер Рубля — CalcHub', 'Я запустил Шредер Рубля и проверил реальное обесценивание накоплений из-за инфляции! Мои потери составили ' + document.getElementById('mobile-loss').innerText + '. Проверь свои накопления!')" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
+            <button onclick="shareShredderResult()" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
                 📢 Поделиться расчетом
             </button>
         </div>
@@ -326,112 +331,185 @@
         <p>© 2026 Инфляционный шредер. Все расчеты основаны на официальной статистике инфляции в РФ.</p>
     </footer>
 
-    <!-- Всплывающие уведомления (Toast) -->
-    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-        <span class="text-brand-500 font-bold">✓</span>
-        <span id="toast-message" class="text-sm">Данные обновлены</span>
-    </div>
-
     <script>
-        let inflationData = {};
+        let inflationDataset = null;
+        let inflationRecords = [];
+        let availableYears = [];
         let chartInstance = null;
+        let dataLoading = true;
+        let dataReady = false;
+        let successfulCalculationTracked = false;
 
         const state = {
             amount: 1000,
             startYear: 2016,
-            currentYear: new Date().getFullYear()
+            dataThrough: null
         };
 
+        const shredderStateController = CalculatorState.createController({
+            root: 'screenshot-area',
+            messageElement: 'shredder-state-message',
+            resultElements: [
+                'result-period-label',
+                'equivalent-amount',
+                'inflation-summary',
+                'coffee-index-text',
+                'burger-index-text',
+                'mobile-value',
+                'mobile-loss',
+                'inflation-start-year',
+                'inflation-end-year'
+            ],
+            onClear: clearHistoricalOutputs
+        });
+
         async function init() {
-            inflationData = await fetchInflation();
-            if (inflationData) {
-                // Настройка выпадающего списка лет
-                const yearSelect = document.getElementById('year-select');
-                const years = Object.keys(inflationData).sort((a, b) => b - a);
+            initTheme();
+            shredderStateController.transition(CalculatorState.STATES.LOADING);
+            setCalculationControlsEnabled(false);
 
-                // Ограничиваем выбор до текущий год - 1
-                const validYears = years.filter(y => y < state.currentYear).sort((a, b) => a - b);
+            inflationDataset = await fetchInflation();
+            inflationRecords = getInflationRecords(inflationDataset);
+            availableYears = inflationRecords.map((record) => record.year);
+            const datasetStatus = getDatasetStatus(inflationDataset);
 
-                yearSelect.innerHTML = '';
-                validYears.forEach(year => {
-                    const option = document.createElement('option');
-                    option.value = year;
-                    option.textContent = year;
-                    if (year == state.startYear) option.selected = true;
-                    yearSelect.appendChild(option);
-                });
+            dataReady = (datasetStatus === 'ok' || datasetStatus === 'stale') && availableYears.length > 0;
+            dataLoading = false;
+            renderDatasetStatus(datasetStatus);
 
-                document.getElementById('year-range').min = validYears[0];
-                document.getElementById('year-range').max = validYears[validYears.length - 1];
-                document.getElementById('year-range').value = state.startYear;
+            if (dataReady) {
+                state.dataThrough = inflationRecords[inflationRecords.length - 1].year;
+                if (!availableYears.includes(state.startYear)) state.startYear = availableYears[0];
+                configureYearControls();
+                setCalculationControlsEnabled(true);
+            }
 
-                calculate();
+            calculate();
+        }
 
-                // Highlight default preset button
-                highlightPresetButton(state.startYear);
-            } else {
-                showToast('Ошибка загрузки данных');
+        function clearHistoricalOutputs() {
+            const grid = document.getElementById('inflation-by-year-grid');
+            if (grid) grid.innerHTML = '';
+
+            const factCard = document.getElementById('micro-fact-card');
+            if (factCard) {
+                factCard.classList.add('hidden', 'opacity-0', 'scale-95');
+                factCard.classList.remove('opacity-100', 'scale-100');
+            }
+
+            if (chartInstance) {
+                chartInstance.destroy();
+                chartInstance = null;
             }
         }
 
+        function renderDatasetStatus(status) {
+            const statusElement = document.getElementById('inflation-data-status');
+            const message = status === 'stale' ? getInflationStatusMessage(inflationDataset) : null;
+            statusElement.textContent = message || '';
+            statusElement.hidden = !message;
+        }
+
+        function setCalculationControlsEnabled(enabled) {
+            document.getElementById('year-select').disabled = !enabled;
+            document.getElementById('year-range').disabled = !enabled;
+            document.getElementById('run-shredder-button').disabled = !enabled;
+            document.querySelectorAll('.era-btn').forEach((button) => {
+                button.disabled = !enabled;
+            });
+        }
+
+        function configureYearControls() {
+            const yearSelect = document.getElementById('year-select');
+            const yearRange = document.getElementById('year-range');
+            yearSelect.innerHTML = '';
+
+            availableYears.forEach((year) => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            });
+
+            yearRange.min = availableYears[0];
+            yearRange.max = availableYears[availableYears.length - 1];
+            syncYearControls();
+        }
+
+        function syncYearControls() {
+            document.getElementById('year-select').value = String(state.startYear);
+            document.getElementById('year-range').value = String(state.startYear);
+            CalculatorState.writeSafeText('year-display', state.startYear);
+            highlightPresetButton(state.startYear);
+        }
+
         function highlightPresetButton(year) {
+            const activeClasses = ['font-black', 'border-2', 'bg-brand-500/10', 'text-brand-700', 'border-brand-500', 'dark:text-brand-400', 'dark:bg-brand-950/20', 'shadow-sm', 'scale-[1.02]'];
+            const inactiveClasses = ['font-bold', 'border', 'border-slate-200', 'dark:border-slate-700', 'hover:bg-slate-50', 'dark:hover:bg-slate-800', 'text-slate-600', 'dark:text-slate-400'];
             const buttons = document.querySelectorAll('.era-btn');
             buttons.forEach(btn => {
-                if (btn.getAttribute('data-year') == year) {
-                    btn.className = "era-btn px-3 py-2 text-xs font-black rounded-xl border-2 transition-all bg-brand-500/10 text-brand-700 border-brand-500 dark:text-brand-400 dark:bg-brand-950/20 shadow-sm scale-[1.02]";
+                if (Number(btn.dataset.year) === Number(year)) {
+                    btn.classList.remove(...inactiveClasses);
+                    btn.classList.add(...activeClasses);
                 } else {
-                    btn.className = "era-btn px-3 py-2 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-all text-left";
+                    btn.classList.remove(...activeClasses);
+                    btn.classList.add(...inactiveClasses);
                 }
             });
         }
 
         function setEra(year) {
-            state.startYear = parseInt(year);
-            const selectEl = document.getElementById('year-select');
-            if (selectEl) {
-                selectEl.value = year;
-            }
-            const rangeEl = document.getElementById('year-range');
-            if (rangeEl) {
-                rangeEl.value = year;
-            }
-            document.getElementById('year-display').innerText = year;
+            setStartYear(year);
+        }
 
-            highlightPresetButton(year);
+        function setStartYear(value) {
+            if (!dataReady) {
+                calculate();
+                return false;
+            }
+
+            const year = Number(value);
+            if (!Number.isInteger(year) || !availableYears.includes(year)) {
+                shredderStateController.transition(CalculatorState.STATES.INVALID_INPUT, {
+                    message: 'Выберите год из доступного официального ряда.'
+                });
+                return false;
+            }
+
+            state.startYear = year;
+            syncYearControls();
             calculate();
+            return true;
         }
 
         function handleAmountInput(el) {
             state.amount = formatInputField(el, el.value);
             document.getElementById('amount-range').value = state.amount;
-            document.getElementById('amount-display').innerText = formatMoney(state.amount);
+            CalculatorState.writeSafeText('amount-display', formatMoney(state.amount));
             calculate();
         }
 
         function handleYearChange(val) {
-            state.startYear = parseInt(val);
-            document.getElementById('year-display').innerText = state.startYear;
-            document.getElementById('year-range').value = state.startYear;
-            highlightPresetButton(state.startYear);
-            calculate();
+            setStartYear(val);
         }
 
         function syncRangeToInput(field, val) {
             if (field === 'amount') {
-                state.amount = parseInt(val);
-                document.getElementById('amount-input').value = new Intl.NumberFormat('ru-RU').format(state.amount);
-                document.getElementById('amount-display').innerText = formatMoney(state.amount);
+                state.amount = Number(val);
+                document.getElementById('amount-input').value = Number.isFinite(state.amount)
+                    ? new Intl.NumberFormat('ru-RU').format(state.amount)
+                    : '';
+                CalculatorState.writeSafeText('amount-display', formatMoney(state.amount));
+                calculate();
             } else if (field === 'year') {
-                state.startYear = parseInt(val);
-                document.getElementById('year-select').value = state.startYear;
-                document.getElementById('year-display').innerText = state.startYear;
-                highlightPresetButton(state.startYear);
+                setStartYear(val);
             }
-            calculate();
         }
 
         function runShredder() {
-            calculate();
+            const outcome = calculate();
+            if (!outcome.ok) return;
+
             const resultCard = document.getElementById('screenshot-area');
             if (resultCard) {
                 const offset = 85;
@@ -453,7 +531,7 @@
         }
 
         function selectGridYear(year) {
-            const cells = document.querySelectorAll('#inflation-by-year-grid > div');
+            const cells = document.querySelectorAll('#inflation-by-year-grid [data-grid-year]');
             cells.forEach(c => {
                 c.classList.remove('border-brand-500', 'ring-4', 'ring-brand-500/30', 'scale-105');
             });
@@ -468,40 +546,14 @@
             const factDesc = document.getElementById('micro-fact-desc');
             const factVal = document.getElementById('micro-fact-val');
 
-            const facts = {
-                2000: "Век начался с двузначной инфляции в 20.2%. Страна оправлялась от дефолта 1998 года, цены росли стремительно, но начинался сырьевой суперцикл.",
-                2001: "Инфляция 18.6%. Экономика росла быстрыми темпами на фоне дорожающей нефти, однако структурные реформы еще не успели обуздать рост цен.",
-                2002: "Инфляция 15.1%. Постепенное замедление роста цен. Потребительский сектор рос взрывными темпами, рубль укреплялся.",
-                2003: "Инфляция 12.0%. Рубль стал укрепляться к доллару, начался приток иностранных инвестиций, экономика росла более чем на 7% в год.",
-                2004: "Инфляция 11.7%. Высокие цены на энергоносители поддерживали бюджет, но потребительский бум продолжал разгонять цены.",
-                2005: "Инфляция 10.9%. Банковский сектор расцвел, кредитование населения росло трехзначными темпами, импорт дешевел.",
-                2006: "Инфляция 9.0%. Впервые за новейшую историю России инфляция опустилась ниже 10%. Настоящая золотая эпоха потребительского спроса.",
-                2007: "Инфляция 11.9%. Мировой продовольственный кризис и избыток ликвидности вернули инфляцию в двузначную зону.",
-                2008: "Инфляция 13.3%. Мировой финансовый кризис. Валютный шок в конце года привел к падению рубля и резкому росту цен на импорт.",
-                2009: "Инфляция 8.8%. Глубокая рецессия заставила продавцов снижать цены. Снижение потребительского спроса сбило инфляцию до исторического минимума.",
-                2010: "Инфляция 8.8%. Аномальная летняя жара и засуха уничтожили значительную часть урожая, вызвав резкий скачок цен на базовые товары.",
-                2011: "Инфляция 6.1%. Рекордное замедление темпов роста цен на фоне жесткой монетарной политики ЦБ и хорошего урожая.",
-                2012: "Инфляция 6.6%. Стабильные мировые цены и умеренный внутренний спрос удерживали инфляцию в рамках комфортных значений.",
-                2013: "Инфляция 6.5%. Экономический рост замедлился до стагнации, но инфляция оставалась стабильной перед будущими потрясениями.",
-                2014: "Инфляция 11.4%. Крымская весна, введение первых масштабных санкций, обвал цен на нефть и двукратное падение курса рубля к концу года.",
-                2015: "Инфляция 12.9%. Пик валютного кризиса. Переход ЦБ к плавающему курсу рубля и ключевая ставка в 17% помогли остановить гиперинфляцию, но цены выросли на шестую часть.",
-                2016: "Инфляция 5.4%. Эффект высокой базы прошел, жесткая политика Эльвиры Набиуллиной начала приносить плоды, цены начали стабилизироваться.",
-                2017: "Инфляция 2.5%. Исторический минимум инфляции в РФ за всю историю! Рекордный урожай и стабильный рубль временно приблизили нас к европейским стандартам.",
-                2018: "Инфляция 4.3%. Небольшое ускорение на фоне объявленного повышения НДС до 20% с января следующего года и новых пакетов санкций.",
-                2019: "Инфляция 3.0%. Слабый потребительский спрос компенсировал повышение НДС, инфляция оказалась ниже целевого ориентира ЦБ (4%).",
-                2020: "Инфляция 4.9%. Пандемия COVID-19. Закрытие границ, разрыв логистических цепочек и масштабное вливание ликвидности мировыми центробанками разогнали цены.",
-                2021: "Инфляция 8.4%. Постковидное восстановление спроса столкнулось с глобальным дефицитом сырья и чипов. Цены на металл, стройматериалы и авто взлетели.",
-                2022: "Инфляция 11.9%. Начало СВО, беспрецедентные санкции, уход сотен зарубежных брендов. Логистический шок привел к резкому росту цен весной, но сильный рубль летом стабилизировал годовой итог.",
-                2023: "Инфляция 7.4%. Дефицит рабочей силы, рекордные госрасходы и ослабление рубля разогнали потребительский спрос, вынудив ЦБ поднять ставку до 16%.",
-                2024: "Инфляция 8.5%. Продолжающийся перегрев экономики, санкции на платежи и высокая индексация тарифов ЖКХ удерживали инфляцию на высоком уровне.",
-                2025: "Инфляция 6.8%. Сверхвысокая ключевая ставка ЦБ (выше 21%) охладила кредитование, но цены продолжили расти из-за роста издержек производителей."
-            };
-
-            const rate = inflationData[year];
-            if (factCard && factTitle && factDesc && factVal && facts[year]) {
-                factTitle.innerText = `Исторический факт: ${year} год`;
-                factVal.innerText = `${rate.toFixed(1)}%`;
-                factDesc.innerText = facts[year];
+            const record = inflationRecords.find((item) => item.year === Number(year));
+            if (factCard && factTitle && factDesc && factVal && record) {
+                CalculatorState.writeSafeText(factTitle, `Официальные данные за ${record.year} год`);
+                CalculatorState.writeSafeText(factVal, formatOfficialPercent(record.inflation_percent));
+                CalculatorState.writeSafeText(
+                    factDesc,
+                    `ИПЦ: ${formatOfficialNumber(record.cpi_index)}. Инфляция: ${formatOfficialPercent(record.inflation_percent)}. Показатель Росстата — декабрь к декабрю предыдущего года.`
+                );
 
                 factCard.classList.remove('hidden', 'opacity-0', 'scale-95');
                 factCard.classList.add('opacity-100', 'scale-100');
@@ -524,74 +576,115 @@
         }
 
         function calculate() {
-            if (!inflationData || Object.keys(inflationData).length === 0) return;
-
-            let currentEquivalent = state.amount;
-            let cumulativeInflation = 1;
-            const years = [];
-            const purchasingPower = [];
-
-            for (let year = state.startYear; year < state.currentYear; year++) {
-                const rate = inflationData[year] || 0;
-                cumulativeInflation *= (1 + rate / 100);
-            }
-
-            currentEquivalent = state.amount * cumulativeInflation;
-
-            document.getElementById('equivalent-amount').innerText = formatMoney(currentEquivalent);
-            document.getElementById('inflation-summary').innerHTML = `Суммарная инфляция за этот период составила: <strong>${((cumulativeInflation - 1) * 100).toFixed(1)}%</strong>`;
-
-            // Обновление индексов
-            const ratio = currentEquivalent / state.amount;
-            document.getElementById('coffee-index-text').innerText = `В ${state.startYear} году вы могли купить 100 чашек кофе, а сегодня — только ${Math.round(100 / ratio)}.`;
-            document.getElementById('burger-index-text').innerText = `Покупательная способность вашей суммы сократилась в ${ratio.toFixed(1)} раза.`;
-
-            // Обновление липких результатов мобильного устройства
-            const lossValue = currentEquivalent - state.amount;
-            document.getElementById('mobile-value').innerText = formatMoney(state.amount / ratio);
-            document.getElementById('mobile-loss').innerText = formatMoney(state.amount - (state.amount / ratio));
-
-            // Данные для графика
-            const allYears = Object.keys(inflationData).sort((a, b) => a - b);
-            const filteredYears = allYears.filter(y => y >= state.startYear);
-            let currentPower = 1000;
-            filteredYears.forEach(year => {
-                years.push(year);
-                purchasingPower.push(currentPower);
-                const rate = inflationData[year] || 0;
-                currentPower /= (1 + rate / 100);
+            const outcome = shredderStateController.runCalculation({
+                isLoading: dataLoading,
+                input: state,
+                data: { ready: dataReady, records: inflationRecords },
+                validateInput: (input) => Number.isFinite(input.amount)
+                    && input.amount > 0
+                    && Number.isInteger(input.startYear),
+                validateData: (data) => data.ready && data.records.length > 0,
+                calculate: () => InflationCalculator.calculateInflationImpact(
+                    inflationRecords,
+                    state.startYear,
+                    state.amount
+                ),
+                validateResult: (result) => result.yearly.length > 0
+                    && result.endYear === state.dataThrough
+                    && result.cumulativeFactor > 0,
+                render: renderCalculation,
+                invalidInputMessage: 'Введите сумму больше нуля и выберите доступный год.',
+                impossibleMessage: 'Расчёт невозможен для выбранного периода.',
+                dataUnavailableMessage: getInflationStatusMessage(inflationDataset),
+                onError: (error) => console.error('Inflation shredder calculation failed:', error)
             });
 
-            updateChart(years, purchasingPower);
-
-            // Dynamic yearly inflation cells rendering
-            const grid = document.getElementById('inflation-by-year-grid');
-            const startYearDisplay = document.getElementById('inflation-start-year');
-            if (grid) {
-                grid.innerHTML = '';
-                if (startYearDisplay) startYearDisplay.innerText = state.startYear;
-
-                filteredYears.forEach(year => {
-                    const rate = inflationData[year];
-                    if (rate === undefined) return;
-
-                    const cell = document.createElement('div');
-                    let colorClass = 'text-emerald-600 dark:text-emerald-400 bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-900/10';
-                    if (rate >= 10) {
-                        colorClass = 'text-rose-600 dark:text-rose-400 bg-rose-50/50 dark:bg-rose-950/20 border-rose-100 dark:border-rose-900/10';
-                    } else if (rate >= 5) {
-                        colorClass = 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-amber-950/20 border-amber-100 dark:border-amber-900/10';
-                    }
-
-                    cell.className = `p-2 rounded-xl ${colorClass} flex flex-col items-center justify-center border cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500/50 year-cell-${year}`;
-                    cell.setAttribute('onclick', `selectGridYear(${year})`);
-                    cell.innerHTML = `
-                        <span class="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">${year}</span>
-                        <span class="font-black text-xs mt-0.5">${rate.toFixed(1)}%</span>
-                    `;
-                    grid.appendChild(cell);
-                });
+            if (outcome.ok && !successfulCalculationTracked) {
+                reachGoal('calculate_success');
+                successfulCalculationTracked = true;
             }
+
+            return outcome;
+        }
+
+        function renderCalculation(result) {
+            CalculatorState.writeSafeText(
+                'result-period-label',
+                `Чтобы сохранить ту же покупательную способность к концу ${result.endYear} года, потребовалось бы примерно:`
+            );
+            CalculatorState.writeSafeText('equivalent-amount', formatMoney(result.equivalentAmount));
+            CalculatorState.writeSafeText(
+                'inflation-summary',
+                `С начала ${result.startYear} до конца ${result.endYear} года накопленная инфляция составила около ${formatApproximatePercent(result.cumulativePercent)}.`
+            );
+            CalculatorState.writeSafeText(
+                'coffee-index-text',
+                `К концу ${result.endYear} года осталось примерно ${formatApproximatePercent(result.remainingPercent)} исходной покупательной способности.`
+            );
+            CalculatorState.writeSafeText(
+                'burger-index-text',
+                `Для той же условной корзины потребовалось бы примерно в ${formatApproximateNumber(result.cumulativeFactor)} раза больше рублей.`
+            );
+            CalculatorState.writeSafeText('mobile-value', formatMoney(result.remainingValue));
+            CalculatorState.writeSafeText('mobile-loss', formatMoney(Math.abs(result.lostValue)));
+            CalculatorState.writeSafeText('mobile-loss-label', result.lostValue >= 0 ? 'Потеряно' : 'Прирост');
+            CalculatorState.writeSafeText('inflation-start-year', result.startYear);
+            CalculatorState.writeSafeText('inflation-end-year', result.endYear);
+
+            updateChart(
+                result.yearly.map((record) => String(record.year)),
+                result.yearly.map((record) => record.purchasingPowerOf1000)
+            );
+            renderHistoricalGrid(result.yearly);
+        }
+
+        function renderHistoricalGrid(yearly) {
+            const grid = document.getElementById('inflation-by-year-grid');
+            grid.innerHTML = '';
+
+            yearly.forEach((record) => {
+                const cell = document.createElement('button');
+                cell.type = 'button';
+                cell.dataset.gridYear = String(record.year);
+                let colorClass = 'text-emerald-600 dark:text-emerald-400 bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-900/10';
+                if (record.rate >= 10) {
+                    colorClass = 'text-rose-600 dark:text-rose-400 bg-rose-50/50 dark:bg-rose-950/20 border-rose-100 dark:border-rose-900/10';
+                } else if (record.rate >= 5) {
+                    colorClass = 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-amber-950/20 border-amber-100 dark:border-amber-900/10';
+                }
+
+                cell.className = `p-2 rounded-xl ${colorClass} flex flex-col items-center justify-center border cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500/50 year-cell-${record.year}`;
+                cell.innerHTML = `
+                    <span class="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">${record.year}</span>
+                    <span class="font-black text-xs mt-0.5">${formatOfficialPercent(record.rate)}</span>
+                `;
+                cell.addEventListener('click', () => selectGridYear(record.year));
+                grid.appendChild(cell);
+            });
+        }
+
+        function formatOfficialNumber(value) {
+            return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(value);
+        }
+
+        function formatOfficialPercent(value) {
+            return `${formatOfficialNumber(value)}%`;
+        }
+
+        function formatApproximateNumber(value) {
+            return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 }).format(value);
+        }
+
+        function formatApproximatePercent(value) {
+            return `${formatApproximateNumber(value)}%`;
+        }
+
+        function shareShredderResult() {
+            if (shredderStateController.getState() !== CalculatorState.STATES.READY) return;
+            shareLinkCustom(
+                'Шредер Рубля — CalcHub',
+                `По официальным данным Росстата потеря покупательной способности выбранной суммы составила около ${document.getElementById('mobile-loss').textContent}.`
+            );
         }
 
         function updateChart(labels, data) {
@@ -606,7 +699,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Реальная покупательная способность 1000 ₽',
+                        label: 'Ориентировочная покупательная способность 1 000 ₽',
                         data: data,
                         borderColor: '#e11d48',
                         backgroundColor: 'rgba(225, 29, 72, 0.1)',
@@ -626,7 +719,7 @@
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return 'Реальная ценность: ' + formatMoney(context.raw);
+                                    return 'Около ' + formatMoney(context.raw);
                                 }
                             }
                         }
@@ -647,26 +740,11 @@
         }
 
         window.shareLink = shareLink;
+        window.shareShredderResult = shareShredderResult;
         window.takeScreenshot = () => takeScreenshot('screenshot-area', 'inflation-report.png');
         window.onload = init;
     </script>
 
-    <script>
-        (function() {
-            let tracked = false;
-            function trackFirstChange() {
-                if (!tracked) {
-                    reachGoal('calculate_success');
-                    tracked = true;
-                    // Remove listeners after first trigger
-                    document.removeEventListener('input', trackFirstChange);
-                    document.removeEventListener('change', trackFirstChange);
-                }
-            }
-            document.addEventListener('input', trackFirstChange);
-            document.addEventListener('change', trackFirstChange);
-        })();
-    </script>
     <script>
         if ("serviceWorker" in navigator) {
             window.addEventListener("load", () => {

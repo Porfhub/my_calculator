@@ -28,11 +28,124 @@ async function fetchInflation() {
     try {
         const response = await fetch('inflation.json');
         if (!response.ok) throw new Error('Failed to fetch inflation');
-        return await response.json();
+        return normalizeInflationData(await response.json());
     } catch (error) {
         console.error('Error loading inflation:', error);
         return null;
     }
+}
+
+function isOfficialInflationUrl(value) {
+    if (typeof value !== 'string' || value.trim() === '') return false;
+
+    try {
+        const url = new URL(value);
+        const hostname = url.hostname.toLowerCase();
+        return url.protocol === 'https:' && (hostname === 'fedstat.ru'
+            || hostname.endsWith('.fedstat.ru')
+            || hostname === 'rosstat.gov.ru'
+            || hostname.endsWith('.rosstat.gov.ru'));
+    } catch {
+        return false;
+    }
+}
+
+function normalizeInflationData(dataset) {
+    const metadata = dataset?.metadata;
+    const status = getDatasetStatus(dataset);
+
+    if (metadata?.schema_version !== 2 || !Array.isArray(dataset?.annual)) {
+        throw new Error('Unsupported inflation schema');
+    }
+    if (
+        metadata.indicator_id !== '31074'
+        || metadata.geography !== 'Российская Федерация'
+        || metadata.measure !== 'декабрь к декабрю предыдущего года'
+        || metadata.unit !== 'percent'
+        || metadata.frequency !== 'annual'
+        || !isOfficialInflationUrl(metadata.source_url)
+        || !isOfficialInflationUrl(metadata.source_landing_url)
+    ) {
+        throw new Error('Unsupported inflation source');
+    }
+
+    if (status === 'unavailable') {
+        if (
+            metadata.status !== 'unavailable'
+            || dataset.annual.length !== 0
+            || metadata.data_through !== null
+            || metadata.source_export_url !== null
+            || metadata.source_checksum_sha256 !== null
+            || metadata.source_published_at !== null
+            || metadata.last_successful_fetch_at !== null
+        ) {
+            throw new Error('Invalid unavailable inflation dataset');
+        }
+        return { metadata: { ...metadata }, annual: [] };
+    }
+
+    if (!isDatasetUsable(dataset) || dataset.annual.length === 0) {
+        throw new Error('Inflation data is unavailable');
+    }
+    if (
+        !isOfficialInflationUrl(metadata.source_export_url)
+        || typeof metadata.source_checksum_sha256 !== 'string'
+        || !/^[a-f0-9]{64}$/i.test(metadata.source_checksum_sha256)
+        || typeof metadata.source_published_at !== 'string'
+        || typeof metadata.last_successful_fetch_at !== 'string'
+    ) {
+        throw new Error('Inflation provenance is incomplete');
+    }
+
+    const annual = dataset.annual.map((entry) => {
+        const year = entry?.year;
+        const cpiIndex = entry?.cpi_index;
+        const inflationPercent = entry?.inflation_percent;
+
+        if (!Number.isInteger(year) || !Number.isFinite(cpiIndex) || !Number.isFinite(inflationPercent)) {
+            throw new Error('Invalid inflation record');
+        }
+        if (cpiIndex <= 0 || inflationPercent <= -100 || Math.abs(inflationPercent - (cpiIndex - 100)) > 1e-6) {
+            throw new Error('Inconsistent inflation record');
+        }
+
+        return { year, cpi_index: cpiIndex, inflation_percent: inflationPercent };
+    }).sort((left, right) => left.year - right.year);
+
+    if (annual[0].year !== 2000) throw new Error('Inflation history is incomplete');
+    for (let index = 1; index < annual.length; index += 1) {
+        if (annual[index].year !== annual[index - 1].year + 1) {
+            throw new Error('Inflation years must be unique and consecutive');
+        }
+    }
+    if (!Number.isInteger(metadata.data_through) || metadata.data_through !== annual[annual.length - 1].year) {
+        throw new Error('Inflation metadata does not match annual data');
+    }
+
+    return { metadata: { ...metadata }, annual };
+}
+
+function getInflationRecords(dataset) {
+    try {
+        const normalized = normalizeInflationData(dataset);
+        return normalized.metadata.status === 'unavailable' ? [] : normalized.annual;
+    } catch {
+        return [];
+    }
+}
+
+function getInflationStatusMessage(dataset) {
+    const status = getDatasetStatus(dataset);
+    if (status === 'stale') {
+        const dataThrough = Number(dataset?.metadata?.data_through);
+        return Number.isInteger(dataThrough)
+            ? `Используются последние доступные официальные данные по ${dataThrough} год.`
+            : 'Используются последние доступные официальные данные.';
+    }
+    if (status === 'unavailable') {
+        return 'Данные инфляции временно недоступны. Расчёт не выполнен.';
+    }
+    return null;
 }
 
 function getDatasetStatus(dataset) {
@@ -70,19 +183,8 @@ function getCentralBankRate(dataset) {
 function getAverageInflationRate(dataset, years = 15) {
     if (!isDatasetUsable(dataset) || !Number.isInteger(years) || years <= 0) return null;
 
-    let values;
-    if (Array.isArray(dataset.annual)) {
-        values = dataset.annual.slice(-years).map((entry) => {
-            const rawValue = entry?.inflation_percent;
-            return rawValue === null || rawValue === undefined || rawValue === '' ? NaN : Number(rawValue);
-        });
-    } else {
-        values = Object.entries(dataset)
-            .filter(([year]) => /^\d{4}$/.test(year))
-            .sort(([left], [right]) => Number(left) - Number(right))
-            .slice(-years)
-            .map(([, value]) => Number(value));
-    }
+    const records = getInflationRecords(dataset);
+    const values = records.slice(-years).map((entry) => entry.inflation_percent);
 
     if (values.length === 0 || values.some((value) => !Number.isFinite(value) || value <= -100)) return null;
 
@@ -93,9 +195,13 @@ function getAverageInflationRate(dataset, years = 15) {
 
 if (typeof module === 'object' && module.exports) {
     module.exports = {
+        fetchInflation,
         getAverageInflationRate,
         getCentralBankRate,
         getDatasetStatus,
+        getInflationRecords,
+        getInflationStatusMessage,
+        normalizeInflationData,
         isDatasetUsable
     };
 }

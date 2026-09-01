@@ -1,5 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const {
     STATES,
@@ -169,13 +171,9 @@ test('financial data helpers accept ok/stale datasets and reject unavailable pay
         key_rate: { value_percent: 14 },
         cb_rate: 14
     };
-    const inflation = {
-        metadata: { status: 'stale' },
-        annual: [
-            { year: 2023, inflation_percent: 7.4 },
-            { year: 2024, inflation_percent: 9.5 }
-        ]
-    };
+    const inflation = JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'inflation.json'), 'utf8'));
+    inflation.metadata.status = 'stale';
+    inflation.metadata.status_reason = 'fetch_failed';
 
     assert.equal(getCentralBankRate(rates), 14);
     assert.equal(getDatasetStatus(inflation), 'stale');
