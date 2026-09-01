@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Инфляционный шредер - Что стало с рублем? | CalcHub</title>
+    <title>Покупательная способность денег — CalcHub</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN -->
@@ -116,10 +116,10 @@
                     </div>
                     <div>
                         <h1 class="text-2xl font-black tracking-tight flex items-center gap-2">
-                            <span>Инфляционный шредер</span>
-                            <span class="text-xs font-bold uppercase bg-rose-600 text-white px-2 py-0.5 rounded-md animate-pulse">Шредер Рубля</span>
+                            <span>Покупательная способность</span>
+                            <span class="text-xs font-bold uppercase bg-rose-600 text-white px-2 py-0.5 rounded-md animate-pulse">Инфляция</span>
                         </h1>
-                        <p class="text-xs text-brand-200">Узнайте, как накопленная инфляция съедает покупательскую способность рубля во времени</p>
+                        <p class="text-xs text-brand-200">Оценка изменения покупательной способности по официальному годовому ряду</p>
                     </div>
                 </div>
             </div>
@@ -328,7 +328,7 @@
     </main>
 
     <footer class="max-w-7xl mx-auto px-4 py-12 text-center text-xs text-slate-400">
-        <p>© 2026 Инфляционный шредер. Все расчеты основаны на официальной статистике инфляции в РФ.</p>
+        <p>© 2026 CalcHub. Расчёт использует официальный годовой ряд инфляции Росстата.</p>
     </footer>
 
     <script>
@@ -408,7 +408,11 @@
 
         function renderDatasetStatus(status) {
             const statusElement = document.getElementById('inflation-data-status');
-            const message = status === 'stale' ? getInflationStatusMessage(inflationDataset) : null;
+            const message = status === 'stale'
+                ? getInflationStatusMessage(inflationDataset)
+                : status === 'ok'
+                    ? `Источник: Росстат / ЕМИСС, годовой ряд по ${inflationDataset.metadata.data_through} год.`
+                    : null;
             statusElement.textContent = message || '';
             statusElement.hidden = !message;
         }
@@ -685,7 +689,7 @@
         function shareShredderResult() {
             if (shredderStateController.getState() !== CalculatorState.STATES.READY) return;
             shareLinkCustom(
-                'Шредер Рубля — CalcHub',
+                'Покупательная способность — CalcHub',
                 `По официальным данным Росстата потеря покупательной способности выбранной суммы составила около ${document.getElementById('mobile-loss').textContent}.`
             );
         }

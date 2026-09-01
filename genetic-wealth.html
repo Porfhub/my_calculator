@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Генетическое богатство — Калькулятор стоимости воспитания ребенка</title>
+    <title>Стоимость воспитания ребёнка — CalcHub</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN -->
@@ -116,8 +116,8 @@
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-black tracking-tight">Генетическое богатство</h1>
-                        <p class="text-xs text-brand-200">Сколько стоит вырастить человека?</p>
+                        <h1 class="text-2xl font-black tracking-tight">Стоимость воспитания ребёнка</h1>
+                        <p class="text-xs text-brand-200">Оценка расходов по возрастным этапам</p>
                     </div>
                 </div>
             </div>
@@ -136,7 +136,7 @@
             <div class="lg:col-span-5 space-y-6">
                 <!-- Тарифы -->
                 <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-4">
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-2">Выберите тариф</h2>
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-2">Выберите сценарий расходов</h2>
                     <div class="grid grid-cols-1 gap-3">
                         <button onclick="setPreset('basic')" id="preset-basic" class="preset-btn flex flex-col p-4 rounded-xl border-2 border-slate-100 dark:border-slate-800 hover:border-brand-500 transition-all text-left">
                             <span class="font-bold text-slate-900 dark:text-white">На чистом характере</span>
@@ -267,7 +267,7 @@
                         <div>
                             <h4 class="font-bold text-slate-900 dark:text-white">Методология расчетов</h4>
                             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                                Все расчеты базируются на реальной статистике потребительских цен крупных городов РФ на 2026 год. Калькулятор автоматически закладывает среднюю историческую инфляцию из нашей базы данных (<span id="inflation-val-text">...</span>), чтобы показать вам честную, скорректированную стоимость расходов в будущем.
+                                Расходы задаются пользователем для каждого этапа. Для долгосрочной оценки используется средняя годовая инфляция из официального ряда Росстата (<span id="inflation-val-text">...</span>). Это сценарный ориентир, а не прогноз личных расходов.
                             </p>
                         </div>
                     </div>
@@ -286,7 +286,7 @@
                                 <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                             </svg>
                         </div>
-                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">Ваш общий родительский капитал за 18 лет:</h3>
+                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">Оценка расходов на 18 лет:</h3>
                         <div id="total-with-inflation" class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-2 leading-tight">... ₽</div>
                         <div class="text-sm font-medium text-slate-500 mb-4">
                             (В ценах сегодняшнего дня без учета инфляции это было бы <span id="total-without-inflation">...</span> ₽)
@@ -356,7 +356,7 @@
     </main>
 
     <footer class="py-12 text-center text-xs text-slate-400 border-t dark:border-slate-800 mt-12">
-        <p class="max-w-md mx-auto px-6">Расчет является ориентировочным. Мы используем среднюю ежегодную инфляцию в РФ за последние 20+ лет как прогнозный ориентир.</p>
+        <p class="max-w-md mx-auto px-6">Расчёт ориентировочный. Используется средняя годовая инфляция из официального ряда Росстата; фактические расходы семьи могут отличаться.</p>
         <p class="mt-4">© 2026 Финансовый Хаб. Инвестиции в будущее.</p>
     </footer>
 
@@ -454,7 +454,10 @@
             if (!statusElement) return;
 
             if (externalDataStatus === 'stale') {
-                statusElement.textContent = 'Используются последние доступные официальные данные.';
+                statusElement.textContent = 'Используются последние доступные годовые данные Росстата.';
+                statusElement.hidden = false;
+            } else if (externalDataStatus === 'ok') {
+                statusElement.textContent = 'Источник инфляции: годовой ряд Росстата.';
                 statusElement.hidden = false;
             } else {
                 statusElement.textContent = '';
@@ -638,8 +641,8 @@
                 return;
             }
             shareLinkCustom(
-                'Генетическое богатство — CalcHub',
-                `Я рассчитал честную стоимость воспитания ребенка от 0 до 18 лет! Мой общий родительский капитал составил ${document.getElementById('mobile-total').innerText} с учетом инфляции. Оцени свой бюджет!`
+                'Стоимость воспитания ребёнка — CalcHub',
+                `Я оценил расходы на воспитание ребёнка от 0 до 18 лет: ${document.getElementById('mobile-total').innerText} с учётом инфляции. Это сценарная оценка, а не прогноз личных расходов.`
             );
         }
 

@@ -113,7 +113,7 @@
                     </div>
                     <div>
                         <h1 class="text-2xl font-black tracking-tight">Машина или Такси</h1>
-                        <p class="text-xs text-brand-200">Честное сравнение стоимости владения авто и поездок на такси</p>
+                        <p class="text-xs text-brand-200">Сравнение расходов на автомобиль и такси</p>
                     </div>
                 </div>
             </div>
@@ -462,7 +462,7 @@
                                         <p id="lost-opp-annual" class="text-sm font-black text-emerald-700 dark:text-emerald-400">... ₽</p>
                                     </div>
                                 </div>
-                                <p class="text-[9px] text-slate-700 dark:text-slate-300 mt-2.5 italic leading-tight">Расчет основан на ставке ЦБ РФ (<span id="actual-cb-rate-display" class="font-bold text-blue-700 dark:text-blue-400">...%</span>) за вычетом 2%. Этот доход упущен при покупке авто.</p>
+                                <p class="text-[9px] text-slate-700 dark:text-slate-300 mt-2.5 italic leading-tight">Для сценария используется ключевая ставка Банка России (<span id="actual-cb-rate-display" class="font-bold text-blue-700 dark:text-blue-400">...%</span>) минус 2 п.п. Это ориентир альтернативного дохода, а не прогноз.</p>
                             </div>
                         </div>
                     </div>
@@ -489,8 +489,8 @@
                             <span class="text-xs font-black uppercase tracking-widest text-brand-600 dark:text-brand-400">Интерактивный тест</span>
                             <span class="px-2 py-0.5 text-[9px] font-bold uppercase bg-amber-500 text-white rounded-full animate-pulse">Новинка</span>
                         </div>
-                        <h3 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight mt-0.5">Весы стиля жизни: Что выбрать помимо денег?</h3>
-                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">Оцените свои эмоциональные потребности, желания и скрытые боли, чтобы получить персональный ментальный вердикт.</p>
+                        <h3 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight mt-0.5">Что учесть помимо расходов?</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">Отметьте важные для вас условия, чтобы сопоставить их с выбранным сценарием.</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
@@ -603,7 +603,7 @@
                 <p id="mobile-taxi-total" class="text-sm font-black text-slate-900 dark:text-white">0 ₽</p>
             </div>
         </div>
-        <button onclick="shareLinkCustom('Машина или Такси — CalcHub', 'Я сравнил стоимость владения личным авто и поездок на такси в CalcHub! ' + document.getElementById('mobile-verdict-title').innerText + ' на ' + document.getElementById('mobile-monthly-diff').innerText + ' в месяц. Сделай и ты свой выбор!')" class="w-full mt-3 py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
+        <button onclick="shareLinkCustom('Машина или такси — CalcHub', 'Я сравнил расходы на личный автомобиль и такси в CalcHub. Разница по выбранным параметрам: ' + document.getElementById('mobile-monthly-diff').innerText + ' в месяц. Результат зависит от введённых условий.')" class="w-full mt-3 py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
             📢 Поделиться расчетом
         </button>
     </div>
@@ -990,16 +990,16 @@
             }
 
             if (carPoints > taxiPoints) {
-                verdictTitle.innerText = "Ваш образ жизни требует автомобиль! 🚗";
-                verdictDesc.innerText = "Свобода передвижения, поездки за город и личное пространство для вас важнее забот об обслуживании и парковке. Машина подарит вам намного больше эмоций.";
+                verdictTitle.innerText = "Автомобиль лучше соответствует выбранным приоритетам 🚗";
+                verdictDesc.innerText = "Для вас важны самостоятельность передвижения, поездки за город и личное пространство. Учтите время и расходы на обслуживание и парковку.";
                 verdictBox.className = "px-6 py-4 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/50 rounded-2xl max-w-lg transition-all duration-300 text-slate-900 dark:text-white";
             } else if (taxiPoints > carPoints) {
-                verdictTitle.innerText = "Такси идеально подходит вашему ритму! 🚕";
-                verdictDesc.innerText = "Вы цените время, отсутствие стресса на дорогах и избавление от бытовой рутины (ТО, страховки, резина). Пассажирское сиденье — ваш выбор для максимальной продуктивности и расслабления.";
+                verdictTitle.innerText = "Такси лучше соответствует выбранным приоритетам 🚕";
+                verdictDesc.innerText = "Для вас важны время, отсутствие забот об обслуживании и поездки без вождения. Учтите доступность такси и стоимость поездок в вашем городе.";
                 verdictBox.className = "px-6 py-4 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/50 rounded-2xl max-w-lg transition-all duration-300 text-slate-900 dark:text-white";
             } else {
                 verdictTitle.innerText = "Вам подходят оба варианта! ⚖️";
-                verdictDesc.innerText = "Ваши приоритеты идеально сбалансированы. Вы можете успешно совмещать каршеринг/такси для поездок на работу и аренду авто для загородных путешествий.";
+                verdictDesc.innerText = "При близких оценках можно сочетать такси, каршеринг и аренду автомобиля в зависимости от задачи.";
                 verdictBox.className = "px-6 py-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/50 rounded-2xl max-w-lg transition-all duration-300 text-slate-900 dark:text-white";
             }
         }
