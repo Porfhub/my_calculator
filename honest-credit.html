@@ -119,6 +119,7 @@
     <!-- /Yandex.Metrika counter -->
     <script src="js/theme.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/calculator-state.js"></script>
     <script src="js/ui-utils.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
@@ -316,6 +317,7 @@
             <!-- Right Column: Results -->
             <div id="results-container" class="lg:col-span-7 space-y-6">
                 <div id="screenshot-area" class="space-y-6">
+                    <p id="honest-credit-state-message" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
                     <!-- Rate Comparison Card (Promised vs. Reality) -->
                     <div id="rate-comparison-card" class="bg-white dark:bg-slate-900 rounded-3xl shadow-lg border border-slate-100 dark:border-slate-800 p-8 text-center space-y-6 overflow-hidden relative">
                         <div class="relative z-10 space-y-6">
@@ -448,12 +450,44 @@
 
     <script>
         let structureChart = null;
+        const honestCreditStateController = CalculatorState.createController({
+            root: 'screenshot-area',
+            messageElement: 'honest-credit-state-message',
+            resultElements: [
+                'advertised-rate-display', 'real-rate-display', 'real-payment-display',
+                'air-overpayment-display', 'debt-pct-label', 'air-pct-label',
+                'verdict-text', 'mobile-rate', 'mobile-payment'
+            ],
+            onClear: () => {
+                if (structureChart) {
+                    structureChart.destroy();
+                    structureChart = null;
+                }
+                const trigger = document.getElementById('air-trigger-box');
+                if (trigger) trigger.classList.add('hidden');
+            }
+        });
+
+        function readMoneyInput(id) {
+            const raw = String(document.getElementById(id).value || '').trim();
+            const compact = raw.replace(/[\s\u00a0]/g, '').replace(',', '.');
+            return /^\d+(?:\.\d+)?$/.test(compact) ? Number(compact) : null;
+        }
+
+        function readPositiveInteger(id) {
+            const raw = String(document.getElementById(id).value || '').trim();
+            return /^\d+$/.test(raw) ? Number(raw) : null;
+        }
 
         function handleFormattedInput(el) {
             formatInputField(el, el.value);
         }
 
         function handleFormattedInputSync(el, rangeId) {
+            if (String(el.value).trim().startsWith('-')) {
+                calculateHonestRate();
+                return;
+            }
             const val = formatInputField(el, el.value);
             const range = document.getElementById(rangeId);
             if (range) {
@@ -498,9 +532,14 @@
         }
 
         function updatePresetLabels() {
-            const amountHand = parseCleanNumber(document.getElementById('amount-input').value);
-            let term = parseInt(document.getElementById('term-input').value) || 0;
+            const amountHand = readMoneyInput('amount-input');
+            let term = readPositiveInteger('term-input');
             const termUnit = document.getElementById('term-unit').value;
+            if (!Number.isFinite(amountHand) || amountHand < 0 || !Number.isFinite(term) || term <= 0) {
+                CalculatorState.writeSafeText('preset-yearly-label', null);
+                CalculatorState.writeSafeText('preset-onetime-label', null);
+                return;
+            }
             const termInYears = termUnit === 'years' ? term : term / 12;
 
             const yearlyVal = Math.round(amountHand * 0.015 * termInYears);
@@ -514,9 +553,15 @@
         }
 
         function applyInsurancePreset(type) {
-            const amountHand = parseCleanNumber(document.getElementById('amount-input').value);
-            let term = parseInt(document.getElementById('term-input').value) || 0;
+            const amountHand = readMoneyInput('amount-input');
+            let term = readPositiveInteger('term-input');
             const termUnit = document.getElementById('term-unit').value;
+            if (!Number.isFinite(amountHand) || amountHand < 0 || !Number.isFinite(term) || term <= 0) {
+                honestCreditStateController.transition(CalculatorState.STATES.INVALID_INPUT, {
+                    message: 'Сначала укажите корректные сумму и срок кредита.'
+                });
+                return;
+            }
             const termInYears = termUnit === 'years' ? term : term / 12;
 
             let val = 0;
@@ -548,19 +593,23 @@
             updatePresetLabels();
 
             // 1. Get Inputs
-            const amountHand = parseCleanNumber(document.getElementById('amount-input').value);
-            let term = parseInt(document.getElementById('term-input').value) || 0;
+            const amountHand = readMoneyInput('amount-input');
+            let term = readPositiveInteger('term-input');
             const termUnit = document.getElementById('term-unit').value;
-            const bankRate = parseFloat(document.getElementById('rate-input').value) || 0;
+            const bankRate = Number(document.getElementById('rate-input').value);
 
-            const insurance = parseCleanNumber(document.getElementById('insurance-input').value);
+            const insurance = readMoneyInput('insurance-input');
             const insuranceInBody = document.getElementById('insurance-in-body').checked;
-            const commissions = parseCleanNumber(document.getElementById('commissions-input').value);
-            const monthlyHidden = parseCleanNumber(document.getElementById('monthly-hidden-input').value);
+            const commissions = readMoneyInput('commissions-input');
+            const monthlyHidden = readMoneyInput('monthly-hidden-input');
 
             if (termUnit === 'years') term *= 12;
-            if (amountHand <= 0 || term <= 0) {
-                showToast("Введите корректную сумму и срок");
+            if (!Number.isFinite(amountHand) || amountHand <= 0 || !Number.isInteger(term) || term <= 0
+                || !Number.isFinite(bankRate) || bankRate < 0 || bankRate > 50
+                || ![insurance, commissions, monthlyHidden].every((value) => Number.isFinite(value) && value >= 0)) {
+                honestCreditStateController.transition(CalculatorState.STATES.INVALID_INPUT, {
+                    message: 'Проверьте сумму, срок, ставку, страховку и комиссии: отрицательные значения недопустимы.'
+                });
                 return;
             }
 
@@ -587,6 +636,12 @@
             // Month 0: +amountHand - commissions - (insuranceInBody ? 0 : insurance)
             // Months 1..N: -pmtReal
             const initialInflow = amountHand - commissions - (insuranceInBody ? 0 : insurance);
+            if (initialInflow <= 0) {
+                honestCreditStateController.transition(CalculatorState.STATES.CALCULATION_IMPOSSIBLE, {
+                    message: 'После разовых списаний вы не получаете положительную сумму на руки. Расчёт кредита невозможен.'
+                });
+                return;
+            }
 
             const findEir = (target, pmt, n) => {
                 let low = -0.1; // Supports negative rates down to -10% monthly
@@ -609,6 +664,13 @@
             const monthlyEir = findEir(initialInflow, pmtReal, term);
             // Convert to nominal annual rate (PSK logic)
             const annualEir = monthlyEir * 12 * 100;
+            if (![fullDebt, pmtBase, pmtReal, totalBankInterest, totalAir, annualEir].every(Number.isFinite)
+                || pmtReal <= 0 || totalAir < 0) {
+                honestCreditStateController.transition(CalculatorState.STATES.CALCULATION_IMPOSSIBLE, {
+                    message: 'Расчёт не дал корректного финансового результата.'
+                });
+                return;
+            }
 
             // 4. Update UI
             document.getElementById('advertised-rate-display').innerText = bankRate.toFixed(1) + '%';
@@ -691,6 +753,7 @@
             document.getElementById('mobile-payment').innerText = formatMoney(pmtReal);
             document.getElementById('mobile-results').classList.remove('hidden');
 
+            honestCreditStateController.transition(CalculatorState.STATES.READY, { clearResults: false });
             reachGoal("calculate_success");
         }
 
