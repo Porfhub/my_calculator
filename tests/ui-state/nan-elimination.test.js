@@ -59,5 +59,5 @@ test('genetic wealth clears every result card and the supported stage chart on n
 });
 
 test('service worker cache is advanced for the shared runtime update', () => {
-    assert.match(read('sw.js'), /fin-hub-cache-v6/);
+    assert.match(read('sw.js'), /fin-hub-cache-v7/);
 });
