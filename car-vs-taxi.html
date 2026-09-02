@@ -408,7 +408,7 @@
                         </div>
                     </div>
 
-                    <!-- СТОИМОСТЬ 1 КМ ПУТИ (COMPACT VERSION) -->
+                    <!-- СТОИМОСТЬ ВЛАДЕНИЯ АВТОМОБИЛЕМ (COMPACT VERSION) -->
                     <div class="bg-gradient-to-br from-brand-600 to-emerald-800 text-white p-4 rounded-2xl shadow-md border border-brand-500 relative overflow-hidden transition-all duration-300">
                         <!-- Abstract glow backgrounds -->
                         <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
@@ -416,15 +416,15 @@
 
                         <div class="relative z-10 flex items-center justify-between">
                             <div class="text-left">
-                                <span class="text-[9px] font-black uppercase tracking-widest text-brand-100 opacity-90 block">Цена 1 км на машине</span>
+                                <span class="text-[9px] font-black uppercase tracking-widest text-brand-100 opacity-90 block">Стоимость владения: 1 км</span>
                                 <div class="flex items-baseline gap-1 mt-0.5">
                                     <span id="km-cost-main" class="text-3xl font-black tracking-tight drop-shadow-md">...</span>
                                     <span class="text-sm font-bold opacity-90">₽/км</span>
                                 </div>
                             </div>
                             <div class="text-right">
-                                <span class="text-[9px] font-black uppercase tracking-widest text-brand-100 opacity-90 block">Цена 1 км на такси</span>
-                                <span id="km-cost-taxi" class="text-base font-extrabold text-brand-200 mt-1 block">... ₽/км</span>
+                                <span class="text-[9px] font-black uppercase tracking-widest text-brand-100 opacity-90 block">Такси</span>
+                                <span class="text-base font-extrabold text-brand-200 mt-1 block">Сравнение — по поездкам</span>
                             </div>
                         </div>
                     </div>
@@ -771,9 +771,10 @@
             const totalTaxiMonthly = tripsPerMonth * tripPrice;
             const totalTaxiAnnual = totalTaxiMonthly * 12;
 
-            // Стоимость 1 км пути
+            // Annual mileage belongs only to the ownership scenario. Taxi
+            // distance is not an input, so deriving a taxi cost per kilometre
+            // from car mileage would create a misleading comparison.
             const costPerKm = annualMileage > 0 ? (totalCarAnnual / annualMileage) : 0;
-            const costPerKmTaxi = annualMileage > 0 ? (totalTaxiAnnual / annualMileage) : 0;
 
             // Потеря стоимости за 1 ночь
             const nightlyDeprVal = Math.round(depreciationAnnual / 365);
@@ -803,7 +804,6 @@
 
             // Обновление UI
             document.getElementById('km-cost-main').innerText = costPerKm.toLocaleString('ru-RU', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-            document.getElementById('km-cost-taxi').innerText = costPerKmTaxi.toLocaleString('ru-RU', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' ₽/км';
             document.getElementById('nightly-depreciation').innerText = nightlyDeprVal.toLocaleString('ru-RU') + ' ₽';
 
             // Заполнение Grid-карточек
