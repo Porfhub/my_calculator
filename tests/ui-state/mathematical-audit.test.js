@@ -44,3 +44,21 @@ test('calculation displays are not intentionally capped or mislabeled', () => {
     assert.match(car, /const depositRatePct = Math\.max\(0, cbRate - 2\);/);
     assert.match(car, /tugVerdict = 'Расходы равны';/);
 });
+
+test('audit transparency fixes do not derive unsupported or incomparable results', () => {
+    const car = read('car-vs-taxi.html');
+    const childCost = read('genetic-wealth.html');
+    const goal = read('millionaire.html');
+
+    assert.match(car, /Сравнение — по поездкам/);
+    assert.doesNotMatch(car, /costPerKmTaxi/);
+    assert.doesNotMatch(car, /km-cost-taxi/);
+
+    assert.match(childCost, /без подтверждённой методологии такая разбивка была бы произвольной/);
+    assert.doesNotMatch(childCost, /categoryBreakdownChart/);
+    assert.doesNotMatch(childCost, /updateCategoryChart/);
+
+    assert.match(goal, /syncAgeFromBirthDate\(\);/);
+    assert.match(goal, /if \(input\.key === 'currentAge' && state\.birthDate\)/);
+    assert.match(goal, /state\.birthDate = '';/);
+});

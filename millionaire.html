@@ -620,6 +620,7 @@
             d.setFullYear(d.getFullYear() - 25);
             state.birthDate = d.toISOString().split('T')[0];
             document.getElementById('birth-date').value = state.birthDate;
+            syncAgeFromBirthDate();
 
             setupEventListeners();
             updateAll();
@@ -684,8 +685,16 @@
                         state[input.key] = parseFloat(el.value) || 0;
                         const range = document.getElementById(input.id + '-range');
                         if (range) range.value = state[input.key];
+                        if (input.key === 'currentAge' && state.birthDate) {
+                            // The two fields otherwise describe conflicting
+                            // starting ages. A manually entered age becomes
+                            // the active source when no date is supplied.
+                            state.birthDate = '';
+                            document.getElementById('birth-date').value = '';
+                        }
                     } else {
                         state[input.key] = el.value;
+                        if (input.key === 'birthDate') syncAgeFromBirthDate();
                     }
 
                     // Reset custom highlight on manual changes
@@ -823,6 +832,21 @@
                 impossibleMessage: 'Цель недостижима при текущих доходах и расходах.',
                 onError: (error) => console.error('Millionaire calculation failed:', error)
             });
+        }
+
+        function syncAgeFromBirthDate() {
+            if (!state.birthDate) return;
+            const birth = new Date(state.birthDate);
+            if (Number.isNaN(birth.getTime())) return;
+
+            const today = new Date();
+            let age = today.getFullYear() - birth.getFullYear();
+            const birthdayHasPassed = today.getMonth() > birth.getMonth()
+                || (today.getMonth() === birth.getMonth() && today.getDate() >= birth.getDate());
+            if (!birthdayHasPassed) age--;
+
+            state.currentAge = Math.max(0, age);
+            document.getElementById('current-age').value = state.currentAge;
         }
 
         function shareMillionaireResult() {

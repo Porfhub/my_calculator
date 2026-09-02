@@ -306,12 +306,10 @@
                         </div>
                     </div>
 
-                    <!-- Category Breakdown (Donut Chart) -->
+                    <!-- Category breakdown is intentionally not estimated without source data. -->
                     <div id="genetic-category-card" class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
-                        <h3 class="text-sm font-black text-slate-800 dark:text-slate-200 mb-4 uppercase tracking-wider text-center">Куда уходят деньги (структура расходов)</h3>
-                        <div class="h-64 relative flex items-center justify-center">
-                            <canvas id="categoryBreakdownChart"></canvas>
-                        </div>
+                        <h3 class="text-sm font-black text-slate-800 dark:text-slate-200 mb-2 uppercase tracking-wider text-center">Структура расходов</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 text-center leading-relaxed">Калькулятор не распределяет итог по категориям: без подтверждённой методологии такая разбивка была бы произвольной.</p>
                     </div>
 
                     <!-- График по эпохам -->
@@ -377,7 +375,6 @@
         };
 
         let chartInstance = null;
-        let categoryChartInstance = null;
         let externalDataReady = false;
         let externalDataLoading = true;
         let externalDataStatus = 'unavailable';
@@ -398,10 +395,6 @@
                 if (chartInstance) {
                     chartInstance.destroy();
                     chartInstance = null;
-                }
-                if (categoryChartInstance) {
-                    categoryChartInstance.destroy();
-                    categoryChartInstance = null;
                 }
             },
             onStateChange: (nextState) => {
@@ -634,7 +627,6 @@
             CalculatorState.writeSafeText('equiv-cars', `${carCountText} ${getCarWord(carCountText)}`);
 
             updateChart(result.stages);
-            updateCategoryChart(result.totalWithInf);
         }
 
         function shareGeneticResult() {
@@ -658,62 +650,6 @@
             const n = parseFloat(val);
             if (n === 1) return 'технологичного электромобиля';
             return 'новых электромобилей';
-        }
-
-        function updateCategoryChart(totalValue) {
-            const ctx = document.getElementById('categoryBreakdownChart').getContext('2d');
-
-            // Standard children cost ratios based on demographic statistics:
-            // Образование: 25%, Еда: 35%, Одежда: 20%, Медицина: 20%
-            const educationCost = totalValue * 0.25;
-            const foodCost = totalValue * 0.35;
-            const clothesCost = totalValue * 0.20;
-            const medicineCost = totalValue * 0.20;
-
-            if (categoryChartInstance) {
-                categoryChartInstance.destroy();
-            }
-
-            categoryChartInstance = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Образование', 'Еда', 'Одежда', 'Медицина'],
-                    datasets: [{
-                        data: [educationCost, foodCost, clothesCost, medicineCost],
-                        backgroundColor: [
-                            '#3b82f6', // blue
-                            '#10b981', // emerald
-                            '#f59e0b', // amber
-                            '#ef4444'  // red
-                        ],
-                        borderWidth: 2,
-                        hoverOffset: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                font: { size: 10, weight: 'bold' },
-                                padding: 12,
-                                usePointStyle: true
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: (context) => {
-                                    const value = context.raw;
-                                    const percentage = ((value / totalValue) * 100).toFixed(0);
-                                    return ` ${context.label}: ${formatMoney(value)} (${percentage}%)`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
         }
 
         function updateChart(stages) {
