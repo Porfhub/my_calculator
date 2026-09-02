@@ -861,7 +861,9 @@
             ];
 
             const monthlyDepositRate = state.depositRate / 100 / 12;
-            const monthlyInflationRate = state.avgInflation / 12;
+            // The Rosstat-derived rate is an effective annual rate. Convert it
+            // to an equivalent monthly rate so twelve steps reproduce one year.
+            const monthlyInflationRate = Math.pow(1 + state.avgInflation, 1 / 12) - 1;
 
             // Chart datasets config
             let chartDatasets = [];
@@ -891,9 +893,9 @@
                         balance = 0;
                     }
                     
-                    // Clamp plotted values to 2x initial savings to keep the Chart.js visual scale tight and readable
-                    const plottedVal = Math.min(balance, savings * 2);
-                    points.push({ x: m, y: Math.round(plottedVal) });
+                    // Keep chart data equal to the simulated balance. A visual
+                    // clamp can otherwise show a zero or understated balance.
+                    points.push({ x: m, y: Math.round(balance) });
 
                     if (balance <= 0 && monthsRemaining === 0) {
                         monthsRemaining = m;

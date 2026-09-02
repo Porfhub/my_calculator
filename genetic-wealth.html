@@ -541,7 +541,9 @@
             // 0-3 года (3 года = 36 месяцев)
             let stageToddlerNoInf = finalToddler * 12 * 3;
             let stageToddlerWithInf = 0;
-            for (let y = 1; y <= 3; y++) {
+            // Inputs are stated in today's prices, so the first projected year
+            // uses the current amount (year 0), not an already-inflated amount.
+            for (let y = 0; y < 3; y++) {
                 stageToddlerWithInf += finalToddler * 12 * Math.pow(1 + state.avgInflation, y);
             }
             stages.push({ label: 'Младенец', noInf: stageToddlerNoInf, withInf: stageToddlerWithInf });
@@ -549,7 +551,7 @@
             // 3-7 лет (4 года = 48 месяцев) -> updated according to explicit specs (3-7, 7-12, 12-18)
             let stagePreschoolerNoInf = finalPreschooler * 12 * 4;
             let stagePreschoolerWithInf = 0;
-            for (let y = 4; y <= 7; y++) {
+            for (let y = 3; y < 7; y++) {
                 stagePreschoolerWithInf += finalPreschooler * 12 * Math.pow(1 + state.avgInflation, y);
             }
             stages.push({ label: 'Дошкольник', noInf: stagePreschoolerNoInf, withInf: stagePreschoolerWithInf });
@@ -557,7 +559,7 @@
             // 7-12 лет (5 лет = 60 месяцев) -> updated according to explicit specs
             let stageSchoolerNoInf = finalSchooler * 12 * 5;
             let stageSchoolerWithInf = 0;
-            for (let y = 8; y <= 12; y++) {
+            for (let y = 7; y < 12; y++) {
                 stageSchoolerWithInf += finalSchooler * 12 * Math.pow(1 + state.avgInflation, y);
             }
             stages.push({ label: 'Школьник', noInf: stageSchoolerNoInf, withInf: stageSchoolerWithInf });
@@ -565,7 +567,7 @@
             // 12-18 лет (6 лет = 72 месяцев) -> updated according to explicit specs
             let stageTeenagerNoInf = finalTeenager * 12 * 6;
             let stageTeenagerWithInf = 0;
-            for (let y = 13; y <= 18; y++) {
+            for (let y = 12; y < 18; y++) {
                 stageTeenagerWithInf += finalTeenager * 12 * Math.pow(1 + state.avgInflation, y);
             }
             stages.push({ label: 'Подросток', noInf: stageTeenagerNoInf, withInf: stageTeenagerWithInf });

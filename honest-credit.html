@@ -348,7 +348,7 @@
                                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
                                         <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
                                     </span>
-                                    <p class="text-xs font-extrabold text-rose-600 dark:text-rose-400 uppercase tracking-widest mb-1.5">Расчётная полная ставка</p>
+                                    <p class="text-xs font-extrabold text-rose-600 dark:text-rose-400 uppercase tracking-widest mb-1.5">Расчётная годовая ставка</p>
                                     <p id="real-rate-display" class="text-6xl font-black text-rose-600 dark:text-rose-500 drop-shadow-sm">24.5%</p>
                                     <span class="text-[10px] text-rose-600 dark:text-rose-400 font-semibold mt-2">С учётом страховок и комиссий</span>
                                 </div>
@@ -647,13 +647,20 @@
             }
 
             const findEir = (target, pmt, n) => {
-                let low = -0.1; // Supports negative rates down to -10% monthly
-                let high = 2.0; // Up to 200% monthly
+                let low = 0;
+                let high = 1;
 
                 const getNpv = (rate) => {
                     if (Math.abs(rate) < 0.00001) return target - pmt * n;
                     return target - pmt * (1 - Math.pow(1 + rate, -n)) / rate;
                 };
+
+                // Keep expanding the bracket instead of silently reporting a
+                // capped rate when exceptionally large fees are entered.
+                while (getNpv(high) < 0 && high < 1e6) {
+                    high *= 2;
+                }
+                if (getNpv(high) < 0) return NaN;
 
                 // Bisection method
                 for (let i = 0; i < 60; i++) {

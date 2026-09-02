@@ -281,7 +281,7 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-brand-800/60 pt-6">
                             <div>
-                                <p class="text-xs text-brand-200 uppercase font-bold mb-1">Официальная ставка</p>
+                                <p class="text-xs text-brand-200 uppercase font-bold mb-1">Ставка без дороги и переработок</p>
                                 <p id="official-hourly-rate" class="text-xl font-bold text-white">0 ₽ / час</p>
                                 <p class="text-[10px] text-brand-300 mt-1">Без учета дороги и переработок</p>
                             </div>
@@ -504,7 +504,7 @@
             const totalRealHours = monthlyOfficialHours + monthlyCommuteHours + monthlyOvertimeHours;
 
             const realHourlyRate = totalRealHours > 0 ? state.income / totalRealHours : 0;
-            const officialHourlyRate = state.income / (40 * WEEKS_IN_MONTH);
+            const officialHourlyRate = state.income / monthlyOfficialHours;
 
             const rateDiff = officialHourlyRate > 0 ? ((officialHourlyRate - realHourlyRate) / officialHourlyRate) * 100 : 0;
 
@@ -554,7 +554,7 @@
                 verdictTitle.innerText = "Отрезвляющий итог";
                 verdictTitle.className = "text-lg font-black text-slate-900 dark:text-white mb-1";
 
-                verdictText.innerHTML = `Эта покупка заберет у вас ровно <span class="font-bold text-slate-900 dark:text-white" id="hours-cost">${formatNumber(hCostRound)}</span> <span id="hours-word">${getHoursWord(hCostRound)}</span> чистой, непрерывной концентрации на работе (что эквивалентно <span class="font-bold text-brand-600" id="days-cost">${dCostRound}</span> <span id="days-word-normal">${getDaysWord(dCostRound)}</span> сборов по утрам и дороги). Подумайте, стоит ли вещь этих усилий?`;
+                verdictText.innerHTML = `Эта покупка заберет у вас ровно <span class="font-bold text-slate-900 dark:text-white" id="hours-cost">${formatNumber(hCostRound)}</span> <span id="hours-word">${getHoursWord(hCostRound)}</span> времени, связанного с работой (что эквивалентно <span class="font-bold text-brand-600" id="days-cost">${dCostRound}</span> <span id="days-word-normal">${getDaysWord(dCostRound)}</span> сборов по утрам и дороги). Подумайте, стоит ли вещь этих усилий?`;
             }
 
             // Mobile sticky
