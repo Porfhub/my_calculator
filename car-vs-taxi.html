@@ -779,7 +779,9 @@
             const nightlyDeprVal = Math.round(depreciationAnnual / 365);
 
             // Упущенная выгода
-            const depositRatePct = Math.max(1, Math.floor(cbRate) - 2);
+            // Key rates can include fractional percentage points; keep the
+            // stated "minus 2 p.p." assumption exact instead of truncating it.
+            const depositRatePct = Math.max(0, cbRate - 2);
             const lostOppAnnual = carPrice * (depositRatePct / 100);
             const lostOppMonthly = lostOppAnnual / 12;
 
@@ -792,7 +794,7 @@
                 const mEl = document.getElementById('lost-opp-monthly');
                 const aEl = document.getElementById('lost-opp-annual');
                 if (pEl) pEl.innerText = formatNumber(carPrice);
-                if (rEl) rEl.innerText = depositRatePct + '%';
+                if (rEl) rEl.innerText = depositRatePct.toLocaleString('ru-RU', { maximumFractionDigits: 2 }) + '%';
                 if (mEl) mEl.innerText = formatMoney(lostOppMonthly);
                 if (aEl) aEl.innerText = formatMoney(lostOppAnnual);
             } else {
@@ -846,9 +848,11 @@
             if (totalCarMonthly < totalTaxiMonthly) {
                 const advantage = Math.round((totalTaxiMonthly - totalCarMonthly) / totalTaxiMonthly * 100);
                 tugVerdict = `Машина выгоднее на ${advantage}%`;
-            } else {
+            } else if (totalTaxiMonthly < totalCarMonthly) {
                 const advantage = Math.round((totalCarMonthly - totalTaxiMonthly) / totalCarMonthly * 100);
                 tugVerdict = `Такси выгоднее на ${advantage}%`;
+            } else {
+                tugVerdict = 'Расходы равны';
             }
             document.getElementById('tug-of-war-verdict').innerText = tugVerdict;
 
@@ -880,7 +884,7 @@
                 mobileTitle.innerText = "Машина выгоднее";
                 mobileDiff.innerText = formatMoney(diff);
                 mobileDiff.className = "text-lg font-black text-brand-600 dark:text-brand-400";
-            } else {
+            } else if (totalTaxiMonthly < totalCarMonthly) {
                 // Такси выгоднее
                 verdictCard.className = "p-8 rounded-3xl transition-all duration-500 flex flex-col items-center text-center space-y-4 shadow-xl border bg-gradient-to-br from-yellow-50 to-white dark:from-yellow-950/20 dark:to-slate-900 border-yellow-200 dark:border-yellow-900/50 text-slate-900 dark:text-white";
                 verdictIcon.innerText = "🚕";
@@ -893,6 +897,14 @@
                 mobileTitle.innerText = "Такси выгоднее";
                 mobileDiff.innerText = formatMoney(diff);
                 mobileDiff.className = "text-lg font-black text-yellow-600 dark:text-yellow-400";
+            } else {
+                verdictIcon.innerText = "⚖️";
+                verdictTitle.innerText = "Расходы равны";
+                verdictDesc.innerText = "При выбранных параметрах ежемесячные расходы на автомобиль и такси совпадают.";
+                monthlyDiffEl.innerText = formatMoney(0);
+                mobileIcon.innerText = "⚖️";
+                mobileTitle.innerText = "Расходы равны";
+                mobileDiff.innerText = formatMoney(0);
             }
 
             mobileCar.innerText = formatMoney(totalCarMonthly);
@@ -929,14 +941,14 @@
         };
 
         function updateDepositRateUI() {
-            const depositRate = Math.max(1, Math.floor(state.cbRate) - 2);
+            const depositRate = Math.max(0, state.cbRate - 2);
             const displayEl = document.getElementById('deposit-rate-display');
             if (displayEl) {
-                displayEl.innerText = depositRate + '%';
+                displayEl.innerText = depositRate.toLocaleString('ru-RU', { maximumFractionDigits: 2 }) + '%';
             }
             const actualCbEl = document.getElementById('actual-cb-rate-display');
             if (actualCbEl) {
-                actualCbEl.innerText = Math.floor(state.cbRate) + '%';
+                actualCbEl.innerText = state.cbRate.toLocaleString('ru-RU', { maximumFractionDigits: 2 }) + '%';
             }
             calculate();
         }

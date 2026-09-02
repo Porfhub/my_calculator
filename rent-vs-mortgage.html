@@ -599,8 +599,10 @@
             let investPot = state.cost * state.dpPercent; // Initial capital for renter
 
             const monthlyInvestRate = state.investRate / 12 / 100;
-            const monthlyGrowthRE = state.growthRE / 12 / 100;
-            const monthlyGrowthRent = state.growthRent / 12 / 100;
+            // Growth inputs are annual rates. Use equivalent monthly rates so a
+            // twelve-month simulation matches the stated annual assumption.
+            const monthlyGrowthRE = Math.pow(1 + state.growthRE / 100, 1 / 12) - 1;
+            const monthlyGrowthRent = Math.pow(1 + state.growthRent / 100, 1 / 12) - 1;
 
             // Initial month (0)
             dataBuy.push(currentPropertyValue - currentLoanBalance);
