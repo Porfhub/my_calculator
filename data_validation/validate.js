@@ -376,6 +376,29 @@ function validateInflationSemantic(value, options) {
     }
 }
 
+function validateRegionsSemantic(value) {
+    const policy = getPolicy('regions');
+    assertOfficialUrl(value.metadata.source_url, policy, 'metadata.source_url');
+    const ids = new Set();
+    const names = new Set();
+    for (const region of value.regions) {
+        if (ids.has(region.id) || names.has(region.name)) {
+            throw new DataValidationError('semantic', 'partial_dataset', 'Коды и названия регионов должны быть уникальны');
+        }
+        ids.add(region.id);
+        names.add(region.name);
+        for (const metric of Object.values(region.metrics || {})) {
+            if (metric.value !== null && !value.sources[metric.source_id]) {
+                throw new DataValidationError('semantic', 'semantic_validation_failed', `Неизвестный source_id для ${region.name}`);
+            }
+        }
+    }
+    if (value.regions.length !== 90 || !ids.has('RU')) {
+        throw new DataValidationError('semantic', 'partial_dataset', 'Нужны Россия и полный roster из 89 субъектов');
+    }
+    for (const source of Object.values(value.sources)) assertOfficialUrl(source.url, policy, 'sources.url');
+}
+
 function inflationDeadline(now) {
     const policy = getPolicy('inflation');
     return new Date(Date.UTC(now.getUTCFullYear(), policy.completedYearPublicationMonth - 1,
@@ -384,6 +407,7 @@ function inflationDeadline(now) {
 
 function validateFreshness(dataset, value, now) {
     const policy = getPolicy(dataset);
+    if (dataset === 'regions') return;
     if (value.metadata.status === 'unavailable') return;
 
     if (dataset === 'rates') {
@@ -415,7 +439,8 @@ function validateFreshness(dataset, value, now) {
 
 const SEMANTIC_VALIDATORS = Object.freeze({
     rates: validateRatesSemantic,
-    inflation: validateInflationSemantic
+    inflation: validateInflationSemantic,
+    regions: validateRegionsSemantic
 });
 
 function validateDataset(dataset, value, options = {}) {
@@ -575,7 +600,6 @@ function runCli(argv = process.argv.slice(2)) {
         console.log(`[data-validation] ${dataset}: schema + semantic + freshness OK`);
         if (value.metadata.status !== 'ok') unhealthy.push(`${dataset}=${value.metadata.status}`);
     }
-    console.log('[data-validation] regions: not registered; migration intentionally deferred to P0.4');
     if (mode === 'health' && unhealthy.length) {
         throw new Error(`Требуется внимание: ${unhealthy.join(', ')}`);
     }

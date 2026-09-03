@@ -54,6 +54,14 @@ const DATASET_POLICIES = Object.freeze({
         historicalRevisionThreshold: 0.5,
         interYearJumpThreshold: 15,
         clockSkewMs: HOUR_MS
+    }),
+    regions: Object.freeze({
+        datasetId: 'regional_salary_references',
+        schemaVersion: 2,
+        schemaPath: path.join(__dirname, '..', 'schemas', 'regions.schema.json'),
+        dataPath: path.join(__dirname, '..', 'regions.json'),
+        sourceHosts: Object.freeze(['rosstat.gov.ru', 'www.rosstat.gov.ru', 'government.ru']),
+        sourceUrl: 'https://rosstat.gov.ru/labor_market_employment_salaries'
     })
 });
 
