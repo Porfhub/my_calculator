@@ -72,11 +72,16 @@
         async function init() {
             regionalDataset = IncomeComparison.normalizeDataset(await fetchRegions());
             const select = document.getElementById('regionSelect');
-            if (!regionalDataset) { select.innerHTML = '<option>Данные недоступны</option>'; return; }
+            if (!regionalDataset) {
+                select.innerHTML = '<option>Данные недоступны</option>';
+                select.disabled = true;
+                return;
+            }
             select.innerHTML = '';
             regionalDataset.regions.forEach((region) => { const option = document.createElement('option'); option.value = region.id; option.textContent = region.name; select.appendChild(option); });
             select.value = 'RU'; currentRegion = IncomeComparison.getRegion(regionalDataset, 'RU');
-            document.getElementById('datasetStatus').textContent = `Обновлено: ${regionalDataset.metadata.updated_at}. Непроверенные метрики не показываются.`;
+            const updatedAt = regionalDataset.metadata.updated_at || 'дата обновления не указана';
+            document.getElementById('datasetStatus').textContent = `Обновлено: ${updatedAt}. Непроверенные метрики не показываются.`;
             select.addEventListener('change', () => { currentRegion = IncomeComparison.getRegion(regionalDataset, select.value); });
         }
 
@@ -102,21 +107,22 @@
             const salary = parseCleanNumber(document.getElementById('grossSalary').value);
             if (!salary || salary <= 0) { showToast('Введите зарплату больше нуля'); return; }
             if (!currentRegion) { showToast('Выберите Россию или субъект'); return; }
-            const references = IncomeComparison.availableReferences(currentRegion);
+            const references = IncomeComparison.availableReferences(currentRegion, regionalDataset.sources);
             const metrics = currentRegion.metrics || {};
             document.getElementById('resultsDashboard').classList.remove('hidden');
             document.getElementById('userSalary').textContent = formatMoney(salary);
             document.getElementById('comparisonScope').textContent = `Регион: ${currentRegion.name}. Сравнение использует только опубликованные значения.`;
-            document.getElementById('comparisonCards').innerHTML = references.length ? references.map((reference) => renderCard(reference, salary)).join('') : '<p class="text-sm text-slate-500">Для выбранного субъекта в наборе пока нет проверенных официальных ориентиров.</p>';
+            document.getElementById('comparisonCards').innerHTML = references.length ? references.map((reference) => renderCard(reference, salary)).join('') : '<p class="text-sm text-slate-500">Данные недоступны: для выбранного субъекта в наборе нет проверенных официальных ориентиров.</p>';
             const average = references.find((reference) => reference.key === 'average_salary');
-            document.getElementById('mainComparison').textContent = average ? comparisonText(IncomeComparison.compareSalary(salary, average.value), 'средней зарплаты выбранного региона') : 'Средняя зарплата для выбранного субъекта пока не опубликована в проверенном наборе.';
-            renderScale(references, salary);
+            document.getElementById('mainComparison').textContent = average ? comparisonText(IncomeComparison.compareSalary(salary, average.value), 'средней зарплаты выбранного региона') : references.length ? 'Средняя зарплата для выбранного субъекта пока не опубликована в проверенном наборе.' : 'Данные недоступны: нет официальных ориентиров для сравнения.';
+            if (references.length) renderScale(references, salary);
+            else document.getElementById('comparisonScale').innerHTML = '<p class="text-sm text-slate-500">Шкала появится, когда для выбранного субъекта будет доступен официальный ориентир.</p>';
             const minimum = metrics.working_age_subsistence_minimum;
             document.getElementById('minimumCard').classList.toggle('hidden', !Number.isFinite(minimum?.value));
             if (Number.isFinite(minimum?.value)) document.getElementById('minimumValue').textContent = formatMoney(minimum.value);
-            const absent = ['median_salary', 'high_income_reference'].filter((key) => !Number.isFinite(metrics[key]?.value));
+            const absent = ['median_salary', 'average_salary', 'high_income_reference'].filter((key) => !IncomeComparison.isVerifiedMetric(metrics[key], regionalDataset.sources));
             const notice = document.getElementById('unavailableNotice');
-            notice.classList.toggle('hidden', absent.length === 0);
+            notice.classList.toggle('hidden', absent.length === 0 || references.length === 0);
             notice.textContent = absent.length ? 'Часть ориентиров не показана: для них нет проверенного официального значения с совместимым периодом и охватом.' : '';
             window.canExportCalculation = () => references.length > 0;
         }

@@ -24,17 +24,55 @@ test('official region dataset includes Russia and the full 89-subject roster', (
 });
 
 test('Russia mode exposes only the verified national salary references', () => {
-    const references = comparison.availableReferences(comparison.getRegion(regions, 'RU'));
+    const references = comparison.availableReferences(comparison.getRegion(regions, 'RU'), regions.sources);
     assert.deepEqual(references.map((reference) => [reference.key, reference.value]), [
         ['median_salary', 73871],
         ['average_salary', 99399]
     ]);
 });
 
+test('a partial regional record keeps its verified comparison instead of failing the whole result', () => {
+    const moscow = comparison.availableReferences(comparison.getRegion(regions, 'MSK'), regions.sources);
+    assert.deepEqual(moscow.map((reference) => [reference.key, reference.value]), [['average_salary', 180861]]);
+    assert.equal(comparison.availableReferences(comparison.getRegion(regions, 'ADY'), regions.sources).length, 0);
+});
+
+test('only metrics with a declared official source are available for comparison', () => {
+    const region = { id: 'TEST', name: 'Тест', metrics: { average_salary: { value: 100000, source_id: 'missing' } } };
+    assert.equal(comparison.availableReferences(region, regions.sources).length, 0);
+});
+
+test('dataset normalization preserves valid regional records when another record is malformed', () => {
+    const dataset = comparison.normalizeDataset({
+        sources: { official: { url: 'https://rosstat.gov.ru/example' } },
+        regions: [
+            { id: 'RU', name: 'Россия', metrics: { average_salary: { value: 100000, source_id: 'official' } } },
+            { id: '', name: 'Повреждённая запись' }
+        ]
+    });
+    assert.equal(dataset.regions.length, 1);
+    assert.deepEqual(
+        comparison.availableReferences(comparison.getRegion(dataset, 'RU'), dataset.sources).map((reference) => reference.key),
+        ['average_salary']
+    );
+});
+
 test('income x-ray contains no ranking or social-class model', () => {
     assert.doesNotMatch(wealth, /percentile|богаче|Топ-|Финансовая элита|Крайняя бедность/i);
     assert.doesNotMatch(wealth, /popOffset|renderSocialStrata|calculateWealth/);
     assert.match(wealth, /IncomeComparison\.compareSalary/);
+});
+
+test('the unavailable state is reserved for a region with no verified references', () => {
+    assert.match(wealth, /references\.length \? references\.map/);
+    assert.match(wealth, /references\.length \? 'Средняя зарплата/);
+    assert.match(wealth, /Данные недоступны: нет официальных ориентиров/);
+});
+
+test('page loads the full selector from the validated dataset and resolves the dataset URL from its deployment path', () => {
+    const api = fs.readFileSync(path.join(root, 'js', 'api.js'), 'utf8');
+    assert.match(wealth, /regionalDataset\.regions\.forEach/);
+    assert.match(api, /new URL\('regions\.json', document\.baseURI\)/);
 });
 
 test('minimum-income tooltip identifies the subsistence minimum and rejects MROT equivalence', () => {
