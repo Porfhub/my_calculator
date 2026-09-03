@@ -33,7 +33,7 @@ test('shared share and screenshot actions fail closed when a page marks its calc
 });
 
 test('service worker cache is advanced with the shared export behaviour', () => {
-    assert.match(read('sw.js'), /fin-hub-cache-v9/);
+    assert.match(read('sw.js'), /fin-hub-cache-v11/);
     assert.match(read('sw.js'), /'\/js\/trust-layer\.js'/);
     assert.match(read('sw.js'), /'\/js\/ui-utils\.js'/);
 });

@@ -27,7 +27,8 @@ test('Russia mode exposes only the verified national salary references', () => {
     const references = comparison.availableReferences(comparison.getRegion(regions, 'RU'), regions.sources);
     assert.deepEqual(references.map((reference) => [reference.key, reference.value]), [
         ['median_salary', 73871],
-        ['average_salary', 99399]
+        ['average_salary', 99399],
+        ['working_age_subsistence_minimum', 20644]
     ]);
 });
 
@@ -35,6 +36,15 @@ test('a partial regional record keeps its verified comparison instead of failing
     const moscow = comparison.availableReferences(comparison.getRegion(regions, 'MSK'), regions.sources);
     assert.deepEqual(moscow.map((reference) => [reference.key, reference.value]), [['average_salary', 180861]]);
     assert.equal(comparison.availableReferences(comparison.getRegion(regions, 'ADY'), regions.sources).length, 0);
+});
+
+test('selector eligibility requires at least one verified official comparison metric', () => {
+    const eligibleIds = regions.regions
+        .filter((region) => comparison.availableReferences(region, regions.sources).length > 0)
+        .map((region) => region.id);
+    assert.ok(eligibleIds.includes('RU'));
+    assert.ok(eligibleIds.includes('MSK'));
+    assert.ok(!eligibleIds.includes('ADY'));
 });
 
 test('only metrics with a declared official source are available for comparison', () => {
@@ -69,9 +79,17 @@ test('the unavailable state is reserved for a region with no verified references
     assert.match(wealth, /Данные недоступны: нет официальных ориентиров/);
 });
 
+test('main result shows one direct comparison as a consistent ruble difference and percentage', () => {
+    const result = comparison.compareSalary(120000, 100000);
+    assert.equal(result.difference, 20000);
+    assert.equal(result.percent, 20);
+    assert.match(wealth, /formatMoney\(Math\.abs\(comparison\.difference\)\)/);
+    assert.match(wealth, /\$\{sign\}\$\{comparison\.percent\}%/);
+});
+
 test('page loads the full selector from the validated dataset and resolves the dataset URL from its deployment path', () => {
     const api = fs.readFileSync(path.join(root, 'js', 'api.js'), 'utf8');
-    assert.match(wealth, /regionalDataset\.regions\.forEach/);
+    assert.match(wealth, /selectableRegions\.forEach/);
     assert.match(api, /new URL\('regions\.json', document\.baseURI\)/);
 });
 
