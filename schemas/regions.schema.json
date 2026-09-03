@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://calchub.local/schemas/regions.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["metadata", "sources", "regions"],
+  "properties": {
+    "metadata": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "dataset_id", "status", "source_name", "source_url", "updated_at", "notes"],
+      "properties": {
+        "schema_version": { "const": 2 }, "dataset_id": { "const": "regional_salary_references" }, "status": { "const": "partial" },
+        "source_name": { "const": "Росстат" }, "source_url": { "type": "string", "format": "uri" }, "updated_at": { "type": "string", "format": "date" }, "notes": { "type": "string", "minLength": 1 }
+      }
+    },
+    "sources": { "type": "object", "minProperties": 1, "additionalProperties": { "type": "object", "additionalProperties": false, "required": ["name", "url", "reference_period", "coverage"], "properties": { "name": { "type": "string", "minLength": 1 }, "url": { "type": "string", "format": "uri" }, "reference_period": { "type": "string", "minLength": 1 }, "coverage": { "type": "string", "minLength": 1 } } } },
+    "regions": { "type": "array", "minItems": 90, "items": { "type": "object", "additionalProperties": false, "required": ["id", "name"], "properties": { "id": { "type": "string", "pattern": "^[A-Z_]+$" }, "name": { "type": "string", "minLength": 1 }, "metrics": { "type": "object", "additionalProperties": false, "properties": { "median_salary": { "$ref": "#/$defs/metric" }, "average_salary": { "$ref": "#/$defs/metric" }, "high_income_reference": { "$ref": "#/$defs/metric" }, "working_age_subsistence_minimum": { "$ref": "#/$defs/metric" } } } } } }
+  },
+  "$defs": { "metric": { "type": "object", "additionalProperties": false, "required": ["value", "source_id"], "properties": { "value": { "type": ["number", "null"], "minimum": 1 }, "source_id": { "type": ["string", "null"] } }, "allOf": [{ "if": { "properties": { "value": { "type": "number" } }, "required": ["value"] }, "then": { "properties": { "source_id": { "type": "string", "minLength": 1 } } } }] } }
+}

@@ -4,12 +4,14 @@
 
 async function fetchRegions() {
     try {
-        const response = await fetch('regions.json');
+        // Resolve from the document URL so this also works when the site is
+        // deployed under a project subpath (for example, GitHub Pages).
+        const response = await fetch(new URL('regions.json', document.baseURI).toString());
         if (!response.ok) throw new Error('Failed to fetch regions');
         return await response.json();
     } catch (error) {
         console.error('Error loading regions:', error);
-        return [];
+        return null;
     }
 }
 
