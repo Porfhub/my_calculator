@@ -56,8 +56,7 @@
                 </div>
                 <div class="rounded-2xl p-6 border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50"><h3 class="text-sm font-black uppercase tracking-wide text-slate-500 mb-4">Сравнение с доступными ориентирами</h3><div id="comparisonCards" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div></div>
                 <div class="rounded-2xl p-6 border border-slate-100 dark:border-slate-800"><h3 class="text-sm font-black uppercase tracking-wide text-slate-500 mb-1">Шкала ориентиров</h3><p class="text-xs text-slate-500 mb-5">Метки показывают опубликованные значения и вашу зарплату. Расстояния между ними ничего не оценивают.</p><div id="comparisonScale" class="space-y-5"></div></div>
-                <div id="minimumCard" class="hidden rounded-2xl p-6 border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50"><div class="flex items-center gap-2"><h3 class="text-sm font-black uppercase tracking-wide text-slate-500">Прожиточный минимум трудоспособного населения</h3><button class="info-button shrink-0 w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-xs font-bold" aria-label="Пояснение к прожиточному минимуму" aria-describedby="minimumInfo">i</button><span id="minimumInfo" role="tooltip" class="info-popover absolute max-w-xs p-3 rounded-xl bg-slate-900 text-white text-xs shadow-xl">Это прожиточный минимум трудоспособного населения. Он не является законодательно установленным минимальным размером оплаты труда (МРОТ).</span></div><p id="minimumValue" class="mt-3 text-2xl font-black">—</p></div>
-                <div id="unavailableNotice" class="hidden rounded-2xl p-5 border border-amber-200 bg-amber-50 text-amber-900 text-sm"></div>
+                <div id="unavailableNotice" class="hidden rounded-2xl p-5 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 text-slate-600 dark:text-slate-300 text-sm"></div>
             </section>
         </div>
     </main>
@@ -67,8 +66,6 @@
     <script>
         let regionalDataset = null;
         let currentRegion = null;
-        const metricLabels = { median_salary: 'Медианная зарплата', average_salary: 'Средняя зарплата', high_income_reference: 'Уровень высоких зарплат' };
-
         async function init() {
             regionalDataset = IncomeComparison.normalizeDataset(await fetchRegions());
             const select = document.getElementById('regionSelect');
@@ -78,7 +75,13 @@
                 return;
             }
             select.innerHTML = '';
-            regionalDataset.regions.forEach((region) => { const option = document.createElement('option'); option.value = region.id; option.textContent = region.name; select.appendChild(option); });
+            const selectableRegions = regionalDataset.regions.filter((region) => IncomeComparison.availableReferences(region, regionalDataset.sources).length > 0);
+            if (selectableRegions.length === 0) {
+                select.innerHTML = '<option>Данные недоступны</option>';
+                select.disabled = true;
+                return;
+            }
+            selectableRegions.forEach((region) => { const option = document.createElement('option'); option.value = region.id; option.textContent = region.name; select.appendChild(option); });
             select.value = 'RU'; currentRegion = IncomeComparison.getRegion(regionalDataset, 'RU');
             const updatedAt = regionalDataset.metadata.updated_at || 'дата обновления не указана';
             document.getElementById('datasetStatus').textContent = `Обновлено: ${updatedAt}. Непроверенные метрики не показываются.`;
@@ -87,15 +90,19 @@
 
         function handleSalaryInput(input) { formatInputField(input, input.value); }
         function comparisonText(comparison, referenceTitle) {
-            if (comparison.relation === 'equal') return `На уровне ориентира: ${referenceTitle.toLowerCase()}.`;
-            return comparison.relation === 'above' ? `На ${comparison.percent}% выше ${referenceTitle.toLowerCase()}.` : `На ${comparison.percent}% ниже ${referenceTitle.toLowerCase()}.`;
+            const reference = referenceTitle.toLowerCase();
+            if (comparison.relation === 'equal') return `Разница со ${reference}: 0 ₽ (0%).`;
+            const relation = comparison.relation === 'above' ? 'выше' : 'ниже';
+            const sign = comparison.relation === 'above' ? '+' : '−';
+            return `${formatMoney(Math.abs(comparison.difference))} ${relation} ${reference} (${sign}${comparison.percent}%).`;
         }
         function renderCard(reference, salary) {
             const comparison = IncomeComparison.compareSalary(salary, reference.value);
             const above = comparison.relation === 'above';
             const detail = comparison.relation === 'equal' ? 'На уровне ориентира' : above ? `Выше на ${comparison.percent}%` : `Ниже на ${comparison.percent}%`;
             const needed = !above && comparison.relation !== 'equal' ? `<p class="mt-2 text-xs text-slate-500">До ориентира: ${formatMoney(Math.abs(comparison.difference))}</p>` : '';
-            return `<article class="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700"><p class="text-xs font-bold text-slate-500">${reference.title}</p><p class="mt-1 text-xl font-black">${formatMoney(reference.value)}</p><p class="mt-2 text-sm font-bold ${above ? 'text-brand-700 dark:text-brand-300' : 'text-slate-700 dark:text-slate-300'}">${above ? '✓' : '○'} ${detail}</p>${needed}</article>`;
+            const info = reference.key === 'working_age_subsistence_minimum' ? '<div class="relative flex items-center gap-2"><p class="text-xs font-bold text-slate-500">Прожиточный минимум трудоспособного населения</p><button class="info-button shrink-0 w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-xs font-bold" aria-label="Пояснение к прожиточному минимуму" aria-describedby="minimumInfo">i</button><span id="minimumInfo" role="tooltip" class="info-popover absolute max-w-xs p-3 rounded-xl bg-slate-900 text-white text-xs shadow-xl">Это прожиточный минимум трудоспособного населения. Он не является законодательно установленным минимальным размером оплаты труда (МРОТ).</span></div>' : `<p class="text-xs font-bold text-slate-500">${reference.title}</p>`;
+            return `<article class="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">${info}<p class="mt-1 text-xl font-black">${formatMoney(reference.value)}</p><p class="mt-2 text-sm font-bold ${above ? 'text-brand-700 dark:text-brand-300' : 'text-slate-700 dark:text-slate-300'}">${above ? '✓' : '○'} ${detail}</p>${needed}</article>`;
         }
         function renderScale(references, salary) {
             const markers = references.map((reference) => ({ title: reference.title, value: reference.value, user: false }));
@@ -117,13 +124,10 @@
             document.getElementById('mainComparison').textContent = average ? comparisonText(IncomeComparison.compareSalary(salary, average.value), 'средней зарплаты выбранного региона') : references.length ? 'Средняя зарплата для выбранного субъекта пока не опубликована в проверенном наборе.' : 'Данные недоступны: нет официальных ориентиров для сравнения.';
             if (references.length) renderScale(references, salary);
             else document.getElementById('comparisonScale').innerHTML = '<p class="text-sm text-slate-500">Шкала появится, когда для выбранного субъекта будет доступен официальный ориентир.</p>';
-            const minimum = metrics.working_age_subsistence_minimum;
-            document.getElementById('minimumCard').classList.toggle('hidden', !Number.isFinite(minimum?.value));
-            if (Number.isFinite(minimum?.value)) document.getElementById('minimumValue').textContent = formatMoney(minimum.value);
-            const absent = ['median_salary', 'average_salary', 'high_income_reference'].filter((key) => !IncomeComparison.isVerifiedMetric(metrics[key], regionalDataset.sources));
+            const absent = ['median_salary', 'average_salary', 'working_age_subsistence_minimum'].filter((key) => !IncomeComparison.isVerifiedMetric(metrics[key], regionalDataset.sources));
             const notice = document.getElementById('unavailableNotice');
             notice.classList.toggle('hidden', absent.length === 0 || references.length === 0);
-            notice.textContent = absent.length ? 'Часть ориентиров не показана: для них нет проверенного официального значения с совместимым периодом и охватом.' : '';
+            notice.textContent = absent.length ? 'Некоторые официальные ориентиры для выбранного региона пока не опубликованы с совместимым периодом и охватом, поэтому мы намеренно их не показываем.' : '';
             window.canExportCalculation = () => references.length > 0;
         }
         window.onload = init;

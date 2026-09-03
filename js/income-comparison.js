@@ -60,7 +60,7 @@
         const references = [
             { key: 'median_salary', title: 'Медианная зарплата', metric: region?.metrics?.median_salary },
             { key: 'average_salary', title: 'Средняя зарплата', metric: region?.metrics?.average_salary },
-            { key: 'high_income_reference', title: 'Уровень высоких зарплат', metric: region?.metrics?.high_income_reference }
+            { key: 'working_age_subsistence_minimum', title: 'Прожиточный минимум трудоспособного населения', metric: region?.metrics?.working_age_subsistence_minimum }
         ];
         return references
             .filter((reference) => isVerifiedMetric(reference.metric, sources))
