@@ -11,8 +11,8 @@
     "payload_checksum_sha256": "d8eecbbc377657bc6e0dfe29a7375f03bbd9a5b0bd96555839fbea4abc332ccf",
     "source_published_at": null,
     "sources": null,
-    "last_successful_fetch_at": "2026-09-04T07:31:38.821Z",
-    "last_attempt_at": "2026-09-04T07:31:38.821Z"
+    "last_successful_fetch_at": "2026-09-05T07:11:27.100Z",
+    "last_attempt_at": "2026-09-05T07:11:27.100Z"
   },
   "key_rate": {
     "value_percent": 14,
@@ -21,6 +21,6 @@
   "cb_rate": 14,
   "source_url": "https://www.cbr.ru/hd_base/keyrate/",
   "effective_from": "2026-07-27",
-  "fetched_at": "2026-09-04T07:31:38.821Z",
+  "fetched_at": "2026-09-05T07:11:27.100Z",
   "status": "ok"
 }
