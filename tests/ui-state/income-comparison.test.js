@@ -79,6 +79,15 @@ test('the unavailable state is reserved for a region with no verified references
     assert.match(wealth, /Данные недоступны: нет официальных ориентиров/);
 });
 
+test('invalid salary clears every previous income-comparison result before showing recovery guidance', () => {
+    assert.match(wealth, /function clearIncomeComparison\(message\)/);
+    assert.match(wealth, /results\.classList\.add\('hidden'\)/);
+    assert.match(wealth, /comparisonCards'\)\.innerHTML = ''/);
+    assert.match(wealth, /comparisonScale'\)\.innerHTML = ''/);
+    assert.match(wealth, /salaryInput\.setAttribute\('aria-invalid', 'true'\)/);
+    assert.match(wealth, /clearIncomeComparison\('Введите зарплату больше нуля'\)/);
+});
+
 test('main result shows one direct comparison as a consistent ruble difference and percentage', () => {
     const result = comparison.compareSalary(120000, 100000);
     assert.equal(result.difference, 20000);

@@ -89,7 +89,22 @@
             select.addEventListener('change', () => { currentRegion = IncomeComparison.getRegion(regionalDataset, select.value); });
         }
 
-        function handleSalaryInput(input) { formatInputField(input, input.value); }
+        function clearIncomeComparison(message) {
+            const results = document.getElementById('resultsDashboard');
+            results.classList.add('hidden');
+            document.getElementById('userSalary').textContent = '—';
+            document.getElementById('mainComparison').textContent = '—';
+            document.getElementById('comparisonScope').textContent = '';
+            document.getElementById('comparisonCards').innerHTML = '';
+            document.getElementById('comparisonScale').innerHTML = '';
+            document.getElementById('conversionDisclosure').classList.add('hidden');
+            window.canExportCalculation = () => false;
+            if (message) showToast(message);
+        }
+        function handleSalaryInput(input) {
+            formatInputField(input, input.value);
+            input.removeAttribute('aria-invalid');
+        }
         function selectedSalaryMode() { return document.querySelector('input[name="salaryMode"]:checked')?.value || 'net'; }
         function updateSalaryInputLabel() {
             document.getElementById('salaryInputLabel').textContent = selectedSalaryMode() === 'net' ? 'Ваша зарплата «на руки»' : 'Ваша начисленная зарплата до НДФЛ';
@@ -116,12 +131,18 @@
             document.getElementById('comparisonScale').innerHTML = markers.map((marker) => `<div class="comparison-marker ${marker.user ? 'user' : ''}"><span class="dot"></span><p class="text-xs font-bold text-slate-500">${marker.title}</p><p class="text-lg font-black">${formatMoney(marker.value)}</p></div>`).join('');
         }
         function calculateIncomeComparison() {
-            const enteredSalary = parseCleanNumber(document.getElementById('grossSalary').value);
-            if (!enteredSalary || enteredSalary <= 0) { showToast('Введите зарплату больше нуля'); return; }
-            if (!currentRegion) { showToast('Выберите Россию или субъект'); return; }
+            const salaryInput = document.getElementById('grossSalary');
+            const enteredSalary = parseCleanNumber(salaryInput.value);
+            if (!enteredSalary || enteredSalary <= 0) {
+                salaryInput.setAttribute('aria-invalid', 'true');
+                clearIncomeComparison('Введите зарплату больше нуля');
+                salaryInput.focus();
+                return;
+            }
+            if (!currentRegion) { clearIncomeComparison('Выберите Россию или субъект'); return; }
             const isNetSalary = selectedSalaryMode() === 'net';
             const salary = isNetSalary ? Ndfl.monthlyGrossFromMonthlyNet(enteredSalary) : enteredSalary;
-            if (!salary) { showToast('Не удалось перевести зарплату для сравнения'); return; }
+            if (!salary) { clearIncomeComparison('Не удалось перевести зарплату для сравнения'); return; }
             const references = IncomeComparison.availableReferences(currentRegion, regionalDataset.sources);
             const metrics = currentRegion.metrics || {};
             document.getElementById('resultsDashboard').classList.remove('hidden');
