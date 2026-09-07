@@ -68,6 +68,7 @@
             box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.12), 0 4px 12px rgba(0, 0, 0, 0.3);
         }
     </style>
+    <link rel="stylesheet" href="css/product-polish.css">
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){
@@ -92,7 +93,7 @@
     <script src="js/utils.js"></script>
     <script src="js/ui-utils.js"></script>
 </head>
-<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen font-sans antialiased flex flex-col transition-colors duration-300">
+<body class="home-page bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen font-sans antialiased flex flex-col transition-colors duration-300">
 
     <!-- Sticky Navigation Header with Premium Glassmorphism -->
     <header class="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/85 backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-950/85 transition-all">
@@ -118,10 +119,10 @@
         <div class="max-w-6xl w-full">
 
             <!-- Hero Section with polished copy and live rate skeleton -->
-            <div class="text-center mb-10 md:mb-14 relative">
+            <div class="text-center mb-8 md:mb-10 relative">
                 <!-- Data freshness notice (No bot jargon) -->
                 <div class="mb-5 inline-flex items-center gap-2 px-3.5 py-1.5 bg-slate-100/80 dark:bg-slate-900/50 rounded-full border border-slate-200/60 dark:border-slate-800/60 text-xs font-semibold text-slate-500 dark:text-slate-400 justify-center shadow-sm">
-                    <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse shrink-0"></span>
+                    <span class="w-2 h-2 rounded-full bg-brand-500 shrink-0"></span>
                     <span id="freshness-text" class="flex items-center gap-1.5">
                         <span class="h-3 w-32 bg-slate-200 dark:bg-slate-700 rounded animate-pulse inline-block"></span>
                     </span>
@@ -129,7 +130,7 @@
                     <span id="freshness-indicator" class="hidden"></span>
                 </div>
 
-                <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-slate-900 dark:text-white mb-6 leading-tight">
+                <h1 class="text-4xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-5 leading-tight">
                     Понятные расчёты <br class="sm:hidden"> для <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-400">финансовых решений</span>
                 </h1>
 
@@ -139,24 +140,24 @@
             </div>
 
             <!-- Goal-Selection / Quick Filter Block -->
-            <div class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 p-4 sm:p-6 rounded-3xl shadow-lg mb-10 md:mb-12">
+            <div class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 p-4 sm:p-5 rounded-3xl shadow-sm mb-8 md:mb-10">
                 <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-5 text-center">
                     Что вы хотите сделать? Выберите для быстрого фокуса
                 </h3>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3.5">
-                    <button id="btn-scenario-mortgage" onclick="scrollToCategory('mortgage')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 border border-slate-100 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-900/60 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-all duration-300 group shadow-sm">
+                    <button id="btn-scenario-mortgage" type="button" aria-pressed="false" onclick="scrollToCategory('mortgage')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 border border-slate-100 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-900/60 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-all duration-300 group shadow-sm">
                         <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">🏠</span>
                         <span class="text-[11px] sm:text-sm font-bold text-center sm:text-left">Купить квартиру</span>
                     </button>
-                    <button id="btn-scenario-credits" onclick="scrollToCategory('credits')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-teal-50 dark:hover:bg-teal-950/20 border border-slate-100 dark:border-slate-800 hover:border-teal-300 dark:hover:border-teal-900/60 text-slate-700 dark:text-slate-300 hover:text-teal-700 dark:hover:text-teal-400 transition-all duration-300 group shadow-sm">
+                    <button id="btn-scenario-credits" type="button" aria-pressed="false" onclick="scrollToCategory('credits')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-teal-50 dark:hover:bg-teal-950/20 border border-slate-100 dark:border-slate-800 hover:border-teal-300 dark:hover:border-teal-900/60 text-slate-700 dark:text-slate-300 hover:text-teal-700 dark:hover:text-teal-400 transition-all duration-300 group shadow-sm">
                         <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">💳</span>
                         <span class="text-[11px] sm:text-sm font-bold text-center sm:text-left">Проверить кредит</span>
                     </button>
-                    <button id="btn-scenario-savings" onclick="scrollToCategory('savings')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-amber-50 dark:hover:bg-amber-950/20 border border-slate-100 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-900/60 text-slate-700 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-500 transition-all duration-300 group shadow-sm">
+                    <button id="btn-scenario-savings" type="button" aria-pressed="false" onclick="scrollToCategory('savings')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-amber-50 dark:hover:bg-amber-950/20 border border-slate-100 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-900/60 text-slate-700 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-500 transition-all duration-300 group shadow-sm">
                         <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">💰</span>
                         <span class="text-[11px] sm:text-sm font-bold text-center sm:text-left">Копить сбережения</span>
                     </button>
-                    <button id="btn-scenario-life" onclick="scrollToCategory('life')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-blue-50 dark:hover:bg-blue-950/20 border border-slate-100 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-900/60 text-slate-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-blue-400 transition-all duration-300 group shadow-sm">
+                    <button id="btn-scenario-life" type="button" aria-pressed="false" onclick="scrollToCategory('life')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-blue-50 dark:hover:bg-blue-950/20 border border-slate-100 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-900/60 text-slate-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-blue-400 transition-all duration-300 group shadow-sm">
                         <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">🌱</span>
                         <span class="text-[11px] sm:text-sm font-bold text-center sm:text-left">Управлять бюджетом</span>
                     </button>
@@ -165,7 +166,7 @@
 
             <!-- Dynamic Interactive Catalog -->
             <div id="catalog-section" class="mb-14 scroll-mt-20">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                     <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
                         <span class="text-brand-600">⚡</span> Финансовые калькуляторы
                     </h2>
@@ -440,22 +441,20 @@
 
                 // Complete premium card rendering with isolated BG layer, soft shadows & Fitts's Law absolute overlay
                 const cardHtml = `
-                    <div id="${calc.id}" class="group premium-card relative bg-white dark:bg-slate-900 p-8 md:p-10 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 transition-all duration-300 ${borderHoverColor} overflow-hidden flex flex-col h-full transform hover:scale-[1.01]">
+                    <div id="${calc.id}" class="group premium-card relative bg-white dark:bg-slate-900 p-6 md:p-7 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 transition-all duration-300 ${borderHoverColor} overflow-hidden flex flex-col h-full">
 
                         <!-- Absolute isolated background layer with controlled scale/z-index -->
                         <div class="absolute -right-6 -bottom-6 opacity-5 dark:opacity-[0.03] transition-transform group-hover:scale-110 duration-500 z-0 pointer-events-none">
                             ${calc.iconSvg.replace('w-8 h-8', 'w-44 h-44')}
                         </div>
 
-                        <!-- Card badge layout -->
-                        <div class="relative z-10 flex justify-end mb-4">
-                            ${calc.badge ? `<span class="px-2.5 py-0.5 text-[10px] uppercase tracking-wider font-extrabold rounded-full border shadow-sm ${calc.badgeClass}">${calc.badge}</span>` : ''}
-                        </div>
-
                         <!-- Card content -->
                         <div class="relative z-10 flex flex-col h-full">
-                            <div class="w-14 h-14 ${iconBg} rounded-2xl flex items-center justify-center mb-5 transition-all group-hover:scale-105 duration-300 shadow-sm shrink-0">
-                                ${calc.iconSvg}
+                            <div class="flex items-start justify-between gap-4 mb-5">
+                                <div class="w-12 h-12 ${iconBg} rounded-2xl flex items-center justify-center shadow-sm shrink-0">
+                                    ${calc.iconSvg}
+                                </div>
+                                ${calc.badge ? `<span class="px-2.5 py-0.5 text-[10px] uppercase tracking-wider font-extrabold rounded-full border ${calc.badgeClass}">${calc.badge}</span>` : ''}
                             </div>
 
                             <!-- Main title with absolute overlay for flawless click capability -->
@@ -491,6 +490,8 @@
             categories.forEach(cat => {
                 const btn = document.getElementById(`btn-scenario-${cat}`);
                 if (!btn) return;
+
+                btn.setAttribute('aria-pressed', String(cat === category));
 
                 if (cat === category) {
                     // Apply visual active state based on category theme
@@ -533,13 +534,8 @@
 
             const catalog = document.getElementById('catalog-section');
             if (catalog) {
-                catalog.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-                // Pulsate active filters brief hint animation
-                catalog.classList.add('glow-active');
-                setTimeout(() => {
-                    catalog.classList.remove('glow-active');
-                }, 1500);
+                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                catalog.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
             }
         }
 

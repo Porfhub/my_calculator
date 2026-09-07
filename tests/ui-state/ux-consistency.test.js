@@ -33,7 +33,46 @@ test('shared share and screenshot actions fail closed when a page marks its calc
 });
 
 test('service worker cache is advanced with the shared export behaviour', () => {
-    assert.match(read('sw.js'), /fin-hub-cache-v12/);
+    assert.match(read('sw.js'), /fin-hub-cache-v13/);
     assert.match(read('sw.js'), /'\/js\/trust-layer\.js'/);
     assert.match(read('sw.js'), /'\/js\/ui-utils\.js'/);
+});
+
+test('every product page loads the shared interaction and responsive polish layer', () => {
+    const pages = [
+        'index.html',
+        'mortgage.html',
+        'wealth.html',
+        'rent-vs-mortgage.html',
+        'time-is-money.html',
+        'inflation-shredder.html',
+        'car-vs-taxi.html',
+        'millionaire.html',
+        'financial-freedom.html',
+        'honest-credit.html',
+        'genetic-wealth.html'
+    ];
+
+    for (const page of pages) {
+        const html = read(page);
+        assert.match(html, /<link rel="stylesheet" href="css\/product-polish\.css">/, page);
+        assert.match(html, /<button[^>]*id="theme-toggle"[^>]*aria-label="Переключить тему"/, page);
+    }
+
+    assert.match(read('sw.js'), /'\/css\/product-polish\.css'/);
+});
+
+test('state-managed calculators keep fixed mobile results hidden until a valid result exists', () => {
+    const stateMachine = read('js/calculator-state.js');
+    const polish = read('css/product-polish.css');
+
+    assert.match(stateMachine, /document\.body\.classList\.add\('calculation-state-managed'\)/);
+    assert.match(stateMachine, /document\.body\.dataset\.calculationState = nextState/);
+    assert.match(polish, /\.calculation-state-managed:not\(\[data-calculation-state="READY"\]\) \.mobile-sticky-results/);
+});
+
+test('shared polish respects reduced-motion preferences and provides visible keyboard focus', () => {
+    const polish = read('css/product-polish.css');
+    assert.match(polish, /prefers-reduced-motion: reduce/);
+    assert.match(polish, /:focus-visible/);
 });
