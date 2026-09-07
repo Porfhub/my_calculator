@@ -7,6 +7,9 @@ function showToast(message) {
     const toastMessage = document.getElementById('toast-message');
     if (!toast || !toastMessage) return;
 
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
+    toast.setAttribute('aria-atomic', 'true');
     toastMessage.innerText = message;
     toast.classList.remove('translate-y-20', 'opacity-0');
     toast.classList.add('translate-y-0', 'opacity-100');

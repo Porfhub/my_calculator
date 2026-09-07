@@ -82,6 +82,11 @@
         const messages = { ...DEFAULT_MESSAGES, ...(options.messages || {}) };
         let currentState = null;
 
+        if (typeof document !== 'undefined' && document.body) {
+            document.body.classList.add('calculation-state-managed');
+            document.body.dataset.calculationState = 'INITIALIZING';
+        }
+
         function clearResults() {
             resolveElements(resultReferences).forEach((element) => {
                 element.textContent = clearValue;
@@ -102,6 +107,9 @@
 
             currentState = nextState;
             if (rootElement?.dataset) rootElement.dataset.calculationState = nextState;
+            if (typeof document !== 'undefined' && document.body) {
+                document.body.dataset.calculationState = nextState;
+            }
 
             if (messageElement) {
                 if (nextState === STATES.READY) {
