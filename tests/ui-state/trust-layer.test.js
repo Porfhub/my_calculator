@@ -23,7 +23,7 @@ test('official-data consumers show a human-readable source without technical jar
     assert.match(read('inflation-shredder.html'), /Источник: Росстат \/ ЕМИСС, годовой ряд/);
 });
 
-test('every production calculator has one shared WebWisor methodology block', () => {
+test('every production calculator has one shared methodology block', () => {
     const calculators = [
         'car-vs-taxi.html',
         'financial-freedom.html',
@@ -48,6 +48,9 @@ test('every production calculator has one shared WebWisor methodology block', ()
     for (const label of ['Официальные данные', 'Ваши данные', 'Допущения сценария', 'Расчётный результат', 'Ограничения']) {
         assert.match(trustLayer, new RegExp(label), label);
     }
+
+    assert.match(trustLayer, /ℹ️ Как устроен расчёт/);
+    assert.doesNotMatch(trustLayer, /<summary>[^\n]*WebWisor/);
 });
 
 test('calculator copy does not retain prototype labels or manipulative prompts', () => {

@@ -1,5 +1,5 @@
 /*
- * WebWisor is a local, contextual help layer. It explains the current
+ * This local, contextual help layer explains the current
  * calculator only; it does not collect inputs or change calculations.
  */
 (function () {
@@ -73,8 +73,8 @@
         'rent-vs-mortgage.html': {
             purpose: 'сравнивает капитал и денежные потоки при аренде и покупке жилья.',
             official: 'Официальные данные не используются.',
-            input: 'Стоимость жилья, аренда, взнос, ставка, срок и личные параметры.',
-            scenario: 'Рост цен, аренды, доходность и расходы — изменяемые сценарные допущения.',
+            input: 'Стоимость жилья, аренда, взнос, ставка и выбранный горизонт анализа.',
+            scenario: 'Рост цен, аренды, доходность, расходы и горизонт 5–40 лет — изменяемые сценарные допущения.',
             result: 'Сравнение двух сценариев, а не прогноз рынка или рекомендация.',
             limitation: 'Рынок, ликвидность, налоги и условия кредита могут отличаться от модели.'
         },
@@ -108,7 +108,7 @@
         container.dataset.webwisorRendered = 'true';
         container.innerHTML = `
             <details class="webwisor" data-testid="webwisor-help">
-                <summary><span>WebWisor</span><strong>Как устроен расчёт</strong><span class="webwisor-chevron" aria-hidden="true">⌄</span></summary>
+                <summary><strong>ℹ️ Как устроен расчёт</strong><span class="webwisor-chevron" aria-hidden="true">⌄</span></summary>
                 <div class="webwisor-content">
                     <p class="webwisor-purpose"><b>Что рассчитывает:</b> ${config.purpose}</p>
                     <dl>
@@ -132,7 +132,6 @@
         .dark .webwisor { border-color: #334155; background: #0f172a; color: #cbd5e1; }
         .webwisor summary { display: flex; align-items: center; gap: .6rem; padding: 1rem 1.25rem; cursor: pointer; list-style: none; }
         .webwisor summary::-webkit-details-marker { display: none; }
-        .webwisor summary span:first-child { font-size: .65rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #64748b; }
         .webwisor summary strong { font-size: .875rem; color: #0f172a; }
         .dark .webwisor summary strong { color: #f8fafc; }
         .webwisor-chevron { margin-left: auto; font-size: 1.1rem; transition: transform .2s; }
