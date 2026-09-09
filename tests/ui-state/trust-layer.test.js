@@ -18,7 +18,9 @@ test('homepage avoids unsupported trust claims and explains the product boundary
 
 test('official-data consumers show a human-readable source without technical jargon', () => {
     assert.match(read('financial-freedom.html'), /Источники сценария: ключевая ставка Банка России и годовой ряд инфляции Росстата/);
-    assert.match(read('millionaire.html'), /Источники сценария: ключевая ставка Банка России и годовой ряд инфляции Росстата/);
+    assert.match(read('millionaire.html'), /Источники сценария: \$\{rateLink\}/);
+    assert.match(read('millionaire.html'), /ставка действует с/);
+    assert.match(read('millionaire.html'), /годовой ряд по/);
     assert.match(read('genetic-wealth.html'), /Источник инфляции: годовой ряд Росстата/);
     assert.match(read('inflation-shredder.html'), /Источник: Росстат \/ ЕМИСС, годовой ряд/);
 });

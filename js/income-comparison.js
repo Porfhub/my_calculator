@@ -64,7 +64,11 @@
         ];
         return references
             .filter((reference) => isVerifiedMetric(reference.metric, sources))
-            .map((reference) => ({ ...reference, value: reference.metric.value }));
+            .map((reference) => ({
+                ...reference,
+                value: reference.metric.value,
+                source: sources[reference.metric.source_id]
+            }));
     }
 
     return { normalizeDataset, getRegion, compareSalary, isVerifiedMetric, availableReferences };

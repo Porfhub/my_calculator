@@ -58,7 +58,7 @@
             text-transform: none !important;
             letter-spacing: normal !important;
         }
-        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        .tooltip:hover .tooltiptext, .tooltip:focus-within .tooltiptext { visibility: visible; opacity: 1; }
 
     </style>
     <script src="js/theme.js"></script>
@@ -185,7 +185,7 @@
                     <div id="tab-content-rent" class="space-y-5 hidden">
                         <div class="flex items-center gap-2 text-slate-400 dark:text-slate-500 font-bold text-[10px] uppercase tracking-wider">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Аренда и Инвестиции
+                            Аренда и накопления
                         </div>
                         <div class="space-y-2">
                             <div class="flex justify-between items-center">
@@ -194,12 +194,19 @@
                             </div>
                             <input type="range" id="rent-range" min="10000" max="300000" step="1000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
                         </div>
-                        <div class="space-y-2">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 px-3 py-2.5">
+                                <label for="include-investments" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Учитывать инвестиционный доход</label>
+                                <input type="checkbox" id="include-investments" class="h-5 w-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500" aria-describedby="investment-mode-help">
+                            </div>
+                            <p id="investment-mode-help" class="text-[11px] text-slate-500 dark:text-slate-400">Если выключено, первоначальный взнос и разница в ежемесячных расходах остаются накоплениями без доходности.</p>
+                        </div>
+                        <div id="investment-rate-field" class="space-y-2 hidden">
                             <div class="flex justify-between items-center">
                                 <div class="flex items-center gap-1.5">
-                                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Доходность депозитов/акций</label>
-                                    <span class="tooltip text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-500 w-3.5 h-3.5 flex items-center justify-center rounded-full">?
-                                        <span class="tooltiptext">Годовой процент, под который вы будете вкладывать сэкономленные деньги (депозиты, акции).</span>
+                                    <label for="invest-range" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Ожидаемая годовая доходность накоплений (%)</label>
+                                    <span class="tooltip"><button type="button" class="text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-600 w-5 h-5 flex items-center justify-center rounded-full" aria-label="Примеры накоплений" aria-describedby="investment-rate-help">?</button>
+                                        <span id="investment-rate-help" role="tooltip" class="tooltiptext">Примеры: вклад, облигации, ETF, акции и другие инвестиции. Доходность не гарантирована.</span>
                                     </span>
                                 </div>
                                 <span class="text-sm font-bold text-brand-700 dark:text-brand-400" id="invest-display">15.0%</span>
@@ -269,7 +276,7 @@
                                 <span id="verdict-percent" class="text-sm font-bold text-slate-500 dark:text-slate-400">0%</span>
                             </div>
                             <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mt-2" id="verdict-desc">
-                                Через 20 лет капитал при ипотеке будет больше капитала при аренде.
+                                При выбранных предположениях через 20 лет капитал при ипотеке будет больше капитала при аренде.
                             </p>
                         </div>
 
@@ -292,7 +299,7 @@
                                 <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                     <div id="comparison-bar-rent" role="progressbar" aria-label="Капитал при аренде" class="h-full bg-slate-400 dark:bg-slate-500 rounded-full transition-all duration-500" style="width: 50%"></div>
                                 </div>
-                                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5">Стоимость инвестиционного портфеля</p>
+                                <p id="rent-capital-caption" class="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5">Накопления без инвестиционного дохода</p>
                             </div>
                         </div>
                     </div>
@@ -320,11 +327,16 @@
                                 <span>📈 Капитал при Аренде</span>
                             </h4>
                             <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                                Арендатор не покупает жилье, но экономит деньги (так как аренда обычно дешевле платежа по ипотеке и не требует первоначального взноса). Калькулятор считает, что вы <strong>инвестируете эту разницу</strong> под процент. Ваш капитал — это сумма этих накоплений со всеми процентами.
+                                Арендатор сохраняет первоначальный взнос и разницу между расходами на покупку и аренду. При включённом инвестиционном доходе эти деньги растут по заданной ставке; иначе это накопления без доходности.
                             </p>
                         </div>
                     </div>
                 </div>
+
+                <section class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5" aria-labelledby="assumptions-title">
+                    <h3 id="assumptions-title" class="text-sm font-bold text-slate-800 dark:text-white">Что сильнее всего влияет на этот вывод?</h3>
+                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">При выбранных предположениях: <span id="key-assumptions">ипотечная ставка, рост стоимости жилья и рост аренды.</span></p>
+                </section>
 
                 <!-- Chart -->
                 <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm h-[420px] sm:h-[400px]">
@@ -404,7 +416,7 @@
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8" data-webwisor="rent-vs-mortgage"></section>
 
     <footer class="max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-400 border-t border-slate-100 dark:border-slate-800 mt-12">
-        <p>© 2026 Рент-vs-Ипотека. Математическая модель учитывает сложные проценты и инфляцию.</p>
+        <p>© 2026 CalcHub. Расчёт показывает сценарий, а не прогноз рынка.</p>
     </footer>
 
     <!-- Всплывающие уведомления (Toast) -->
@@ -420,6 +432,7 @@
             dpPercent: 0.2,
             rent: 50000,
             investRate: 15,
+            includeInvestments: false,
             growthRE: 5,
             growthRent: 4,
             years: 20,
@@ -452,7 +465,7 @@
                 && Number.isFinite(state.rate) && state.rate >= 0 && state.rate <= 50
                 && Number.isFinite(state.dpPercent) && state.dpPercent >= 0 && state.dpPercent < 1
                 && Number.isFinite(state.rent) && state.rent > 0
-                && Number.isFinite(state.investRate) && state.investRate >= 0 && state.investRate <= 50
+                && (!state.includeInvestments || (Number.isFinite(state.investRate) && state.investRate >= 0 && state.investRate <= 50))
                 && Number.isFinite(state.growthRE) && state.growthRE >= -50 && state.growthRE <= 50
                 && Number.isFinite(state.growthRent) && state.growthRent >= -50 && state.growthRent <= 50
                 && Number.isInteger(state.years) && state.years >= 5 && state.years <= 40;
@@ -558,7 +571,7 @@
             let currentRent = state.rent;
             let investPot = state.cost * state.dpPercent; // Initial capital for renter
 
-            const monthlyInvestRate = state.investRate / 12 / 100;
+            const monthlyInvestRate = state.includeInvestments ? state.investRate / 12 / 100 : 0;
             // Growth inputs are annual rates. Use equivalent monthly rates so a
             // twelve-month simulation matches the stated annual assumption.
             const monthlyGrowthRE = Math.pow(1 + state.growthRE / 100, 1 / 12) - 1;
@@ -610,6 +623,13 @@
             document.getElementById('dp-percent').innerText = Math.round(state.dpPercent * 100) + '%';
             document.getElementById('rent-display').innerText = formatMoney(state.rent);
             document.getElementById('invest-display').innerText = state.investRate.toFixed(1) + '%';
+            document.getElementById('investment-rate-field').classList.toggle('hidden', !state.includeInvestments);
+            document.getElementById('rent-capital-caption').innerText = state.includeInvestments
+                ? 'Стоимость инвестиционного портфеля'
+                : 'Накопления без инвестиционного дохода';
+            const assumptions = ['ипотечная ставка', 'рост стоимости жилья', 'рост аренды'];
+            if (state.includeInvestments) assumptions.unshift('доходность накоплений');
+            document.getElementById('key-assumptions').textContent = `${assumptions.join(', ')}.`;
             const periodLabel = `${state.years} ${getYearWord(state.years)}`;
             document.getElementById('years-display').innerText = periodLabel;
             document.getElementById('verdict-period').innerText = periodLabel;
@@ -626,17 +646,18 @@
 
             const diff = Math.abs(buyFinal - rentFinal);
             const winner = buyFinal === rentFinal ? null : (buyFinal > rentFinal ? 'Ипотека' : 'Аренда');
-            const winnerPercent = Math.round((Math.max(buyFinal, rentFinal) / Math.min(buyFinal, rentFinal) - 1) * 100);
+            const lowerCapital = Math.min(buyFinal, rentFinal);
+            const winnerPercent = lowerCapital > 0 ? Math.round((Math.max(buyFinal, rentFinal) / lowerCapital - 1) * 100) : 0;
             document.getElementById('verdict-difference').innerText = formatMoney(diff);
 
             percent.innerText = winnerPercent + '%';
             if (winner) {
                 title.innerText = `${winner} выгоднее`;
-                desc.innerText = `На горизонте ${periodLabel} чистый капитал при выборе ${winner === 'Ипотека' ? 'ипотеки' : 'аренды'} будет на ${formatMoney(diff)} больше.`;
+                desc.innerText = `При выбранных предположениях на горизонте ${periodLabel} чистый капитал при выборе ${winner === 'Ипотека' ? 'ипотеки' : 'аренды'} будет на ${formatMoney(diff)} больше.`;
                 tag.innerText = 'Победитель сценария';
             } else {
                 title.innerText = 'Капитал одинаковый';
-                desc.innerText = `На горизонте ${periodLabel} оба сценария дают одинаковый чистый капитал.`;
+                desc.innerText = `При выбранных предположениях на горизонте ${periodLabel} оба сценария дают одинаковый чистый капитал.`;
                 tag.innerText = 'Результат сценария';
             }
 
@@ -682,7 +703,7 @@
                             pointRadius: 2
                         },
                         {
-                            label: 'Аренда (Инвестиции)',
+                            label: state.includeInvestments ? 'Аренда (инвестиции)' : 'Аренда (накопления)',
                             data: rent,
                             borderColor: '#94a3b8',
                             backgroundColor: 'rgba(148, 163, 184, 0.1)',
@@ -715,6 +736,7 @@
         document.getElementById('dp-range').addEventListener('input', (e) => { state.dpPercent = parseFloat(e.target.value); calculate(); });
         document.getElementById('rent-range').addEventListener('input', (e) => { state.rent = parseInt(e.target.value); calculate(); });
         document.getElementById('invest-range').addEventListener('input', (e) => { state.investRate = parseFloat(e.target.value); calculate(); });
+        document.getElementById('include-investments').addEventListener('change', (e) => { state.includeInvestments = e.target.checked; calculate(); });
         document.getElementById('years-range').addEventListener('input', (e) => { state.years = parseInt(e.target.value); calculate(); });
         document.getElementById('growth-re').addEventListener('input', (e) => { state.growthRE = parseFloat(e.target.value); calculate(); });
         document.getElementById('growth-rent').addEventListener('input', (e) => { state.growthRent = parseFloat(e.target.value); calculate(); });

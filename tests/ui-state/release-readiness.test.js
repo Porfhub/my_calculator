@@ -30,3 +30,27 @@ test('key date and mortgage controls have programmatic names', () => {
     assert.match(mortgage, /aria-label="Учитывать ипотечную страховку"/);
     assert.match(mortgage, /aria-label="Осталось платить: лет"/);
 });
+
+test('release audit scenarios keep their units, transport need and source context explicit', () => {
+    const rent = read('rent-vs-mortgage.html');
+    const car = read('car-vs-taxi.html');
+    const goal = read('millionaire.html');
+    const income = read('wealth.html');
+
+    assert.match(rent, /id="include-investments"/);
+    assert.match(rent, /includeInvestments: false/);
+    assert.match(rent, /Ожидаемая годовая доходность накоплений/);
+    assert.match(rent, /Что сильнее всего влияет на этот вывод/);
+
+    assert.match(car, /id="taxi-trip-distance"/);
+    assert.match(car, /const tripsPerYear = annualMileage \/ taxiTripDistance;/);
+    assert.match(car, /const totalCarAnnual = fuelCostAnnual \+ insurance \+ maintenance \+ depreciationAnnual \+ includedOpportunityCost;/);
+
+    assert.match(goal, /name="goal-mode" value="today"/);
+    assert.match(goal, /name="goal-mode" value="future" checked/);
+    assert.match(goal, /const comparableBalance =/);
+
+    assert.match(income, /id="conversion-summary"/);
+    assert.match(income, /Сравнивается как/);
+    assert.match(income, /Период: \$\{reference\.source\.reference_period\}/);
+});
