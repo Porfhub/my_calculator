@@ -282,14 +282,22 @@
                     <!-- Goal sum block with premium interactive presets -->
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Желаемая сумма (Цель)</label>
+                            <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Желаемая сумма</label>
                             <span class="text-sm font-bold text-slate-900 dark:text-white" id="goal-display">0 ₽</span>
                         </div>
+                        <fieldset>
+                            <legend class="mb-2 text-xs font-semibold text-slate-700 dark:text-slate-300">Как указана цель?</legend>
+                            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <input id="goal-mode-today" type="radio" name="goal-mode" value="today" class="sr-only peer/today"><label for="goal-mode-today" class="cursor-pointer rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600 transition peer-checked/today:border-brand-600 peer-checked/today:bg-brand-50 peer-checked/today:text-brand-800 peer-focus-visible/today:ring-2 peer-focus-visible/today:ring-brand-500 peer-focus-visible/today:ring-offset-2 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:peer-checked/today:border-brand-400 dark:peer-checked/today:bg-brand-900/20 dark:peer-checked/today:text-brand-200"><b class="block">Цель указана в сегодняшних ценах</b><span class="mt-1 block text-xs">Сумма сохранит покупательную способность: к дате цели она увеличится на инфляцию.</span></label>
+                                <input id="goal-mode-future" type="radio" name="goal-mode" value="future" checked class="sr-only peer/future"><label for="goal-mode-future" class="cursor-pointer rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600 transition peer-checked/future:border-brand-600 peer-checked/future:bg-brand-50 peer-checked/future:text-brand-800 peer-focus-visible/future:ring-2 peer-focus-visible/future:ring-brand-500 peer-focus-visible/future:ring-offset-2 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:peer-checked/future:border-brand-400 dark:peer-checked/future:bg-brand-900/20 dark:peer-checked/future:text-brand-200"><b class="block">Цель уже указана в ценах будущего периода</b><span class="mt-1 block text-xs">Фиксированная сумма, которую вы хотите видеть на дату достижения.</span></label>
+                            </div>
+                        </fieldset>
                         <div class="relative">
                             <input type="text" id="goal-sum" value="1 000 000" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                         </div>
                         <input type="range" id="goal-range" min="100000" max="100000000" step="100000" value="1000000" class="w-full accent-brand-500 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                        <p id="goal-range-helper" class="text-xs text-slate-500 dark:text-slate-400" aria-live="polite">Сумма цели: 1 000 000 ₽</p>
 
                         <!-- HIGH CONVERTING PREMIUM PRESETS (2026 REALITY) -->
                         <div class="grid grid-cols-2 gap-2 pt-1">
@@ -314,7 +322,7 @@
 
                     <div class="space-y-2 pt-2">
                         <div class="flex justify-between items-center">
-                            <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Ставка по вкладу (% годовых)</label>
+                            <label for="interest-rate" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Ожидаемая годовая доходность (% в год)</label>
                             <span class="text-sm font-bold text-brand-600 dark:text-brand-400" id="rate-display">...</span>
                         </div>
                         <div class="relative">
@@ -367,9 +375,9 @@
                         <div class="flex items-start gap-3">
                             <div class="w-10 h-10 bg-amber-100 dark:bg-amber-900/30 rounded-xl flex items-center justify-center text-amber-600 shrink-0 text-lg">💡</div>
                             <div class="space-y-1">
-                                <h4 class="text-xs font-black uppercase tracking-widest text-amber-800 dark:text-amber-400">Корректировка на инфляцию</h4>
+                                <h4 id="goal-value-heading" class="text-xs font-black uppercase tracking-widest text-amber-800 dark:text-amber-400">Корректировка на инфляцию</h4>
                                 <p class="text-sm font-medium text-slate-700 dark:text-slate-300">
-                                    Реальная покупательная способность накопленной суммы составит <span id="real-purchasing-power" class="font-extrabold text-amber-600 dark:text-amber-400 text-base">... ₽</span>
+                                    <span id="goal-value-description">Реальная покупательная способность накопленной суммы составит</span> <span id="real-purchasing-power" class="font-extrabold text-amber-600 dark:text-amber-400 text-base">... ₽</span>
                                 </p>
                                 <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-normal">
                                     Значение скорректировано на основе исторической средней инфляции в РФ за последние 15 лет (<span id="inflation-percent-text">...</span>), полученной из официального архива.
@@ -378,7 +386,7 @@
                         </div>
                     </div>
 
-                    <!-- Мотивационный блок -->
+                    <!-- Структура накоплений -->
                     <div class="bg-gradient-to-br from-brand-600 to-amber-700 dark:from-brand-800 dark:to-emerald-950/40 rounded-3xl p-6 text-white shadow-xl border border-brand-500/20">
                         <div class="flex items-center gap-4 mb-6">
                             <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
@@ -387,8 +395,8 @@
                                 </svg>
                             </div>
                             <div>
-                                <h4 class="font-black text-lg leading-none">Сила сложных процентов</h4>
-                                <p class="text-brand-100 text-xs mt-1">Банк сделает часть работы за вас</p>
+                                <h4 class="font-black text-lg leading-none">Структура накоплений</h4>
+                                <p class="text-brand-100 text-xs mt-1">Взносы и начисленные проценты в выбранном сценарии</p>
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-4 text-white">
@@ -406,7 +414,7 @@
                     <!-- Дополнительные метрики возраста -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm text-center">
-                            <p class="text-xs font-bold text-slate-400 uppercase mb-1">Ваш возраст в момент триумфа</p>
+                            <p class="text-xs font-bold text-slate-400 uppercase mb-1">Ваш возраст в момент достижения цели</p>
                             <p id="age-at-target" class="text-xl font-black text-slate-800 dark:text-slate-100">...</p>
                         </div>
                         <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm text-center">
@@ -417,7 +425,7 @@
 
                     <!-- График -->
                     <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
-                        <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 mb-4">График роста капитала</h3>
+                        <h3 id="growth-chart-title" class="text-sm font-bold text-slate-800 dark:text-slate-200 mb-4">График роста капитала в будущих рублях</h3>
                         <div class="h-64 relative">
                             <canvas id="growthChart"></canvas>
                         </div>
@@ -488,11 +496,14 @@
             monthlyExpenses: 70000,
             interestRate: null,
             goalSum: 1000000,
+            goalMode: 'future',
             avgInflation: null
         };
 
         let chartInstance = null;
         let confettiAnimationId = null;
+        let ratesDataset = null;
+        let inflationDataset = null;
         let externalDataReady = false;
         let externalDataLoading = true;
         let externalDataStatus = 'unavailable';
@@ -592,6 +603,8 @@
             millionaireStateController.transition(CalculatorState.STATES.LOADING);
 
             const [rates, inflationData] = await Promise.all([fetchRates(), fetchInflation()]);
+            ratesDataset = rates;
+            inflationDataset = inflationData;
             const centralBankRate = getCentralBankRate(rates);
             const averageInflation = getAverageInflationRate(inflationData);
             const combinedStatus = getCombinedDatasetStatus([rates, inflationData]);
@@ -641,15 +654,25 @@
             if (!statusElement) return;
 
             if (externalDataStatus === 'stale') {
-                statusElement.textContent = 'Используются последние доступные значения Банка России и Росстата.';
+                statusElement.innerHTML = 'Используются последние доступные официальные значения. ' + renderScenarioSources();
                 statusElement.hidden = false;
             } else if (externalDataStatus === 'ok') {
-                statusElement.textContent = 'Источники сценария: ключевая ставка Банка России и годовой ряд инфляции Росстата.';
+                statusElement.innerHTML = renderScenarioSources();
                 statusElement.hidden = false;
             } else {
                 statusElement.textContent = '';
                 statusElement.hidden = true;
             }
+        }
+
+        function renderScenarioSources() {
+            const rateUrl = ratesDataset?.metadata?.source_url || ratesDataset?.source_url;
+            const inflationUrl = inflationDataset?.metadata?.source_url;
+            const ratePeriod = ratesDataset?.key_rate?.effective_from || ratesDataset?.effective_from;
+            const inflationPeriod = inflationDataset?.metadata?.data_through;
+            const rateLink = rateUrl ? `<a class="underline" href="${rateUrl}" target="_blank" rel="noopener noreferrer">Банк России</a>` : 'Банк России';
+            const inflationLink = inflationUrl ? `<a class="underline" href="${inflationUrl}" target="_blank" rel="noopener noreferrer">Росстат / ЕМИСС</a>` : 'Росстат / ЕМИСС';
+            return `Источники сценария: ${rateLink}${ratePeriod ? `, ставка действует с ${ratePeriod}` : ''}; ${inflationLink}${inflationPeriod ? `, годовой ряд по ${inflationPeriod} год` : ''}.`;
         }
 
         function setupEventListeners() {
@@ -679,7 +702,14 @@
                     } else if (input.type === 'range') {
                         state[input.key] = parseFloat(el.value);
                         // Sync text input
-                        const textInput = document.getElementById(input.id.replace('-range', '').replace('income', 'monthly-income').replace('expenses', 'monthly-expenses').replace('savings', 'current-savings').replace('goal', 'goal-sum'));
+                        const textInputId = {
+                            'savings-range': 'current-savings',
+                            'income-range': 'monthly-income',
+                            'expenses-range': 'monthly-expenses',
+                            'rate-range': 'interest-rate',
+                            'goal-range': 'goal-sum'
+                        }[input.id];
+                        const textInput = textInputId ? document.getElementById(textInputId) : null;
                         if (textInput && textInput.type === 'text') {
                             textInput.value = formatNumber(state[input.key]);
                         } else if (textInput) {
@@ -708,6 +738,12 @@
                     updateAll();
                 });
             });
+            document.querySelectorAll('input[name="goal-mode"]').forEach((input) => {
+                input.addEventListener('change', () => {
+                    state.goalMode = input.value;
+                    updateAll();
+                });
+            });
         }
 
         function resetGoalHighlight() {
@@ -731,7 +767,6 @@
             }
 
             updateAll();
-            triggerCelebration();
             showToast(`Цель установлена: ${formatMoney(val)}`);
         }
 
@@ -749,10 +784,17 @@
             let totalInterest = 0;
             let totalInvested = currentSavings;
 
-            const history = [{ month: 0, balance: balance }];
+            const monthlyInflationRate = Math.pow(1 + Math.max(0, state.avgInflation || 0), 1 / 12) - 1;
+            const targetAtMonth = (month) => state.goalMode === 'today'
+                ? goalSum * Math.pow(1 + monthlyInflationRate, month)
+                : goalSum;
+            const comparableBalance = (balance, month) => state.goalMode === 'today'
+                ? balance / Math.pow(1 + monthlyInflationRate, month)
+                : balance;
+            const history = [{ month: 0, balance: comparableBalance(balance, 0), target: goalSum, nominalBalance: balance }];
 
-            if (balance >= goalSum) {
-                return { months: 0, totalInterest: 0, totalInvested: balance, history, unreachable: false };
+            if (balance >= targetAtMonth(0)) {
+                return { months: 0, totalInterest: 0, totalInvested: balance, history, unreachable: false, nominalTarget: goalSum };
             }
 
             if (freeCash <= 0 && monthlyRate <= 0) {
@@ -766,15 +808,15 @@
 
             const maxMonths = 1200; // 100 лет лимит
 
-            while (balance < goalSum && month < maxMonths) {
+            while (balance < targetAtMonth(month) && month < maxMonths) {
                 month++;
                 const interest = balance * monthlyRate;
                 balance += interest + freeCash;
                 totalInterest += interest;
                 totalInvested += freeCash;
 
-                if (month % 12 === 0 || balance >= goalSum) {
-                    history.push({ month, balance });
+                if (month % 12 === 0 || balance >= targetAtMonth(month)) {
+                    history.push({ month, balance: comparableBalance(balance, month), target: goalSum, nominalBalance: balance });
                 }
             }
 
@@ -783,7 +825,8 @@
                 totalInterest,
                 totalInvested,
                 history,
-                unreachable: month >= maxMonths
+                unreachable: month >= maxMonths,
+                nominalTarget: targetAtMonth(month)
             };
         }
 
@@ -798,6 +841,12 @@
                 Number.isFinite(state.interestRate) ? `${state.interestRate}%` : null
             );
             CalculatorState.writeSafeText('goal-display', formatMoney(state.goalSum));
+            document.getElementById('goal-range-helper').textContent = state.goalMode === 'today'
+                ? `Сумма цели в сегодняшних ценах: ${formatMoney(state.goalSum)}`
+                : `Сумма цели в ценах будущего периода: ${formatMoney(state.goalSum)}`;
+            document.getElementById('growth-chart-title').textContent = state.goalMode === 'today'
+                ? 'График роста капитала в сегодняшних рублях'
+                : 'График роста капитала в будущих рублях';
 
             millionaireStateController.runCalculation({
                 isLoading: externalDataLoading,
@@ -828,8 +877,9 @@
                     && Number.isFinite(result.months)
                     && Number.isFinite(result.totalInterest)
                     && Number.isFinite(result.totalInvested)
+                    && Number.isFinite(result.nominalTarget)
                     && Array.isArray(result.history)
-                    && result.history.every((point) => Number.isFinite(point.month) && Number.isFinite(point.balance)),
+                    && result.history.every((point) => Number.isFinite(point.month) && Number.isFinite(point.balance) && Number.isFinite(point.target)),
                 render: renderMillionaireResult,
                 invalidInputMessage: 'Проверьте доходы, расходы, цель и дату рождения.',
                 dataUnavailableMessage: 'Ставка Банка России или данные инфляции временно недоступны. Расчёт не выполнен.',
@@ -912,12 +962,20 @@
             mobileInterest.innerText = formatMoney(result.totalInterest);
             investedDisplay.innerText = formatMoney(result.totalInvested);
 
-            // Calculate purchasing power in future value (adjusted for inflation)
+            // Keep the displayed value in the same unit as the chosen goal mode.
             const yearsToGoal = result.months / 12;
-            const purchasingPower = state.goalSum / Math.pow(1 + state.avgInflation, yearsToGoal);
+            const goalValueHeading = document.getElementById('goal-value-heading');
+            const goalValueDescription = document.getElementById('goal-value-description');
+            const displayedGoalValue = state.goalMode === 'today'
+                ? result.nominalTarget
+                : state.goalSum / Math.pow(1 + state.avgInflation, yearsToGoal);
+            goalValueHeading.textContent = state.goalMode === 'today' ? 'Сумма цели в будущих рублях' : 'Корректировка на инфляцию';
+            goalValueDescription.textContent = state.goalMode === 'today'
+                ? 'Чтобы сохранить покупательную способность цели, потребуется'
+                : 'Реальная покупательная способность накопленной суммы составит';
             CalculatorState.writeSafeText(
                 realPurchasingPowerEl,
-                Number.isFinite(purchasingPower) ? formatMoney(purchasingPower) : null
+                Number.isFinite(displayedGoalValue) ? formatMoney(displayedGoalValue) : null
             );
 
             // Совет
@@ -951,6 +1009,7 @@
                 return d.toLocaleDateString('ru-RU', { year: '2-digit', month: 'short' });
             });
             const data = history.map(h => h.balance);
+            const targetData = history.map(h => h.target);
 
             if (chartInstance) {
                 chartInstance.destroy();
@@ -961,7 +1020,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Капитал',
+                        label: state.goalMode === 'today' ? 'Капитал в сегодняшних рублях' : 'Капитал в будущих рублях',
                         data: data,
                         borderColor: '#d4af37',
                         backgroundColor: 'rgba(212, 175, 55, 0.1)',
@@ -969,6 +1028,14 @@
                         fill: true,
                         tension: 0.4,
                         pointRadius: history.length > 50 ? 0 : 3
+                    }, {
+                        label: state.goalMode === 'today' ? 'Цель в сегодняшних рублях' : 'Цель в будущих рублях',
+                        data: targetData,
+                        borderColor: '#64748b',
+                        borderDash: [6, 4],
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: false
                     }]
                 },
                 options: {

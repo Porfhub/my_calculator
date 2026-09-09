@@ -106,6 +106,25 @@ input[type="range"]:focus-visible {
     line-height: 1.5;
 }
 
+/* Every calculator ends with the same methodology disclosure. */
+.calculator-page > section[data-webwisor] {
+    width: 100%;
+    max-width: 80rem !important;
+    margin: 0 auto;
+    padding: 2rem 1rem 2rem !important;
+}
+
+.calculator-page > section[data-webwisor] .webwisor {
+    margin-top: 0;
+}
+
+@media (min-width: 640px) {
+    .calculator-page > section[data-webwisor] {
+        padding-right: 1.5rem !important;
+        padding-left: 1.5rem !important;
+    }
+}
+
 /* A fixed result is useful only once there is a trustworthy result to show. */
 .calculation-state-managed:not([data-calculation-state="READY"]) .mobile-sticky-results {
     display: none !important;
