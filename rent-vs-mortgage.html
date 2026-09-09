@@ -365,8 +365,8 @@
                 </div>
 
                 <!-- Myth Buster section ("Развенчиватель мифов") -->
-                <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-8 shadow-sm space-y-6">
-                    <div class="flex items-center gap-3">
+                <details class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-5 shadow-sm">
+                    <summary class="flex cursor-pointer list-none items-center gap-3">
                         <div class="p-2.5 bg-rose-500/10 text-rose-600 rounded-xl">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
@@ -374,11 +374,11 @@
                         </div>
                         <div>
                         <h3 class="text-lg font-black text-slate-900 dark:text-white">Что важно учесть</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Сравнение чувствительно к ставке, росту цен, аренде и горизонту расчёта.</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Ставка, рост цен, аренды и горизонт расчёта.</p>
                         </div>
-                    </div>
+                    </summary>
 
-                    <div class="space-y-4">
+                    <div class="space-y-4 pt-5">
                         <!-- Myth 1 -->
                         <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-2">
                             <span class="text-[9px] font-extrabold uppercase bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-400 px-2 py-0.5 rounded-full">Расходы</span>
@@ -406,7 +406,7 @@
                             </p>
                         </div>
                     </div>
-                </div>
+                </details>
 
             </div>
 
@@ -544,7 +544,7 @@
             } catch (error) {
                 console.error('Rent versus mortgage calculation failed:', error);
                 rentStateController.transition(CalculatorState.STATES.CALCULATION_IMPOSSIBLE, {
-                    message: 'При этих рыночных предположениях нельзя построить корректное сравнение.'
+                    message: 'Итог нельзя показать, потому что один из расчётных показателей стал неопределённым. Проверьте ставки роста, первоначальный взнос и горизонт анализа; все значения должны быть конечными числами.'
                 });
             }
         }
@@ -609,8 +609,8 @@
 
             const buyFinal = dataBuy[dataBuy.length - 1];
             const rentFinal = dataRent[dataRent.length - 1];
-            if (!Number.isFinite(buyFinal) || !Number.isFinite(rentFinal) || buyFinal <= 0 || rentFinal <= 0) {
-                throw new Error('Invalid comparison outcome');
+            if (!Number.isFinite(buyFinal) || !Number.isFinite(rentFinal)) {
+                throw new Error('Final capital is not finite');
             }
 
             updateUI(buyFinal, rentFinal);
@@ -624,9 +624,11 @@
             document.getElementById('rent-display').innerText = formatMoney(state.rent);
             document.getElementById('invest-display').innerText = state.investRate.toFixed(1) + '%';
             document.getElementById('investment-rate-field').classList.toggle('hidden', !state.includeInvestments);
-            document.getElementById('rent-capital-caption').innerText = state.includeInvestments
-                ? 'Стоимость инвестиционного портфеля'
-                : 'Накопления без инвестиционного дохода';
+            document.getElementById('rent-capital-caption').innerText = rentFinal < 0
+                ? 'Отрицательное значение: расходы аренды превысили сохранённый взнос и разницу платежей'
+                : state.includeInvestments
+                    ? 'Стоимость инвестиционного портфеля'
+                    : 'Накопления без инвестиционного дохода';
             const assumptions = ['ипотечная ставка', 'рост стоимости жилья', 'рост аренды'];
             if (state.includeInvestments) assumptions.unshift('доходность накоплений');
             document.getElementById('key-assumptions').textContent = `${assumptions.join(', ')}.`;
@@ -647,10 +649,10 @@
             const diff = Math.abs(buyFinal - rentFinal);
             const winner = buyFinal === rentFinal ? null : (buyFinal > rentFinal ? 'Ипотека' : 'Аренда');
             const lowerCapital = Math.min(buyFinal, rentFinal);
-            const winnerPercent = lowerCapital > 0 ? Math.round((Math.max(buyFinal, rentFinal) / lowerCapital - 1) * 100) : 0;
+            const winnerPercent = lowerCapital > 0 ? Math.round((Math.max(buyFinal, rentFinal) / lowerCapital - 1) * 100) : null;
             document.getElementById('verdict-difference').innerText = formatMoney(diff);
 
-            percent.innerText = winnerPercent + '%';
+            percent.innerText = winnerPercent === null ? 'н/д' : winnerPercent + '%';
             if (winner) {
                 title.innerText = `${winner} выгоднее`;
                 desc.innerText = `При выбранных предположениях на горизонте ${periodLabel} чистый капитал при выборе ${winner === 'Ипотека' ? 'ипотеки' : 'аренды'} будет на ${formatMoney(diff)} больше.`;
@@ -661,13 +663,13 @@
                 tag.innerText = 'Результат сценария';
             }
 
-            const comparisonMax = Math.max(buyFinal, rentFinal);
+            const comparisonMax = Math.max(0, buyFinal, rentFinal);
             const comparisonBars = [
                 { element: document.getElementById('comparison-bar-buy'), value: buyFinal },
                 { element: document.getElementById('comparison-bar-rent'), value: rentFinal }
             ];
             comparisonBars.forEach(({ element, value }) => {
-                element.style.width = `${(value / comparisonMax) * 100}%`;
+                element.style.width = `${comparisonMax > 0 ? Math.max(0, value) / comparisonMax * 100 : 0}%`;
                 element.setAttribute('aria-valuemin', '0');
                 element.setAttribute('aria-valuemax', String(comparisonMax));
                 element.setAttribute('aria-valuenow', String(value));

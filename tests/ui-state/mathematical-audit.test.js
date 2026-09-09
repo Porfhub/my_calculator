@@ -50,11 +50,13 @@ test('audit transparency fixes do not derive unsupported or incomparable results
     const childCost = read('genetic-wealth.html');
     const goal = read('millionaire.html');
 
-    assert.match(car, /Один и тот же пробег используется для автомобиля и такси/);
-    assert.match(car, /const tripsPerYear = annualMileage \/ taxiTripDistance;/);
-    assert.match(car, /const tripPrice = taxiBaseFare \+ taxiRatePerKm \* taxiTripDistance;/);
+    assert.match(car, /Число поездок задаёт общую потребность в передвижении/);
+    assert.match(car, /const annualMileage = tripsPerMonth \* 12 \* taxiTripDistance;/);
+    assert.match(car, /const tripsPerYear = tripsPerMonth \* 12;/);
+    assert.match(car, /const totalTaxiAnnual = tripsPerYear \* tripPrice;/);
     assert.doesNotMatch(car, /costPerKmTaxi/);
     assert.doesNotMatch(car, /km-cost-taxi/);
+    assert.doesNotMatch(car, /taxiBaseFare|taxiRatePerKm/);
 
     assert.match(childCost, /без подтверждённой методологии такая разбивка была бы произвольной/);
     assert.doesNotMatch(childCost, /categoryBreakdownChart/);

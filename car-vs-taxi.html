@@ -165,14 +165,11 @@
                                 <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
                             </div>
                         </div>
-                        <!-- Единый объём поездок -->
+                        <!-- Расчётный пробег -->
                         <div class="space-y-2">
-                            <label for="annual-mileage" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Ваши поездки за год</label>
-                            <div class="relative">
-                                <input type="text" id="annual-mileage" oninput="handleInput(this, 'annualMileage')" class="w-full pl-4 pr-14 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="15 000">
-                                <span class="absolute right-4 top-3.5 text-slate-400">км</span>
-                            </div>
-                            <p class="text-[10px] text-slate-500 dark:text-slate-400">Один и тот же пробег используется для автомобиля и такси.</p>
+                            <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Расчётный пробег за год</span>
+                            <output id="annual-mileage-display" class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-bold text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-white" aria-live="polite">—</output>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400">Выводится из числа поездок; длину типичной поездки можно изменить в деталях.</p>
                         </div>
                     </div>
 
@@ -194,12 +191,12 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Расход -->
                                 <div class="space-y-2">
-                                    <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Расход (л/100 км)</label>
+                                    <label for="fuel-consumption" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Расход (л/100 км)</label>
                                     <input type="number" id="fuel-consumption" oninput="handleRawInput('fuelConsumption', this.value)" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="10">
                                 </div>
                                 <!-- Цена топлива -->
                                 <div class="space-y-2">
-                                    <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Цена литра топлива</label>
+                                    <label for="fuel-price" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Цена литра топлива</label>
                                     <div class="relative">
                                         <input type="number" id="fuel-price" oninput="handleRawInput('fuelPrice', this.value)" class="w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="55">
                                         <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
@@ -207,7 +204,7 @@
                                 </div>
                                 <!-- Страховка -->
                                 <div class="space-y-2">
-                                    <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Страховка (ОСАГО+КАСКО) в год</label>
+                                    <label for="insurance" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Страховка (ОСАГО+КАСКО) в год</label>
                                     <div class="relative">
                                         <input type="text" id="insurance" oninput="handleInput(this, 'insurance')" class="w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="80 000">
                                         <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
@@ -215,11 +212,15 @@
                                 </div>
                                 <!-- Обслуживание -->
                                 <div class="space-y-2">
-                                    <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">ТО и ремонт в год</label>
+                                    <label for="maintenance" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">ТО и ремонт в год</label>
                                     <div class="relative">
                                         <input type="text" id="maintenance" oninput="handleInput(this, 'maintenance')" class="w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="40 000">
                                         <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
                                     </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <label for="taxi-trip-distance" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Длина типичной поездки для расчёта пробега</label>
+                                    <div class="relative"><input type="number" min="0.1" step="0.5" id="taxi-trip-distance" oninput="handleRawInput('taxiTripDistance', this.value)" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="10"><span class="absolute right-4 top-3.5 text-slate-400">км</span></div>
                                 </div>
                             </div>
 
@@ -233,12 +234,12 @@
                                 <p class="text-[10px] text-slate-400 dark:text-slate-500">Средняя потеря стоимости нового авто составляет 10-15% в год. Для б/у машин этот показатель ниже.</p>
                             </div>
 
-                            <!-- Упущенная выгода (Депозит) -->
+                            <!-- Альтернативная доходность капитала -->
                             <div class="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-850">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Упущенная выгода (Депозит)</span>
+                                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Альтернативная доходность капитала</span>
                                     <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" id="lost-opp-toggle" aria-label="Учитывать альтернативную доходность капитала" class="sr-only peer" checked onchange="handleLostOppToggle(this.checked)">
+                                        <input type="checkbox" id="lost-opp-toggle" aria-label="Учитывать альтернативную доходность капитала" class="sr-only peer" onchange="handleLostOppToggle(this.checked)">
                                         <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none dark:bg-slate-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-600"></div>
                                     </label>
                                 </div>
@@ -254,22 +255,27 @@
                         <div class="w-10 h-10 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl flex items-center justify-center text-yellow-600">
                             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 17a2 2 0 11-4 0 2 2 0 014 0zM9 17a2 2 0 11-4 0 2 2 0 014 0z"></path><path d="M13 5h-1.948a1 1 0 00-.894.553L7.382 11H4a1 1 0 00-1 1v5a1 1 0 001 1h1a3 3 0 006 0h2a3 3 0 006 0h1a1 1 0 001-1v-5a1 1 0 00-1-1h-3.382l-2.774-5.447A1 1 0 0013 5z"></path></svg>
                         </div>
-                        <h2 class="text-lg font-bold text-slate-900 dark:text-white">Тариф такси</h2>
+                        <h2 class="text-lg font-bold text-slate-900 dark:text-white">Поездки на такси</h2>
                     </div>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Количество поездок выводится из вашего годового пробега и средней длины одной поездки. Так оба сценария покрывают одинаковую потребность в передвижении.</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Число поездок задаёт общую потребность в передвижении. Из неё рассчитывается пробег автомобиля при длине типичной поездки из детальных настроек.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
-                            <label for="taxi-trip-distance" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Средняя длина поездки</label>
-                            <div class="relative"><input type="number" min="0.1" step="0.5" id="taxi-trip-distance" oninput="handleRawInput('taxiTripDistance', this.value)" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="10"><span class="absolute right-4 top-3.5 text-slate-400">км</span></div>
+                            <label for="trips-per-month" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Поездок в месяц</label>
+                            <input type="number" min="0" id="trips-per-month" oninput="handleRawInput('tripsPerMonth', this.value)" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="30">
                         </div>
                         <div class="space-y-2">
-                            <label for="taxi-base-fare" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Минимальная стоимость поездки</label>
-                            <div class="relative"><input type="text" id="taxi-base-fare" oninput="handleInput(this, 'taxiBaseFare')" class="w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="200"><span class="absolute right-4 top-3.5 text-slate-400">₽</span></div>
+                            <label for="trip-price" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Средняя стоимость поездки</label>
+                            <div class="relative"><input type="text" id="trip-price" oninput="handleInput(this, 'tripPrice')" class="w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="500"><span class="absolute right-4 top-3.5 text-slate-400">₽</span></div>
                         </div>
                     </div>
                     <div class="pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <label for="taxi-rate-per-km" class="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-2 uppercase">Тариф за километр</label>
-                        <div class="relative"><input type="number" min="0" step="1" id="taxi-rate-per-km" oninput="handleRawInput('taxiRatePerKm', this.value)" class="w-full pl-4 pr-14 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="30"><span class="absolute right-4 top-3.5 text-slate-400">₽/км</span></div>
+                        <label class="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-3 uppercase">Быстрые пресеты поездок</label>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                            <button id="preset-trips-10" onclick="setTripsPreset(10)" class="preset-trips-btn py-2 px-1 text-[11px] font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition uppercase active:scale-95">Редко (10)</button>
+                            <button id="preset-trips-30" onclick="setTripsPreset(30)" class="preset-trips-btn py-2 px-1 text-[11px] font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition uppercase active:scale-95">Обычно (30)</button>
+                            <button id="preset-trips-44" onclick="setTripsPreset(44)" class="preset-trips-btn py-2 px-1 text-[11px] font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition uppercase active:scale-95">Работа (44)</button>
+                            <button id="preset-trips-60" onclick="setTripsPreset(60)" class="preset-trips-btn py-2 px-1 text-[11px] font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition uppercase active:scale-95">Часто (60)</button>
+                        </div>
                     </div>
                 </div>
 
@@ -607,16 +613,15 @@
     <script>
         const state = {
             carPrice: 3000000,
-            annualMileage: 15000,
             fuelConsumption: 10,
             fuelPrice: 55,
             insurance: 80000,
             maintenance: 40000,
             depreciation: 10,
             taxiTripDistance: 10,
-            taxiBaseFare: 200,
-            taxiRatePerKm: 30,
-            includeLostOpportunity: true,
+            tripsPerMonth: 30,
+            tripPrice: 500,
+            includeLostOpportunity: false,
             cbRate: 21, // Fallback default
             cbRateEffectiveFrom: null
         };
@@ -649,11 +654,33 @@
             if (key === 'depreciation' || key === 'fuelConsumption' || key === 'fuelPrice') {
                 resetPresetHighlight();
             }
+            if (key === 'tripsPerMonth') {
+                resetTripsPresetHighlight();
+            }
             calculate();
         }
 
         function handleLostOppToggle(checked) {
             state.includeLostOpportunity = checked;
+            calculate();
+        }
+
+        function resetTripsPresetHighlight() {
+            document.querySelectorAll('.preset-trips-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-600', 'text-white', 'hover:bg-brand-700', 'dark:bg-brand-600');
+                btn.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+            });
+        }
+
+        function setTripsPreset(trips) {
+            state.tripsPerMonth = trips;
+            document.getElementById('trips-per-month').value = trips;
+            resetTripsPresetHighlight();
+            const activeBtn = document.getElementById(`preset-trips-${trips}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+                activeBtn.classList.add('bg-brand-600', 'text-white', 'hover:bg-brand-700', 'dark:bg-brand-600');
+            }
             calculate();
         }
 
@@ -700,16 +727,16 @@
 
         function calculate() {
             // Safe clamping of inputs to prevent negative/zero division bugs
-            const annualMileage = Math.max(0, state.annualMileage);
+            const tripsPerMonth = Math.max(0, state.tripsPerMonth);
+            const taxiTripDistance = Math.max(0.1, state.taxiTripDistance);
+            const annualMileage = tripsPerMonth * 12 * taxiTripDistance;
             const fuelConsumption = Math.max(0, state.fuelConsumption);
             const fuelPrice = Math.max(0, state.fuelPrice);
             const carPrice = Math.max(0, state.carPrice);
             const depreciation = Math.max(0, state.depreciation);
             const insurance = Math.max(0, state.insurance);
             const maintenance = Math.max(0, state.maintenance);
-            const taxiTripDistance = Math.max(0.1, state.taxiTripDistance);
-            const taxiBaseFare = Math.max(0, state.taxiBaseFare);
-            const taxiRatePerKm = Math.max(0, state.taxiRatePerKm);
+            const tripPrice = Math.max(0, state.tripPrice);
             const cbRate = Math.max(0, state.cbRate);
 
             // Машина
@@ -723,11 +750,9 @@
             const lostOppMonthly = lostOppAnnual / 12;
             const includedOpportunityCost = state.includeLostOpportunity ? lostOppAnnual : 0;
 
-            // Both scenarios serve one annual distance. Taxi trips and their
-            // price are derived from that distance and the stated tariff.
-            const tripsPerYear = annualMileage / taxiTripDistance;
-            const tripsPerMonth = tripsPerYear / 12;
-            const tripPrice = taxiBaseFare + taxiRatePerKm * taxiTripDistance;
+            // Both scenarios serve the same number of trips. The car mileage
+            // is derived using the detailed typical-trip-length assumption.
+            const tripsPerYear = tripsPerMonth * 12;
             const totalTaxiAnnual = tripsPerYear * tripPrice;
             const totalTaxiMonthly = totalTaxiAnnual / 12;
             const totalCarAnnual = fuelCostAnnual + insurance + maintenance + depreciationAnnual + includedOpportunityCost;
@@ -755,6 +780,7 @@
 
             // Обновление UI
             document.getElementById('km-cost-main').innerText = costPerKm.toLocaleString('ru-RU', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+            document.getElementById('annual-mileage-display').innerText = `${formatNumber(annualMileage)} км`;
             document.getElementById('nightly-depreciation').innerText = nightlyDeprVal.toLocaleString('ru-RU') + ' ₽';
 
             // Заполнение Grid-карточек
@@ -770,7 +796,7 @@
             document.getElementById('car-monthly-opportunity').innerText = state.includeLostOpportunity ? formatMoney(lostOppMonthly) : 'Не учитывается';
             document.getElementById('car-annual-opportunity').innerText = state.includeLostOpportunity ? formatMoney(lostOppAnnual) : 'Не учитывается';
 
-            document.getElementById('taxi-monthly-trips').innerText = tripsPerMonth.toLocaleString('ru-RU', { maximumFractionDigits: 1 });
+            document.getElementById('taxi-monthly-trips').innerText = tripsPerMonth.toLocaleString('ru-RU', { maximumFractionDigits: 0 });
             document.getElementById('taxi-monthly-rate').innerText = formatMoney(tripPrice);
 
             // Детализация в Год
@@ -829,7 +855,7 @@
                 verdictCard.className = "p-8 rounded-3xl transition-all duration-500 flex flex-col items-center text-center space-y-4 shadow-xl border bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/20 dark:to-slate-900 border-emerald-200 dark:border-emerald-900/50 text-slate-900 dark:text-white";
                 verdictIcon.innerText = "🚗";
                 verdictTitle.innerText = "Машина выгоднее";
-                verdictDesc.innerText = "При выбранных предположениях и одинаковом пробеге автомобиль обходится дешевле такси. В расчёт включены потеря стоимости и доходность капитала, если она включена.";
+                verdictDesc.innerText = "При выбранных предположениях и одинаковой потребности в поездках автомобиль обходится дешевле такси. В расчёт включены потеря стоимости и альтернативная доходность капитала, если она включена.";
                 monthlyDiffEl.innerText = formatMoney(diff);
                 monthlyDiffEl.className = "text-4xl font-black text-brand-600 dark:text-brand-400";
 
@@ -842,7 +868,7 @@
                 verdictCard.className = "p-8 rounded-3xl transition-all duration-500 flex flex-col items-center text-center space-y-4 shadow-xl border bg-gradient-to-br from-yellow-50 to-white dark:from-yellow-950/20 dark:to-slate-900 border-yellow-200 dark:border-yellow-900/50 text-slate-900 dark:text-white";
                 verdictIcon.innerText = "🚕";
                 verdictTitle.innerText = "Такси выгоднее";
-                verdictDesc.innerText = "При выбранных предположениях и одинаковом пробеге такси обходится дешевле автомобиля. В расчёт включены потеря стоимости и доходность капитала, если она включена.";
+                verdictDesc.innerText = "При выбранных предположениях и одинаковой потребности в поездках такси обходится дешевле автомобиля. В расчёт включены потеря стоимости и альтернативная доходность капитала, если она включена.";
                 monthlyDiffEl.innerText = formatMoney(diff);
                 monthlyDiffEl.className = "text-4xl font-black text-yellow-600 dark:text-yellow-400";
 
@@ -853,7 +879,7 @@
             } else {
                 verdictIcon.innerText = "⚖️";
                 verdictTitle.innerText = "Расходы равны";
-                verdictDesc.innerText = "При выбранных предположениях и одинаковом пробеге ежемесячные расходы совпадают.";
+                verdictDesc.innerText = "При выбранных предположениях и одинаковой потребности в поездках ежемесячные расходы совпадают.";
                 monthlyDiffEl.innerText = formatMoney(0);
                 mobileIcon.innerText = "⚖️";
                 mobileTitle.innerText = "Расходы равны";
@@ -867,10 +893,9 @@
         window.onload = function() {
             initTheme();
             document.getElementById('car-price').value = formatNumber(state.carPrice);
-            document.getElementById('annual-mileage').value = formatNumber(state.annualMileage);
             document.getElementById('insurance').value = formatNumber(state.insurance);
             document.getElementById('maintenance').value = formatNumber(state.maintenance);
-            document.getElementById('taxi-base-fare').value = formatNumber(state.taxiBaseFare);
+            document.getElementById('trip-price').value = formatNumber(state.tripPrice);
 
             // Fetch live rates to calculate deposit interest
             if (typeof fetchRates === 'function') {
@@ -891,7 +916,7 @@
             // Set Comfort Geely Coolray as pre-selected default layout
             setCarPreset('comfort');
             document.getElementById('taxi-trip-distance').value = state.taxiTripDistance;
-            document.getElementById('taxi-rate-per-km').value = state.taxiRatePerKm;
+            setTripsPreset(state.tripsPerMonth);
         };
 
         function updateDepositRateUI() {

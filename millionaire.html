@@ -285,11 +285,11 @@
                             <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Желаемая сумма</label>
                             <span class="text-sm font-bold text-slate-900 dark:text-white" id="goal-display">0 ₽</span>
                         </div>
-                        <fieldset class="rounded-xl border border-slate-200 dark:border-slate-700 p-3">
-                            <legend class="px-1 text-xs font-semibold text-slate-700 dark:text-slate-300">Как понимать цель?</legend>
-                            <div class="grid grid-cols-1 gap-2 text-sm">
-                                <label class="flex items-start gap-2 cursor-pointer"><input type="radio" name="goal-mode" value="today" class="mt-0.5 text-brand-600 focus:ring-brand-500"><span><b>Цель в сегодняшних рублях</b><span class="block text-xs text-slate-500 dark:text-slate-400">Нужная покупательная способность сохраняется: цель растёт с инфляцией.</span></span></label>
-                                <label class="flex items-start gap-2 cursor-pointer"><input type="radio" name="goal-mode" value="future" checked class="mt-0.5 text-brand-600 focus:ring-brand-500"><span><b>Цель в будущих рублях</b><span class="block text-xs text-slate-500 dark:text-slate-400">Фиксированная номинальная сумма в рублях на дату достижения.</span></span></label>
+                        <fieldset>
+                            <legend class="mb-2 text-xs font-semibold text-slate-700 dark:text-slate-300">Как указана цель?</legend>
+                            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <input id="goal-mode-today" type="radio" name="goal-mode" value="today" class="sr-only peer/today"><label for="goal-mode-today" class="cursor-pointer rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600 transition peer-checked/today:border-brand-600 peer-checked/today:bg-brand-50 peer-checked/today:text-brand-800 peer-focus-visible/today:ring-2 peer-focus-visible/today:ring-brand-500 peer-focus-visible/today:ring-offset-2 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:peer-checked/today:border-brand-400 dark:peer-checked/today:bg-brand-900/20 dark:peer-checked/today:text-brand-200"><b class="block">Цель указана в сегодняшних ценах</b><span class="mt-1 block text-xs">Сумма сохранит покупательную способность: к дате цели она увеличится на инфляцию.</span></label>
+                                <input id="goal-mode-future" type="radio" name="goal-mode" value="future" checked class="sr-only peer/future"><label for="goal-mode-future" class="cursor-pointer rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600 transition peer-checked/future:border-brand-600 peer-checked/future:bg-brand-50 peer-checked/future:text-brand-800 peer-focus-visible/future:ring-2 peer-focus-visible/future:ring-brand-500 peer-focus-visible/future:ring-offset-2 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:peer-checked/future:border-brand-400 dark:peer-checked/future:bg-brand-900/20 dark:peer-checked/future:text-brand-200"><b class="block">Цель уже указана в ценах будущего периода</b><span class="mt-1 block text-xs">Фиксированная сумма, которую вы хотите видеть на дату достижения.</span></label>
                             </div>
                         </fieldset>
                         <div class="relative">
@@ -297,6 +297,7 @@
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                         </div>
                         <input type="range" id="goal-range" min="100000" max="100000000" step="100000" value="1000000" class="w-full accent-brand-500 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                        <p id="goal-range-helper" class="text-xs text-slate-500 dark:text-slate-400" aria-live="polite">Сумма цели: 1 000 000 ₽</p>
 
                         <!-- HIGH CONVERTING PREMIUM PRESETS (2026 REALITY) -->
                         <div class="grid grid-cols-2 gap-2 pt-1">
@@ -321,7 +322,7 @@
 
                     <div class="space-y-2 pt-2">
                         <div class="flex justify-between items-center">
-                            <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Ставка по вкладу (% годовых)</label>
+                            <label for="interest-rate" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Ожидаемая доходность накоплений (% в год)</label>
                             <span class="text-sm font-bold text-brand-600 dark:text-brand-400" id="rate-display">...</span>
                         </div>
                         <div class="relative">
@@ -833,6 +834,9 @@
                 Number.isFinite(state.interestRate) ? `${state.interestRate}%` : null
             );
             CalculatorState.writeSafeText('goal-display', formatMoney(state.goalSum));
+            document.getElementById('goal-range-helper').textContent = state.goalMode === 'today'
+                ? `Сумма цели в сегодняшних ценах: ${formatMoney(state.goalSum)}`
+                : `Сумма цели в ценах будущего периода: ${formatMoney(state.goalSum)}`;
             document.getElementById('growth-chart-title').textContent = state.goalMode === 'today'
                 ? 'График роста капитала в сегодняшних рублях'
                 : 'График роста капитала в будущих рублях';

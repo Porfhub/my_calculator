@@ -34,10 +34,12 @@ test('honest credit and price of time reject invalid values before rendering con
     assert.match(time, /timeStateController\.transition\(CalculatorState\.STATES\.INVALID_INPUT/);
 });
 
-test('rent versus mortgage suppresses a leader for invalid market assumptions or non-positive capital', () => {
+test('rent versus mortgage explains an invalid calculation without hiding a negative cash position', () => {
     const html = read('rent-vs-mortgage.html');
     assert.match(html, /state\.dpPercent < 1/);
     assert.match(html, /state\.growthRE >= -50/);
-    assert.match(html, /buyFinal <= 0 \|\| rentFinal <= 0/);
+    assert.match(html, /!Number\.isFinite\(buyFinal\) \|\| !Number\.isFinite\(rentFinal\)/);
+    assert.match(html, /Отрицательное значение: расходы аренды/);
+    assert.doesNotMatch(html, /При этих рыночных предположениях нельзя построить корректное сравнение/);
     assert.match(html, /rentStateController\.transition\(CalculatorState\.STATES\.CALCULATION_IMPOSSIBLE/);
 });

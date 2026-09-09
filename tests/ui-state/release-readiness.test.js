@@ -42,12 +42,17 @@ test('release audit scenarios keep their units, transport need and source contex
     assert.match(rent, /Ожидаемая годовая доходность накоплений/);
     assert.match(rent, /Что сильнее всего влияет на этот вывод/);
 
-    assert.match(car, /id="taxi-trip-distance"/);
-    assert.match(car, /const tripsPerYear = annualMileage \/ taxiTripDistance;/);
+    assert.match(car, /id="trips-per-month"/);
+    assert.match(car, /id="trip-price"/);
+    assert.match(car, /includeLostOpportunity: false/);
+    assert.match(car, /const annualMileage = tripsPerMonth \* 12 \* taxiTripDistance;/);
     assert.match(car, /const totalCarAnnual = fuelCostAnnual \+ insurance \+ maintenance \+ depreciationAnnual \+ includedOpportunityCost;/);
 
     assert.match(goal, /name="goal-mode" value="today"/);
     assert.match(goal, /name="goal-mode" value="future" checked/);
+    assert.match(goal, /Цель указана в сегодняшних ценах/);
+    assert.match(goal, /Цель уже указана в ценах будущего периода/);
+    assert.match(goal, /Ожидаемая доходность накоплений/);
     assert.match(goal, /const comparableBalance =/);
 
     assert.match(income, /id="conversion-summary"/);

@@ -25,10 +25,13 @@ test('take-home to accrued conversion is the inverse of the standard progressive
 
 test('income comparison defaults to take-home entry and discloses its standard NDFL conversion', () => {
     assert.match(wealth, /name="salaryMode" value="net" checked/);
-    assert.match(wealth, /Зарплата «на руки»/);
-    assert.match(wealth, /Начисленная зарплата до НДФЛ/);
-    assert.match(wealth, /фактически получаете после удержания НДФЛ/);
-    assert.match(wealth, /Росстат публикует зарплаты в таком формате/);
+    assert.match(wealth, /id="salary-mode-net"/);
+    assert.match(wealth, /id="salary-mode-gross"/);
+    assert.match(wealth, /peer-checked\/net/);
+    assert.match(wealth, /Ваша зарплата «на руки»/);
+    assert.match(wealth, /Начисленная сумма/);
+    assert.match(wealth, /После НДФЛ/);
+    assert.match(wealth, /Росстат публикует <b>начисленную<\/b> зарплату/);
     assert.match(wealth, /Ndfl\.monthlyGrossFromMonthlyNet/);
     assert.match(wealth, /Индивидуальные льготы и особые налоговые ситуации не учитываются/);
 });
