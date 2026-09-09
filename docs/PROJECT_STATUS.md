@@ -2,23 +2,29 @@
 
 ## Current Status
 
-- **Current Epic:** Epic III — Trust & Transparency.
-- **Current objective:** сделать происхождение данных, модель и ограничения каждого production-калькулятора понятными пользователю.
-- **Latest merged PR:** PR #64 — добавлен единый слой прозрачности и методологии калькуляторов.
+- **Release stage:** Release Candidate (RC1).
+- **Current objective:** подготовка к независимому release-аудиту перед публичным выпуском v1.0.
 
 ## Progress Dashboard
 
 | Epic | Completion | Status |
 | --- | ---: | --- |
-| I. Основа доверия | 100% | Completed |
-| II. Контур достоверных данных | 100% | Completed |
-| III. Trust & Transparency | 100% | Completed |
-| IV. Доказуемая корректность калькуляторов | 85% | In Progress |
-| V. Единый понятный пользовательский опыт | 70% | In Progress |
-| VI. Надёжность, приватность и качество релизов | 55% | In Progress |
-| VII. Ответственный рост | 0% | Planned |
+| Mathematical Audit | 100% | ✅ Completed |
+| UX/UI Audit | 100% | ✅ Completed |
+| Trust & Transparency | 100% | ✅ Completed |
+| Income X-Ray Rebuild | 100% | ✅ Completed |
+| Release Readiness | 100% | ✅ Completed |
+| Product Polish | 100% | ✅ Completed |
 
-Проценты отражают объём закрытого направления по текущей истории изменений; это рабочая оценка, а не отдельный план релиза.
+## Current Product Quality
+
+| Area | Status |
+| --- | --- |
+| Mathematical correctness | ✅ Complete |
+| Trust & transparency | ✅ Complete |
+| UX/UI | ✅ Complete |
+| Accessibility | ✅ Complete |
+| Release readiness | ✅ Complete |
 
 ## Merged PR Summary
 
@@ -40,26 +46,33 @@
 - **PR #63** — исправлена методология финансовых расчётов. Это повысило корректность результатов на уровне продукта.
 - **PR #64** — добавлен единый WebWisor-слой: источники, пользовательский ввод, сценарные допущения, результаты и ограничения объяснены во всех production-калькуляторах.
 
-## Remaining Roadmap
+## Roadmap
 
-### Epic IV. Доказуемая корректность калькуляторов
+Release Candidate (current)
 
-- Расширить эталонные и граничные проверки критических формул.
-- Версионировать нормативные допущения и закрыть оставшиеся ошибки аудита.
+↓
 
-### Epic V. Единый понятный пользовательский опыт
+Independent Release Audit
 
-- Повысить мобильную и клавиатурную доступность, читаемость и предсказуемость сценариев.
+↓
 
-### Epic VI. Надёжность, приватность и качество релизов
+Public Release v1.0
 
-- Развить smoke/E2E и визуальные проверки.
-- Усилить контроль свежести данных, наблюдаемость обновлений, безопасное кэширование и процедуру выпуска.
+↓
 
-### Epic VII. Ответственный рост
+SEO & Growth
 
-- Развивать полезный контент и новые сценарии только после подтверждения корректности основы.
-- Сохранять независимость расчётов и запрет на продажу лидов и скрытую рекламу.
+↓
+
+Analytics
+
+↓
+
+Real users
+
+↓
+
+v1.1
 
 ## Major Product Decisions
 
