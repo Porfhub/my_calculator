@@ -322,7 +322,7 @@
 
                     <div class="space-y-2 pt-2">
                         <div class="flex justify-between items-center">
-                            <label for="interest-rate" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Ожидаемая доходность накоплений (% в год)</label>
+                            <label for="interest-rate" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Ожидаемая годовая доходность (% в год)</label>
                             <span class="text-sm font-bold text-brand-600 dark:text-brand-400" id="rate-display">...</span>
                         </div>
                         <div class="relative">
@@ -702,7 +702,14 @@
                     } else if (input.type === 'range') {
                         state[input.key] = parseFloat(el.value);
                         // Sync text input
-                        const textInput = document.getElementById(input.id.replace('-range', '').replace('income', 'monthly-income').replace('expenses', 'monthly-expenses').replace('savings', 'current-savings').replace('goal', 'goal-sum'));
+                        const textInputId = {
+                            'savings-range': 'current-savings',
+                            'income-range': 'monthly-income',
+                            'expenses-range': 'monthly-expenses',
+                            'rate-range': 'interest-rate',
+                            'goal-range': 'goal-sum'
+                        }[input.id];
+                        const textInput = textInputId ? document.getElementById(textInputId) : null;
                         if (textInput && textInput.type === 'text') {
                             textInput.value = formatNumber(state[input.key]);
                         } else if (textInput) {

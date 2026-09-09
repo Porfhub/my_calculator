@@ -12,6 +12,14 @@ test('analysis horizon is an always-visible 5–40 year scenario input', () => {
     assert.doesNotMatch(html, /state\.years = 20;/);
 });
 
+test('purchase and rent inputs are visible together instead of being hidden behind tabs', () => {
+    assert.match(html, /id="purchase-section-title">🏠 Покупка/);
+    assert.match(html, /id="rent-section-title">🔑 Аренда/);
+    assert.match(html, /id="include-investments"/);
+    assert.match(html, /id="investment-rate-field"/);
+    assert.doesNotMatch(html, /switchTab|tab-btn-(buy|rent)|tab-content-(buy|rent)/);
+});
+
 test('hero result is built from calculated financial values without a decorative scale', () => {
     for (const id of ['verdict-title', 'verdict-difference', 'verdict-period', 'final-buy', 'final-rent', 'comparison-bar-buy', 'comparison-bar-rent']) {
         assert.match(html, new RegExp(`id="${id}"`), id);
