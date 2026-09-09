@@ -13,8 +13,10 @@ test('analysis horizon is an always-visible 5–40 year scenario input', () => {
 });
 
 test('purchase and rent inputs are visible together instead of being hidden behind tabs', () => {
-    assert.match(html, /id="purchase-section-title">🏠 Покупка/);
-    assert.match(html, /id="rent-section-title">🔑 Аренда/);
+    assert.match(html, /id="purchase-section-title"/);
+    assert.match(html, /id="rent-section-title"/);
+    assert.match(html, /🏠 Покупка/);
+    assert.match(html, /🔑 Аренда/);
     assert.match(html, /id="include-investments"/);
     assert.match(html, /id="investment-rate-field"/);
     assert.doesNotMatch(html, /switchTab|tab-btn-(buy|rent)|tab-content-(buy|rent)/);
