@@ -3,7 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сравнение зарплаты с официальной статистикой — CalcHub</title>
+    <title>Сравнение зарплаты с официальной статистикой — Ясномера</title>
+    <meta name="description" content="Сравните зарплату с доступными официальными ориентирами по России и регионам. Источники, период и охват показаны в методологии.">
+    <meta name="application-name" content="Ясномера">
+    <meta name="theme-color" content="#166534">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Ясномера">
+    <link rel="canonical" href="https://yasnomera.ru/wealth.html">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:site_name" content="Ясномера">
+    <meta property="og:title" content="Сравнение зарплаты — Ясномера">
+    <meta property="og:description" content="Сравнение зарплаты с доступными официальными ориентирами без рейтингов и ярлыков.">
+    <meta property="og:url" content="https://yasnomera.ru/wealth.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Сравнение зарплаты — Ясномера">
+    <meta name="twitter:description" content="Сравнение зарплаты с доступными официальными ориентирами без рейтингов и ярлыков.">
+    <script type="application/ld+json">
+        {"@context":"https://schema.org","@type":"WebApplication","name":"Сравнение зарплаты","url":"https://yasnomera.ru/wealth.html","description":"Сравнение зарплаты с доступными официальными ориентирами по России и регионам.","applicationCategory":"FinanceApplication","operatingSystem":"Any","isAccessibleForFree":true,"inLanguage":"ru-RU","provider":{"@type":"Organization","name":"Ясномера","url":"https://yasnomera.ru/"}}
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class', theme: { extend: { colors: { brand: { 50: '#f0fdf4', 100: '#dcfce7', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534', 900: '#14532d' } } } } };
@@ -34,7 +55,7 @@
     </div>
     <header class="bg-gradient-to-r from-brand-800 to-slate-900 text-white shadow-md">
         <div class="max-w-4xl mx-auto px-4 py-6 sm:px-6 flex items-center gap-4">
-            <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition" aria-label="На главную">←</a>
+            <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition flex items-center gap-2" aria-label="Ясномера — на главную">← <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">Ясномера</span></a>
             <div><h1 class="text-2xl font-black tracking-tight">Сравнение зарплаты</h1><p class="text-xs text-brand-100">Официальные ориентиры без рейтингов и ярлыков</p></div>
         </div>
     </header>
@@ -74,7 +95,7 @@
         </div>
     </main>
     <section class="max-w-4xl mx-auto px-4 pb-8" data-webwisor="wealth"></section>
-    <footer class="max-w-4xl mx-auto px-4 pb-8 text-center text-xs text-slate-400">Расчёт справочный. Источники, период и охват показаны в методологии.</footer>
+    <footer class="max-w-4xl mx-auto px-4 pb-8 text-center text-xs text-slate-400">© 2026 Ясномера. Расчёт справочный. Источники, период и охват показаны в методологии.</footer>
     <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl translate-y-20 opacity-0 transition-all"><span id="toast-message"></span></div>
     <script>
         let regionalDataset = null;

@@ -3,7 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Таймер Свободы — Калькулятор подушки безопасности и финансовой свободы</title>
+    <title>Финансовая подушка и срок свободы — Ясномера</title>
+    <meta name="description" content="Оцените, на сколько месяцев хватит финансовой подушки при разных уровнях расходов и заданной доходности сбережений.">
+    <meta name="application-name" content="Ясномера">
+    <meta name="theme-color" content="#166534">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Ясномера">
+    <link rel="canonical" href="https://yasnomera.ru/financial-freedom.html">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:site_name" content="Ясномера">
+    <meta property="og:title" content="Финансовая подушка — Ясномера">
+    <meta property="og:description" content="Оценка запаса времени при разных уровнях расходов и заданной доходности сбережений.">
+    <meta property="og:url" content="https://yasnomera.ru/financial-freedom.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Финансовая подушка — Ясномера">
+    <meta name="twitter:description" content="Оценка запаса времени при разных уровнях расходов и заданной доходности сбережений.">
+    <script type="application/ld+json">
+        {"@context":"https://schema.org","@type":"WebApplication","name":"Таймер свободы","url":"https://yasnomera.ru/financial-freedom.html","description":"Оценка срока финансовой подушки при заданных расходах и доходности сбережений.","applicationCategory":"FinanceApplication","operatingSystem":"Any","isAccessibleForFree":true,"inLanguage":"ru-RU","provider":{"@type":"Organization","name":"Ясномера","url":"https://yasnomera.ru/"}}
+    </script>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN -->
@@ -141,7 +162,7 @@
             <div class="flex items-center space-x-4">
                 <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
                     <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">На главную</span>
+                    <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">Ясномера</span>
                 </a>
                 <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
                 <div class="flex items-center space-x-3">
@@ -456,7 +477,7 @@
                         <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
                         Поделиться
                     </button>
-                    <button onclick="takeScreenshot('screenshot-area', 'financial-freedom.png')" class="flex items-center justify-center gap-2 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition shadow-lg active:scale-95">
+                    <button onclick="takeScreenshot('screenshot-area', 'yasnomera-financial-freedom.png')" class="flex items-center justify-center gap-2 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition shadow-lg active:scale-95">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         Сохранить
                     </button>
@@ -483,8 +504,8 @@
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8" data-webwisor="financial-freedom"></section>
 
     <footer class="py-12 text-center text-xs text-slate-400 border-t dark:border-slate-800 mt-12">
-        <p class="max-w-md mx-auto px-6">Проект CalcHub. Финансовые инструменты ответственного планирования жизни.</p>
-        <p class="mt-4">© 2026 Финансовый Хаб.</p>
+        <p class="max-w-md mx-auto px-6">Ясномера. Понятные инструменты ответственного финансового планирования.</p>
+        <p class="mt-4">© 2026 Ясномера.</p>
     </footer>
 
     <script>
@@ -761,7 +782,7 @@
                 return;
             }
             shareLinkCustom(
-                'Таймер Свободы — CalcHub',
+                'Таймер свободы — Ясномера',
                 `Я рассчитал запас прочности своей финансовой подушки: ${document.getElementById('mobile-comfort-duration').innerText}. Оцените свой финансовый резерв!`
             );
         }

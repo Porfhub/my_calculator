@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://calchub.local/schemas/regions.schema.json",
+  "$id": "https://yasnomera.ru/schemas/regions.schema.json",
   "type": "object",
   "additionalProperties": false,
   "required": ["metadata", "sources", "regions"],

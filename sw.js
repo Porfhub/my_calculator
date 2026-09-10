@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fin-hub-cache-v13';
+const CACHE_NAME = 'yasnomera-cache-v14';
 const EXTERNAL_LIBS = [
     'https://cdn.tailwindcss.com',
     'https://cdn.jsdelivr.net/npm/chart.js',
@@ -14,6 +14,12 @@ const INTERNAL_FILES = [
     '/time-is-money.html',
     '/inflation-shredder.html',
     '/car-vs-taxi.html',
+    '/millionaire.html',
+    '/financial-freedom.html',
+    '/honest-credit.html',
+    '/genetic-wealth.html',
+    '/manifest.webmanifest',
+    '/favicon.ico',
     '/css/product-polish.css',
     '/js/api.js',
     '/js/income-comparison.js',

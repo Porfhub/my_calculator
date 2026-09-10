@@ -1,9 +1,10 @@
-# Project Status
+# Статус проекта «Ясномера»
 
 ## Current Status
 
-- **Release stage:** Release Candidate (RC1).
-- **Current objective:** подготовка к независимому release-аудиту перед публичным выпуском v1.0.
+- **Release stage:** Public Launch Candidate.
+- **Current objective:** финальная проверка производственной миграции бренда перед публичным выпуском v1.0.
+- **Production domain:** [yasnomera.ru](https://yasnomera.ru/).
 
 ## Progress Dashboard
 
@@ -15,6 +16,7 @@
 | Income X-Ray Rebuild | 100% | ✅ Completed |
 | Release Readiness | 100% | ✅ Completed |
 | Product Polish | 100% | ✅ Completed |
+| Brand Migration | 100% | ✅ Completed |
 
 ## Current Product Quality
 
@@ -25,6 +27,7 @@
 | UX/UI | ✅ Complete |
 | Accessibility | ✅ Complete |
 | Release readiness | ✅ Complete |
+| Brand and domain consistency | ✅ Complete |
 
 ## Merged PR Summary
 
@@ -45,14 +48,19 @@
 - **PR #62** — усилены доверительные формулировки интерфейса. Это помогает пользователю правильно понимать ограничения расчётов.
 - **PR #63** — исправлена методология финансовых расчётов. Это повысило корректность результатов на уровне продукта.
 - **PR #64** — добавлен единый WebWisor-слой: источники, пользовательский ввод, сценарные допущения, результаты и ограничения объяснены во всех production-калькуляторах.
+- **Финальная миграция бренда** — интерфейс, metadata, PWA, структурированные данные, домен, экспорт и документация приведены к единой идентичности «Ясномера».
 
 ## Roadmap
 
-Release Candidate (current)
+Release Candidate
 
 ↓
 
-Independent Release Audit
+Independent Release Audit (completed)
+
+↓
+
+Public Launch Candidate (current)
 
 ↓
 

@@ -30,7 +30,7 @@ def run_verification():
                 time.sleep(1)
 
                 # Light mode
-                page.screenshot(path=f"/home/jules/verification/screenshot_{p_name}_light.png")
+                page.screenshot(path=f"/home/jules/verification/yasnomera-{p_name}-light.png")
 
                 # Switch to dark mode
                 page.evaluate("""() => {
@@ -44,7 +44,7 @@ def run_verification():
                     }
                 }""")
                 time.sleep(0.5)
-                page.screenshot(path=f"/home/jules/verification/screenshot_{p_name}_dark.png")
+                page.screenshot(path=f"/home/jules/verification/yasnomera-{p_name}-dark.png")
             except Exception as e:
                 print(f"Error processing {p_name}: {e}")
 

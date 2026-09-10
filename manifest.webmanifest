@@ -1,0 +1,19 @@
+{
+  "id": "/",
+  "name": "Ясномера — понятные расчёты для финансовых решений",
+  "short_name": "Ясномера",
+  "description": "Независимые и прозрачные финансовые калькуляторы для сравнения сценариев.",
+  "lang": "ru",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#166534",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}

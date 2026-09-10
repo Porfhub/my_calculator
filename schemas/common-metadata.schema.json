@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://calchub.local/schemas/common-metadata.schema.json",
+  "$id": "https://yasnomera.ru/schemas/common-metadata.schema.json",
   "$defs": {
     "status": {
       "type": "string",

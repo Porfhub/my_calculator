@@ -3,7 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Машина или Такси - Финансовый Хаб</title>
+    <title>Машина или такси — сравнение расходов | Ясномера</title>
+    <meta name="description" content="Сравните расходы на личный автомобиль и такси по своим условиям: поездки, топливо, обслуживание, амортизация и альтернативная стоимость.">
+    <meta name="application-name" content="Ясномера">
+    <meta name="theme-color" content="#166534">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Ясномера">
+    <link rel="canonical" href="https://yasnomera.ru/car-vs-taxi.html">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:site_name" content="Ясномера">
+    <meta property="og:title" content="Машина или такси — Ясномера">
+    <meta property="og:description" content="Сравнение расходов на автомобиль и такси по выбранным условиям.">
+    <meta property="og:url" content="https://yasnomera.ru/car-vs-taxi.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Машина или такси — Ясномера">
+    <meta name="twitter:description" content="Сравнение расходов на автомобиль и такси по выбранным условиям.">
+    <script type="application/ld+json">
+        {"@context":"https://schema.org","@type":"WebApplication","name":"Машина или такси","url":"https://yasnomera.ru/car-vs-taxi.html","description":"Сравнение расходов на личный автомобиль и такси по выбранным условиям.","applicationCategory":"FinanceApplication","operatingSystem":"Any","isAccessibleForFree":true,"inLanguage":"ru-RU","provider":{"@type":"Organization","name":"Ясномера","url":"https://yasnomera.ru/"}}
+    </script>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- html2canvas CDN -->
@@ -103,7 +124,7 @@
             <div class="flex items-center space-x-4">
                 <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
                     <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">На главную</span>
+                    <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">Ясномера</span>
                 </a>
                 <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
                 <div class="flex items-center space-x-3">
@@ -595,13 +616,13 @@
                 <p id="mobile-taxi-total" class="text-sm font-black text-slate-900 dark:text-white">0 ₽</p>
             </div>
         </div>
-        <button onclick="shareLinkCustom('Машина или такси — CalcHub', 'Я сравнил расходы на личный автомобиль и такси в CalcHub. Разница по выбранным параметрам: ' + document.getElementById('mobile-monthly-diff').innerText + ' в месяц. Результат зависит от введённых условий.')" class="w-full mt-3 py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
+        <button onclick="shareLinkCustom('Машина или такси — Ясномера', 'Я сравнил расходы на личный автомобиль и такси в Ясномере. Разница по выбранным параметрам: ' + document.getElementById('mobile-monthly-diff').innerText + ' в месяц. Результат зависит от введённых условий.')" class="w-full mt-3 py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
             📢 Поделиться расчетом
         </button>
     </div>
 
     <footer class="max-w-7xl mx-auto px-4 py-12 text-center text-xs text-slate-400 pb-40 lg:pb-12">
-        <p>© 2026 Финансовый Хаб. Расчеты носят информационный характер.</p>
+        <p>© 2026 Ясномера. Расчёты носят информационный характер.</p>
     </footer>
 
     <!-- Toast Notification -->
@@ -998,7 +1019,7 @@
         }
 
         window.shareResult = shareLink;
-        window.takeScreenshot = () => takeScreenshot('screenshot-area', 'car-vs-taxi.png');
+        window.takeScreenshot = () => takeScreenshot('screenshot-area', 'yasnomera-car-vs-taxi.png');
     </script>
 
 
