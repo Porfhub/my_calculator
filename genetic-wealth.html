@@ -219,7 +219,7 @@
                         <!-- Малыш 0-3 -->
                         <div class="space-y-2 p-4 bg-sky-50/40 dark:bg-sky-950/20 border border-sky-100 dark:border-sky-900/35 rounded-2xl">
                             <div class="flex justify-between items-center">
-                                <label class="text-sm font-bold text-sky-850 dark:text-sky-300">👶 Младенец (0–3 года)</label>
+                                <label for="range-toddler" class="text-sm font-bold text-sky-850 dark:text-sky-300">👶 Младенец (0–3 года)</label>
                                 <span class="text-sm font-black text-sky-600 dark:text-sky-400" id="val-toddler">30 000 ₽</span>
                             </div>
                             <p class="text-[10px] text-slate-400 leading-normal">Питание, подгузники, коляска, первая одежда, базовые педиатрические чекапы.</p>
@@ -229,7 +229,7 @@
                         <!-- Дошкольник 3-7 -->
                         <div class="space-y-2 p-4 bg-amber-50/40 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/35 rounded-2xl">
                             <div class="flex justify-between items-center">
-                                <label class="text-sm font-bold text-amber-850 dark:text-amber-300">🧒 Дошкольник (3–7 лет)</label>
+                                <label for="range-preschooler" class="text-sm font-bold text-amber-850 dark:text-amber-300">🧒 Дошкольник (3–7 лет)</label>
                                 <span class="text-sm font-black text-amber-600 dark:text-amber-400" id="val-preschooler">35 000 ₽</span>
                             </div>
                             <p class="text-[10px] text-slate-400 leading-normal">Детский сад, развивающие кружки, игрушки, сезонная одежда и обувь.</p>
@@ -239,7 +239,7 @@
                         <!-- Школьник 7-12 -->
                         <div class="space-y-2 p-4 bg-emerald-50/40 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/35 rounded-2xl">
                             <div class="flex justify-between items-center">
-                                <label class="text-sm font-bold text-emerald-850 dark:text-emerald-300">🎒 Школьник (7–12 лет)</label>
+                                <label for="range-schooler" class="text-sm font-bold text-emerald-850 dark:text-emerald-300">🎒 Школьник (7–12 лет)</label>
                                 <span class="text-sm font-black text-emerald-600 dark:text-emerald-400" id="val-schooler">45 000 ₽</span>
                             </div>
                             <p class="text-[10px] text-slate-400 leading-normal">Школьные принадлежности, форма, спортивные секции, первый смартфон, питание.</p>
@@ -249,7 +249,7 @@
                         <!-- Подросток 12-18 -->
                         <div class="space-y-2 p-4 bg-indigo-50/40 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/35 rounded-2xl">
                             <div class="flex justify-between items-center">
-                                <label class="text-sm font-bold text-indigo-850 dark:text-indigo-300">🎸 Подросток (12–18 лет)</label>
+                                <label for="range-teenager" class="text-sm font-bold text-indigo-850 dark:text-indigo-300">🎸 Подросток (12–18 лет)</label>
                                 <span class="text-sm font-black text-indigo-600 dark:text-indigo-400" id="val-teenager">60 000 ₽</span>
                             </div>
                             <p class="text-[10px] text-slate-400 leading-normal">Подготовка к ОГЭ/ЕГЭ, репетиторы, карманные расходы, взрослая одежда, девайсы.</p>
@@ -294,15 +294,14 @@
                             (В ценах сегодняшнего дня без учета инфляции это было бы <span id="total-without-inflation">...</span> ₽)
                         </div>
 
-                        <!-- Supportive Reassuring Microcopy -->
                         <div class="bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-700/50 p-4 rounded-2xl text-xs text-slate-600 dark:text-slate-350 leading-relaxed font-medium mb-6">
-                            👼 <span class="font-bold text-slate-900 dark:text-white">Дети — это дорого, но расходы распределены на 18 лет.</span> В среднем это всего <span id="monthly-average-stat" class="font-black text-brand-600">... ₽</span> в месяц — вполне подъемная сумма для семьи.
+                            Расходы распределены на 18 лет. Среднее значение в выбранном сценарии: <span id="monthly-average-stat" class="font-black text-brand-600">... ₽</span> в месяц.
                         </div>
 
                         <div class="pt-6 border-t dark:border-slate-800">
                             <div class="p-4 bg-brand-50 dark:bg-brand-900/20 rounded-2xl border border-brand-100 dark:border-brand-800">
-                                <p class="text-sm text-brand-800 dark:text-brand-300 italic">
-                                    «Для понимания масштаба: эта сумма эквивалентна покупке <span id="equiv-apartments" class="font-bold text-brand-600">...</span> или <span id="equiv-cars" class="font-bold text-brand-600">...</span>. Но помните: инвестиция в счастливое детство вашего ребенка — это самый высокодоходный проект в жизни! ❤️»
+                                <p class="text-sm text-brand-800 dark:text-brand-300">
+                                    Для сопоставления масштаба: сумма эквивалентна стоимости <span id="equiv-apartments" class="font-bold text-brand-600">...</span> или <span id="equiv-cars" class="font-bold text-brand-600">...</span> по принятым в модели ориентирам.
                                 </p>
                             </div>
                         </div>

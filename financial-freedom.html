@@ -190,7 +190,7 @@
                                 <input type="text" id="savings-input" oninput="handleFormattedInputSync(this, 'savings-range')" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg text-slate-800 dark:text-white" value="1 000 000">
                                 <span class="absolute right-4 top-3.5 text-slate-400 font-bold">₽</span>
                             </div>
-                            <input type="range" id="savings-range" min="10000" max="20000000" step="50000" value="1000000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('savings', this.value)">
+                            <input type="range" id="savings-range" min="10000" max="20000000" step="10000" value="1000000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('savings', this.value)">
                         </div>
 
                         <!-- Expected yield control (Psychology & Trust) -->
