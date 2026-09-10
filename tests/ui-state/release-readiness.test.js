@@ -46,6 +46,7 @@ test('release audit scenarios keep their units, transport need and source contex
     assert.match(car, /id="trips-per-month"/);
     assert.match(car, /id="trip-price"/);
     assert.match(car, /includeLostOpportunity: false/);
+    assert.match(car, /min="0\.5" step="0\.5" id="taxi-trip-distance"/);
     assert.match(car, /const annualMileage = tripsPerMonth \* 12 \* taxiTripDistance;/);
     assert.match(car, /const totalCarAnnual = fuelCostAnnual \+ insurance \+ maintenance \+ depreciationAnnual \+ includedOpportunityCost;/);
 
@@ -60,4 +61,15 @@ test('release audit scenarios keep their units, transport need and source contex
     assert.match(income, /id="conversion-summary"/);
     assert.match(income, /Сравнивается как/);
     assert.match(income, /Период: \$\{reference\.source\.reference_period\}/);
+});
+
+test('child-cost framing remains neutral and primary controls receive programmatic labels', () => {
+    const childCost = read('genetic-wealth.html');
+    const utilities = read('js/ui-utils.js');
+
+    assert.doesNotMatch(childCost, /подъемн|высокодоходн|счастливое детство/i);
+    assert.match(childCost, /Расходы распределены на 18 лет/);
+    assert.match(utilities, /function applyAccessibleControlLabels\(\)/);
+    assert.match(utilities, /'mode-checkbox': 'Экспертный режим'/);
+    assert.match(utilities, /'interest-rate': 'Ожидаемая годовая доходность, % в год'/);
 });

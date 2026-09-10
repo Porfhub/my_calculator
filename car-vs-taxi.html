@@ -159,7 +159,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Цена авто -->
                         <div class="space-y-2">
-                            <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Цена автомобиля</label>
+                            <label for="car-price" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Цена автомобиля</label>
                             <div class="relative">
                                 <input type="text" id="car-price" oninput="handleInput(this, 'carPrice')" class="w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="3 000 000">
                                 <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
@@ -220,14 +220,14 @@
                                 </div>
                                 <div class="space-y-2">
                                     <label for="taxi-trip-distance" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Длина типичной поездки для расчёта пробега</label>
-                                    <div class="relative"><input type="number" min="0.1" step="0.5" id="taxi-trip-distance" oninput="handleRawInput('taxiTripDistance', this.value)" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="10"><span class="absolute right-4 top-3.5 text-slate-400">км</span></div>
+                                    <div class="relative"><input type="number" min="0.5" step="0.5" id="taxi-trip-distance" oninput="handleRawInput('taxiTripDistance', this.value)" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="10"><span class="absolute right-4 top-3.5 text-slate-400">км</span></div>
                                 </div>
                             </div>
 
                             <!-- Девальвация (Потеря стоимости) -->
                             <div class="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-850">
                                 <div class="flex justify-between items-center">
-                                    <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Потеря стоимости в год</label>
+                                    <label for="depreciation-range" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Потеря стоимости в год</label>
                                     <span id="depreciation-display" class="text-sm font-black text-rose-600">10%</span>
                                 </div>
                                 <input type="range" id="depreciation-range" min="0" max="30" step="1" value="10" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="handleRawInput('depreciation', this.value)">
