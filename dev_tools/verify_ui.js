@@ -19,7 +19,7 @@ const { chromium } = require('playwright');
     await page.waitForTimeout(1000);
 
     // Light mode
-    await page.screenshot({ path: `screenshot_${p}_light.png`, fullPage: false });
+    await page.screenshot({ path: `yasnomera-${p}-light.png`, fullPage: false });
 
     // Switch to dark mode (if toggle exists and works as intended)
     await page.evaluate(() => {
@@ -30,7 +30,7 @@ const { chromium } = require('playwright');
         }
     });
     await page.waitForTimeout(500);
-    await page.screenshot({ path: `screenshot_${p}_dark.png`, fullPage: false });
+    await page.screenshot({ path: `yasnomera-${p}-dark.png`, fullPage: false });
   }
 
   await browser.close();

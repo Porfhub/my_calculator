@@ -181,7 +181,7 @@ function canExportCurrentCalculation() {
     return false;
 }
 
-async function takeScreenshot(elementId = 'screenshot-area', filename = 'calculation.png') {
+async function takeScreenshot(elementId = 'screenshot-area', filename = 'yasnomera-calculation.png') {
     if (!canExportCurrentCalculation()) return;
 
     const element = document.getElementById(elementId);
@@ -206,8 +206,8 @@ async function takeScreenshot(elementId = 'screenshot-area', filename = 'calcula
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 navigator.share({
                     files: [file],
-                    title: 'Мой расчет',
-                    text: 'Посмотри на результаты моего расчета!'
+                    title: 'Расчёт — Ясномера',
+                    text: 'Результат расчёта в Ясномере.'
                 }).then(() => showToast("Успешно отправлено!"))
                   .catch((err) => console.log('User cancelled share', err));
             } else {

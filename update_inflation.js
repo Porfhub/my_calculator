@@ -120,7 +120,7 @@ function requestBuffer(url, { accept, maxBytes = MAX_RESPONSE_BYTES, redirects =
             ca: ROSSTAT_CA_BUNDLE,
             headers: {
                 Accept: accept || '*/*',
-                'User-Agent': 'my-calculator-inflation-updater/2.0'
+                'User-Agent': 'yasnomera-data-updater/2.0 (+https://yasnomera.ru/)'
             },
             timeout: REQUEST_TIMEOUT_MS
         }, (response) => {

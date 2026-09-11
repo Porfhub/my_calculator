@@ -39,7 +39,7 @@ test('CBR parsers require usable and internally consistent source data', () => {
 });
 
 test('rates updater publishes a validated schema v2 candidate atomically', async () => {
-    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'calchub-rates-'));
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'yasnomera-rates-'));
     const outputPath = path.join(directory, 'rates.json');
     try {
         const result = await updateRates({
@@ -79,7 +79,7 @@ test('network failure without a trusted rate snapshot publishes unavailable', as
 });
 
 test('inflation updater keeps the last valid complete row on validation failure', async () => {
-    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'calchub-inflation-'));
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'yasnomera-inflation-'));
     const outputPath = path.join(directory, 'inflation.json');
     try {
         const first = await updateInflation({
@@ -107,7 +107,7 @@ test('inflation updater keeps the last valid complete row on validation failure'
 });
 
 test('unchanged inflation source still transitions through stale to unavailable by freshness policy', async () => {
-    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'calchub-inflation-freshness-'));
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'yasnomera-inflation-freshness-'));
     const outputPath = path.join(directory, 'inflation.json');
     try {
         const first = await updateInflation({

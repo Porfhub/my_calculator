@@ -1,8 +1,8 @@
 {
-  "name": "calchub-data-validation",
+  "name": "yasnomera-data-validation",
   "version": "1.0.0",
   "private": true,
-  "description": "Fail-closed validation for CalcHub financial datasets",
+  "description": "Fail-closed validation for Yasnomera financial datasets",
   "scripts": {
     "test": "node --test tests/data-validation/*.test.js tests/ui-state/*.test.js",
     "validate:data": "node data_validation/validate.js --all --mode publish"

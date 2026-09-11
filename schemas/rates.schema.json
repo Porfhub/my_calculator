@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://calchub.local/schemas/rates.schema.json",
-  "title": "CalcHub key rate dataset schema v2",
+  "$id": "https://yasnomera.ru/schemas/rates.schema.json",
+  "title": "Yasnomera key rate dataset schema v2",
   "$comment": "Top-level cb_rate/source_url/effective_from/fetched_at/status are a temporary compatibility projection for current browser consumers.",
   "type": "object",
   "additionalProperties": false,

@@ -206,7 +206,7 @@ test('unavailable datasets contain no invented financial payload', () => {
 });
 
 test('atomic write validates before replace and leaves no temporary file', () => {
-    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'calchub-validation-'));
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'yasnomera-validation-'));
     const outputPath = path.join(directory, 'rates.json');
     try {
         const valid = validRates();

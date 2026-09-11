@@ -12,10 +12,10 @@ test('annual growth assumptions use equivalent monthly compounding', () => {
     assert.ok(Math.abs(Math.pow(1 + monthlyRate, 12) - (1 + annualRate)) < 1e-12);
 
     const freedom = read('financial-freedom.html');
-    const rent = read('rent-vs-mortgage.html');
+    const rentModel = read('js/rent-vs-mortgage-model.js');
     assert.match(freedom, /const monthlyInflationRate = Math\.pow\(1 \+ state\.avgInflation, 1 \/ 12\) - 1;/);
-    assert.match(rent, /const monthlyGrowthRE = Math\.pow\(1 \+ state\.growthRE \/ 100, 1 \/ 12\) - 1;/);
-    assert.match(rent, /const monthlyGrowthRent = Math\.pow\(1 \+ state\.growthRent \/ 100, 1 \/ 12\) - 1;/);
+    assert.match(rentModel, /const monthlyGrowthRE = Math\.pow\(1 \+ state\.growthRE \/ 100, 1 \/ 12\) - 1;/);
+    assert.match(rentModel, /const monthlyGrowthRent = Math\.pow\(1 \+ state\.growthRent \/ 100, 1 \/ 12\) - 1;/);
 });
 
 test('child-cost projection starts from today\'s prices and covers exactly eighteen years', () => {

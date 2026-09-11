@@ -3,7 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Покупательная способность денег — CalcHub</title>
+    <title>Калькулятор покупательной способности — Ясномера</title>
+    <meta name="description" content="Оцените изменение покупательной способности денег по официальному годовому ряду инфляции Росстата.">
+    <meta name="application-name" content="Ясномера">
+    <meta name="theme-color" content="#166534">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Ясномера">
+    <link rel="canonical" href="https://yasnomera.ru/inflation-shredder.html">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" type="image/svg+xml" href="yasnomera-mark.svg">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:site_name" content="Ясномера">
+    <meta property="og:title" content="Покупательная способность денег — Ясномера">
+    <meta property="og:description" content="Расчёт изменения покупательной способности по официальному годовому ряду инфляции.">
+    <meta property="og:url" content="https://yasnomera.ru/inflation-shredder.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Покупательная способность денег — Ясномера">
+    <meta name="twitter:description" content="Расчёт изменения покупательной способности по официальному годовому ряду инфляции.">
+    <script type="application/ld+json">
+        {"@context":"https://schema.org","@type":"WebApplication","name":"Покупательная способность","url":"https://yasnomera.ru/inflation-shredder.html","description":"Расчёт изменения покупательной способности по официальному годовому ряду инфляции Росстата.","applicationCategory":"FinanceApplication","operatingSystem":"Any","isAccessibleForFree":true,"inLanguage":"ru-RU","provider":{"@type":"Organization","name":"Ясномера","url":"https://yasnomera.ru/"}}
+    </script>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN -->
@@ -107,7 +128,7 @@
             <div class="flex items-center space-x-4">
                 <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
                     <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">На главную</span>
+                    <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">Ясномера</span>
                 </a>
                 <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
                 <div class="flex items-center space-x-3">
@@ -332,7 +353,7 @@
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8" data-webwisor="inflation-shredder"></section>
 
     <footer class="max-w-7xl mx-auto px-4 py-12 text-center text-xs text-slate-400">
-        <p>© 2026 CalcHub. Расчёт использует официальный годовой ряд инфляции Росстата.</p>
+        <p>© 2026 Ясномера. Расчёт использует официальный годовой ряд инфляции Росстата.</p>
     </footer>
 
     <script>
@@ -693,7 +714,7 @@
         function shareShredderResult() {
             if (shredderStateController.getState() !== CalculatorState.STATES.READY) return;
             shareLinkCustom(
-                'Покупательная способность — CalcHub',
+                'Покупательная способность — Ясномера',
                 `По официальным данным Росстата потеря покупательной способности выбранной суммы составила около ${document.getElementById('mobile-loss').textContent}.`
             );
         }
@@ -752,7 +773,7 @@
 
         window.shareLink = shareLink;
         window.shareShredderResult = shareShredderResult;
-        window.takeScreenshot = () => takeScreenshot('screenshot-area', 'inflation-report.png');
+        window.takeScreenshot = () => takeScreenshot('screenshot-area', 'yasnomera-inflation-report.png');
         window.onload = init;
     </script>
 

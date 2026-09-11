@@ -3,7 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Покупка или аренда — сравнение сценариев | CalcHub</title>
+    <title>Покупка или аренда — сравнение сценариев | Ясномера</title>
+    <meta name="description" content="Сравните покупку жилья в ипотеку и аренду на одном горизонте. Прозрачный сценарный расчёт капитала, расходов и допущений.">
+    <meta name="application-name" content="Ясномера">
+    <meta name="theme-color" content="#166534">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Ясномера">
+    <link rel="canonical" href="https://yasnomera.ru/rent-vs-mortgage.html">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" type="image/svg+xml" href="yasnomera-mark.svg">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:site_name" content="Ясномера">
+    <meta property="og:title" content="Покупка или аренда — Ясномера">
+    <meta property="og:description" content="Сравнение сценариев владения и аренды жилья на выбранном горизонте.">
+    <meta property="og:url" content="https://yasnomera.ru/rent-vs-mortgage.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Покупка или аренда — Ясномера">
+    <meta name="twitter:description" content="Сравнение сценариев владения и аренды жилья на выбранном горизонте.">
+    <script type="application/ld+json">
+        {"@context":"https://schema.org","@type":"WebApplication","name":"Покупка или аренда","url":"https://yasnomera.ru/rent-vs-mortgage.html","description":"Сравнение сценариев покупки жилья в ипотеку и аренды.","applicationCategory":"FinanceApplication","operatingSystem":"Any","isAccessibleForFree":true,"inLanguage":"ru-RU","provider":{"@type":"Organization","name":"Ясномера","url":"https://yasnomera.ru/"}}
+    </script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
@@ -65,6 +86,7 @@
     <script src="js/utils.js"></script>
     <script src="js/calculator-state.js"></script>
     <script src="js/ui-utils.js"></script>
+    <script src="js/rent-vs-mortgage-model.js"></script>
     <script src="js/trust-layer.js"></script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -103,7 +125,7 @@
         <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex items-center space-x-4">
             <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
                 <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">На главную</span>
+                <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">Ясномера</span>
             </a>
             <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
             <div class="flex items-center space-x-3">
@@ -182,19 +204,39 @@
                                 <label for="include-investments" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Учитывать инвестиционный доход</label>
                                 <input type="checkbox" id="include-investments" class="h-5 w-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500" aria-describedby="investment-mode-help">
                             </div>
-                            <p id="investment-mode-help" class="text-[11px] text-slate-500 dark:text-slate-400">Если выключено, первоначальный взнос и разница в ежемесячных расходах остаются накоплениями без доходности.</p>
+                            <div id="investment-breakdown" hidden class="rounded-xl border border-slate-200 bg-white px-3 py-3 text-[11px] text-slate-600 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300" aria-live="polite">
+                                <h3 class="font-bold text-slate-800 dark:text-white">Что инвестируется?</h3>
+                                <dl class="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
+                                    <div>
+                                        <dt class="font-bold text-slate-800 dark:text-white">Стартовый капитал</dt>
+                                        <dd id="investment-initial-capital" class="mt-0.5 text-sm font-black text-slate-900 dark:text-white">0 ₽</dd>
+                                        <p class="mt-0.5 text-slate-500 dark:text-slate-400">Первоначальный взнос, который не уходит в покупку.</p>
+                                    </div>
+                                    <div>
+                                        <dt class="font-bold text-slate-800 dark:text-white">Ежемесячная разница</dt>
+                                        <dd id="investment-monthly-difference" class="mt-0.5 text-sm font-black text-slate-900 dark:text-white">0 ₽ / мес</dd>
+                                        <p id="investment-monthly-difference-help" class="mt-0.5 text-slate-500 dark:text-slate-400">Стартовая разница в первый месяц.</p>
+                                    </div>
+                                    <div>
+                                        <dt class="font-bold text-slate-800 dark:text-white">Доходность</dt>
+                                        <dd id="investment-return-value" class="mt-0.5 text-sm font-black text-slate-900 dark:text-white">0% в год</dd>
+                                        <p id="investment-return-help" class="mt-0.5 text-slate-500 dark:text-slate-400">Применяется к накопленному капиталу.</p>
+                                    </div>
+                                </dl>
+                                <p class="mt-2 border-t border-slate-100 pt-2 text-slate-500 dark:border-slate-700 dark:text-slate-400">Это сценарий с инвестиционным допущением, а не прогноз доходности.</p>
+                            </div>
                         </div>
                         <div id="investment-rate-field" class="space-y-2 hidden">
                             <div class="flex justify-between items-center">
                                 <div class="flex items-center gap-1.5">
-                                    <label for="invest-range" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Ожидаемая годовая доходность накоплений (%)</label>
+                                    <label for="invest-range" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Ожидаемая годовая доходность (% в год)</label>
                                     <span class="tooltip"><button type="button" class="text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-600 w-5 h-5 flex items-center justify-center rounded-full" aria-label="Примеры накоплений" aria-describedby="investment-rate-help">?</button>
                                         <span id="investment-rate-help" role="tooltip" class="tooltiptext">Примеры: вклад, облигации, ETF, акции и другие инвестиции. Доходность не гарантирована.</span>
                                     </span>
                                 </div>
                                 <span class="text-sm font-bold text-brand-700 dark:text-brand-400" id="invest-display">15.0%</span>
                             </div>
-                            <input type="range" id="invest-range" min="1" max="25" step="0.5" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                            <input type="range" id="invest-range" min="0" max="25" step="0.5" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
                         </div>
                     </section>
 
@@ -310,7 +352,7 @@
                                 <span>📈 Капитал при Аренде</span>
                             </h4>
                             <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                                Арендатор сохраняет первоначальный взнос и разницу между расходами на покупку и аренду. При включённом инвестиционном доходе эти деньги растут по заданной ставке; иначе это накопления без доходности.
+                                Капитал арендатора сопоставляется с чистым капиталом покупки. Состав инвестиционного сценария показан в блоке «Что инвестируется?» рядом с арендой.
                             </p>
                         </div>
                     </div>
@@ -399,7 +441,7 @@
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8" data-webwisor="rent-vs-mortgage"></section>
 
     <footer class="max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-400 border-t border-slate-100 dark:border-slate-800 mt-12">
-        <p>© 2026 CalcHub. Расчёт показывает сценарий, а не прогноз рынка.</p>
+        <p>© 2026 Ясномера. Расчёт показывает сценарий, а не прогноз рынка.</p>
     </footer>
 
     <!-- Всплывающие уведомления (Toast) -->
@@ -498,80 +540,40 @@
         }
 
         function calculateRentCore() {
-            const loanAmount = state.cost * (1 - state.dpPercent);
-            const monthlyRate = state.rate / 12 / 100;
-            const months = state.years * 12;
-
-            // Mortgage Payment
-            let mortgagePayment = 0;
-            if (monthlyRate > 0) {
-                mortgagePayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
-            } else {
-                mortgagePayment = loanAmount / months;
-            }
-
-            const dataBuy = [];
-            const dataRent = [];
-            const labels = [];
-
-            let currentLoanBalance = loanAmount;
-            let currentPropertyValue = state.cost;
-            let currentRent = state.rent;
-            let investPot = state.cost * state.dpPercent; // Initial capital for renter
-
-            const monthlyInvestRate = state.includeInvestments ? state.investRate / 12 / 100 : 0;
-            // Growth inputs are annual rates. Use equivalent monthly rates so a
-            // twelve-month simulation matches the stated annual assumption.
-            const monthlyGrowthRE = Math.pow(1 + state.growthRE / 100, 1 / 12) - 1;
-            const monthlyGrowthRent = Math.pow(1 + state.growthRent / 100, 1 / 12) - 1;
-
-            // Initial month (0)
-            dataBuy.push(currentPropertyValue - currentLoanBalance);
-            dataRent.push(investPot);
-            labels.push('Старт');
-
-            for (let m = 1; m <= months; m++) {
-                // Buy logic
-                let interest = currentLoanBalance * monthlyRate;
-                let principal = mortgagePayment - interest;
-                currentLoanBalance -= principal;
-                if (currentLoanBalance < 0) currentLoanBalance = 0;
-                currentPropertyValue *= (1 + monthlyGrowthRE);
-
-                // Rent logic
-                // Difference between (Mortgage + Maintenance) and Rent
-                const maintenance = (state.cost * 0.001) / 12; // 0.1% of cost per year for maintenance/tax
-                const totalBuyOutflow = mortgagePayment + maintenance;
-
-                const savings = totalBuyOutflow - currentRent;
-                investPot = investPot * (1 + monthlyInvestRate) + savings;
-
-                currentRent *= (1 + monthlyGrowthRent);
-
-                if (m % 12 === 0) {
-                    dataBuy.push(Math.round(currentPropertyValue - currentLoanBalance));
-                    dataRent.push(Math.round(investPot));
-                    labels.push(m / 12 + ' г.');
-                }
-            }
-
-            const buyFinal = dataBuy[dataBuy.length - 1];
-            const rentFinal = dataRent[dataRent.length - 1];
+            const result = RentVsMortgageModel.calculateScenario(state);
+            const { buyFinal, rentFinal } = result;
             if (!Number.isFinite(buyFinal) || !Number.isFinite(rentFinal)) {
                 throw new Error('Final capital is not finite');
             }
 
-            updateUI(buyFinal, rentFinal);
-            updateChart(labels, dataBuy, dataRent);
+            updateUI(buyFinal, rentFinal, result);
+            updateChart(result.labels, result.dataBuy, result.dataRent);
         }
 
-        function updateUI(buyFinal, rentFinal) {
+        function updateUI(buyFinal, rentFinal, result) {
             document.getElementById('cost-display').innerText = formatMoney(state.cost);
             document.getElementById('rate-display').innerText = state.rate.toFixed(1) + '%';
             document.getElementById('dp-percent').innerText = Math.round(state.dpPercent * 100) + '%';
             document.getElementById('rent-display').innerText = formatMoney(state.rent);
             document.getElementById('invest-display').innerText = state.investRate.toFixed(1) + '%';
-            document.getElementById('investment-rate-field').classList.toggle('hidden', !state.includeInvestments);
+            const investmentEnabled = state.includeInvestments;
+            document.getElementById('investment-rate-field').classList.toggle('hidden', !investmentEnabled);
+            const investmentBreakdown = document.getElementById('investment-breakdown');
+            investmentBreakdown.hidden = !investmentEnabled;
+            if (investmentEnabled) {
+                const startingDifference = result.initialMonthlyDifference;
+                document.getElementById('investment-initial-capital').innerText = formatMoney(result.initialRenterCapital);
+                document.getElementById('investment-monthly-difference').innerText = `${startingDifference < 0 ? '−' : '+'}${formatMoney(Math.abs(startingDifference))} / мес`;
+                document.getElementById('investment-monthly-difference-help').innerText = startingDifference > 0
+                    ? 'Добавляется к капиталу в первый месяц.'
+                    : startingDifference < 0
+                        ? 'Снимается с капитала в первый месяц.'
+                        : 'В первый месяц не меняет капитал.';
+                document.getElementById('investment-return-value').innerText = `${state.investRate.toFixed(1)}% в год`;
+                document.getElementById('investment-return-help').innerText = state.investRate > 0
+                    ? 'Применяется к накопленному капиталу.'
+                    : 'Капитал не растёт от доходности.';
+            }
             const rentFinalElement = document.getElementById('final-rent');
             rentFinalElement.innerText = rentFinal < 0 ? 'Накопления исчерпаны' : formatMoney(rentFinal);
             rentFinalElement.className = rentFinal < 0
@@ -643,7 +645,7 @@
         }
 
         window.shareLink = shareLink;
-        window.takeScreenshot = () => takeScreenshot('screenshot-area', 'rent-vs-mortgage.png');
+        window.takeScreenshot = () => takeScreenshot('screenshot-area', 'yasnomera-rent-vs-mortgage.png');
 
         function updateChart(labels, buy, rent) {
             const ctx = document.getElementById('comparisonChart').getContext('2d');

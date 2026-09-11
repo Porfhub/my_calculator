@@ -144,7 +144,7 @@ async function fetchOfficialRate(fetchImpl = fetch, now = new Date()) {
         headers: {
             'Content-Type': 'text/xml; charset=utf-8',
             SOAPAction: 'http://web.cbr.ru/KeyRateXML',
-            'User-Agent': 'CalcHub rates updater'
+            'User-Agent': 'yasnomera-data-updater/2.0 (+https://yasnomera.ru/)'
         },
         body: buildSoapRequest(toDate)
     }, fetchImpl);
@@ -155,7 +155,7 @@ async function fetchOfficialRate(fetchImpl = fetch, now = new Date()) {
 
     const controlResponse = await fetchTextWithPolicy(SOURCE_URL, {
         method: 'GET',
-        headers: { Accept: 'text/html', 'User-Agent': 'CalcHub rates updater' }
+        headers: { Accept: 'text/html', 'User-Agent': 'yasnomera-data-updater/2.0 (+https://yasnomera.ru/)' }
     }, fetchImpl);
     if (!controlResponse.contentType.includes('text/html')) {
         throw new DataSourceError('source_format_changed', 'Контрольная страница Банка России вернула неожиданный Content-Type');

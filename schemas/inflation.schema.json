@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://calchub.local/schemas/inflation.schema.json",
-  "title": "CalcHub annual inflation dataset schema v2",
+  "$id": "https://yasnomera.ru/schemas/inflation.schema.json",
+  "title": "Yasnomera annual inflation dataset schema v2",
   "type": "object",
   "additionalProperties": false,
   "required": ["metadata", "annual"],
