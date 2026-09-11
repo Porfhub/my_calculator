@@ -204,14 +204,26 @@
                                 <label for="include-investments" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Учитывать инвестиционный доход</label>
                                 <input type="checkbox" id="include-investments" class="h-5 w-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500" aria-describedby="investment-mode-help">
                             </div>
-                            <div id="investment-mode-help" class="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[11px] leading-relaxed text-slate-600 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300">
-                                <p class="font-bold text-slate-800 dark:text-white">Что считается при этой галочке?</p>
-                                <ul class="mt-1.5 space-y-1">
-                                    <li>• При аренде первоначальный взнос не направляется на покупку: он остаётся у арендатора как стартовый капитал.</li>
-                                    <li>• Каждый месяц к нему добавляется или из него вычитается разница между расходами на ипотеку и аренду.</li>
-                                    <li>• Если доходность выше 0%, накопленный капитал растёт по выбранной годовой ставке.</li>
-                                    <li>• Это инвестиционный сценарий, а не прогноз доходности.</li>
-                                </ul>
+                            <div id="investment-breakdown" hidden class="rounded-xl border border-slate-200 bg-white px-3 py-3 text-[11px] text-slate-600 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300" aria-live="polite">
+                                <h3 class="font-bold text-slate-800 dark:text-white">Что инвестируется?</h3>
+                                <dl class="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
+                                    <div>
+                                        <dt class="font-bold text-slate-800 dark:text-white">Стартовый капитал</dt>
+                                        <dd id="investment-initial-capital" class="mt-0.5 text-sm font-black text-slate-900 dark:text-white">0 ₽</dd>
+                                        <p class="mt-0.5 text-slate-500 dark:text-slate-400">Первоначальный взнос, который не уходит в покупку.</p>
+                                    </div>
+                                    <div>
+                                        <dt class="font-bold text-slate-800 dark:text-white">Ежемесячная разница</dt>
+                                        <dd id="investment-monthly-difference" class="mt-0.5 text-sm font-black text-slate-900 dark:text-white">0 ₽ / мес</dd>
+                                        <p id="investment-monthly-difference-help" class="mt-0.5 text-slate-500 dark:text-slate-400">Стартовая разница в первый месяц.</p>
+                                    </div>
+                                    <div>
+                                        <dt class="font-bold text-slate-800 dark:text-white">Доходность</dt>
+                                        <dd id="investment-return-value" class="mt-0.5 text-sm font-black text-slate-900 dark:text-white">0% в год</dd>
+                                        <p id="investment-return-help" class="mt-0.5 text-slate-500 dark:text-slate-400">Применяется к накопленному капиталу.</p>
+                                    </div>
+                                </dl>
+                                <p class="mt-2 border-t border-slate-100 pt-2 text-slate-500 dark:border-slate-700 dark:text-slate-400">Это сценарий с инвестиционным допущением, а не прогноз доходности.</p>
                             </div>
                         </div>
                         <div id="investment-rate-field" class="space-y-2 hidden">
@@ -340,7 +352,7 @@
                                 <span>📈 Капитал при Аренде</span>
                             </h4>
                             <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                                Стартовый капитал арендатора равен первоначальному взносу. Затем ежемесячно добавляется или вычитается разница между платежом по ипотеке с обслуживанием и арендой. При включённом доходе сначала начисляется <strong>годовая ставка ÷ 12</strong>, затем применяется эта разница; при 0% результат совпадает с накоплениями без доходности. На длинном горизонте ежемесячные пополнения и начисление дохода могут заметно увеличить итог; это сценарий, а не прогноз.
+                                Капитал арендатора сопоставляется с чистым капиталом покупки. Состав инвестиционного сценария показан в блоке «Что инвестируется?» рядом с арендой.
                             </p>
                         </div>
                     </div>
@@ -534,17 +546,34 @@
                 throw new Error('Final capital is not finite');
             }
 
-            updateUI(buyFinal, rentFinal);
+            updateUI(buyFinal, rentFinal, result);
             updateChart(result.labels, result.dataBuy, result.dataRent);
         }
 
-        function updateUI(buyFinal, rentFinal) {
+        function updateUI(buyFinal, rentFinal, result) {
             document.getElementById('cost-display').innerText = formatMoney(state.cost);
             document.getElementById('rate-display').innerText = state.rate.toFixed(1) + '%';
             document.getElementById('dp-percent').innerText = Math.round(state.dpPercent * 100) + '%';
             document.getElementById('rent-display').innerText = formatMoney(state.rent);
             document.getElementById('invest-display').innerText = state.investRate.toFixed(1) + '%';
-            document.getElementById('investment-rate-field').classList.toggle('hidden', !state.includeInvestments);
+            const investmentEnabled = state.includeInvestments;
+            document.getElementById('investment-rate-field').classList.toggle('hidden', !investmentEnabled);
+            const investmentBreakdown = document.getElementById('investment-breakdown');
+            investmentBreakdown.hidden = !investmentEnabled;
+            if (investmentEnabled) {
+                const startingDifference = result.initialMonthlyDifference;
+                document.getElementById('investment-initial-capital').innerText = formatMoney(result.initialRenterCapital);
+                document.getElementById('investment-monthly-difference').innerText = `${startingDifference < 0 ? '−' : '+'}${formatMoney(Math.abs(startingDifference))} / мес`;
+                document.getElementById('investment-monthly-difference-help').innerText = startingDifference > 0
+                    ? 'Добавляется к капиталу в первый месяц.'
+                    : startingDifference < 0
+                        ? 'Снимается с капитала в первый месяц.'
+                        : 'В первый месяц не меняет капитал.';
+                document.getElementById('investment-return-value').innerText = `${state.investRate.toFixed(1)}% в год`;
+                document.getElementById('investment-return-help').innerText = state.investRate > 0
+                    ? 'Применяется к накопленному капиталу.'
+                    : 'Капитал не растёт от доходности.';
+            }
             const rentFinalElement = document.getElementById('final-rent');
             rentFinalElement.innerText = rentFinal < 0 ? 'Накопления исчерпаны' : formatMoney(rentFinal);
             rentFinalElement.className = rentFinal < 0

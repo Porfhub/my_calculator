@@ -55,6 +55,8 @@
             dataBuy,
             dataRent,
             initialRenterCapital,
+            initialMonthlyDifference: mortgagePayment + (state.cost * 0.001) / 12 - state.rent,
+            annualReturn: state.investRate,
             labels,
             monthlyInvestmentRate,
             mortgagePayment

@@ -34,9 +34,9 @@ test('purchase and rent inputs are visible together instead of being hidden behi
     assert.match(html, /🔑 Аренда/);
     assert.match(html, /id="include-investments"/);
     assert.match(html, /id="investment-rate-field"/);
-    assert.match(html, /Что считается при этой галочке\?/);
-    assert.match(html, /первоначальный взнос не направляется на покупку/);
-    assert.match(html, /Это инвестиционный сценарий, а не прогноз доходности/);
+    assert.match(html, /id="investment-breakdown" hidden/);
+    assert.match(html, /Что инвестируется\?/);
+    assert.match(html, /Это сценарий с инвестиционным допущением, а не прогноз доходности/);
     assert.doesNotMatch(html, /switchTab|tab-btn-(buy|rent)|tab-content-(buy|rent)/);
 });
 
@@ -83,4 +83,24 @@ test('a higher rent reduces the renter capital under the same assumptions', () =
     const higherRent = calculateScenario({ ...baseScenario, includeInvestments: false, rent: 60_000 });
 
     assert.ok(higherRent.rentFinal < lowerRent.rentFinal);
+});
+
+test('investment breakdown uses current scenario values and is visible only in investment mode', () => {
+    const baseline = calculateScenario({ ...baseScenario, includeInvestments: true });
+    assert.equal(baseline.initialRenterCapital, 200_000);
+    assert.equal(baseline.initialMonthlyDifference, 16_750);
+    assert.equal(baseline.annualReturn, 12);
+
+    assert.notEqual(calculateScenario({ ...baseScenario, includeInvestments: true, cost: 1_200_000 }).initialRenterCapital, baseline.initialRenterCapital);
+    assert.notEqual(calculateScenario({ ...baseScenario, includeInvestments: true, dpPercent: 0.3 }).initialMonthlyDifference, baseline.initialMonthlyDifference);
+    assert.notEqual(calculateScenario({ ...baseScenario, includeInvestments: true, rent: 60_000 }).initialMonthlyDifference, baseline.initialMonthlyDifference);
+    assert.notEqual(calculateScenario({ ...baseScenario, includeInvestments: true, rate: 12 }).initialMonthlyDifference, baseline.initialMonthlyDifference);
+    assert.notEqual(calculateScenario({ ...baseScenario, includeInvestments: true, investRate: 0 }).monthlyInvestmentRate, baseline.monthlyInvestmentRate);
+    assert.notEqual(calculateScenario({ ...baseScenario, includeInvestments: true, years: 2 }).rentFinal, baseline.rentFinal);
+
+    assert.match(html, /investmentBreakdown\.hidden = !investmentEnabled/);
+    assert.match(html, /investment-initial-capital'\)\.innerText = formatMoney\(result\.initialRenterCapital\)/);
+    assert.match(html, /investment-monthly-difference'\)\.innerText = `\$\{startingDifference < 0 \? '−' : '\+'\}\$\{formatMoney\(Math\.abs\(startingDifference\)\)\} \/ мес`/);
+    assert.match(html, /investment-return-value'\)\.innerText = `\$\{state\.investRate\.toFixed\(1\)\}% в год`/);
+    assert.match(html, /Капитал не растёт от доходности/);
 });
