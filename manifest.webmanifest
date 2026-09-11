@@ -11,9 +11,10 @@
   "theme_color": "#166534",
   "icons": [
     {
-      "src": "/favicon.ico",
+      "src": "/yasnomera-mark.svg",
       "sizes": "any",
-      "type": "image/x-icon"
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ]
 }

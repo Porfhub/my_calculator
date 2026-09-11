@@ -12,7 +12,7 @@
     <meta name="apple-mobile-web-app-title" content="Ясномера">
     <link rel="canonical" href="https://yasnomera.ru/rent-vs-mortgage.html">
     <link rel="manifest" href="manifest.webmanifest">
-    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="icon" type="image/svg+xml" href="yasnomera-mark.svg">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="ru_RU">
     <meta property="og:site_name" content="Ясномера">
@@ -86,6 +86,7 @@
     <script src="js/utils.js"></script>
     <script src="js/calculator-state.js"></script>
     <script src="js/ui-utils.js"></script>
+    <script src="js/rent-vs-mortgage-model.js"></script>
     <script src="js/trust-layer.js"></script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -203,7 +204,7 @@
                                 <label for="include-investments" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Учитывать инвестиционный доход</label>
                                 <input type="checkbox" id="include-investments" class="h-5 w-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500" aria-describedby="investment-mode-help">
                             </div>
-                            <p id="investment-mode-help" class="text-[11px] text-slate-500 dark:text-slate-400">Если выключено, первоначальный взнос и разница в ежемесячных расходах остаются накоплениями без доходности.</p>
+                            <p id="investment-mode-help" class="text-[11px] text-slate-500 dark:text-slate-400">Стартовый капитал — первоначальный взнос. Каждый месяц к нему добавляется или из него вычитается разница между ипотечным платежом с обслуживанием и арендой.</p>
                         </div>
                         <div id="investment-rate-field" class="space-y-2 hidden">
                             <div class="flex justify-between items-center">
@@ -215,7 +216,7 @@
                                 </div>
                                 <span class="text-sm font-bold text-brand-700 dark:text-brand-400" id="invest-display">15.0%</span>
                             </div>
-                            <input type="range" id="invest-range" min="1" max="25" step="0.5" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                            <input type="range" id="invest-range" min="0" max="25" step="0.5" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
                         </div>
                     </section>
 
@@ -331,7 +332,7 @@
                                 <span>📈 Капитал при Аренде</span>
                             </h4>
                             <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                                Арендатор сохраняет первоначальный взнос и разницу между расходами на покупку и аренду. При включённом инвестиционном доходе эти деньги растут по заданной ставке; иначе это накопления без доходности.
+                                Стартовый капитал арендатора равен первоначальному взносу. Затем ежемесячно добавляется или вычитается разница между платежом по ипотеке с обслуживанием и арендой. При включённом доходе сначала начисляется <strong>годовая ставка ÷ 12</strong>, затем применяется эта разница; при 0% результат совпадает с накоплениями без доходности. На длинном горизонте ежемесячные пополнения и начисление дохода могут заметно увеличить итог; это сценарий, а не прогноз.
                             </p>
                         </div>
                     </div>
@@ -519,71 +520,14 @@
         }
 
         function calculateRentCore() {
-            const loanAmount = state.cost * (1 - state.dpPercent);
-            const monthlyRate = state.rate / 12 / 100;
-            const months = state.years * 12;
-
-            // Mortgage Payment
-            let mortgagePayment = 0;
-            if (monthlyRate > 0) {
-                mortgagePayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
-            } else {
-                mortgagePayment = loanAmount / months;
-            }
-
-            const dataBuy = [];
-            const dataRent = [];
-            const labels = [];
-
-            let currentLoanBalance = loanAmount;
-            let currentPropertyValue = state.cost;
-            let currentRent = state.rent;
-            let investPot = state.cost * state.dpPercent; // Initial capital for renter
-
-            const monthlyInvestRate = state.includeInvestments ? state.investRate / 12 / 100 : 0;
-            // Growth inputs are annual rates. Use equivalent monthly rates so a
-            // twelve-month simulation matches the stated annual assumption.
-            const monthlyGrowthRE = Math.pow(1 + state.growthRE / 100, 1 / 12) - 1;
-            const monthlyGrowthRent = Math.pow(1 + state.growthRent / 100, 1 / 12) - 1;
-
-            // Initial month (0)
-            dataBuy.push(currentPropertyValue - currentLoanBalance);
-            dataRent.push(investPot);
-            labels.push('Старт');
-
-            for (let m = 1; m <= months; m++) {
-                // Buy logic
-                let interest = currentLoanBalance * monthlyRate;
-                let principal = mortgagePayment - interest;
-                currentLoanBalance -= principal;
-                if (currentLoanBalance < 0) currentLoanBalance = 0;
-                currentPropertyValue *= (1 + monthlyGrowthRE);
-
-                // Rent logic
-                // Difference between (Mortgage + Maintenance) and Rent
-                const maintenance = (state.cost * 0.001) / 12; // 0.1% of cost per year for maintenance/tax
-                const totalBuyOutflow = mortgagePayment + maintenance;
-
-                const savings = totalBuyOutflow - currentRent;
-                investPot = investPot * (1 + monthlyInvestRate) + savings;
-
-                currentRent *= (1 + monthlyGrowthRent);
-
-                if (m % 12 === 0) {
-                    dataBuy.push(Math.round(currentPropertyValue - currentLoanBalance));
-                    dataRent.push(Math.round(investPot));
-                    labels.push(m / 12 + ' г.');
-                }
-            }
-
-            const buyFinal = dataBuy[dataBuy.length - 1];
-            const rentFinal = dataRent[dataRent.length - 1];
+            const result = RentVsMortgageModel.calculateScenario(state);
+            const { buyFinal, rentFinal } = result;
             if (!Number.isFinite(buyFinal) || !Number.isFinite(rentFinal)) {
                 throw new Error('Final capital is not finite');
             }
 
             updateUI(buyFinal, rentFinal);
-            updateChart(labels, dataBuy, dataRent);
+            updateChart(result.labels, result.dataBuy, result.dataRent);
         }
 
         function updateUI(buyFinal, rentFinal) {

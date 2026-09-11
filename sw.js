@@ -1,4 +1,4 @@
-const CACHE_NAME = 'yasnomera-cache-v14';
+const CACHE_NAME = 'yasnomera-cache-v15';
 const EXTERNAL_LIBS = [
     'https://cdn.tailwindcss.com',
     'https://cdn.jsdelivr.net/npm/chart.js',
@@ -19,7 +19,8 @@ const INTERNAL_FILES = [
     '/honest-credit.html',
     '/genetic-wealth.html',
     '/manifest.webmanifest',
-    '/favicon.ico',
+    '/yasnomera-mark.svg',
+    '/js/rent-vs-mortgage-model.js',
     '/css/product-polish.css',
     '/js/api.js',
     '/js/income-comparison.js',
