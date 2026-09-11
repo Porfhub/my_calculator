@@ -33,6 +33,9 @@ test('every public page uses the production brand and complete discovery metadat
         assert.doesNotMatch(html, /favicon\.ico/, file);
         assert.match(html, /<meta property="og:site_name" content="Ясномера">/, file);
         assert.match(html, /<meta property="og:title" content="[^"]*Ясномера[^"]*">/, file);
+        assert.match(html, /<meta property="og:image" content="https:\/\/yasnomera\.ru\/assets\/yasnomera-og\.png">/, file);
+        assert.match(html, /<meta name="twitter:card" content="summary_large_image">/, file);
+        assert.match(html, /<meta name="twitter:image" content="https:\/\/yasnomera\.ru\/assets\/yasnomera-og\.png">/, file);
         assert.match(html, /<meta name="twitter:title" content="[^"]*Ясномера[^"]*">/, file);
         const structuredData = html.match(/<script type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>/);
         assert.ok(structuredData, file);
@@ -54,6 +57,7 @@ test('PWA and crawler files use the production identity and domain', () => {
 });
 
 test('exports and application cache carry the Yasnomera identity', () => {
+    assert.ok(fs.existsSync(path.join(root, 'assets', 'yasnomera-og.png')));
     assert.match(read('js/ui-utils.js'), /yasnomera-calculation\.png/);
     assert.match(read('sw.js'), /yasnomera-cache-v15/);
     assert.match(read('sw.js'), /'\/manifest\.webmanifest'/);

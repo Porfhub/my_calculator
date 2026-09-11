@@ -32,6 +32,26 @@ test('shared share and screenshot actions fail closed when a page marks its calc
     assert.match(utilities, /function shareLinkCustom\(title, text\)\s*\{\s*if \(!canExportCurrentCalculation\(\)\) return;/);
 });
 
+test('affected pages do not expose an unstable screenshot export control', () => {
+    const screenshotPages = [
+        'rent-vs-mortgage.html',
+        'inflation-shredder.html',
+        'car-vs-taxi.html',
+        'time-is-money.html'
+    ];
+
+    for (const file of screenshotPages) {
+        const html = read(file);
+        assert.doesNotMatch(html, /onclick="takeScreenshot\(/, file);
+        assert.doesNotMatch(html, /window\.takeScreenshot\s*=/, file);
+    }
+});
+
+test('financial freedom tooltip styles stay inside the mobile viewport', () => {
+    const html = read('financial-freedom.html');
+    assert.match(html, /@media \(max-width: 639px\)[\s\S]*?\.tooltip \.tooltiptext[\s\S]*?position: fixed;[\s\S]*?right: 1rem;[\s\S]*?left: 1rem;/);
+});
+
 test('service worker cache is advanced with the shared export behaviour', () => {
     assert.match(read('sw.js'), /yasnomera-cache-v15/);
     assert.match(read('sw.js'), /'\/js\/trust-layer\.js'/);
