@@ -59,7 +59,7 @@ test('PWA and crawler files use the production identity and domain', () => {
 test('exports and application cache carry the Yasnomera identity', () => {
     assert.ok(fs.existsSync(path.join(root, 'assets', 'yasnomera-og.png')));
     assert.match(read('js/ui-utils.js'), /yasnomera-calculation\.png/);
-    assert.match(read('sw.js'), /yasnomera-cache-v15/);
+    assert.match(read('sw.js'), /yasnomera-cache-v16/);
     assert.match(read('sw.js'), /'\/manifest\.webmanifest'/);
     assert.match(read('sw.js'), /'\/yasnomera-mark\.svg'/);
     for (const [file] of pages.slice(1)) {
