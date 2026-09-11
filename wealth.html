@@ -19,7 +19,12 @@
     <meta property="og:title" content="Сравнение зарплаты — Ясномера">
     <meta property="og:description" content="Сравнение зарплаты с доступными официальными ориентирами без рейтингов и ярлыков.">
     <meta property="og:url" content="https://yasnomera.ru/wealth.html">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:image" content="https://yasnomera.ru/assets/yasnomera-og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://yasnomera.ru/assets/yasnomera-og.png">
     <meta name="twitter:title" content="Сравнение зарплаты — Ясномера">
     <meta name="twitter:description" content="Сравнение зарплаты с доступными официальными ориентирами без рейтингов и ярлыков.">
     <script type="application/ld+json">
@@ -32,6 +37,7 @@
     <script src="js/theme.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/api.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="js/ui-utils.js"></script>
     <script src="js/income-comparison.js"></script>
     <script src="js/ndfl.js"></script>
@@ -84,13 +90,14 @@
                 <div class="space-y-2"><label for="regionSelect" class="block text-sm font-semibold">Россия или субъект</label><select id="regionSelect" class="w-full px-4 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-lg"><option>Загрузка данных…</option></select><p id="datasetStatus" class="text-xs text-slate-500"></p></div>
             </div>
             <button onclick="calculateIncomeComparison()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-4 rounded-xl shadow-md text-lg">Сравнить с официальными ориентирами</button>
-            <section id="resultsDashboard" class="hidden mt-8 space-y-6" aria-live="polite">
+            <section id="screenshot-area" class="hidden mt-8 space-y-6" aria-live="polite">
                 <div class="rounded-3xl p-6 md:p-8 border border-brand-100 dark:border-slate-800 bg-gradient-to-br from-brand-50 to-white dark:from-brand-950/30 dark:to-slate-900">
                     <p id="resultSalaryLabel" class="text-xs uppercase tracking-wide font-black text-slate-500 mb-2">Ваша зарплата</p><p id="userSalary" class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white">—</p><div id="conversion-summary" class="hidden mt-4 rounded-xl border border-brand-100 bg-white/70 p-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-200" aria-live="polite"></div><p id="mainComparison" class="mt-4 text-lg font-bold text-brand-700 dark:text-brand-300">—</p><p id="comparisonScope" class="mt-2 text-xs text-slate-500"></p><p id="conversionDisclosure" class="hidden mt-3 text-xs text-slate-600 dark:text-slate-300"></p>
                 </div>
                 <div class="rounded-2xl p-6 border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50"><h3 class="text-sm font-black uppercase tracking-wide text-slate-500 mb-4">Сравнение с доступными ориентирами</h3><div id="comparisonCards" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div></div>
                 <div class="rounded-2xl p-6 border border-slate-100 dark:border-slate-800"><h3 class="text-sm font-black uppercase tracking-wide text-slate-500 mb-1">Шкала ориентиров</h3><p class="text-xs text-slate-500 mb-5">Метки показывают опубликованные значения и вашу зарплату. Расстояния между ними ничего не оценивают.</p><div id="comparisonScale" class="space-y-5"></div></div>
                 <div id="unavailableNotice" class="hidden rounded-2xl p-5 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 text-slate-600 dark:text-slate-300 text-sm"></div>
+                <button onclick="takeScreenshot('screenshot-area', 'yasnomera-income-comparison.png')" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl shadow-sm">Скриншот</button>
             </section>
         </div>
     </main>
@@ -123,7 +130,7 @@
         }
 
         function clearIncomeComparison(message) {
-            const results = document.getElementById('resultsDashboard');
+            const results = document.getElementById('screenshot-area');
             results.classList.add('hidden');
             document.getElementById('userSalary').textContent = '—';
             document.getElementById('mainComparison').textContent = '—';
@@ -181,7 +188,7 @@
             if (!salary) { clearIncomeComparison('Не удалось перевести зарплату для сравнения'); return; }
             const references = IncomeComparison.availableReferences(currentRegion, regionalDataset.sources);
             const metrics = currentRegion.metrics || {};
-            document.getElementById('resultsDashboard').classList.remove('hidden');
+            document.getElementById('screenshot-area').classList.remove('hidden');
             document.getElementById('resultSalaryLabel').textContent = isNetSalary ? 'Ваша зарплата «на руки»' : 'Ваша начисленная зарплата';
             document.getElementById('userSalary').textContent = formatMoney(enteredSalary);
             document.getElementById('comparisonScope').textContent = isNetSalary ? `Для сравнения: ${formatMoney(salary)} начисленной зарплаты. Регион: ${currentRegion.name}.` : `Регион: ${currentRegion.name}. Сравнение использует только опубликованные значения.`;
