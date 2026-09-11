@@ -34,6 +34,9 @@ test('purchase and rent inputs are visible together instead of being hidden behi
     assert.match(html, /🔑 Аренда/);
     assert.match(html, /id="include-investments"/);
     assert.match(html, /id="investment-rate-field"/);
+    assert.match(html, /Что считается при этой галочке\?/);
+    assert.match(html, /первоначальный взнос не направляется на покупку/);
+    assert.match(html, /Это инвестиционный сценарий, а не прогноз доходности/);
     assert.doesNotMatch(html, /switchTab|tab-btn-(buy|rent)|tab-content-(buy|rent)/);
 });
 
