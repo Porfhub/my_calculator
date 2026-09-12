@@ -5,8 +5,8 @@
     "source_name": "Росстат / ЕМИСС",
     "source_url": "https://www.fedstat.ru/indicator/31074",
     "source_landing_url": "https://rosstat.gov.ru/statistics/price",
-    "source_export_url": "https://rosstat.gov.ru/storage/mediabank/ipc_mes_07-2026.xlsx",
-    "source_checksum_sha256": "ace8990fe8358173f743987a256eaef71501b06b5c4e5fe865b28046776ea412",
+    "source_export_url": "https://rosstat.gov.ru/storage/mediabank/ipc_mes_08-2026.xlsx",
+    "source_checksum_sha256": "4ef8b1d7a70d3b3e40260d4374b063a176b6fd628d7bf7289a7343ab621f6ebf",
     "indicator_id": "31074",
     "showcase_indicator_id": "11521100300010200001",
     "indicator_name": "Индекс потребительских цен на товары и услуги",
@@ -16,9 +16,9 @@
     "unit": "percent",
     "frequency": "annual",
     "data_through": 2025,
-    "source_published_at": "2026-08-12",
-    "last_successful_fetch_at": "2026-08-31T16:26:31.831Z",
-    "last_attempt_at": "2026-08-31T16:26:31.831Z",
+    "source_published_at": "2026-09-11",
+    "last_successful_fetch_at": "2026-09-12T07:25:46.027Z",
+    "last_attempt_at": "2026-09-12T07:25:46.027Z",
     "status_reason": null
   },
   "annual": [
