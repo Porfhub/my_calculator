@@ -181,46 +181,128 @@ function canExportCurrentCalculation() {
     return false;
 }
 
+const SCREENSHOT_EXCLUDED_SELECTORS = [
+    '[data-screenshot-exclude]',
+    '.tooltip',
+    '.tooltiptext',
+    '.mobile-sticky-results',
+    'button',
+    '[role="button"]',
+    'iframe',
+    'script',
+    'video'
+].join(', ');
+
+function copyCanvasContents(source, clone) {
+    const sourceCanvases = source.querySelectorAll('canvas');
+    const clonedCanvases = clone.querySelectorAll('canvas');
+
+    sourceCanvases.forEach((canvas, index) => {
+        const clonedCanvas = clonedCanvases[index];
+        if (!clonedCanvas) return;
+
+        try {
+            const image = document.createElement('img');
+            const styles = window.getComputedStyle(canvas);
+            image.src = canvas.toDataURL('image/png');
+            image.alt = '';
+            image.style.width = styles.width;
+            image.style.height = styles.height;
+            image.style.display = styles.display;
+            clonedCanvas.replaceWith(image);
+        } catch (_) {
+            // A non-exportable canvas is omitted rather than breaking the whole PNG export.
+            clonedCanvas.remove();
+        }
+    });
+}
+
+function createScreenshotStage(source) {
+    const bounds = source.getBoundingClientRect();
+    const stage = document.createElement('div');
+    const clone = source.cloneNode(true);
+
+    stage.setAttribute('aria-hidden', 'true');
+    stage.setAttribute('data-screenshot-stage', '');
+    stage.style.cssText = [
+        'position:fixed',
+        'top:0',
+        'left:-100000px',
+        `width:${Math.ceil(bounds.width)}px`,
+        'pointer-events:none',
+        'z-index:-1',
+        'overflow:visible',
+        'background:#f8fafc'
+    ].join(';');
+
+    clone.removeAttribute('id');
+    clone.querySelectorAll('[id]').forEach((node) => node.removeAttribute('id'));
+    copyCanvasContents(source, clone);
+    clone.querySelectorAll(SCREENSHOT_EXCLUDED_SELECTORS).forEach((node) => node.remove());
+    clone.querySelectorAll('*').forEach((node) => {
+        node.style.animation = 'none';
+        node.style.transition = 'none';
+        node.style.transform = 'none';
+    });
+
+    stage.append(clone);
+    document.body.append(stage);
+    return stage;
+}
+
+function renderScreenshot(stage) {
+    if (typeof html2canvas !== 'function') {
+        return Promise.reject(new Error('Screenshot renderer is unavailable'));
+    }
+
+    return html2canvas(stage, {
+        backgroundColor: '#f8fafc',
+        scale: 2,
+        logging: false,
+        useCORS: false,
+        allowTaint: false,
+        ignoreElements: (node) => node.matches?.(SCREENSHOT_EXCLUDED_SELECTORS) || false
+    });
+}
+
+function canvasToBlob(canvas) {
+    return new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('PNG creation failed')), 'image/png');
+    });
+}
+
+function downloadScreenshot(blob, filename) {
+    const link = document.createElement('a');
+    const objectUrl = URL.createObjectURL(blob);
+    link.download = filename;
+    link.href = objectUrl;
+    link.click();
+    window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
+}
+
 async function takeScreenshot(elementId = 'screenshot-area', filename = 'yasnomera-calculation.png') {
     if (!canExportCurrentCalculation()) return;
 
     const element = document.getElementById(elementId);
     if (!element) {
-        console.error('Screenshot element not found:', elementId);
+        showToast('Не удалось подготовить скриншот. Попробуйте ещё раз.');
         return;
     }
 
-    reachGoal("share_click");
-    showToast("Подготовка скриншота...");
+    reachGoal('share_click');
+    showToast('Подготовка скриншота...');
 
+    let stage;
     try {
-        const canvas = await html2canvas(element, {
-            backgroundColor: '#f8fafc',
-            scale: 2,
-            logging: false,
-            useCORS: true
-        });
-
-        canvas.toBlob((blob) => {
-            const file = new File([blob], filename, { type: "image/png" });
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                navigator.share({
-                    files: [file],
-                    title: 'Расчёт — Ясномера',
-                    text: 'Результат расчёта в Ясномере.'
-                }).then(() => showToast("Успешно отправлено!"))
-                  .catch((err) => console.log('User cancelled share', err));
-            } else {
-                const link = document.createElement('a');
-                link.download = filename;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                showToast("Скриншот скачан!");
-            }
-        }, 'image/png');
-    } catch (err) {
-        console.error('Screenshot error:', err);
-        showToast("Ошибка при создании скриншота");
+        stage = createScreenshotStage(element);
+        const canvas = await renderScreenshot(stage);
+        const blob = await canvasToBlob(canvas);
+        downloadScreenshot(blob, filename);
+        showToast('Скриншот скачан!');
+    } catch (_) {
+        showToast('Не удалось создать скриншот. Попробуйте ещё раз.');
+    } finally {
+        stage?.remove();
     }
 }
 

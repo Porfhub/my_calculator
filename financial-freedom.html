@@ -19,7 +19,12 @@
     <meta property="og:title" content="Финансовая подушка — Ясномера">
     <meta property="og:description" content="Оценка запаса времени при разных уровнях расходов и заданной доходности сбережений.">
     <meta property="og:url" content="https://yasnomera.ru/financial-freedom.html">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:image" content="https://yasnomera.ru/assets/yasnomera-og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://yasnomera.ru/assets/yasnomera-og.png">
     <meta name="twitter:title" content="Финансовая подушка — Ясномера">
     <meta name="twitter:description" content="Оценка запаса времени при разных уровнях расходов и заданной доходности сбережений.">
     <script type="application/ld+json">
@@ -112,6 +117,16 @@
             line-height: 1.4;
             pointer-events: none;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        @media (max-width: 639px) {
+            .tooltip .tooltiptext {
+                position: fixed;
+                right: 1rem;
+                bottom: 1rem;
+                left: 1rem;
+                width: auto;
+                margin-left: 0;
+            }
         }
         .tooltip:hover .tooltiptext {
             visibility: visible;

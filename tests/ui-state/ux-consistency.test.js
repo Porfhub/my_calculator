@@ -32,8 +32,45 @@ test('shared share and screenshot actions fail closed when a page marks its calc
     assert.match(utilities, /function shareLinkCustom\(title, text\)\s*\{\s*if \(!canExportCurrentCalculation\(\)\) return;/);
 });
 
+test('every production calculator exposes the shared screenshot export without replacing it', () => {
+    const screenshotPages = {
+        'mortgage.html': ['screenshot-area', 'yasnomera-mortgage-calculation.png'],
+        'wealth.html': ['screenshot-area', 'yasnomera-income-comparison.png'],
+        'rent-vs-mortgage.html': ['screenshot-area', 'yasnomera-rent-vs-mortgage.png'],
+        'time-is-money.html': ['results-card', 'yasnomera-time-is-money.png'],
+        'inflation-shredder.html': ['screenshot-area', 'yasnomera-inflation-report.png'],
+        'car-vs-taxi.html': ['screenshot-area', 'yasnomera-car-vs-taxi.png'],
+        'millionaire.html': ['screenshot-area', 'yasnomera-financial-goal.png'],
+        'financial-freedom.html': ['screenshot-area', 'yasnomera-financial-freedom.png'],
+        'honest-credit.html': ['screenshot-area', 'yasnomera-honest-credit-cost.png'],
+        'genetic-wealth.html': ['screenshot-area', 'yasnomera-child-cost.png']
+    };
+
+    for (const [file, [elementId, filename]] of Object.entries(screenshotPages)) {
+        const html = read(file);
+        assert.match(html, new RegExp(`onclick="takeScreenshot\\('${elementId}', '${filename}'\\)"`), file);
+        assert.match(html, /html2canvas\.min\.js/, file);
+        assert.doesNotMatch(html, /window\.takeScreenshot\s*=/, file);
+    }
+});
+
+test('screenshot export uses an isolated, capture-safe result clone', () => {
+    const utilities = read('js/ui-utils.js');
+    assert.match(utilities, /function createScreenshotStage\(source\)/);
+    assert.match(utilities, /copyCanvasContents\(source, clone\)/);
+    assert.match(utilities, /SCREENSHOT_EXCLUDED_SELECTORS/);
+    assert.match(utilities, /clone\.querySelectorAll\(SCREENSHOT_EXCLUDED_SELECTORS\)/);
+    assert.match(utilities, /downloadScreenshot\(blob, filename\)/);
+    assert.doesNotMatch(utilities, /console\.error\('Screenshot/);
+});
+
+test('financial freedom tooltip styles stay inside the mobile viewport', () => {
+    const html = read('financial-freedom.html');
+    assert.match(html, /@media \(max-width: 639px\)[\s\S]*?\.tooltip \.tooltiptext[\s\S]*?position: fixed;[\s\S]*?right: 1rem;[\s\S]*?left: 1rem;/);
+});
+
 test('service worker cache is advanced with the shared export behaviour', () => {
-    assert.match(read('sw.js'), /yasnomera-cache-v15/);
+    assert.match(read('sw.js'), /yasnomera-cache-v16/);
     assert.match(read('sw.js'), /'\/js\/trust-layer\.js'/);
     assert.match(read('sw.js'), /'\/js\/ui-utils\.js'/);
 });
