@@ -221,23 +221,48 @@ function createScreenshotStage(source) {
     const bounds = source.getBoundingClientRect();
     const stage = document.createElement('div');
     const clone = source.cloneNode(true);
+    const portraitWidth = Number(source.dataset.screenshotWidth);
+    const usePortraitLayout = Number.isFinite(portraitWidth) && portraitWidth > 0;
+    const portraitPadding = 20;
+    const background = usePortraitLayout && document.documentElement.classList.contains('dark')
+        ? '#020617' : '#f8fafc';
 
     stage.setAttribute('aria-hidden', 'true');
     stage.setAttribute('data-screenshot-stage', '');
+    stage.dataset.screenshotBackground = background;
     stage.style.cssText = [
         'position:fixed',
         'top:0',
         'left:-100000px',
-        `width:${Math.ceil(bounds.width)}px`,
+        `width:${usePortraitLayout ? portraitWidth + portraitPadding * 2 : Math.ceil(bounds.width)}px`,
+        ...(usePortraitLayout ? [`padding:${portraitPadding}px`, 'box-sizing:border-box'] : []),
         'pointer-events:none',
         'z-index:-1',
         'overflow:visible',
-        'background:#f8fafc'
+        `background:${background}`
     ].join(';');
 
     clone.removeAttribute('id');
+    if (usePortraitLayout) {
+        clone.style.position = 'static';
+        clone.style.width = '100%';
+        clone.querySelectorAll('[data-screenshot-flush]').forEach((node) => {
+            node.style.margin = '0';
+            node.style.padding = '0';
+            node.style.background = 'transparent';
+        });
+        clone.querySelectorAll('[data-screenshot-fallback]').forEach((node) => {
+            node.parentElement.classList.remove('hidden');
+        });
+    }
     clone.querySelectorAll('[id]').forEach((node) => node.removeAttribute('id'));
     copyCanvasContents(source, clone);
+    if (usePortraitLayout) {
+        clone.querySelectorAll('img').forEach((image) => {
+            image.style.maxWidth = '100%';
+            image.style.objectFit = 'contain';
+        });
+    }
     clone.querySelectorAll(SCREENSHOT_EXCLUDED_SELECTORS).forEach((node) => node.remove());
     clone.querySelectorAll('*').forEach((node) => {
         node.style.animation = 'none';
@@ -256,7 +281,7 @@ function renderScreenshot(stage) {
     }
 
     return html2canvas(stage, {
-        backgroundColor: '#f8fafc',
+        backgroundColor: stage.dataset.screenshotBackground || '#f8fafc',
         scale: 2,
         logging: false,
         useCORS: false,

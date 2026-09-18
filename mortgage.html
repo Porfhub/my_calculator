@@ -451,8 +451,8 @@
                 </div>
             </div>
 
-            <div class="lg:col-span-7 lg:sticky lg:top-6 self-start flex flex-col space-y-6" id="results-panel">
-                <p id="mortgage-state-message" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
+            <div class="lg:col-span-7 lg:sticky lg:top-6 self-start flex flex-col space-y-6" id="results-panel" data-screenshot-width="560">
+                <p id="mortgage-state-message" data-screenshot-exclude hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
                 <!-- Hero Results Card with Premium Overpayment Focus -->
                 <div class="bg-gradient-to-br from-slate-900 to-slate-950 dark:from-slate-900 dark:to-black text-white rounded-3xl p-6 shadow-xl border border-slate-800 relative overflow-hidden flex flex-col justify-between">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -481,6 +481,12 @@
                                 <span class="text-[10px] font-bold text-slate-400 block mb-1" id="label-term">Реальный срок</span>
                                 <span id="res-real-term" class="text-base sm:text-lg font-extrabold text-brand-400">0 мес.</span>
                             </div>
+                        </div>
+                        <div class="pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-1" id="mortgage-cost-breakdown">
+                            <p>Переплата = проценты по ипотеке + учтённая страховка</p>
+                            <p>Проценты банку: <strong id="res-bank-interest" class="text-white">0 ₽</strong></p>
+                            <p>Страховка: <strong id="res-insurance" class="text-white">0 ₽</strong></p>
+                            <p><span id="label-total-paid">Сумма выплат</span>: <strong id="res-all-paid" class="text-white">0 ₽</strong><span id="total-paid-note" class="block text-[10px] text-slate-400">без первоначального взноса</span></p>
                         </div>
                     </div>
                 </div>
@@ -514,12 +520,12 @@
                     </div>
                 </div>
 
-                <div id="screenshot-area" class="space-y-6 bg-slate-50 dark:bg-slate-950 p-4 -m-4 rounded-3xl">
+                <div id="screenshot-area" data-screenshot-flush class="space-y-6 bg-slate-50 dark:bg-slate-950 p-4 -m-4 rounded-3xl">
                     <div id="savings-card" class="bg-emerald-950 border border-emerald-800/30 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300">
                         <!-- Content is populated dynamically via updateCalculations() to show either stats or empty-state encouraging microcopy -->
                     </div>
 
-                    <div id="existing-history-card" class="bg-slate-900 border border-slate-800 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300 hidden">
+                    <div id="existing-history-card" data-screenshot-exclude class="bg-slate-900 border border-slate-800 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300 hidden">
                         <!-- Content is populated dynamically via updateCalculations() -->
                     </div>
 
@@ -543,9 +549,9 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
+                    <div data-screenshot-exclude class="grid grid-cols-2 gap-3">
                         <button onclick="shareLink()" class="flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 transition shadow-sm active:scale-[0.98]">Поделиться</button>
-                        <button onclick="takeScreenshot('screenshot-area', 'yasnomera-mortgage-calculation.png')" class="flex items-center justify-center gap-2 py-3 bg-brand-600 text-white font-bold rounded-2xl transition shadow-sm active:scale-[0.98]">Скриншот</button>
+                        <button onclick="takeScreenshot('results-panel', 'yasnomera-mortgage-calculation.png')" class="flex items-center justify-center gap-2 py-3 bg-brand-600 text-white font-bold rounded-2xl transition shadow-sm active:scale-[0.98]">Скриншот</button>
                     </div>
                 </div>
             </div>
@@ -679,6 +685,7 @@
             messageElement: 'mortgage-state-message',
             resultElements: [
                 'res-total-interest', 'res-monthly-payment', 'res-loan-amount', 'res-real-term',
+                'res-bank-interest', 'res-insurance', 'res-all-paid',
                 'mobile-overpayment', 'mobile-payment', 'ratio-body-text', 'ratio-interest-text',
                 'ratio-text', 'donut-efficiency', 'cost-display', 'downpayment-percent',
                 'rate-display', 'term-display', 'payment-display', 'recurring-display'
@@ -697,6 +704,16 @@
 
         window.canExportCalculation = () =>
             mortgageStateController.getState() === CalculatorState.STATES.READY;
+
+        let mortgageCalculationRequested = false;
+        let mortgageSuccessTracked = false;
+        // Capture calculator edits before inline handlers recalculate; ignore unrelated page controls.
+        function noteMortgageInput(event) {
+            if (event.target.closest('#panel-new, #panel-existing')) mortgageCalculationRequested = true;
+        }
+        document.addEventListener('input', noteMortgageInput, true);
+        document.addEventListener('change', noteMortgageInput, true);
+        document.addEventListener('click', noteMortgageInput, true);
 
         function mortgageValidationMessage() {
             if (activeTab === 'new') {
@@ -1247,13 +1264,23 @@
             document.getElementById('res-loan-amount').innerText = localFormatMoney(loanAmount);
             document.getElementById('res-monthly-payment').innerText = localFormatMoney(monthlyPmt);
             document.getElementById('res-real-term').innerText = `${preRes.realTerm} мес.`;
-            // Переплата и Итого выплатим банку должны включать расходы на страховку (totalInsurance)
-            document.getElementById('res-total-interest').innerText = localFormatMoney(preRes.totalInterest + preRes.totalInsurance);
+            // Round displayed components first so the whole-ruble figures always add up.
+            const bankInterest = Math.round(preRes.totalInterest);
+            const modeledInsurance = Math.round(preRes.totalInsurance);
+            const overpayment = bankInterest + modeledInsurance;
+            const totalPaid = Math.round(loanAmount) + overpayment;
+            // Переплата включает проценты по кредиту и модельную страховку; страховка не является процентами банку.
+            document.getElementById('res-total-interest').innerText = localFormatMoney(overpayment);
+            document.getElementById('res-bank-interest').innerText = localFormatMoney(bankInterest);
+            document.getElementById('res-insurance').innerText = localFormatMoney(modeledInsurance);
+            document.getElementById('res-all-paid').innerText = localFormatMoney(totalPaid);
+            document.getElementById('label-total-paid').innerText = activeTab === 'new' ? 'Сумма выплат' : 'Сумма будущих выплат';
+            document.getElementById('total-paid-note').innerText = activeTab === 'new' ? 'без первоначального взноса' : 'по текущему остатку долга';
             document.getElementById('mobile-payment').innerText = localFormatMoney(monthlyPmt);
             
             const mobileOverpay = document.getElementById('mobile-overpayment');
             if (mobileOverpay) {
-                mobileOverpay.innerText = localFormatMoney(preRes.totalInterest + preRes.totalInsurance);
+                mobileOverpay.innerText = localFormatMoney(overpayment);
             }
 
             // Populate the newly redesigned solid Savings Card
@@ -1261,6 +1288,20 @@
             if (savingsCard) {
                 if (savedInt <= 0 && savedM <= 0) {
                     savingsCard.classList.add('hidden');
+                    // The live savings card stays hidden; the isolated PNG clone uses this current-state summary as its third result block.
+                    const summaryItems = activeTab === 'new'
+                        ? `<span>Стоимость жилья: <strong class="text-white">${localFormatMoney(state.cost)}</strong></span>
+                           <span>Первоначальный взнос: <strong class="text-white">${localFormatMoney(state.downPayment)}</strong></span>
+                           <span>Ставка: <strong class="text-white">${state.rate}%</strong></span>
+                           <span>Срок: <strong class="text-white">${state.termYears} ${localGetYearWord(state.termYears)}</strong></span>`
+                        : `<span>Остаток долга: <strong class="text-white">${localFormatMoney(loanAmount)}</strong></span>
+                           <span>Ставка: <strong class="text-white">${state.activeRate}%</strong></span>`;
+                    savingsCard.innerHTML = `<div data-screenshot-fallback class="space-y-3">
+                        <span class="text-xs uppercase font-black text-emerald-300">Параметры расчёта</span>
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            ${summaryItems}
+                        </div>
+                    </div>`;
                 } else {
                     savingsCard.classList.remove('hidden');
                     savingsCard.innerHTML = `
@@ -1280,7 +1321,7 @@
                                 </div>
                             </div>
                             <div class="border-t border-emerald-800/60 pt-3 text-[11px] text-emerald-300 flex flex-col sm:flex-row sm:justify-between gap-2">
-                                <span>Итого выплатим: <strong id="res-total-paid" class="text-white">${localFormatMoney(preRes.totalPaid)}</strong></span>
+                                <span>Итого выплатим: <strong id="res-total-paid" class="text-white">${localFormatMoney(totalPaid)}</strong></span>
                                 <span>Досрочный капитал: <strong id="res-total-prepaid" class="text-emerald-400 font-extrabold">${localFormatMoney(preRes.totalPrepaid)}</strong></span>
                             </div>
                         </div>
@@ -1421,6 +1462,10 @@
 
             renderAmortizationTable(preRes.schedule); updateChart(preRes.schedule, baseRes.schedule);
             mortgageStateController.transition(CalculatorState.STATES.READY, { clearResults: false });
+            if (mortgageCalculationRequested && !mortgageSuccessTracked) {
+                reachGoal('calculate_success');
+                mortgageSuccessTracked = true;
+            }
             } catch (error) {
                 console.error('Mortgage calculation failed:', error);
                 mortgageStateController.transition(CalculatorState.STATES.CALCULATION_IMPOSSIBLE, {
