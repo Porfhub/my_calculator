@@ -105,6 +105,9 @@ test('portrait PNG composes three result cards before the chart and omits contro
     const chart = panel.indexOf('id="balanceChart"');
     assert.ok(hero >= 0 && hero < ratio && ratio < savings && savings < chart);
     assert.match(panel, /data-screenshot-width="560"/);
+    assert.match(panel, /id="results-panel" data-screenshot-width="560"/);
+    assert.match(panel, /id="screenshot-area" data-screenshot-flush class="space-y-6/);
+    assert.doesNotMatch(panel, /id="panel-new"|id="panel-existing"|id="theme-toggle"|<nav/);
     assert.match(panel, /id="chart-title">Динамика остатка долга/);
     assert.match(panel, /Зеленая линия \(сплошная\)/);
     assert.match(panel, /Серая линия \(пунктир\)/);
@@ -147,9 +150,14 @@ test('isolated portrait export clone copies chart pixels and reveals only export
             '[id]': [], canvas: canvasClones, img: images, '*': []
         }[selector] ?? excluded)
     };
-    const stage = { style: {}, setAttribute() {}, append(node) { this.child = node; } };
+    const stage = { style: {}, dataset: {}, setAttribute() {}, append(node) { this.child = node; } };
+    let darkMode = false;
     const context = vm.createContext({
-        document: { createElement: (tag) => tag === 'div' ? stage : { style: {} }, body: { append() {} } },
+        document: {
+            createElement: (tag) => tag === 'div' ? stage : { style: {} },
+            documentElement: { classList: { contains: () => darkMode } },
+            body: { append() {} }
+        },
         window: { getComputedStyle: () => ({ width: '700px', height: '200px', display: 'block' }) },
         console
     });
@@ -157,12 +165,34 @@ test('isolated portrait export clone copies chart pixels and reveals only export
     context.source = source;
     const result = vm.runInContext('createScreenshotStage(source)', context);
     assert.equal(result, stage);
-    assert.match(stage.style.cssText, /width:560px/);
+    assert.match(stage.style.cssText, /width:600px/);
+    assert.match(stage.style.cssText, /padding:20px/);
+    assert.match(stage.style.cssText, /box-sizing:border-box/);
+    assert.match(stage.style.cssText, /background:#f8fafc/);
+    assert.equal(stage.dataset.screenshotBackground, '#f8fafc');
     assert.equal(clone.style.position, 'static');
     assert.equal(flush.style.margin, '0');
+    assert.equal(flush.style.padding, '0');
+    assert.equal(flush.style.background, 'transparent');
     assert.deepEqual(images.map((image) => image.src), ['data:image/png;base64,donut', 'data:image/png;base64,chart']);
     assert.ok(images.every((image) => image.style.maxWidth === '100%' && image.style.objectFit === 'contain'));
     assert.deepEqual(removed, ['summary:hidden', 'control', 'tooltip']);
+    assert.match(mortgage, /id="results-panel" data-screenshot-width="560"/);
+    assert.match(mortgage, /class="[^"]*space-y-6" id="results-panel"/);
+    vm.runInContext(utilities.slice(utilities.indexOf('function renderScreenshot('), utilities.indexOf('function canvasToBlob(')), context);
+    context.html2canvas = (_, options) => options;
+    context.stage = stage;
+    assert.equal(vm.runInContext('renderScreenshot(stage).backgroundColor', context), '#f8fafc');
+    darkMode = true;
+    vm.runInContext('createScreenshotStage(source)', context);
+    assert.match(stage.style.cssText, /background:#020617/);
+    assert.equal(vm.runInContext('renderScreenshot(stage).backgroundColor', context), '#020617');
+    darkMode = false;
+    delete source.dataset.screenshotWidth;
+    vm.runInContext('createScreenshotStage(source)', context);
+    assert.match(stage.style.cssText, /width:900px/);
+    assert.doesNotMatch(stage.style.cssText, /padding:20px/);
+    assert.match(stage.style.cssText, /background:#f8fafc/);
 });
 
 test('calculate_success follows a valid result update, never invalid input or render alone, and fires once', () => {
