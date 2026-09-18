@@ -162,6 +162,7 @@
                         <div class="w-11 h-6 bg-slate-200 dark:bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-brand-600"></div>
                     </label>
                 </div>
+                <p id="quick-start-assumptions" class="text-xs leading-relaxed text-slate-500 dark:text-slate-400 px-1">В быстром старте считаем: жильё +5% в год, аренда +4% в год. Изменить можно в экспертном режиме.</p>
 
                 <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
                     <!-- Purchase scenario -->
@@ -188,7 +189,18 @@
                                 <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Первоначальный взнос</label>
                                 <span class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded font-bold" id="dp-percent">20%</span>
                             </div>
-                            <input type="range" id="dp-range" min="0" max="1" step="0.01" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                            <input type="range" id="dp-range" min="0" max="0.99" step="0.01" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-start gap-4">
+                                <div>
+                                    <label for="mortgage-term-range" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Срок ипотеки</label>
+                                    <p id="mortgage-term-help" class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">На какой срок рассчитан ежемесячный платёж.</p>
+                                </div>
+                                <output for="mortgage-term-range" id="mortgage-term-display" class="shrink-0 text-sm font-extrabold text-brand-700 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20 px-3 py-1 rounded-lg" aria-live="polite">20 лет</output>
+                            </div>
+                            <input type="range" id="mortgage-term-range" min="5" max="30" step="1" value="20" aria-describedby="mortgage-term-help mortgage-term-limits" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
+                            <div id="mortgage-term-limits" class="flex justify-between text-[10px] font-semibold text-slate-400 dark:text-slate-500"><span>5 лет</span><span>30 лет</span></div>
                         </div>
                     </section>
 
@@ -218,9 +230,9 @@
                                         <p class="mt-0.5 text-slate-500 dark:text-slate-400">Первоначальный взнос, который не уходит в покупку.</p>
                                     </div>
                                     <div>
-                                        <dt class="font-bold text-slate-800 dark:text-white">Ежемесячная разница</dt>
+                                        <dt class="font-bold text-slate-800 dark:text-white">Стартовая разница в первый месяц</dt>
                                         <dd id="investment-monthly-difference" class="mt-0.5 text-sm font-black text-slate-900 dark:text-white">0 ₽ / мес</dd>
-                                        <p id="investment-monthly-difference-help" class="mt-0.5 text-slate-500 dark:text-slate-400">Стартовая разница в первый месяц.</p>
+                                        <p id="investment-monthly-difference-help" class="mt-0.5 text-slate-500 dark:text-slate-400">Меняется по мере роста аренды и погашения ипотеки.</p>
                                     </div>
                                     <div>
                                         <dt class="font-bold text-slate-800 dark:text-white">Доходность</dt>
@@ -273,7 +285,7 @@
                         <div class="flex justify-between items-start gap-4">
                             <div>
                                 <label for="years-range" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Горизонт анализа</label>
-                                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Период, за который сравнивается итоговый капитал</p>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Период, через который сравнивается итоговый капитал.</p>
                             </div>
                             <output for="years-range" class="shrink-0 text-sm font-extrabold text-brand-700 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20 px-3 py-1 rounded-lg" id="years-display" aria-live="polite">20 лет</output>
                         </div>
@@ -308,6 +320,7 @@
                             <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mt-2" id="verdict-desc">
                                 При выбранных предположениях через 20 лет капитал при ипотеке будет больше капитала при аренде.
                             </p>
+                            <p class="mt-2 text-xs leading-relaxed text-slate-500 dark:text-slate-400">Платёж по ипотеке рассчитан на срок ипотеки: <span id="result-mortgage-term">20 лет</span>.<br>Итоговый капитал сравнивается через: <span id="result-analysis-years">20 лет</span>.</p>
                         </div>
 
                         <div class="mt-6 space-y-5" aria-label="Сравнение итогового чистого капитала">
@@ -465,7 +478,8 @@
             includeInvestments: false,
             growthRE: 5,
             growthRent: 4,
-            years: 20,
+            mortgageTermYears: 20,
+            analysisYears: 20,
             expertMode: false
         };
 
@@ -497,13 +511,15 @@
                 && (!state.includeInvestments || (Number.isFinite(state.investRate) && state.investRate >= 0 && state.investRate <= 50))
                 && Number.isFinite(state.growthRE) && state.growthRE >= -50 && state.growthRE <= 50
                 && Number.isFinite(state.growthRent) && state.growthRent >= -50 && state.growthRent <= 50
-                && Number.isInteger(state.years) && state.years >= 5 && state.years <= 40;
+                && Number.isInteger(state.mortgageTermYears) && state.mortgageTermYears >= 5 && state.mortgageTermYears <= 30
+                && Number.isInteger(state.analysisYears) && state.analysisYears >= 5 && state.analysisYears <= 40;
         }
 
         function toggleExpertMode(isExpert) {
             state.expertMode = isExpert;
 
             const marketAssumptions = document.getElementById('expert-market-assumptions');
+            document.getElementById('quick-start-assumptions').hidden = isExpert;
             const statusText = document.getElementById('mode-status-text');
 
             if (isExpert) {
@@ -599,7 +615,11 @@
                 chip.textContent = assumption;
                 return chip;
             }));
-            const periodLabel = `${state.years} ${getYearWord(state.years)}`;
+            const periodLabel = `${state.analysisYears} ${getYearWord(state.analysisYears)}`;
+            const mortgageTermLabel = `${state.mortgageTermYears} ${getYearWord(state.mortgageTermYears)}`;
+            document.getElementById('mortgage-term-display').innerText = mortgageTermLabel;
+            document.getElementById('result-mortgage-term').innerText = mortgageTermLabel;
+            document.getElementById('result-analysis-years').innerText = periodLabel;
             document.getElementById('years-display').innerText = periodLabel;
             document.getElementById('verdict-period').innerText = periodLabel;
             document.getElementById('explain-period').innerText = periodLabel;
@@ -703,7 +723,8 @@
         document.getElementById('rent-range').addEventListener('input', (e) => { state.rent = parseInt(e.target.value); calculate(); });
         document.getElementById('invest-range').addEventListener('input', (e) => { state.investRate = parseFloat(e.target.value); calculate(); });
         document.getElementById('include-investments').addEventListener('change', (e) => { state.includeInvestments = e.target.checked; calculate(); });
-        document.getElementById('years-range').addEventListener('input', (e) => { state.years = parseInt(e.target.value); calculate(); });
+        document.getElementById('mortgage-term-range').addEventListener('input', (e) => { state.mortgageTermYears = parseInt(e.target.value); calculate(); });
+        document.getElementById('years-range').addEventListener('input', (e) => { state.analysisYears = parseInt(e.target.value); calculate(); });
         document.getElementById('growth-re').addEventListener('input', (e) => { state.growthRE = parseFloat(e.target.value); calculate(); });
         document.getElementById('growth-rent').addEventListener('input', (e) => { state.growthRent = parseFloat(e.target.value); calculate(); });
 
@@ -713,7 +734,8 @@
         document.getElementById('dp-range').value = state.dpPercent;
         document.getElementById('rent-range').value = state.rent;
         document.getElementById('invest-range').value = state.investRate;
-        document.getElementById('years-range').value = state.years;
+        document.getElementById('mortgage-term-range').value = state.mortgageTermYears;
+        document.getElementById('years-range').value = state.analysisYears;
 
         calculate();
     </script>
