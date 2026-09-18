@@ -6,10 +6,11 @@
     function calculateScenario(state) {
         const loanAmount = state.cost * (1 - state.dpPercent);
         const monthlyRate = state.rate / 12 / 100;
-        const months = state.years * 12;
+        const mortgageMonths = state.mortgageTermYears * 12;
+        const analysisMonths = state.analysisYears * 12;
         const mortgagePayment = monthlyRate > 0
-            ? loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1)
-            : loanAmount / months;
+            ? loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, mortgageMonths)) / (Math.pow(1 + monthlyRate, mortgageMonths) - 1)
+            : loanAmount / mortgageMonths;
 
         const dataBuy = [];
         const dataRent = [];
@@ -31,14 +32,18 @@
         dataRent.push(investPot);
         labels.push('Старт');
 
-        for (let month = 1; month <= months; month++) {
+        for (let month = 1; month <= analysisMonths; month++) {
+            const paymentThisMonth = month <= mortgageMonths
+                ? Math.min(mortgagePayment, currentLoanBalance * (1 + monthlyRate))
+                : 0;
             const interest = currentLoanBalance * monthlyRate;
-            const principal = mortgagePayment - interest;
-            currentLoanBalance = Math.max(0, currentLoanBalance - principal);
+            currentLoanBalance = month >= mortgageMonths
+                ? 0
+                : Math.max(0, currentLoanBalance + interest - paymentThisMonth);
             currentPropertyValue *= (1 + monthlyGrowthRE);
 
             const maintenance = (state.cost * 0.001) / 12;
-            const monthlyDifference = mortgagePayment + maintenance - currentRent;
+            const monthlyDifference = paymentThisMonth + maintenance - currentRent;
             investPot = investPot * (1 + monthlyInvestmentRate) + monthlyDifference;
             currentRent *= (1 + monthlyGrowthRent);
 
@@ -59,7 +64,8 @@
             annualReturn: state.investRate,
             labels,
             monthlyInvestmentRate,
-            mortgagePayment
+            mortgagePayment,
+            remainingMortgageDebt: currentLoanBalance
         };
     }
 
