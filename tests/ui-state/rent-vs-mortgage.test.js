@@ -159,3 +159,13 @@ test('mortgage payments stop after payoff during a longer analysis horizon', () 
     assert.equal(result.rentFinal, 1_020_000);
     assert.equal(result.buyFinal, 1_000_000);
 });
+
+test('99% down payment remains finite and the UI rejects a 100% loan-free state', () => {
+    const result = calculateScenario({ ...smokeScenario, dpPercent: 0.99 });
+    for (const value of [result.mortgagePayment, result.remainingMortgageDebt, result.buyFinal, result.rentFinal]) {
+        assert.ok(Number.isFinite(value));
+    }
+    assert.ok(result.mortgagePayment > 0);
+    assert.match(html, /state\.dpPercent >= 0 && state\.dpPercent < 1/);
+    assert.doesNotMatch(html, /<input[^>]*id="dp-(?!range)/);
+});

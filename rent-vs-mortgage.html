@@ -85,6 +85,11 @@
             letter-spacing: normal !important;
         }
         .tooltip:hover .tooltiptext, .tooltip:focus-within .tooltiptext { visibility: visible; opacity: 1; }
+        @media (max-width: 400px) {
+            #investment-rate-field > div:first-child { flex-wrap: wrap; gap: 0.5rem; }
+            #investment-rate-field > div:first-child > div { width: 100%; justify-content: space-between; }
+            #investment-rate-field .tooltiptext { left: auto; right: 0; margin-left: 0; }
+        }
 
     </style>
     <script src="js/theme.js"></script>
