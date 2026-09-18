@@ -451,8 +451,8 @@
                 </div>
             </div>
 
-            <div class="lg:col-span-7 lg:sticky lg:top-6 self-start flex flex-col space-y-6" id="results-panel">
-                <p id="mortgage-state-message" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
+            <div class="lg:col-span-7 lg:sticky lg:top-6 self-start flex flex-col space-y-6" id="results-panel" data-screenshot-width="560">
+                <p id="mortgage-state-message" data-screenshot-exclude hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
                 <!-- Hero Results Card with Premium Overpayment Focus -->
                 <div class="bg-gradient-to-br from-slate-900 to-slate-950 dark:from-slate-900 dark:to-black text-white rounded-3xl p-6 shadow-xl border border-slate-800 relative overflow-hidden flex flex-col justify-between">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -486,7 +486,7 @@
                             <p>Переплата = проценты по ипотеке + учтённая страховка</p>
                             <p>Проценты банку: <strong id="res-bank-interest" class="text-white">0 ₽</strong></p>
                             <p>Страховка: <strong id="res-insurance" class="text-white">0 ₽</strong></p>
-                            <p><span id="label-total-paid">Всего выплачено</span>: <strong id="res-all-paid" class="text-white">0 ₽</strong></p>
+                            <p><span id="label-total-paid">Сумма выплат</span>: <strong id="res-all-paid" class="text-white">0 ₽</strong><span id="total-paid-note" class="block text-[10px] text-slate-400">без первоначального взноса</span></p>
                         </div>
                     </div>
                 </div>
@@ -520,12 +520,12 @@
                     </div>
                 </div>
 
-                <div id="screenshot-area" class="space-y-6 bg-slate-50 dark:bg-slate-950 p-4 -m-4 rounded-3xl">
+                <div id="screenshot-area" data-screenshot-flush class="space-y-6 bg-slate-50 dark:bg-slate-950 p-4 -m-4 rounded-3xl">
                     <div id="savings-card" class="bg-emerald-950 border border-emerald-800/30 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300">
                         <!-- Content is populated dynamically via updateCalculations() to show either stats or empty-state encouraging microcopy -->
                     </div>
 
-                    <div id="existing-history-card" class="bg-slate-900 border border-slate-800 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300 hidden">
+                    <div id="existing-history-card" data-screenshot-exclude class="bg-slate-900 border border-slate-800 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300 hidden">
                         <!-- Content is populated dynamically via updateCalculations() -->
                     </div>
 
@@ -549,9 +549,9 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
+                    <div data-screenshot-exclude class="grid grid-cols-2 gap-3">
                         <button onclick="shareLink()" class="flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 transition shadow-sm active:scale-[0.98]">Поделиться</button>
-                        <button onclick="takeScreenshot('screenshot-area', 'yasnomera-mortgage-calculation.png')" class="flex items-center justify-center gap-2 py-3 bg-brand-600 text-white font-bold rounded-2xl transition shadow-sm active:scale-[0.98]">Скриншот</button>
+                        <button onclick="takeScreenshot('results-panel', 'yasnomera-mortgage-calculation.png')" class="flex items-center justify-center gap-2 py-3 bg-brand-600 text-white font-bold rounded-2xl transition shadow-sm active:scale-[0.98]">Скриншот</button>
                     </div>
                 </div>
             </div>
@@ -1274,7 +1274,8 @@
             document.getElementById('res-bank-interest').innerText = localFormatMoney(bankInterest);
             document.getElementById('res-insurance').innerText = localFormatMoney(modeledInsurance);
             document.getElementById('res-all-paid').innerText = localFormatMoney(totalPaid);
-            document.getElementById('label-total-paid').innerText = activeTab === 'new' ? 'Всего выплачено' : 'Всего выплатить по остатку';
+            document.getElementById('label-total-paid').innerText = activeTab === 'new' ? 'Сумма выплат' : 'Сумма будущих выплат';
+            document.getElementById('total-paid-note').innerText = activeTab === 'new' ? 'без первоначального взноса' : 'по текущему остатку долга';
             document.getElementById('mobile-payment').innerText = localFormatMoney(monthlyPmt);
             
             const mobileOverpay = document.getElementById('mobile-overpayment');
@@ -1287,6 +1288,20 @@
             if (savingsCard) {
                 if (savedInt <= 0 && savedM <= 0) {
                     savingsCard.classList.add('hidden');
+                    // The live savings card stays hidden; the isolated PNG clone uses this current-state summary as its third result block.
+                    const summaryItems = activeTab === 'new'
+                        ? `<span>Стоимость жилья: <strong class="text-white">${localFormatMoney(state.cost)}</strong></span>
+                           <span>Первоначальный взнос: <strong class="text-white">${localFormatMoney(state.downPayment)}</strong></span>
+                           <span>Ставка: <strong class="text-white">${state.rate}%</strong></span>
+                           <span>Срок: <strong class="text-white">${state.termYears} ${localGetYearWord(state.termYears)}</strong></span>`
+                        : `<span>Остаток долга: <strong class="text-white">${localFormatMoney(loanAmount)}</strong></span>
+                           <span>Ставка: <strong class="text-white">${state.activeRate}%</strong></span>`;
+                    savingsCard.innerHTML = `<div data-screenshot-fallback class="space-y-3">
+                        <span class="text-xs uppercase font-black text-emerald-300">Параметры расчёта</span>
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            ${summaryItems}
+                        </div>
+                    </div>`;
                 } else {
                     savingsCard.classList.remove('hidden');
                     savingsCard.innerHTML = `

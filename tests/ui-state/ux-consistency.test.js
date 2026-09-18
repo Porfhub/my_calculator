@@ -34,7 +34,7 @@ test('shared share and screenshot actions fail closed when a page marks its calc
 
 test('every production calculator exposes the shared screenshot export without replacing it', () => {
     const screenshotPages = {
-        'mortgage.html': ['screenshot-area', 'yasnomera-mortgage-calculation.png'],
+        'mortgage.html': ['results-panel', 'yasnomera-mortgage-calculation.png'],
         'wealth.html': ['screenshot-area', 'yasnomera-income-comparison.png'],
         'rent-vs-mortgage.html': ['screenshot-area', 'yasnomera-rent-vs-mortgage.png'],
         'time-is-money.html': ['results-card', 'yasnomera-time-is-money.png'],

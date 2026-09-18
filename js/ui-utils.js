@@ -221,6 +221,8 @@ function createScreenshotStage(source) {
     const bounds = source.getBoundingClientRect();
     const stage = document.createElement('div');
     const clone = source.cloneNode(true);
+    const portraitWidth = Number(source.dataset.screenshotWidth);
+    const usePortraitLayout = Number.isFinite(portraitWidth) && portraitWidth > 0;
 
     stage.setAttribute('aria-hidden', 'true');
     stage.setAttribute('data-screenshot-stage', '');
@@ -228,7 +230,7 @@ function createScreenshotStage(source) {
         'position:fixed',
         'top:0',
         'left:-100000px',
-        `width:${Math.ceil(bounds.width)}px`,
+        `width:${usePortraitLayout ? portraitWidth : Math.ceil(bounds.width)}px`,
         'pointer-events:none',
         'z-index:-1',
         'overflow:visible',
@@ -236,8 +238,22 @@ function createScreenshotStage(source) {
     ].join(';');
 
     clone.removeAttribute('id');
+    if (usePortraitLayout) {
+        clone.style.position = 'static';
+        clone.style.width = '100%';
+        clone.querySelectorAll('[data-screenshot-flush]').forEach((node) => { node.style.margin = '0'; });
+        clone.querySelectorAll('[data-screenshot-fallback]').forEach((node) => {
+            node.parentElement.classList.remove('hidden');
+        });
+    }
     clone.querySelectorAll('[id]').forEach((node) => node.removeAttribute('id'));
     copyCanvasContents(source, clone);
+    if (usePortraitLayout) {
+        clone.querySelectorAll('img').forEach((image) => {
+            image.style.maxWidth = '100%';
+            image.style.objectFit = 'contain';
+        });
+    }
     clone.querySelectorAll(SCREENSHOT_EXCLUDED_SELECTORS).forEach((node) => node.remove());
     clone.querySelectorAll('*').forEach((node) => {
         node.style.animation = 'none';
