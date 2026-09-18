@@ -482,6 +482,12 @@
                                 <span id="res-real-term" class="text-base sm:text-lg font-extrabold text-brand-400">0 мес.</span>
                             </div>
                         </div>
+                        <div class="pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-1" id="mortgage-cost-breakdown">
+                            <p>Переплата = проценты по ипотеке + учтённая страховка</p>
+                            <p>Проценты банку: <strong id="res-bank-interest" class="text-white">0 ₽</strong></p>
+                            <p>Страховка: <strong id="res-insurance" class="text-white">0 ₽</strong></p>
+                            <p><span id="label-total-paid">Всего выплачено</span>: <strong id="res-all-paid" class="text-white">0 ₽</strong></p>
+                        </div>
                     </div>
                 </div>
 
@@ -679,6 +685,7 @@
             messageElement: 'mortgage-state-message',
             resultElements: [
                 'res-total-interest', 'res-monthly-payment', 'res-loan-amount', 'res-real-term',
+                'res-bank-interest', 'res-insurance', 'res-all-paid',
                 'mobile-overpayment', 'mobile-payment', 'ratio-body-text', 'ratio-interest-text',
                 'ratio-text', 'donut-efficiency', 'cost-display', 'downpayment-percent',
                 'rate-display', 'term-display', 'payment-display', 'recurring-display'
@@ -697,6 +704,16 @@
 
         window.canExportCalculation = () =>
             mortgageStateController.getState() === CalculatorState.STATES.READY;
+
+        let mortgageCalculationRequested = false;
+        let mortgageSuccessTracked = false;
+        // Capture calculator edits before inline handlers recalculate; ignore unrelated page controls.
+        function noteMortgageInput(event) {
+            if (event.target.closest('#panel-new, #panel-existing')) mortgageCalculationRequested = true;
+        }
+        document.addEventListener('input', noteMortgageInput, true);
+        document.addEventListener('change', noteMortgageInput, true);
+        document.addEventListener('click', noteMortgageInput, true);
 
         function mortgageValidationMessage() {
             if (activeTab === 'new') {
@@ -1247,13 +1264,22 @@
             document.getElementById('res-loan-amount').innerText = localFormatMoney(loanAmount);
             document.getElementById('res-monthly-payment').innerText = localFormatMoney(monthlyPmt);
             document.getElementById('res-real-term').innerText = `${preRes.realTerm} мес.`;
-            // Переплата и Итого выплатим банку должны включать расходы на страховку (totalInsurance)
-            document.getElementById('res-total-interest').innerText = localFormatMoney(preRes.totalInterest + preRes.totalInsurance);
+            // Round displayed components first so the whole-ruble figures always add up.
+            const bankInterest = Math.round(preRes.totalInterest);
+            const modeledInsurance = Math.round(preRes.totalInsurance);
+            const overpayment = bankInterest + modeledInsurance;
+            const totalPaid = Math.round(loanAmount) + overpayment;
+            // Переплата включает проценты по кредиту и модельную страховку; страховка не является процентами банку.
+            document.getElementById('res-total-interest').innerText = localFormatMoney(overpayment);
+            document.getElementById('res-bank-interest').innerText = localFormatMoney(bankInterest);
+            document.getElementById('res-insurance').innerText = localFormatMoney(modeledInsurance);
+            document.getElementById('res-all-paid').innerText = localFormatMoney(totalPaid);
+            document.getElementById('label-total-paid').innerText = activeTab === 'new' ? 'Всего выплачено' : 'Всего выплатить по остатку';
             document.getElementById('mobile-payment').innerText = localFormatMoney(monthlyPmt);
             
             const mobileOverpay = document.getElementById('mobile-overpayment');
             if (mobileOverpay) {
-                mobileOverpay.innerText = localFormatMoney(preRes.totalInterest + preRes.totalInsurance);
+                mobileOverpay.innerText = localFormatMoney(overpayment);
             }
 
             // Populate the newly redesigned solid Savings Card
@@ -1280,7 +1306,7 @@
                                 </div>
                             </div>
                             <div class="border-t border-emerald-800/60 pt-3 text-[11px] text-emerald-300 flex flex-col sm:flex-row sm:justify-between gap-2">
-                                <span>Итого выплатим: <strong id="res-total-paid" class="text-white">${localFormatMoney(preRes.totalPaid)}</strong></span>
+                                <span>Итого выплатим: <strong id="res-total-paid" class="text-white">${localFormatMoney(totalPaid)}</strong></span>
                                 <span>Досрочный капитал: <strong id="res-total-prepaid" class="text-emerald-400 font-extrabold">${localFormatMoney(preRes.totalPrepaid)}</strong></span>
                             </div>
                         </div>
@@ -1421,6 +1447,10 @@
 
             renderAmortizationTable(preRes.schedule); updateChart(preRes.schedule, baseRes.schedule);
             mortgageStateController.transition(CalculatorState.STATES.READY, { clearResults: false });
+            if (mortgageCalculationRequested && !mortgageSuccessTracked) {
+                reachGoal('calculate_success');
+                mortgageSuccessTracked = true;
+            }
             } catch (error) {
                 console.error('Mortgage calculation failed:', error);
                 mortgageStateController.transition(CalculatorState.STATES.CALCULATION_IMPOSSIBLE, {
