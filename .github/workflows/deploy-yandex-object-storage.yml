@@ -2,6 +2,15 @@ name: Deploy Yandex Object Storage Mirror
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Deployment target
+        required: true
+        type: choice
+        default: test
+        options:
+          - test
+          - production
 
 permissions:
   contents: read
@@ -16,16 +25,33 @@ jobs:
     runs-on: ubuntu-latest
     env:
       YC_S3_ENDPOINT: https://storage.yandexcloud.net
-      YC_BUCKET: s3://yasnomera-test/
-      WEBSITE_BASE_URL: https://yasnomera-test.website.yandexcloud.net
 
     steps:
-      - name: Initialize workflow paths
+      - name: Initialize workflow paths and deployment target
         shell: bash
+        env:
+          DEPLOY_TARGET: ${{ inputs.target }}
         run: |
+          set -euo pipefail
+
           echo "DEPLOY_DIR=$RUNNER_TEMP/yasnomera-deploy-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_ENV"
           echo "EXPECTED_FILES=$RUNNER_TEMP/yasnomera-expected-files-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.txt" >> "$GITHUB_ENV"
           echo "ACTUAL_FILES=$RUNNER_TEMP/yasnomera-actual-files-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.txt" >> "$GITHUB_ENV"
+
+          case "$DEPLOY_TARGET" in
+            test)
+              echo "YC_BUCKET=s3://yasnomera-test/" >> "$GITHUB_ENV"
+              echo "WEBSITE_BASE_URL=https://yasnomera-test.website.yandexcloud.net" >> "$GITHUB_ENV"
+              ;;
+            production)
+              echo "YC_BUCKET=s3://yasnomera.ru/" >> "$GITHUB_ENV"
+              echo "WEBSITE_BASE_URL=https://website.yandexcloud.net/yasnomera.ru" >> "$GITHUB_ENV"
+              ;;
+            *)
+              echo "Unsupported deployment target: $DEPLOY_TARGET" >&2
+              exit 1
+              ;;
+          esac
 
       - name: Checkout latest main
         uses: actions/checkout@v4
