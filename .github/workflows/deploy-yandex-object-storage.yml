@@ -1,0 +1,200 @@
+name: Deploy Yandex Object Storage Mirror
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-yasnomera-test
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy verified static website
+    runs-on: ubuntu-latest
+    env:
+      DEPLOY_DIR: ${{ runner.temp }}/yasnomera-deploy-${{ github.run_id }}-${{ github.run_attempt }}
+      EXPECTED_FILES: ${{ runner.temp }}/yasnomera-expected-files.txt
+      ACTUAL_FILES: ${{ runner.temp }}/yasnomera-actual-files.txt
+      YC_S3_ENDPOINT: https://storage.yandexcloud.net
+      YC_BUCKET: s3://yasnomera-test/
+      WEBSITE_BASE_URL: https://yasnomera-test.website.yandexcloud.net
+
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Build deploy payload
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p "$DEPLOY_DIR"
+          git archive --format=tar HEAD | tar -xf - -C "$DEPLOY_DIR"
+
+          rm -rf -- \
+            "$DEPLOY_DIR/.github" \
+            "$DEPLOY_DIR/node_modules" \
+            "$DEPLOY_DIR/data_validation" \
+            "$DEPLOY_DIR/dev_tools" \
+            "$DEPLOY_DIR/docs" \
+            "$DEPLOY_DIR/tests"
+
+          rm -f -- \
+            "$DEPLOY_DIR/.gitignore" \
+            "$DEPLOY_DIR/PROJECT_HANDOFF.md" \
+            "$DEPLOY_DIR/P0_10_DATA_VALIDATION_SPEC.md" \
+            "$DEPLOY_DIR/README.md" \
+            "$DEPLOY_DIR/TECH_PASSPORT.md" \
+            "$DEPLOY_DIR/package.json" \
+            "$DEPLOY_DIR/package-lock.json" \
+            "$DEPLOY_DIR/update_inflation.js" \
+            "$DEPLOY_DIR/update_rates.js" \
+            "$DEPLOY_DIR/update_regions.js"
+
+      - name: Verify exact deploy payload
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cat > "$EXPECTED_FILES" <<'EOF'
+          assets/yasnomera-og.png
+          car-vs-taxi.html
+          css/product-polish.css
+          financial-freedom.html
+          genetic-wealth.html
+          honest-credit.html
+          index.html
+          inflation-shredder.html
+          inflation.json
+          js/api.js
+          js/calculator-state.js
+          js/income-comparison.js
+          js/inflation-calculator.js
+          js/ndfl.js
+          js/rent-vs-mortgage-model.js
+          js/theme.js
+          js/trust-layer.js
+          js/ui-utils.js
+          js/utils.js
+          manifest.webmanifest
+          millionaire.html
+          mortgage.html
+          rates.json
+          regions.json
+          rent-vs-mortgage.html
+          robots.txt
+          schemas/common-metadata.schema.json
+          schemas/inflation.schema.json
+          schemas/rates.schema.json
+          schemas/regions.schema.json
+          sitemap.xml
+          sw.js
+          time-is-money.html
+          wealth.html
+          yasnomera-mark.svg
+          EOF
+
+          find "$DEPLOY_DIR" -type f -printf '%P\n' | LC_ALL=C sort > "$ACTUAL_FILES"
+          diff -u "$EXPECTED_FILES" "$ACTUAL_FILES"
+
+          if [[ "$(wc -l < "$ACTUAL_FILES")" -ne 35 ]]; then
+            echo "Expected exactly 35 deploy files" >&2
+            exit 1
+          fi
+
+          if find "$DEPLOY_DIR" -type l -print -quit | grep -q .; then
+            echo "Deploy payload must not contain symbolic links" >&2
+            exit 1
+          fi
+
+          while IFS= read -r path; do
+            packaged_hash="$(git hash-object --path="$path" "$DEPLOY_DIR/$path")"
+            repository_hash="$(git rev-parse "HEAD:$path")"
+            if [[ "$packaged_hash" != "$repository_hash" ]]; then
+              echo "Packaged file differs from main: $path" >&2
+              exit 1
+            fi
+          done < "$ACTUAL_FILES"
+
+          calculator_pages=(
+            car-vs-taxi.html
+            financial-freedom.html
+            genetic-wealth.html
+            honest-credit.html
+            inflation-shredder.html
+            millionaire.html
+            mortgage.html
+            rent-vs-mortgage.html
+            time-is-money.html
+            wealth.html
+          )
+
+          for page in "${calculator_pages[@]}"; do
+            grep -Fq 'html2canvas' "$DEPLOY_DIR/$page"
+            grep -Fq 'takeScreenshot(' "$DEPLOY_DIR/$page"
+          done
+
+          echo "Verified 35-file deploy payload from main commit $(git rev-parse HEAD)"
+
+      - name: Verify AWS CLI
+        shell: bash
+        run: aws --version
+
+      - name: Sync verified payload to Yandex Object Storage
+        shell: bash
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.YC_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.YC_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ru-central1
+          AWS_EC2_METADATA_DISABLED: 'true'
+        run: |
+          set -euo pipefail
+
+          if [[ -z "$AWS_ACCESS_KEY_ID" || -z "$AWS_SECRET_ACCESS_KEY" ]]; then
+            echo "Required Yandex Cloud credentials are not configured" >&2
+            exit 1
+          fi
+
+          aws --endpoint-url "$YC_S3_ENDPOINT" s3 sync \
+            "$DEPLOY_DIR/" \
+            "$YC_BUCKET" \
+            --delete \
+            --only-show-errors \
+            --no-progress
+
+      - name: Check deployed website
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            /
+            /index.html
+            /mortgage.html
+            /rent-vs-mortgage.html
+            /sw.js
+            /rates.json
+          )
+
+          for path in "${required_paths[@]}"; do
+            url="${WEBSITE_BASE_URL}${path}"
+            echo "Checking $url"
+            curl \
+              --silent \
+              --show-error \
+              --fail \
+              --location \
+              --retry 5 \
+              --retry-delay 2 \
+              --retry-all-errors \
+              --connect-timeout 10 \
+              --max-time 30 \
+              --output /dev/null \
+              "$url"
+          done
