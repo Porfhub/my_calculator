@@ -15,14 +15,18 @@ jobs:
     name: Deploy verified static website
     runs-on: ubuntu-latest
     env:
-      DEPLOY_DIR: ${{ runner.temp }}/yasnomera-deploy-${{ github.run_id }}-${{ github.run_attempt }}
-      EXPECTED_FILES: ${{ runner.temp }}/yasnomera-expected-files.txt
-      ACTUAL_FILES: ${{ runner.temp }}/yasnomera-actual-files.txt
       YC_S3_ENDPOINT: https://storage.yandexcloud.net
       YC_BUCKET: s3://yasnomera-test/
       WEBSITE_BASE_URL: https://yasnomera-test.website.yandexcloud.net
 
     steps:
+      - name: Initialize workflow paths
+        shell: bash
+        run: |
+          echo "DEPLOY_DIR=$RUNNER_TEMP/yasnomera-deploy-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_ENV"
+          echo "EXPECTED_FILES=$RUNNER_TEMP/yasnomera-expected-files-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.txt" >> "$GITHUB_ENV"
+          echo "ACTUAL_FILES=$RUNNER_TEMP/yasnomera-actual-files-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.txt" >> "$GITHUB_ENV"
+
       - name: Checkout latest main
         uses: actions/checkout@v4
         with:
