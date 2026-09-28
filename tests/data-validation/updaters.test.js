@@ -10,6 +10,7 @@ const { buildRatesData, parseControlRateHtml, parseKeyRateXml, updateRates } = r
 const { updateInflation } = require('../../update_inflation');
 
 const NOW = new Date('2026-09-01T06:00:00.000Z');
+const INFLATION_SOURCE_PUBLISHED_AT = '2026-08-31';
 
 function officialRate(valuePercent = 14) {
     return {
@@ -23,7 +24,8 @@ function officialInflation() {
     const current = parseJsonStrict(fs.readFileSync(path.join(__dirname, '..', '..', 'inflation.json'), 'utf8'));
     return {
         exportUrl: current.metadata.source_export_url,
-        sourcePublishedAt: current.metadata.source_published_at,
+        // The updater scenario owns its clock instead of inheriting moving production provenance.
+        sourcePublishedAt: INFLATION_SOURCE_PUBLISHED_AT,
         checksum: current.metadata.source_checksum_sha256,
         annual: current.annual
     };
@@ -117,9 +119,10 @@ test('unchanged inflation source still transitions through stale to unavailable 
         });
         assert.equal(first.metadata.status, 'ok');
 
+        const scenarioYear = first.metadata.data_through + 2;
         const stale = await updateInflation({
             outputPath,
-            now: new Date('2027-02-15T00:00:00.000Z'),
+            now: new Date(Date.UTC(scenarioYear, 1, 15)),
             loader: async () => officialInflation()
         });
         assert.equal(stale.metadata.status, 'stale');
@@ -128,7 +131,7 @@ test('unchanged inflation source still transitions through stale to unavailable 
 
         const unavailable = await updateInflation({
             outputPath,
-            now: new Date('2027-05-05T00:00:00.000Z'),
+            now: new Date(Date.UTC(scenarioYear, 4, 5)),
             loader: async () => officialInflation()
         });
         assert.equal(unavailable.metadata.status, 'unavailable');
