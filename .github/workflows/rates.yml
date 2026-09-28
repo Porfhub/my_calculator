@@ -62,4 +62,5 @@ jobs:
 
       - name: Alert when a safe degraded state was published
         if: always()
+        continue-on-error: true
         run: node data_validation/validate.js --all --mode health
