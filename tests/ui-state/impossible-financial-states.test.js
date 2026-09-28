@@ -10,7 +10,12 @@ test('critical financial calculators fail closed through the shared state contro
     for (const file of ['honest-credit.html', 'mortgage.html', 'rent-vs-mortgage.html', 'time-is-money.html']) {
         const html = read(file);
         assert.match(html, /js\/calculator-state\.js/, file);
-        assert.match(html, /CalculatorState\.STATES\.(INVALID_INPUT|CALCULATION_IMPOSSIBLE)/, file);
+        if (file === 'time-is-money.html') {
+            assert.match(html, /timeStateController\.runCalculation\(/, file);
+            assert.match(html, /validateInput:isValidTimeState/, file);
+        } else {
+            assert.match(html, /CalculatorState\.STATES\.(INVALID_INPUT|CALCULATION_IMPOSSIBLE)/, file);
+        }
     }
 });
 
@@ -29,9 +34,10 @@ test('honest credit and price of time reject invalid values before rendering con
     const time = read('time-is-money.html');
     assert.match(credit, /initialInflow <= 0/);
     assert.match(credit, /totalAir < 0/);
-    assert.match(time, /state\.income > 0/);
-    assert.match(time, /state\.hours > 0/);
-    assert.match(time, /timeStateController\.transition\(CalculatorState\.STATES\.INVALID_INPUT/);
+    assert.match(time, /Number\.isFinite\(state\.income\)&&state\.income>0/);
+    assert.match(time, /Number\.isFinite\(state\.hours\)&&state\.hours>0/);
+    assert.match(time, /timeStateController\.runCalculation\(/);
+    assert.match(time, /validateInput:isValidTimeState/);
 });
 
 test('rent versus mortgage explains an invalid calculation without hiding a negative cash position', () => {

@@ -35,8 +35,9 @@ test('calculation displays are not intentionally capped or mislabeled', () => {
 
     assert.match(freedom, /points\.push\(\{ x: m, y: Math\.round\(balance\) \}\);/);
     assert.doesNotMatch(freedom, /Math\.min\(balance, savings \* 2\)/);
-    assert.match(time, /const officialHourlyRate = state\.income \/ monthlyOfficialHours;/);
-    assert.match(time, /Ставка без дороги и переработок/);
+    assert.match(time, /const officialHourlyRate=input\.income\/monthlyOfficialHours;/);
+    assert.match(time, /Доход за час по рабочему графику/);
+    assert.match(time, /const scheduledWorkDays=purchaseHours\/input\.hours;/);
     assert.match(credit, /Расчётная годовая ставка/);
     assert.match(credit, /while \(getNpv\(high\) < 0 && high < 1e6\)/);
     assert.match(mortgage, /Соотношение тела долга и процентов/);
