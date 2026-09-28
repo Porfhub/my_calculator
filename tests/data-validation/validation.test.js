@@ -16,6 +16,8 @@ const {
 } = require('../../data_validation/validate');
 
 const NOW = new Date('2026-09-01T06:00:00.000Z');
+const INFLATION_SOURCE_PUBLISHED_AT = '2026-08-31';
+const INFLATION_FETCHED_AT = '2026-09-01T05:00:00.000Z';
 
 function validRates(overrides = {}) {
     const keyRate = overrides.keyRate || { value_percent: 14, effective_from: '2026-07-27' };
@@ -48,7 +50,12 @@ function validRates(overrides = {}) {
 }
 
 function inflationFixture() {
-    return parseJsonStrict(fs.readFileSync(path.join(__dirname, '..', '..', 'inflation.json'), 'utf8'));
+    const fixture = parseJsonStrict(fs.readFileSync(path.join(__dirname, '..', '..', 'inflation.json'), 'utf8'));
+    // Production provenance moves forward; these tests own a fixed, valid timeline.
+    fixture.metadata.source_published_at = INFLATION_SOURCE_PUBLISHED_AT;
+    fixture.metadata.last_successful_fetch_at = INFLATION_FETCHED_AT;
+    fixture.metadata.last_attempt_at = NOW.toISOString();
+    return fixture;
 }
 
 test('strict parser rejects duplicate object keys', () => {
@@ -145,8 +152,9 @@ test('inflation rejects gaps, inconsistent CPI, and historical revisions', () =>
 });
 
 test('inflation freshness follows publication grace and hard TTL', () => {
-    const afterDeadline = new Date('2027-02-15T00:00:00.000Z');
     const wronglyOk = inflationFixture();
+    const scenarioYear = wronglyOk.metadata.data_through + 2;
+    const afterDeadline = new Date(Date.UTC(scenarioYear, 1, 15));
     wronglyOk.metadata.last_attempt_at = afterDeadline.toISOString();
     assert.throws(
         () => validateDataset('inflation', wronglyOk, { now: afterDeadline }),
@@ -159,7 +167,7 @@ test('inflation freshness follows publication grace and hard TTL', () => {
     stale.metadata.last_attempt_at = afterDeadline.toISOString();
     validateDataset('inflation', stale, { now: afterDeadline });
 
-    const afterHardTtl = new Date('2027-05-05T00:00:00.000Z');
+    const afterHardTtl = new Date(Date.UTC(scenarioYear, 4, 5));
     stale.metadata.last_attempt_at = afterHardTtl.toISOString();
     assert.throws(
         () => validateDataset('inflation', stale, { now: afterHardTtl }),
@@ -191,9 +199,21 @@ test('official provenance dates and host allowlists are enforced', () => {
     badHost.metadata.source_export_url = 'https://example.com/inflation.xlsx';
     assert.throws(() => validateDataset('inflation', badHost, { now: NOW }), { reason: 'semantic_validation_failed' });
 
+    const futureFetch = inflationFixture();
+    const futureFetchAt = new Date(NOW.getTime() + 24 * 60 * 60 * 1000).toISOString();
+    futureFetch.metadata.last_successful_fetch_at = futureFetchAt;
+    futureFetch.metadata.last_attempt_at = futureFetchAt;
+    assert.throws(
+        () => validateDataset('inflation', futureFetch, { now: NOW }),
+        (error) => error instanceof DataValidationError && error.message === 'last_successful_fetch_at находится в будущем'
+    );
+
     const futurePublication = inflationFixture();
-    futurePublication.metadata.source_published_at = '2026-09-02';
-    assert.throws(() => validateDataset('inflation', futurePublication, { now: NOW }), { reason: 'semantic_validation_failed' });
+    futurePublication.metadata.source_published_at = futureFetchAt.slice(0, 10);
+    assert.throws(
+        () => validateDataset('inflation', futurePublication, { now: NOW }),
+        (error) => error instanceof DataValidationError && error.message === 'source_published_at позже last_successful_fetch_at'
+    );
 });
 
 test('unavailable datasets contain no invented financial payload', () => {
