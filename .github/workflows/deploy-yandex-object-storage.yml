@@ -11,17 +11,29 @@ on:
         options:
           - test
           - production
+  push:
+    branches:
+      - main
+  workflow_run:
+    workflows:
+      - Update Mortgage Rates
+    types:
+      - completed
 
 permissions:
   contents: read
 
 concurrency:
-  group: deploy-yasnomera-test
+  group: deploy-yandex-object-storage
   cancel-in-progress: false
 
 jobs:
   deploy:
     name: Deploy verified static website
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
     env:
       YC_S3_ENDPOINT: https://storage.yandexcloud.net
@@ -30,13 +42,42 @@ jobs:
       - name: Initialize workflow paths and deployment target
         shell: bash
         env:
-          DEPLOY_TARGET: ${{ inputs.target }}
+          MANUAL_TARGET: ${{ github.event.inputs.target }}
+          UPSTREAM_WORKFLOW: ${{ github.event.workflow_run.name }}
+          UPSTREAM_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          UPSTREAM_HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
         run: |
           set -euo pipefail
 
           echo "DEPLOY_DIR=$RUNNER_TEMP/yasnomera-deploy-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_ENV"
           echo "EXPECTED_FILES=$RUNNER_TEMP/yasnomera-expected-files-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.txt" >> "$GITHUB_ENV"
           echo "ACTUAL_FILES=$RUNNER_TEMP/yasnomera-actual-files-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.txt" >> "$GITHUB_ENV"
+
+          case "$GITHUB_EVENT_NAME" in
+            workflow_dispatch)
+              DEPLOY_TARGET="$MANUAL_TARGET"
+              ;;
+            push)
+              if [[ "$GITHUB_REF" != "refs/heads/main" ]]; then
+                echo "Refusing automatic push deployment from unexpected ref: $GITHUB_REF" >&2
+                exit 1
+              fi
+              DEPLOY_TARGET=production
+              ;;
+            workflow_run)
+              if [[ "$UPSTREAM_WORKFLOW" != "Update Mortgage Rates" ||
+                    "$UPSTREAM_CONCLUSION" != "success" ||
+                    "$UPSTREAM_HEAD_BRANCH" != "main" ]]; then
+                echo "Refusing unexpected workflow_run deployment" >&2
+                exit 1
+              fi
+              DEPLOY_TARGET=production
+              ;;
+            *)
+              echo "Unsupported deployment event: $GITHUB_EVENT_NAME" >&2
+              exit 1
+              ;;
+          esac
 
           case "$DEPLOY_TARGET" in
             test)
@@ -208,6 +249,7 @@ jobs:
             /index.html
             /mortgage.html
             /rent-vs-mortgage.html
+            /time-is-money.html
             /sw.js
             /rates.json
           )
