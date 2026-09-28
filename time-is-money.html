@@ -1,664 +1,86 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Стоимость часа и покупки во времени — Ясномера</title>
-    <meta name="description" content="Переведите стоимость покупки в часы реальной работы с учётом дороги и переработок. Понятный расчёт цены времени.">
-    <meta name="application-name" content="Ясномера">
-    <meta name="theme-color" content="#166534">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Ясномера">
-    <link rel="canonical" href="https://yasnomera.ru/time-is-money.html">
-    <link rel="manifest" href="manifest.webmanifest">
-    <link rel="icon" type="image/svg+xml" href="yasnomera-mark.svg">
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="ru_RU">
-    <meta property="og:site_name" content="Ясномера">
-    <meta property="og:title" content="Стоимость часа и покупки во времени — Ясномера">
-    <meta property="og:description" content="Узнайте, сколько часов реальной работы стоит выбранная покупка.">
-    <meta property="og:url" content="https://yasnomera.ru/time-is-money.html">
-    <meta property="og:image" content="https://yasnomera.ru/assets/yasnomera-og.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:type" content="image/png">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://yasnomera.ru/assets/yasnomera-og.png">
-    <meta name="twitter:title" content="Стоимость часа и покупки во времени — Ясномера">
-    <meta name="twitter:description" content="Узнайте, сколько часов реальной работы стоит выбранная покупка.">
-    <script type="application/ld+json">
-        {"@context":"https://schema.org","@type":"WebApplication","name":"Цена времени","url":"https://yasnomera.ru/time-is-money.html","description":"Расчёт стоимости покупки в часах реальной работы.","applicationCategory":"FinanceApplication","operatingSystem":"Any","isAccessibleForFree":true,"inLanguage":"ru-RU","provider":{"@type":"Organization","name":"Ясномера","url":"https://yasnomera.ru/"}}
-    </script>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- html2canvas CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            200: '#bbf7d0',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type=number] { -moz-appearance: textfield; }
-        @media (max-width: 1023px) {
-            .mobile-sticky-results {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                z-index: 50;
-                background: white;
-                box-shadow: 0 -10px 15px -3px rgba(0, 0, 0, 0.1);
-                border-top: 1px solid #e2e8f0;
-                padding: 1rem;
-                border-radius: 1.5rem 1.5rem 0 0;
-            }
-            .dark .mobile-sticky-results {
-                background: #0f172a;
-                border-top-color: #1e293b;
-            }
-            body {
-                padding-bottom: 180px;
-            }
-        }
-
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            cursor: help;
-        }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 200px;
-            background-color: #1e293b;
-            color: #fff;
-            text-align: center;
-            border-radius: 8px;
-            padding: 8px;
-            position: absolute;
-            z-index: 50;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -100px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 11px !important;
-            font-weight: 500 !important;
-            line-height: 1.4;
-            pointer-events: none;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            text-transform: none !important;
-            color: #fff !important;
-            letter-spacing: normal !important;
-        }
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-    </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сколько рабочего времени стоит покупка — Ясномера</title>
+<meta name="description" content="Переведите цену покупки в часы работы и дороги с учётом дохода и рабочего графика."><meta name="application-name" content="Ясномера"><meta name="theme-color" content="#166534"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Ясномера">
+<link rel="canonical" href="https://yasnomera.ru/time-is-money.html"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/svg+xml" href="yasnomera-mark.svg">
+<meta property="og:type" content="website"><meta property="og:locale" content="ru_RU"><meta property="og:site_name" content="Ясномера"><meta property="og:title" content="Сколько рабочего времени стоит покупка — Ясномера"><meta property="og:description" content="Покажем, сколько часов работы и дороги соответствует цене покупки."><meta property="og:url" content="https://yasnomera.ru/time-is-money.html"><meta property="og:image" content="https://yasnomera.ru/assets/yasnomera-og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://yasnomera.ru/assets/yasnomera-og.png"><meta name="twitter:title" content="Сколько рабочего времени стоит покупка — Ясномера"><meta name="twitter:description" content="Переведите цену покупки в часы работы и дороги.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Цена времени","url":"https://yasnomera.ru/time-is-money.html","description":"Перевод цены покупки в рабочее время с учётом дохода, графика и дороги.","applicationCategory":"FinanceApplication","operatingSystem":"Any","isAccessibleForFree":true,"inLanguage":"ru-RU","provider":{"@type":"Organization","name":"Ясномера","url":"https://yasnomera.ru/"}}</script>
+<script src="https://cdn.tailwindcss.com"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{50:'#f0fdf4',100:'#dcfce7',200:'#bbf7d0',500:'#22c55e',600:'#16a34a',700:'#15803d',800:'#166534',900:'#14532d'}}}}};</script>
+<style>input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}input[type=number]{-moz-appearance:textfield}[hidden]{display:none!important}</style>
 <!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=110360838', 'ym');
-
-    ym(110360838, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-
-    function reachGoal(goalId) {
-        console.log("Goal reached:", goalId);
-        if (typeof ym !== "undefined") {
-            ym(110360838, 'reachGoal', goalId);
-        }
-    }
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<script type="text/javascript">(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,'script','https://mc.yandex.ru/metrika/tag.js?id=110360838','ym');ym(110360838,'init',{ssr:true,webvisor:true,clickmap:true,ecommerce:"dataLayer",referrer:document.referrer,url:location.href,accurateTrackBounce:true,trackLinks:true});function reachGoal(goalId){console.log("Goal reached:",goalId);if(typeof ym!=="undefined")ym(110360838,'reachGoal',goalId)}</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute;left:-9999px" alt=""></div></noscript>
 <!-- /Yandex.Metrika counter -->
-    <script src="js/theme.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/calculator-state.js"></script>
-    <script src="js/ui-utils.js"></script>
-    <script src="js/trust-layer.js"></script>
-    <link rel="stylesheet" href="css/product-polish.css">
+<script src="js/theme.js"></script><script src="js/utils.js"></script><script src="js/calculator-state.js"></script><script src="js/ui-utils.js"></script><script src="js/trust-layer.js"></script><link rel="stylesheet" href="css/product-polish.css">
 </head>
-<body class="calculator-page bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased flex flex-col transition-colors duration-300">
+<body class="calculator-page min-h-screen bg-slate-50 font-sans text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-200">
+<div class="product-theme-control fixed right-4 top-24 z-50 md:right-8 md:top-6"><button id="theme-toggle" type="button" onclick="toggleDarkMode()" aria-label="Переключить тему" class="min-h-11 min-w-11 rounded-2xl border border-slate-200 bg-white p-3 text-slate-600 shadow-lg focus:ring-2 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"><svg id="sun-icon" class="hidden h-6 w-6 dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg><svg id="moon-icon" class="h-6 w-6 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg></button></div>
+<header class="bg-gradient-to-r from-brand-800 to-slate-900 text-white shadow-md"><div class="mx-auto flex max-w-7xl items-center gap-4 px-4 py-5 sm:px-6 lg:px-8"><a href="index.html" aria-label="На главную Ясномеры" class="flex min-h-11 min-w-11 items-center justify-center rounded-xl p-2 hover:bg-white/10 focus:ring-2 focus:ring-white"><svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg></a><div class="hidden h-8 w-px bg-white/20 sm:block"></div><div><p class="text-xl font-black">Ясномера</p><p class="text-xs text-brand-100 sm:text-sm">Понятные расчёты для финансовых решений</p></div></div></header>
 
-    <!-- Переключатель темной темы -->
-    <div class="product-theme-control fixed top-24 right-4 z-50 md:top-6 md:right-8">
-        <button id="theme-toggle" onclick="toggleDarkMode()" aria-label="Переключить тему" class="p-3 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:scale-110 transition-all active:scale-95">
-            <svg id="sun-icon" class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
-            <svg id="moon-icon" class="w-6 h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
-        </button>
-    </div>
+<main class="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+<section class="max-w-3xl"><p class="text-sm font-semibold text-brand-700 dark:text-brand-400">Калькулятор «Цена времени»</p><h1 class="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-5xl dark:text-white">Сколько рабочего времени стоит покупка?</h1><p class="mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg dark:text-slate-300">Покажем, сколько часов работы и дороги соответствует её цене при вашем доходе и графике.</p></section>
 
-    <!-- Шапка -->
-    <header class="bg-gradient-to-r from-brand-800 to-slate-900 text-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex items-center space-x-4">
-            <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
-                <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">Ясномера</span>
-            </a>
-            <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
-            <div class="flex items-center space-x-3">
-                <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </div>
-                <div>
-                    <h1 class="text-2xl font-black tracking-tight">Цена Времени</h1>
-                    <p class="text-xs text-brand-200">Переводим цены на товары в часы реальной работы</p>
-                </div>
-            </div>
-        </div>
-    </header>
+<div class="mt-8 grid items-start gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-8">
+<section aria-labelledby="inputs-heading" class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7 dark:border-slate-800 dark:bg-slate-900"><h2 id="inputs-heading" class="text-xl font-bold text-slate-950 dark:text-white">Данные для расчёта</h2><div class="mt-6 space-y-6">
+<div><label for="purchase-input" class="block text-sm font-semibold">Цена покупки</label><div class="relative mt-2"><input id="purchase-input" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" placeholder="150 000" aria-label="Цена покупки, ₽" oninput="handleMoneyInput('purchase',this)" onblur="formatMoneyInput('purchase',this)" class="min-h-12 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 pr-12 text-lg font-semibold outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-500/30 dark:border-slate-700 dark:bg-slate-800"><span class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-500">₽</span></div></div>
+<div><label for="income-input" class="block text-sm font-semibold">Доход на руки в месяц</label><div class="relative mt-2"><input id="income-input" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" placeholder="100 000" aria-label="Доход на руки в месяц, ₽" aria-describedby="income-help" oninput="handleMoneyInput('income',this)" onblur="formatMoneyInput('income',this)" class="min-h-12 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 pr-12 text-lg font-semibold outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-500/30 dark:border-slate-700 dark:bg-slate-800"><span class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-500">₽</span></div><p id="income-help" class="mt-2 text-sm text-slate-500 dark:text-slate-400">Если доход меняется, укажите средний за несколько месяцев.</p></div>
+<fieldset><legend class="text-sm font-semibold">Сколько дней в неделю вы ездите на работу?</legend><div id="office-days-options" class="mt-3 grid grid-cols-6 gap-2" aria-describedby="office-days-help"></div><p id="office-days-help" class="mt-2 text-sm text-slate-500 dark:text-slate-400">Полностью удалённо</p></fieldset>
+<div id="commute-field" aria-live="polite"><label for="commute-input" class="block text-sm font-semibold">Дорога до работы в одну сторону</label><div class="relative mt-2"><input id="commute-input" type="number" inputmode="decimal" min="0" max="1440" step="5" aria-label="Дорога до работы в одну сторону, минут" aria-describedby="commute-help" oninput="handleNumberInput('commuteMinutes',this)" class="min-h-12 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 pr-20 text-lg font-semibold outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-500/30 dark:border-slate-700 dark:bg-slate-800"><span class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-500">мин.</span></div><p id="commute-help" class="mt-2 text-sm text-slate-500 dark:text-slate-400">Умножим на 2 и учтём только дни, когда вы ездите на работу.</p></div><p id="commute-status" class="sr-only" role="status" aria-live="polite"></p>
+</div></section>
 
-    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 w-full flex-grow">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<div><p id="time-state-message" hidden role="alert" class="mb-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-900 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200"></p><section id="results-card" data-screenshot-width="640" aria-labelledby="result-heading" class="overflow-hidden rounded-3xl bg-gradient-to-br from-brand-900 to-slate-900 p-6 text-white shadow-xl sm:p-8"><div class="flex justify-between gap-4 text-sm"><p class="font-bold text-brand-100">Ясномера</p><p class="text-brand-200">Калькулятор «Цена времени»</p></div><p id="result-heading" class="mt-8 font-semibold text-brand-100">Цена покупки во времени</p><div class="mt-3 flex flex-wrap items-baseline gap-x-3" aria-live="polite" aria-atomic="true"><span aria-hidden="true" class="text-4xl font-black text-emerald-200 sm:text-5xl">≈</span><span id="purchase-hours" class="text-5xl font-black tracking-tight sm:text-6xl">—</span><span id="purchase-hours-word" class="text-2xl font-bold text-brand-100">часов</span></div><p class="mt-5 max-w-xl leading-7 text-brand-50"><span id="result-time-description">Столько времени на работу и дорогу соответствует покупке за</span> <span id="result-purchase-price" class="font-bold text-white">—</span>.</p><p id="scheduled-days-result" class="mt-5 border-t border-white/15 pt-5 text-xl font-bold text-emerald-100">—</p>
+<div class="hidden"><div data-screenshot-fallback class="mt-7 border-t border-white/15 pt-6"><div class="grid grid-cols-2 gap-4 text-sm"><div><p class="text-brand-200">Доход</p><p id="export-income" class="mt-1 font-bold">—</p></div><div><p class="text-brand-200">Доход за час с учётом дороги</p><p id="export-effective-rate" class="mt-1 font-bold">—</p></div><div><p class="text-brand-200">Рабочий график</p><p id="export-schedule" class="mt-1 font-bold">—</p></div><div><p class="text-brand-200">Офисные дни</p><p id="export-office-days" class="mt-1 font-bold">—</p></div><div class="col-span-2"><p class="text-brand-200">Дорога</p><p id="export-commute" class="mt-1 font-bold">—</p></div></div><p class="mt-6 text-xs leading-5 text-brand-100">Расчёт учитывает работу, дорогу туда и обратно в офисные дни и дополнительное неоплачиваемое время. Это приблизительный перевод цены в рабочее время, а не оценка покупки.</p></div></div>
+</section></div></div>
 
-            <!-- ЛЕВАЯ КОЛОНКА (Ввод параметров) -->
-            <div class="lg:col-span-5 space-y-6">
-                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-3">Параметры работы и трат</h2>
+<section class="mt-6 rounded-2xl border border-brand-100 bg-brand-50 px-5 py-4 dark:border-brand-800 dark:bg-brand-900/30 dark:text-slate-100"><div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><p id="assumption-line" class="text-sm font-semibold">Считаем по графику 8 часов × 5 дней в неделю.</p><button id="advanced-toggle" type="button" aria-controls="advanced-panel" aria-expanded="false" onclick="toggleAdvanced()" class="min-h-11 self-start rounded-xl px-3 py-2 text-left text-sm font-bold text-brand-700 underline underline-offset-4 hover:bg-brand-100/70 focus:outline-none focus:ring-2 focus:ring-brand-500 sm:self-auto dark:text-brand-200 dark:hover:bg-brand-900/50">Уточнить график и дополнительное время</button></div></section>
+<section id="advanced-panel" hidden aria-labelledby="advanced-heading" class="mt-4 rounded-2xl border border-slate-200 bg-slate-100/80 p-5 sm:p-6 dark:border-slate-800 dark:bg-slate-900/70"><h2 id="advanced-heading" class="text-lg font-bold">График и дополнительное время</h2><p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Можно указать средний график, например 3,5 дня в неделю для смен 2/2.</p><div class="mt-5 grid gap-5 md:grid-cols-3"><div><label for="hours-input" class="text-sm font-semibold">Рабочих часов в день</label><input id="hours-input" type="number" inputmode="decimal" min="0.5" max="24" step="0.5" aria-label="Рабочих часов в день" oninput="handleNumberInput('hours',this)" class="mt-2 min-h-12 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold dark:border-slate-700 dark:bg-slate-800"></div><div><label for="work-days-input" class="text-sm font-semibold">Рабочих дней в неделю</label><input id="work-days-input" type="number" inputmode="decimal" min="0.5" max="7" step="0.5" aria-label="Рабочих дней в неделю" oninput="handleNumberInput('workDays',this)" class="mt-2 min-h-12 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold dark:border-slate-700 dark:bg-slate-800"></div><div><label for="overtime-input" class="text-sm font-semibold">Неоплачиваемое время сверх графика</label><div class="relative mt-2"><input id="overtime-input" type="number" inputmode="decimal" min="0" max="168" step="0.5" aria-label="Неоплачиваемое время сверх графика, часов в неделю" aria-describedby="overtime-help" oninput="handleNumberInput('overtime',this)" class="min-h-12 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 pr-20 font-semibold dark:border-slate-700 dark:bg-slate-800"><span class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm text-slate-500 dark:text-slate-400">ч/нед.</span></div></div></div><p id="overtime-help" class="mt-4 text-sm leading-6 text-slate-500 dark:text-slate-400">Например, обязательные переработки или перерывы, которые фактически удлиняют ваш рабочий день. Оплачиваемые перерывы повторно не добавляйте.</p></section>
 
-                    <!-- Доход -->
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-center">
-                            <label for="income-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Чистый доход в месяц (на руки)</label>
-                            <span class="text-sm font-bold text-slate-900 dark:text-white" id="income-display">100 000 ₽</span>
-                        </div>
-                        <div class="relative rounded-lg shadow-sm">
-                            <input type="text" id="income-input" oninput="handleInput('income', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
-                        </div>
-                        <input type="range" id="income-range" min="10000" max="1000000" step="5000" value="100000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRange('income', this.value)">
-                    </div>
+<div class="mt-8 grid gap-8 lg:grid-cols-2"><section aria-labelledby="breakdown-heading" class="border-t border-slate-200 pt-7 dark:border-slate-800"><h2 id="breakdown-heading" class="text-xl font-bold">Время, связанное с работой за месяц</h2><dl class="mt-5 divide-y divide-slate-200 rounded-2xl bg-slate-100/80 px-5 dark:divide-slate-800 dark:bg-slate-900/70"><div class="flex justify-between gap-4 py-4"><dt>Работа</dt><dd id="monthly-work" class="font-bold">—</dd></div><div class="flex justify-between gap-4 py-4"><dt>Дорога</dt><dd id="monthly-commute" class="font-bold">—</dd></div><div class="flex justify-between gap-4 py-4"><dt>Дополнительное время</dt><dd id="monthly-overtime" class="font-bold">—</dd></div><div class="flex justify-between gap-4 py-4"><dt class="font-semibold">Всего</dt><dd id="monthly-total" class="text-lg font-black text-brand-700 dark:text-brand-300">—</dd></div></dl></section>
+<section aria-labelledby="rates-heading" class="border-t border-slate-200 pt-7 dark:border-slate-800"><h2 id="rates-heading" class="text-xl font-bold">Доход в пересчёте на час</h2><dl class="mt-5 space-y-3"><div class="rounded-2xl bg-slate-100/80 p-5 dark:bg-slate-900/70"><dt class="text-sm">Доход за час с учётом дороги</dt><dd id="effective-hourly-rate" class="mt-2 text-2xl font-black">—</dd></div><div class="rounded-2xl bg-slate-100/80 p-5 dark:bg-slate-900/70"><dt class="text-sm">Доход за час по рабочему графику</dt><dd id="scheduled-hourly-rate" class="mt-2 text-2xl font-black">—</dd></div></dl></section></div>
 
-                    <!-- Рабочие часы -->
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-center">
-                            <label for="hours-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Официальные рабочие часы в неделю</label>
-                            <span class="text-sm font-bold text-slate-900 dark:text-white" id="hours-display">40 ч.</span>
-                        </div>
-                        <div class="relative rounded-lg shadow-sm">
-                            <input type="number" id="hours-input" min="1" max="100" oninput="handleInput('hours', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">ч.</div>
-                        </div>
-                        <input type="range" id="hours-range" min="1" max="100" step="1" value="40" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRange('hours', this.value)">
-                    </div>
+<section class="mt-10 border-t border-slate-200 pt-8 dark:border-slate-800" data-webwisor="time-is-money" data-webwisor-rendered="true" aria-labelledby="method-heading"><h2 id="method-heading" class="text-xl font-bold">Как посчитано</h2><p class="mt-3 max-w-4xl leading-7 text-slate-600 dark:text-slate-300">Сложили время работы, дорогу туда и обратно в офисные дни и указанное дополнительное время. Затем разделили месячный доход на получившееся количество часов.</p><ul class="mt-5 grid gap-3 text-sm leading-6 text-slate-600 sm:grid-cols-2 dark:text-slate-300"><li class="rounded-xl bg-slate-100/80 p-4 dark:bg-slate-900/70">Среднее число недель в месяце: 52 / 12 ≈ 4,33.</li><li class="rounded-xl bg-slate-100/80 p-4 dark:bg-slate-900/70">Дорогу в одну сторону умножаем на 2 и учитываем только в офисные дни.</li><li class="rounded-xl bg-slate-100/80 p-4 dark:bg-slate-900/70">Рабочие дни для покупки считаем по указанной продолжительности рабочего дня, без дороги и дополнительного времени.</li><li class="rounded-xl bg-slate-100/80 p-4 dark:bg-slate-900/70">Дополнительное неоплачиваемое время — обязательные часы, которые удлиняют занятость, но не входят в оплачиваемый график.</li></ul></section>
+<aside class="mt-8 rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-6 text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">Это приблизительный перевод цены в рабочее время, а не оценка покупки и не рекомендация покупать или отказываться от неё.</aside>
+<section aria-label="Действия с результатом" class="mt-6 grid gap-3 sm:grid-cols-2"><button type="button" onclick="takeScreenshot('results-card', 'yasnomera-time-is-money.png')" class="min-h-12 rounded-xl bg-brand-600 px-5 py-3 font-bold text-white hover:bg-brand-700 focus:ring-2 focus:ring-brand-500">Сохранить результат</button><button type="button" onclick="shareLink()" class="min-h-12 rounded-xl border border-slate-300 bg-white px-5 py-3 font-bold dark:border-slate-700 dark:bg-slate-900">Скопировать ссылку</button></section>
+</main>
+<footer class="mx-auto w-full max-w-6xl border-t border-slate-200 px-4 py-8 text-center text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400"><p>© 2026 Ясномера. Понятные расчёты для финансовых решений.</p></footer>
+<div id="toast" class="pointer-events-none fixed bottom-5 right-5 z-50 flex max-w-[calc(100vw-2.5rem)] translate-y-20 items-center gap-3 rounded-xl bg-slate-900 px-5 py-3 text-white opacity-0 shadow-2xl transition-all"><span class="font-bold text-brand-500">✓</span><span id="toast-message" class="text-sm">Ссылка скопирована!</span></div>
 
-                    <!-- Дорога -->
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-center">
-                            <label for="commute-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Время на дорогу (туда-обратно) в день</label>
-                            <span class="text-sm font-bold text-slate-900 dark:text-white" id="commute-display">2 ч.</span>
-                        </div>
-                        <div class="relative rounded-lg shadow-sm">
-                            <input type="number" id="commute-input" min="0" max="12" step="0.5" oninput="handleInput('commute', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">ч.</div>
-                        </div>
-                        <input type="range" id="commute-range" min="0" max="12" step="0.5" value="2" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRange('commute', this.value)">
-                    </div>
-
-                    <!-- Переработки -->
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-center">
-                            <label for="overtime-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Неоплачиваемые переработки в неделю</label>
-                            <span class="text-sm font-bold text-slate-900 dark:text-white" id="overtime-display">5 ч.</span>
-                        </div>
-                        <div class="relative rounded-lg shadow-sm">
-                            <input type="number" id="overtime-input" min="0" max="40" oninput="handleInput('overtime', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">ч.</div>
-                        </div>
-                        <input type="range" id="overtime-range" min="0" max="40" step="1" value="5" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRange('overtime', this.value)">
-                    </div>
-
-                    <!-- Покупка -->
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-center">
-                            <label for="purchase-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Стоимость желаемой покупки</label>
-                            <span class="text-sm font-bold text-slate-900 dark:text-white" id="purchase-display">150 000 ₽</span>
-                        </div>
-                        <div class="relative rounded-lg shadow-sm">
-                            <input type="text" id="purchase-input" oninput="handleInput('purchase', this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition font-semibold text-lg text-slate-800 dark:text-white">
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
-                        </div>
-                        <input type="range" id="purchase-range" min="1000" max="2000000" step="1000" value="150000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRange('purchase', this.value)">
-                    </div>
-
-                    <!-- Quick Icon Presets -->
-                    <div class="space-y-2 border-t dark:border-slate-800 pt-4">
-                        <label class="block text-xs font-black text-slate-400 uppercase tracking-widest">Популярные покупки</label>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button onclick="setPurchasePreset(160000, 'iPhone 17 Pro Max')" class="flex items-center gap-2 p-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-900/25 rounded-xl border border-transparent hover:border-brand-500 transition text-left text-xs font-bold text-slate-700 dark:text-slate-300">
-                                <span>📱</span>
-                                <div class="flex flex-col">
-                                    <span class="truncate">iPhone 17 Pro</span>
-                                    <span class="text-[10px] text-slate-400">160k ₽</span>
-                                </div>
-                            </button>
-                            <button onclick="setPurchasePreset(350, 'Чашка кофе')" class="flex items-center gap-2 p-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-900/25 rounded-xl border border-transparent hover:border-brand-500 transition text-left text-xs font-bold text-slate-700 dark:text-slate-300">
-                                <span>☕</span>
-                                <div class="flex flex-col">
-                                    <span>Чашка кофе</span>
-                                    <span class="text-[10px] text-slate-400">350 ₽</span>
-                                </div>
-                            </button>
-                            <button onclick="setPurchasePreset(250000, 'Поездка на море')" class="flex items-center gap-2 p-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-900/25 rounded-xl border border-transparent hover:border-brand-500 transition text-left text-xs font-bold text-slate-700 dark:text-slate-300">
-                                <span>🏖️</span>
-                                <div class="flex flex-col">
-                                    <span>Поездка на море</span>
-                                    <span class="text-[10px] text-slate-400">250k ₽</span>
-                                </div>
-                            </button>
-                            <button onclick="setPurchasePreset(4500000, 'Квартира-студия')" class="flex items-center gap-2 p-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-900/25 rounded-xl border border-transparent hover:border-brand-500 transition text-left text-xs font-bold text-slate-700 dark:text-slate-300">
-                                <span>🏢</span>
-                                <div class="flex flex-col">
-                                    <span>Студия</span>
-                                    <span class="text-[10px] text-slate-400">4.5M ₽</span>
-                                </div>
-                            </button>
-                            <button onclick="setPurchasePreset(6000, 'Ужин в ресторане')" class="col-span-2 flex items-center gap-2 p-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-900/25 rounded-xl border border-transparent hover:border-brand-500 transition text-left text-xs font-bold text-slate-700 dark:text-slate-300">
-                                <span>🍣</span>
-                                <div class="flex flex-col">
-                                    <span>Премиальный ужин в ресторане</span>
-                                    <span class="text-[10px] text-slate-400">6 000 ₽</span>
-                                </div>
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- ПРАВАЯ КОЛОНКА (Результаты) -->
-            <div class="lg:col-span-7 space-y-6">
-                <p id="time-state-message" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
-
-                <!-- Главная карточка (в стиле savings-card) -->
-                <div id="results-card" class="bg-gradient-to-br from-brand-900 to-emerald-850 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden transition-all duration-300 transform">
-                    <div class="absolute -right-10 -bottom-10 opacity-10">
-                        <svg class="w-48 h-48" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>
-                    </div>
-                    <div class="relative z-10 space-y-6">
-                        <div>
-                            <span class="text-xs uppercase font-black bg-brand-600 px-3 py-1 rounded-full text-brand-50 tracking-wide">Реальная стоимость часа</span>
-                            <div class="mt-4 flex items-baseline gap-3">
-                                <p id="real-hourly-rate" class="text-5xl font-black text-emerald-200">0 ₽</p>
-                                <span class="text-lg text-brand-200">в час</span>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-brand-800/60 pt-6">
-                            <div>
-                                <p class="text-xs text-brand-200 uppercase font-bold mb-1">Ставка без дороги и переработок</p>
-                                <p id="official-hourly-rate" class="text-xl font-bold text-white">0 ₽ / час</p>
-                                <p class="text-[10px] text-brand-300 mt-1">Без учета дороги и переработок</p>
-                            </div>
-                            <div>
-                                <p class="text-xs text-brand-200 uppercase font-bold mb-1">Разница в цене часа</p>
-                                <p id="rate-diff" class="text-xl font-bold text-rose-300">0%</p>
-                                <p class="text-[10px] text-brand-300 mt-1">Ваше время дешевле, чем кажется</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Отрезвляющий вердикт (с динамическим blood-red эффектом) -->
-                <div id="verdict-block" class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm flex items-start gap-4 transition-all duration-500">
-                    <div id="verdict-icon-container" class="w-12 h-12 bg-amber-50 dark:bg-amber-900/25 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <svg id="verdict-icon" class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                    </div>
-                    <div>
-                        <h3 id="verdict-title" class="text-lg font-black text-slate-900 dark:text-white mb-1">Отрезвляющий итог</h3>
-                        <p id="verdict-text" class="text-slate-600 dark:text-slate-350 text-sm leading-relaxed">
-                            Эта покупка обойдется вам в <span class="font-bold text-slate-900 dark:text-white" id="hours-cost">0</span> часов реальной работы (или <span class="font-bold text-slate-900 dark:text-white" id="days-cost">0</span> полных рабочих дней). Точно берем?
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Мотивационный блок / Психологическая Поддержка -->
-                <div class="bg-brand-50 dark:bg-brand-900/20 rounded-2xl p-6 border border-brand-100 dark:border-brand-800/50 space-y-4">
-                    <h4 class="text-xs font-black text-brand-600 dark:text-brand-400 uppercase tracking-wider">Осознанное потребление</h4>
-                    <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center text-xl shadow-sm shrink-0">🧘</div>
-                        <div class="space-y-1">
-                            <p class="text-sm font-bold text-slate-850 dark:text-white">Это не значит, что нельзя себя радовать.</p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                                Это значит, что каждая покупка должна быть осознанной. Понимание реальной цены времени уберегает от импульсивных трат и долговых ям, возвращая вам контроль над вашей жизнью.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Динамический оптимизатор стоимости (Как купить быстрее) -->
-                <div class="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
-                    <h4 class="text-xs font-black text-brand-600 dark:text-brand-400 uppercase tracking-wider">Как купить это быстрее?</h4>
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center text-xl shadow-sm">🚀</div>
-                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            Если вы увеличите стоимость своего часа всего на <span class="font-bold text-slate-900 dark:text-white" id="needed-hourly-increase">0 ₽</span>, вы заработаете на эту покупку на <span class="font-bold text-brand-600" id="saved-days-on-boost">3 дня</span> быстрее.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Детали расчета -->
-                <div class="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
-                    <h4 class="text-xs font-black text-slate-400 uppercase tracking-wider">Математика реальности (в месяц)</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="space-y-1">
-                            <p class="text-[10px] text-slate-500 font-bold uppercase">Всего часов</p>
-                            <p id="total-monthly-hours" class="text-xl font-black text-slate-800 dark:text-white">0 ч.</p>
-                        </div>
-                        <div class="space-y-1">
-                            <p class="text-[10px] text-slate-500 font-bold uppercase">На дорогу</p>
-                            <p id="monthly-commute-hours" class="text-xl font-black text-slate-800 dark:text-white">0 ч.</p>
-                        </div>
-                        <div class="space-y-1">
-                            <p class="text-[10px] text-slate-500 font-bold uppercase">На переработки</p>
-                            <p id="monthly-overtime-hours" class="text-xl font-black text-slate-800 dark:text-white">0 ч.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Кнопки -->
-                <div class="grid grid-cols-2 gap-4">
-                    <button onclick="shareLink()" class="flex items-center justify-center gap-2 py-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 transition-all shadow-sm active:scale-[0.98]">
-                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
-                        Ссылка
-                    </button>
-                    <button onclick="takeScreenshot('results-card', 'yasnomera-time-is-money.png')" class="flex items-center justify-center gap-2 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition-all shadow-sm active:scale-[0.98]">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        Скриншот
-                    </button>
-                </div>
-
-            </div>
-        </div>
-    <div class="lg:hidden mobile-sticky-results">
-        <div class="flex items-center justify-between mb-3">
-            <div class="flex flex-col">
-                <span class="text-[10px] font-bold text-slate-400 uppercase">Реальный час</span>
-                <span id="mobile-rate" class="font-black text-slate-900 dark:text-white">0 ₽</span>
-            </div>
-            <div class="text-right">
-                <p class="text-[10px] font-bold text-slate-400 uppercase">Цена в днях</p>
-                <p id="mobile-days" class="text-lg font-black text-brand-600">0 дн.</p>
-            </div>
-        </div>
-        <button onclick="shareLinkCustom('Цена времени — Ясномера', 'Я оценил стоимость покупки в рабочих часах в Ясномере. Расчётная стоимость часа: ' + document.getElementById('mobile-rate').innerText + ', покупка потребует ' + document.getElementById('mobile-days').innerText + ' рабочего времени.')" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
-            📢 Поделиться расчетом
-        </button>
-    </div>
-    </main>
-
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8" data-webwisor="time-is-money"></section>
-
-    <footer class="max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-400 border-t border-slate-100 dark:border-slate-800">
-        <p>© 2026 Ясномера. Помните: время — единственный невосполнимый ресурс.</p>
-    </footer>
-
-    <!-- Всплывающие уведомления (Toast) -->
-    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-        <span class="text-brand-500 font-bold">✓</span>
-        <span id="toast-message" class="text-sm">Ссылка скопирована!</span>
-    </div>
-
-    <script>
-        const state = {
-            income: 100000,
-            hours: 40,
-            commute: 2,
-            overtime: 5,
-            purchase: 150000
-        };
-
-        const DAYS_IN_MONTH = 21.6;
-        const WEEKS_IN_MONTH = 4.33;
-        const timeStateController = CalculatorState.createController({
-            root: 'results-card',
-            messageElement: 'time-state-message',
-            resultElements: [
-                'real-hourly-rate', 'official-hourly-rate', 'rate-diff',
-                'total-monthly-hours', 'monthly-commute-hours', 'monthly-overtime-hours',
-                'verdict-title', 'verdict-text', 'needed-hourly-increase', 'saved-days-on-boost',
-                'mobile-rate', 'mobile-days'
-            ]
-        });
-
-        window.canExportCalculation = () =>
-            timeStateController.getState() === CalculatorState.STATES.READY;
-
-        function isValidTimeState() {
-            return Number.isFinite(state.income) && state.income > 0 && state.income <= 1000000
-                && Number.isFinite(state.hours) && state.hours > 0 && state.hours <= 100
-                && Number.isFinite(state.commute) && state.commute >= 0 && state.commute <= 12
-                && Number.isFinite(state.overtime) && state.overtime >= 0 && state.overtime <= 40
-                && Number.isFinite(state.purchase) && state.purchase > 0 && state.purchase <= 2000000;
-        }
-
-        function handleInput(field, el) {
-            if (String(el.value).trim().startsWith('-')) {
-                state[field] = NaN;
-                update();
-                return;
-            }
-            let val = el.value.replace(/\s+/g, '');
-            if (field === 'income' || field === 'purchase') {
-                val = formatInputField(el, el.value);
-            } else {
-                val = parseFloat(val) || 0;
-            }
-
-            state[field] = val;
-            const range = document.getElementById(`${field}-range`);
-            if (range) range.value = val;
-            update();
-        }
-
-        function syncRange(field, val) {
-            val = parseFloat(val);
-            state[field] = val;
-
-            const input = document.getElementById(`${field}-input`);
-            if (input) {
-                if (field === 'income' || field === 'purchase') {
-                    input.value = formatNumber(val);
-                } else {
-                    input.value = val;
-                }
-            }
-            update();
-        }
-
-        function setPurchasePreset(price, name) {
-            state.purchase = price;
-            const input = document.getElementById('purchase-input');
-            const range = document.getElementById('purchase-range');
-            if (input) input.value = formatNumber(price);
-            if (range) range.value = price;
-
-            showToast(`Установлена стоимость: ${name}`);
-            update();
-        }
-
-        function update() {
-            if (!isValidTimeState()) {
-                timeStateController.transition(CalculatorState.STATES.INVALID_INPUT, {
-                    message: 'Введите положительный доход, стоимость покупки и допустимое рабочее время.'
-                });
-                return;
-            }
-
-            try {
-                updateTimeCore();
-                timeStateController.transition(CalculatorState.STATES.READY, { clearResults: false });
-            } catch (error) {
-                console.error('Time calculation failed:', error);
-                timeStateController.transition(CalculatorState.STATES.CALCULATION_IMPOSSIBLE, {
-                    message: 'Расчёт невозможен при текущих параметрах.'
-                });
-            }
-        }
-
-        function updateTimeCore() {
-            // Displays
-            document.getElementById('income-display').innerText = formatMoney(state.income);
-            document.getElementById('hours-display').innerText = state.hours + ' ч.';
-            document.getElementById('commute-display').innerText = state.commute + ' ч.';
-            document.getElementById('overtime-display').innerText = state.overtime + ' ч.';
-            document.getElementById('purchase-display').innerText = formatMoney(state.purchase);
-
-            // Logic
-            const monthlyOfficialHours = state.hours * WEEKS_IN_MONTH;
-            const monthlyCommuteHours = state.commute * DAYS_IN_MONTH;
-            const monthlyOvertimeHours = state.overtime * WEEKS_IN_MONTH;
-            const totalRealHours = monthlyOfficialHours + monthlyCommuteHours + monthlyOvertimeHours;
-
-            const realHourlyRate = totalRealHours > 0 ? state.income / totalRealHours : 0;
-            const officialHourlyRate = state.income / monthlyOfficialHours;
-
-            const rateDiff = officialHourlyRate > 0 ? ((officialHourlyRate - realHourlyRate) / officialHourlyRate) * 100 : 0;
-
-            const hoursCost = realHourlyRate > 0 ? state.purchase / realHourlyRate : 0;
-            const hoursPerDay = (state.hours / 5) + state.commute + (state.overtime / 5);
-            const daysCost = hoursPerDay > 0 ? hoursCost / hoursPerDay : 0;
-
-            // Update UI
-            document.getElementById('real-hourly-rate').innerText = formatMoney(realHourlyRate);
-            document.getElementById('official-hourly-rate').innerText = formatMoney(officialHourlyRate) + ' / час';
-            document.getElementById('rate-diff').innerText = '-' + Math.round(rateDiff) + '%';
-
-            const hCostRound = Math.round(hoursCost);
-            const dCostRound = Math.round(daysCost);
-
-            // Avoid setting innerText here as we re-render the HTML template below which overwrites these elements and defines their IDs dynamically
-            document.getElementById('total-monthly-hours').innerText = Math.round(totalRealHours) + ' ч.';
-            document.getElementById('monthly-commute-hours').innerText = Math.round(monthlyCommuteHours) + ' ч.';
-            document.getElementById('monthly-overtime-hours').innerText = Math.round(monthlyOvertimeHours) + ' ч.';
-
-            // Blood red & Metaphors
-            const verdictBlock = document.getElementById('verdict-block');
-            const verdictIconContainer = document.getElementById('verdict-icon-container');
-            const verdictIcon = document.getElementById('verdict-icon');
-            const verdictTitle = document.getElementById('verdict-title');
-            const verdictText = document.getElementById('verdict-text');
-
-            // If a purchase takes more than 15 complete working days or 120 working hours of life, mark as highly irrational/blood-red
-            const isIrrational = dCostRound > 15;
-
-            if (isIrrational) {
-                // Blood Red Overrides
-                verdictBlock.className = "bg-rose-50 dark:bg-rose-950/40 rounded-2xl p-6 border-2 border-rose-500 shadow-md flex items-start gap-4 transition-all duration-500";
-                verdictIconContainer.className = "w-12 h-12 bg-rose-100 dark:bg-rose-900/45 rounded-xl flex items-center justify-center flex-shrink-0 animate-bounce";
-                verdictIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>`;
-                verdictIcon.setAttribute('class', 'w-6 h-6 text-rose-600 dark:text-rose-400');
-                verdictTitle.innerText = "🛑 Критический уровень трат времени!";
-                verdictTitle.className = "text-lg font-black text-rose-700 dark:text-rose-400 mb-1";
-
-                verdictText.innerHTML = `Ради этой покупки вы будете просыпаться по будильнику в 7 утра ровно <span class="font-black text-rose-700 dark:text-rose-400 text-base underline decoration-rose-500 decoration-2" id="days-cost">${dCostRound}</span> <span id="days-word">${getDaysWord(dCostRound)}</span>. Вы действительно готовы отдать этот значительный кусок своей единственной и неповторимой жизни за обычный гаджет или услугу?`;
-            } else {
-                // Standard visual styling
-                verdictBlock.className = "bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm flex items-start gap-4 transition-all duration-500";
-                verdictIconContainer.className = "w-12 h-12 bg-amber-50 dark:bg-amber-900/25 rounded-xl flex items-center justify-center flex-shrink-0";
-                verdictIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>`;
-                verdictIcon.setAttribute('class', 'w-6 h-6 text-amber-600 dark:text-amber-400');
-                verdictTitle.innerText = "Отрезвляющий итог";
-                verdictTitle.className = "text-lg font-black text-slate-900 dark:text-white mb-1";
-
-                verdictText.innerHTML = `Эта покупка заберет у вас ровно <span class="font-bold text-slate-900 dark:text-white" id="hours-cost">${formatNumber(hCostRound)}</span> <span id="hours-word">${getHoursWord(hCostRound)}</span> времени, связанного с работой (что эквивалентно <span class="font-bold text-brand-600" id="days-cost">${dCostRound}</span> <span id="days-word-normal">${getDaysWord(dCostRound)}</span> сборов по утрам и дороги). Подумайте, стоит ли вещь этих усилий?`;
-            }
-
-            // Mobile sticky
-            const mobileRate = document.getElementById('mobile-rate');
-            const mobileDays = document.getElementById('mobile-days');
-            if (mobileRate) mobileRate.innerText = formatMoney(realHourlyRate);
-            if (mobileDays) mobileDays.innerText = dCostRound + ' дн.';
-
-            const timeReductionFactor = 0.15;
-            const targetHours = hoursCost * (1 - timeReductionFactor);
-            const neededRate = targetHours > 0 ? state.purchase / targetHours : realHourlyRate;
-            const increase = Math.max(0, neededRate - realHourlyRate);
-
-            document.getElementById('needed-hourly-increase').innerText = formatMoney(increase);
-            document.getElementById('saved-days-on-boost').innerText = Math.round(daysCost * timeReductionFactor) + ' дн.';
-        }
-
-        function getDaysWord(days) {
-            const n = Math.abs(days) % 100;
-            const n1 = n % 10;
-            if (n > 10 && n < 20) return 'дней';
-            if (n1 > 1 && n1 < 5) return 'дня';
-            if (n1 === 1) return 'день';
-            return 'дней';
-        }
-
-        function getHoursWord(hours) {
-            const n = Math.abs(hours) % 100;
-            const n1 = n % 10;
-            if (n > 10 && n < 20) return 'часов';
-            if (n1 > 1 && n1 < 5) return 'часа';
-            if (n1 === 1) return 'час';
-            return 'часов';
-        }
-
-        window.onload = function() {
-            // Initialize inputs
-            document.getElementById('income-input').value = formatNumber(state.income);
-            document.getElementById('hours-input').value = state.hours;
-            document.getElementById('commute-input').value = state.commute;
-            document.getElementById('overtime-input').value = state.overtime;
-            document.getElementById('purchase-input').value = formatNumber(state.purchase);
-            update();
-        };
-
-        window.shareLink = shareLink;
-    </script>
-
-    <script>
-        (function() {
-            let tracked = false;
-            function trackFirstChange() {
-                if (!tracked) {
-                    reachGoal('calculate_success');
-                    tracked = true;
-                    // Remove listeners after first trigger
-                    document.removeEventListener('input', trackFirstChange);
-                    document.removeEventListener('change', trackFirstChange);
-                }
-            }
-            document.addEventListener('input', trackFirstChange);
-            document.addEventListener('change', trackFirstChange);
-        })();
-    </script>
-    <script>
-        if ("serviceWorker" in navigator) {
-            window.addEventListener("load", () => {
-                navigator.serviceWorker.register("sw.js").then(reg => {
-                    console.log("SW registered:", reg.scope);
-                }).catch(err => {
-                    console.log("SW registration failed:", err);
-                });
-            });
-        }
-    </script>
-</body>
-</html>
+<script>
+// TIME_MODEL_START
+const WEEKS_IN_MONTH=52/12;
+function isValidTimeModelInput(input){return Number.isFinite(input.purchase)&&input.purchase>0&&input.purchase<=Number.MAX_SAFE_INTEGER&&Number.isFinite(input.income)&&input.income>0&&input.income<=Number.MAX_SAFE_INTEGER&&Number.isFinite(input.hours)&&input.hours>0&&input.hours<=24&&Number.isFinite(input.workDays)&&input.workDays>0&&input.workDays<=7&&Number.isFinite(input.officeDays)&&input.officeDays>=0&&input.officeDays<=input.workDays&&(input.officeDays===0||(Number.isFinite(input.commuteMinutes)&&input.commuteMinutes>=0&&input.commuteMinutes<=1440))&&Number.isFinite(input.overtime)&&input.overtime>=0&&input.overtime<=168}
+function calculateTimeCost(input){if(!isValidTimeModelInput(input))return null;const monthlyOfficialHours=input.hours*input.workDays*WEEKS_IN_MONTH;const monthlyCommuteHours=input.officeDays===0?0:2*(input.commuteMinutes/60)*input.officeDays*WEEKS_IN_MONTH;const monthlyOvertimeHours=input.overtime*WEEKS_IN_MONTH;const totalWorkRelatedHours=monthlyOfficialHours+monthlyCommuteHours+monthlyOvertimeHours;const officialHourlyRate=input.income/monthlyOfficialHours;const effectiveHourlyRate=input.income/totalWorkRelatedHours;const purchaseHours=input.purchase/effectiveHourlyRate;const scheduledWorkDays=purchaseHours/input.hours;return{monthlyOfficialHours,monthlyCommuteHours,monthlyOvertimeHours,totalWorkRelatedHours,officialHourlyRate,effectiveHourlyRate,purchaseHours,scheduledWorkDays}}
+// TIME_MODEL_END
+const state={purchase:150000,income:100000,hours:8,workDays:5,officeDays:3,commuteMinutes:60,overtime:0};let hasUserEdited=false,calculateSuccessTracked=false;
+const timeStateController=CalculatorState.createController({root:'results-card',messageElement:'time-state-message',resultElements:['purchase-hours','purchase-hours-word','result-purchase-price','scheduled-days-result','monthly-work','monthly-commute','monthly-overtime','monthly-total','effective-hourly-rate','scheduled-hourly-rate','export-income','export-effective-rate','export-schedule','export-office-days','export-commute']});
+window.canExportCalculation=()=>timeStateController.getState()===CalculatorState.STATES.READY;
+function isValidTimeState(){return Number.isFinite(state.income)&&state.income>0&&Number.isFinite(state.purchase)&&state.purchase>0&&Number.isFinite(state.hours)&&state.hours>0&&isValidTimeModelInput(state)}
+function parseInputNumber(value){if(value===''||value===null||value===undefined)return NaN;return Number(String(value).replace(/[\s\u00a0\u202f]/g,'').replace(',','.'))}
+function groupedInteger(value){return new Intl.NumberFormat('ru-RU',{maximumFractionDigits:0,useGrouping:true}).format(value)}
+function parseGroupedInteger(value){const normalized=String(value??'').replace(/[\s\u00a0\u202f]/g,'');return /^\d+$/.test(normalized)?Number(normalized):NaN}
+function handleMoneyInput(field,input){state[field]=parseGroupedInteger(input.value);markUserCalculation()}
+function formatMoneyInput(field,input){if(Number.isFinite(state[field]))input.value=groupedInteger(state[field])}
+function handleNumberInput(field,input){state[field]=parseInputNumber(input.value);if(field==='workDays'&&Number.isFinite(state.workDays)&&state.workDays>0){state.officeDays=Math.min(state.officeDays,state.workDays);renderOfficeDayOptions()}markUserCalculation()}
+function setOfficeDays(value){value=Number(value);if(!Number.isFinite(value)||value<0||value>state.workDays)return;state.officeDays=value;renderOfficeDayOptions();updateCommuteVisibility(true);markUserCalculation()}
+function handleOfficeDaysInput(input){state.officeDays=parseInputNumber(input.value);renderOfficeDaysHelper();updateCommuteVisibility(true);markUserCalculation()}
+function markUserCalculation(){hasUserEdited=true;update({userInitiated:true})}
+function renderOfficeDaysHelper(){const helper=document.getElementById('office-days-help');helper.textContent=!Number.isFinite(state.officeDays)||state.officeDays<0||state.officeDays>state.workDays?`Укажите значение от 0 до ${dec(state.workDays)}.`:state.officeDays===0?'Полностью удалённо':state.officeDays===state.workDays?'Каждый рабочий день с поездкой на работу.':`${dec(state.officeDays)} ${dayWord(state.officeDays)} в неделю с поездкой на работу.`}
+function renderOfficeDayOptions(){const box=document.getElementById('office-days-options');box.innerHTML='';if(state.workDays===5&&Number.isInteger(state.officeDays)){box.className='mt-3 grid grid-cols-6 gap-2';for(let value=0;value<=5;value++){const b=document.createElement('button'),active=value===state.officeDays;b.type='button';b.setAttribute('aria-pressed',String(active));b.setAttribute('aria-label',value===0?'0 дней, полностью удалённо':`${value} ${dayWord(value)} в офисе`);b.className=`min-h-12 rounded-xl border px-2 py-2 text-sm font-bold focus:ring-2 focus:ring-brand-500 ${active?'border-brand-600 bg-brand-600 text-white':'border-slate-300 bg-slate-50 dark:border-slate-700 dark:bg-slate-800'}`;b.textContent=String(value);b.addEventListener('click',()=>setOfficeDays(value));box.appendChild(b)}}else{box.className='mt-3';const wrapper=document.createElement('div'),input=document.createElement('input'),suffix=document.createElement('span');wrapper.className='relative max-w-48';input.id='office-days-input';input.type='number';input.inputMode='decimal';input.min='0';input.max=String(state.workDays);input.step='0.5';input.value=Number.isFinite(state.officeDays)?String(state.officeDays):'';input.setAttribute('aria-label','Дней с поездкой на работу в неделю');input.setAttribute('aria-describedby','office-days-help');input.className='min-h-12 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 pr-20 text-lg font-semibold outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-500/30 dark:border-slate-700 dark:bg-slate-800';input.addEventListener('input',()=>handleOfficeDaysInput(input));input.addEventListener('change',renderOfficeDayOptions);suffix.className='pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm text-slate-500 dark:text-slate-400';suffix.textContent='дн./нед.';wrapper.append(input,suffix);box.appendChild(wrapper)}renderOfficeDaysHelper();updateCommuteVisibility(false)}
+function updateCommuteVisibility(announce){const wrapper=document.getElementById('commute-field'),input=document.getElementById('commute-input'),remote=state.officeDays===0;wrapper.hidden=remote;input.disabled=remote;wrapper.setAttribute('aria-hidden',String(remote));if(announce)document.getElementById('commute-status').textContent=remote?'Дорога не учитывается при полностью удалённой работе.':'Поле времени на дорогу доступно.'}
+function toggleAdvanced(){const panel=document.getElementById('advanced-panel'),button=document.getElementById('advanced-toggle'),open=panel.hidden;panel.hidden=!open;button.setAttribute('aria-expanded',String(open));button.textContent=open?'Скрыть дополнительные параметры':'Уточнить график и дополнительное время'}
+function dec(value,max=1){return new Intl.NumberFormat('ru-RU',{maximumFractionDigits:max}).format(value)}function rounded(value){return new Intl.NumberFormat('ru-RU',{maximumFractionDigits:0}).format(Math.round(value))}function days(value){value=Math.round(value*10)/10;return dec(value,Number.isInteger(value)?0:1)}
+function hoursWord(value){if(!Number.isInteger(value))return'часа';value=Math.round(Math.abs(value));const a=value%100,b=value%10;if(a>=11&&a<=19)return'часов';if(b===1)return'час';if(b>=2&&b<=4)return'часа';return'часов'}function dayWord(value){if(!Number.isInteger(value))return'дня';const a=Math.abs(value)%100,b=Math.abs(value)%10;if(a>=11&&a<=19)return'дней';if(b===1)return'день';if(b>=2&&b<=4)return'дня';return'дней'}function workdayPhrase(value){if(!Number.isInteger(value))return'рабочего дня';const a=Math.abs(value)%100,b=Math.abs(value)%10;if(a>=11&&a<=19)return'рабочих дней';if(b===1)return'рабочий день';if(b>=2&&b<=4)return'рабочих дня';return'рабочих дней'}
+const perMonth=v=>`${rounded(v)} ч/мес.`,perHour=v=>`${rounded(v)} ₽/ч`,schedule=()=>`${dec(state.hours)} ${hoursWord(state.hours)} × ${dec(state.workDays)} ${dayWord(state.workDays)} в неделю`;
+function renderValidationState(){const checks={'purchase-input':Number.isFinite(state.purchase)&&state.purchase>0,'income-input':Number.isFinite(state.income)&&state.income>0,'hours-input':Number.isFinite(state.hours)&&state.hours>0&&state.hours<=24,'work-days-input':Number.isFinite(state.workDays)&&state.workDays>0&&state.workDays<=7,'office-days-input':Number.isFinite(state.officeDays)&&state.officeDays>=0&&state.officeDays<=state.workDays,'overtime-input':Number.isFinite(state.overtime)&&state.overtime>=0&&state.overtime<=168,'commute-input':state.officeDays===0||(Number.isFinite(state.commuteMinutes)&&state.commuteMinutes>=0&&state.commuteMinutes<=1440)};Object.entries(checks).forEach(([id,valid])=>document.getElementById(id)?.setAttribute('aria-invalid',String(!valid)))}
+function renderResult(r){const h=Math.round(r.purchaseHours),d=Math.round(r.scheduledWorkDays*10)/10;document.getElementById('purchase-hours').textContent=rounded(r.purchaseHours);document.getElementById('purchase-hours-word').textContent=hoursWord(h);document.getElementById('result-time-description').textContent=state.overtime>0?'Столько времени на работу, дорогу и указанное дополнительное время соответствует покупке за':'Столько времени на работу и дорогу соответствует покупке за';document.getElementById('result-purchase-price').textContent=formatMoney(state.purchase);document.getElementById('scheduled-days-result').textContent=`≈ ${days(d)} ${workdayPhrase(d)} по ${dec(state.hours)} ${hoursWord(state.hours)}`;document.getElementById('monthly-work').textContent=perMonth(r.monthlyOfficialHours);document.getElementById('monthly-commute').textContent=perMonth(r.monthlyCommuteHours);document.getElementById('monthly-overtime').textContent=perMonth(r.monthlyOvertimeHours);document.getElementById('monthly-total').textContent=perMonth(r.totalWorkRelatedHours);document.getElementById('effective-hourly-rate').textContent=perHour(r.effectiveHourlyRate);document.getElementById('scheduled-hourly-rate').textContent=perHour(r.officialHourlyRate);document.getElementById('assumption-line').textContent=`Считаем по графику ${schedule()}.`;document.getElementById('export-income').textContent=`${formatMoney(state.income)} в месяц`;document.getElementById('export-effective-rate').textContent=perHour(r.effectiveHourlyRate);document.getElementById('export-schedule').textContent=schedule();document.getElementById('export-office-days').textContent=state.officeDays===0?'0 — полностью удалённо':`${dec(state.officeDays)} ${dayWord(state.officeDays)} в неделю`;document.getElementById('export-commute').textContent=state.officeDays===0?'Не учитывается':`${dec(state.commuteMinutes)} мин. в одну сторону`}
+function syncUrlState(){if(!window.history?.replaceState)return;const url=new URL(location.href),values={price:state.purchase,income:state.income,hours:state.hours,days:state.workDays,office:state.officeDays,unpaid:state.overtime};Object.entries(values).forEach(([k,v])=>url.searchParams.set(k,String(v)));if(state.officeDays>0)url.searchParams.set('commute',String(state.commuteMinutes));else url.searchParams.delete('commute');history.replaceState(null,'',url)}
+function update(options={}){renderValidationState();const outcome=timeStateController.runCalculation({input:state,data:{},validateInput:isValidTimeState,validateData:()=>true,calculate:()=>calculateTimeCost(state),validateResult:r=>r!==null&&r.totalWorkRelatedHours>0&&r.effectiveHourlyRate>0,render:renderResult,invalidInputMessage:'Введите положительные цену и доход и проверьте параметры рабочего графика.',impossibleMessage:'Не удалось посчитать результат при этих значениях.'});if(outcome.ok&&options.userInitiated)syncUrlState();if(outcome.ok&&options.userInitiated&&hasUserEdited&&!calculateSuccessTracked){reachGoal('calculate_success');calculateSuccessTracked=true}}
+function applyUrlState(){const params=new URLSearchParams(location.search),map={price:'purchase',income:'income',hours:'hours',days:'workDays',office:'officeDays',commute:'commuteMinutes',unpaid:'overtime'};Object.entries(map).forEach(([p,f])=>{if(params.has(p)){const v=parseInputNumber(params.get(p));if(Number.isFinite(v))state[f]=v}});if(Number.isFinite(state.workDays)&&state.workDays>0)state.officeDays=Math.max(0,Math.min(state.officeDays,state.workDays));if(!isValidTimeModelInput(state))Object.assign(state,{purchase:150000,income:100000,hours:8,workDays:5,officeDays:3,commuteMinutes:60,overtime:0})}
+function populateInputs(){document.getElementById('purchase-input').value=groupedInteger(state.purchase);document.getElementById('income-input').value=groupedInteger(state.income);for(const[id,field]of[['hours-input','hours'],['work-days-input','workDays'],['commute-input','commuteMinutes'],['overtime-input','overtime']])document.getElementById(id).value=state[field]}
+window.addEventListener('DOMContentLoaded',()=>{const hasUrlState=location.search.length>1;applyUrlState();populateInputs();renderOfficeDayOptions();updateCommuteVisibility(false);update({userInitiated:false});if(hasUrlState&&timeStateController.getState()===CalculatorState.STATES.READY)syncUrlState()});
+</script>
+<script>if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(err=>console.log('SW registration failed:',err)));</script>
+</body></html>
