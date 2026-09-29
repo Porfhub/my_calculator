@@ -609,7 +609,7 @@
                 <div class="flex-1 min-w-0 text-right" id="mobile-saving-container">
                     <p id="mobile-saving-label" class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider truncate">Экономия</p>
                     <p id="mobile-saving" class="text-sm font-black text-brand-600 truncate tabular-nums">0 ₽</p>
-                    <span id="mobile-cta-text" class="text-sm font-black text-slate-900 dark:text-white hidden whitespace-nowrap">5 000 ₽/мес.</span>
+                    <span id="mobile-cta-text" class="text-sm font-black text-slate-900 dark:text-white hidden whitespace-nowrap">0 ₽/мес.</span>
                 </div>
             </div>
             <div class="grid grid-cols-1 gap-2">
@@ -1361,6 +1361,7 @@
             const valM = document.getElementById('mobile-saving');
             const ctaM = document.getElementById('mobile-cta-text');
             const labelM = document.getElementById('mobile-saving-label');
+            if (ctaM) ctaM.innerText = `${localFormatMoney(state.recurringPrepayment)}/мес.`;
             if (savedInt > 0 || savedM > 0) { 
                 if (valM) { valM.innerText = localFormatMoney(savedInt); valM.classList.remove('hidden'); }
                 if (ctaM) ctaM.classList.add('hidden');
