@@ -91,9 +91,28 @@
                 background: #0f172a;
                 border-top-color: #1e293b;
             }
+            #cost-range,
+            #downpayment-range,
+            #rate-range,
+            #term-range,
+            #payment-range,
+            #active-balance-range {
+                display: none !important;
+            }
+            body.mortgage-input-focused .mobile-sticky-results {
+                display: none !important;
+            }
             body {
                 padding-bottom: calc(10rem + env(safe-area-inset-bottom));
             }
+        }
+
+        #panel-new input[type="text"],
+        #panel-new input[type="number"],
+        #panel-existing input[type="text"],
+        #panel-existing input[type="number"] {
+            scroll-margin-top: 5rem;
+            scroll-margin-bottom: calc(11rem + env(safe-area-inset-bottom));
         }
 
         .tooltip {
@@ -364,7 +383,7 @@
                             <span class="text-sm font-bold text-slate-900 dark:text-white" id="cost-display">0 ₽</span>
                         </div>
                         <div class="relative rounded-lg shadow-sm">
-                            <input type="text" id="cost-input" oninput="handleCostInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
+                            <input type="text" inputmode="numeric" id="cost-input" oninput="handleCostInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                         </div>
                         <input type="range" id="cost-range" min="1000000" max="50000000" step="100000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('cost', this.value)">
@@ -376,7 +395,7 @@
                             <span class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded font-bold" id="downpayment-percent">0%</span>
                         </div>
                         <div class="relative rounded-lg shadow-sm">
-                            <input type="text" id="downpayment-input" oninput="handleDownpaymentInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
+                            <input type="text" inputmode="numeric" id="downpayment-input" oninput="handleDownpaymentInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                         </div>
                         <input type="range" id="downpayment-range" min="0" max="40000000" step="50000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('downpayment', this.value)">
@@ -854,6 +873,32 @@
 
         let mortgageCalculationRequested = false;
         let mortgageSuccessTracked = false;
+        const mortgageDiagnosticStages = new Set([
+            'simulation', 'primary_render', 'schedule_render', 'chart_render', 'history_render'
+        ]);
+        const mortgageDiagnosticKinds = new Set([
+            'invalid_financial_state', 'non_finite_result', 'incomplete_schedule',
+            'model_exception', 'render_exception', 'dependency_unavailable'
+        ]);
+        const reportedMortgageDiagnostics = new Set();
+
+        function reportMortgageDiagnostic(stage, kind) {
+            if (!mortgageDiagnosticStages.has(stage) || !mortgageDiagnosticKinds.has(kind)) return;
+            if (typeof window.ym !== 'function') return;
+
+            const diagnosticKey = `${stage}:${kind}`;
+            if (reportedMortgageDiagnostics.has(diagnosticKey)) return;
+
+            try {
+                window.ym(110360838, 'params', {
+                    mortgage_diagnostic: { stage, kind }
+                });
+                reportedMortgageDiagnostics.add(diagnosticKey);
+            } catch (error) {
+                console.error('Mortgage diagnostic reporting failed:', error);
+            }
+        }
+
         // Capture calculator edits before inline handlers recalculate; ignore unrelated page controls.
         function noteMortgageInput(event) {
             if (event.target.closest('#panel-new, #panel-existing')) mortgageCalculationRequested = true;
@@ -861,6 +906,47 @@
         document.addEventListener('input', noteMortgageInput, true);
         document.addEventListener('change', noteMortgageInput, true);
         document.addEventListener('click', noteMortgageInput, true);
+
+        const mortgageEditableInputSelector = [
+            '#panel-new input[type="text"]',
+            '#panel-new input[type="number"]',
+            '#panel-existing input[type="text"]',
+            '#panel-existing input[type="number"]'
+        ].join(', ');
+        let mortgageFocusScrollTimer = null;
+
+        function isMortgageEditableInput(target) {
+            return target && typeof target.matches === 'function' && target.matches(mortgageEditableInputSelector);
+        }
+
+        function minimumPaymentForMonths(principal, annualRate, months) {
+            const monthlyRate = annualRate / 1200;
+            if (monthlyRate === 0) return principal / months;
+            return principal * monthlyRate / (1 - Math.pow(1 + monthlyRate, -months));
+        }
+
+        document.addEventListener('focusin', (event) => {
+            if (!isMortgageEditableInput(event.target)) return;
+            document.body.classList.add('mortgage-input-focused');
+            if (typeof window.matchMedia === 'function' && !window.matchMedia('(max-width: 1023px)').matches) return;
+
+            if (mortgageFocusScrollTimer !== null) window.clearTimeout(mortgageFocusScrollTimer);
+            mortgageFocusScrollTimer = window.setTimeout(() => {
+                mortgageFocusScrollTimer = null;
+                if (document.activeElement === event.target && typeof event.target.scrollIntoView === 'function') {
+                    event.target.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' });
+                }
+            }, 300);
+        }, true);
+
+        document.addEventListener('focusout', (event) => {
+            if (!isMortgageEditableInput(event.target)) return;
+            window.setTimeout(() => {
+                if (!isMortgageEditableInput(document.activeElement)) {
+                    document.body.classList.remove('mortgage-input-focused');
+                }
+            }, 0);
+        }, true);
 
         function mortgageValidationMessage() {
             if (activeTab === 'new') {
@@ -871,6 +957,8 @@
                 if (state.mode === 'payment') {
                     const minimum = (state.cost - state.downPayment) * (state.rate / 1200);
                     if (!Number.isFinite(state.targetPayment) || state.targetPayment <= minimum) return 'Желаемый платёж не покрывает ежемесячные проценты. Увеличьте его или измените параметры кредита.';
+                    const maximumTermPayment = minimumPaymentForMonths(state.cost - state.downPayment, state.rate, 600);
+                    if (state.targetPayment < maximumTermPayment) return 'При таком платеже срок погашения превысит 50 лет. Увеличьте желаемый платёж.';
                 }
             } else {
                 if (!Number.isFinite(state.activeCurrentBalance) || state.activeCurrentBalance <= 0) return 'Укажите положительный остаток долга.';
@@ -878,6 +966,8 @@
                 if (state.isExistingKnowPayment) {
                     const minimum = state.activeCurrentBalance * (state.activeRate / 1200);
                     if (!Number.isFinite(state.activePayment) || state.activePayment <= minimum) return 'Введённый платёж не покрывает ежемесячные проценты. Расчёт невозможен.';
+                    const maximumTermPayment = minimumPaymentForMonths(state.activeCurrentBalance, state.activeRate, 600);
+                    if (state.activePayment < maximumTermPayment) return 'При таком платеже срок погашения превысит 50 лет. Увеличьте ежемесячный платёж.';
                 } else if (!Number.isInteger(state.activeOriginalTermYears) || state.activeOriginalTermYears < 1 || state.activePaidMonths < 0 || state.activePaidMonths >= state.activeOriginalTermYears * 12) {
                     return 'Проверьте первоначальный срок и количество уже выплаченных месяцев.';
                 }
@@ -1175,7 +1265,9 @@
                 if (state.includeInsurance && (m % 12 === 1)) { ins = balance * 0.01; totalInsurance += ins; }
                 
                 let interest = balance * mRate;
-                let scheduled = Math.min(currentPmt, balance + interest);
+                // Floating-point drift can leave a small balance after the final
+                // planned instalment at extreme rates and 50-year terms.
+                let scheduled = m === plannedMonths ? balance + interest : Math.min(currentPmt, balance + interest);
                 let principal = Math.max(0, scheduled - interest);
 
                 let prepay = 0;
@@ -1338,6 +1430,11 @@
         function updateChart(sWith, sWithout) {
             const canvas = document.getElementById('balanceChart');
             if (!canvas) return;
+            if (typeof Chart !== 'function') {
+                console.error('Balance chart rendering skipped: Chart.js is unavailable');
+                reportMortgageDiagnostic('chart_render', 'dependency_unavailable');
+                return;
+            }
             const ctx = canvas.getContext('2d');
             let labels = [], dWith = [], dWithout = []; let len = Math.max(sWith.length, sWithout.length); let step = len > 120 ? 6 : 2;
             for (let i = 0; i < len; i += step) { labels.push(`${Math.floor(i/12)+1}г`); dWith.push(i < sWith.length ? sWith[i].balance : 0); dWithout.push(i < sWithout.length ? sWithout[i].balance : 0); }
@@ -1401,26 +1498,63 @@
                 });
             } catch (e) {
                 console.error("Chart rendering skipped inside cycle:", e);
+                reportMortgageDiagnostic('chart_render', 'render_exception');
             }
         }
 
         function updateCalculations() {
             const validationError = mortgageValidationMessage();
             if (validationError) {
+                reportMortgageDiagnostic('simulation', 'invalid_financial_state');
                 mortgageStateController.transition(CalculatorState.STATES.INVALID_INPUT, { message: validationError });
                 return;
             }
 
+            let baseRes, preRes, loanAmount, monthlyPmt, savedInt, savedM;
+            let financialFailureKind = 'model_exception';
             try {
-            const baseRes = simulateMortgage(false); const preRes = simulateMortgage(true);
-            let loanAmount = activeTab === 'new' ? (state.cost - state.downPayment) : state.activeCurrentBalance;
-            let monthlyPmt = preRes.schedule.length > 0 ? preRes.schedule[0].payment : 0;
-            let savedInt = baseRes.totalInterest - preRes.totalInterest; let savedM = baseRes.realTerm - preRes.realTerm;
-            if (![loanAmount, monthlyPmt, savedInt, savedM, preRes.totalInterest, preRes.totalInsurance, preRes.totalPaid].every(Number.isFinite)
-                || loanAmount <= 0 || monthlyPmt <= 0 || preRes.realTerm <= 0) {
-                throw new Error('Invalid mortgage outcome');
+                if (typeof simulateMortgage !== 'function') {
+                    financialFailureKind = 'dependency_unavailable';
+                    throw new Error('Mortgage simulation is unavailable');
+                }
+                baseRes = simulateMortgage(false);
+                preRes = simulateMortgage(true);
+                loanAmount = activeTab === 'new' ? (state.cost - state.downPayment) : state.activeCurrentBalance;
+                monthlyPmt = preRes.schedule.length > 0 ? preRes.schedule[0].payment : 0;
+                savedInt = baseRes.totalInterest - preRes.totalInterest;
+                savedM = baseRes.realTerm - preRes.realTerm;
+                const schedulesAreFinite = [baseRes, preRes].every(result =>
+                    result && Array.isArray(result.schedule) && result.schedule.every(month =>
+                        [month.payment, month.interest, month.principal, month.prepayment, month.balance, month.insurance].every(Number.isFinite)
+                    )
+                );
+                if (!schedulesAreFinite
+                    || ![loanAmount, monthlyPmt, savedInt, savedM, preRes.totalInterest, preRes.totalInsurance, preRes.totalPaid].every(Number.isFinite)) {
+                    financialFailureKind = 'non_finite_result';
+                    throw new Error('Non-finite mortgage outcome');
+                }
+                const schedulesAreComplete = [baseRes, preRes].every(result =>
+                    result.schedule.length > 0 && result.schedule[result.schedule.length - 1].balance <= 0.01
+                );
+                if (!schedulesAreComplete) {
+                    financialFailureKind = 'incomplete_schedule';
+                    throw new Error('Incomplete mortgage schedule');
+                }
+                if (loanAmount <= 0 || monthlyPmt <= 0 || preRes.realTerm <= 0) {
+                    financialFailureKind = 'invalid_financial_state';
+                    throw new Error('Invalid mortgage outcome');
+                }
+            } catch (error) {
+                console.error('Mortgage financial calculation failed:', error);
+                reportMortgageDiagnostic('simulation', financialFailureKind);
+                mortgageStateController.transition(CalculatorState.STATES.CALCULATION_IMPOSSIBLE, {
+                    message: 'Расчёт временно не выполнен. Измените любой параметр и попробуйте снова.'
+                });
+                return;
             }
 
+            let bPct, iPct;
+            try {
             document.getElementById('res-loan-amount').innerText = localFormatMoney(loanAmount);
             document.getElementById('res-monthly-payment').innerText = localFormatMoney(monthlyPmt);
             document.getElementById('res-real-term').innerText = `${preRes.realTerm} мес.`;
@@ -1504,8 +1638,8 @@
             }
 
             let rTotal = loanAmount + preRes.totalInterest; 
-            let bPct = rTotal > 0 ? (loanAmount / rTotal) * 100 : 50;
-            let iPct = 100 - bPct;
+            bPct = rTotal > 0 ? (loanAmount / rTotal) * 100 : 50;
+            iPct = 100 - bPct;
             
             // Update percentage values
             const bodyTxt = document.getElementById('ratio-body-text');
@@ -1529,9 +1663,26 @@
                     <strong class="ratio-amount-value text-slate-900 dark:text-white font-extrabold">${localFormatMoney(bankInterest)}</strong>
                 </div>`;
 
+            document.getElementById('cost-display').innerText = localFormatMoney(state.cost);
+            document.getElementById('downpayment-percent').innerText = state.cost > 0 ? Math.round((state.downPayment / state.cost) * 100) + '%' : '0%';
+            document.getElementById('rate-display').innerText = state.rate + '%';
+            document.getElementById('term-display').innerText = state.termYears + ' ' + localGetYearWord(state.termYears);
+            if (document.getElementById('payment-display')) document.getElementById('payment-display').innerText = localFormatMoney(state.targetPayment);
+            document.getElementById('recurring-display').innerText = localFormatMoney(state.recurringPrepayment);
+            } catch (error) {
+                console.error('Mortgage primary result rendering failed:', error);
+                reportMortgageDiagnostic('primary_render', 'render_exception');
+                return;
+            }
+
+            // The financial result is ready before optional detail and chart rendering.
+            mortgageStateController.transition(CalculatorState.STATES.READY, { clearResults: false });
+            let resultDetailsRendered = true;
+
             // Existing History Card
-            const historyCard = document.getElementById('existing-history-card');
-            if (historyCard) {
+            try {
+                const historyCard = document.getElementById('existing-history-card');
+                if (historyCard) {
                 if (activeTab === 'existing') {
                     historyCard.classList.remove('hidden');
                     if (state.isExistingKnowPayment) {
@@ -1586,12 +1737,20 @@
                 } else {
                     historyCard.classList.add('hidden');
                 }
+                }
+            } catch (error) {
+                resultDetailsRendered = false;
+                console.error('Mortgage history rendering skipped:', error);
+                reportMortgageDiagnostic('history_render', 'render_exception');
             }
 
             // Render/Update the Donut Chart
             const donutCanvas = document.getElementById('ratioDonutChart');
             if (donutCanvas) {
-                try {
+                if (typeof Chart !== 'function') {
+                    console.error('Donut chart rendering skipped: Chart.js is unavailable');
+                    reportMortgageDiagnostic('chart_render', 'dependency_unavailable');
+                } else try {
                     if (ratioDonutInstance) ratioDonutInstance.destroy();
                     const isDark = document.documentElement.classList.contains('dark');
                     ratioDonutInstance = new Chart(donutCanvas, {
@@ -1623,27 +1782,27 @@
                     });
                 } catch (e) {
                     console.error("Donut chart rendering skipped:", e);
+                    reportMortgageDiagnostic('chart_render', 'render_exception');
                 }
             }
 
-            document.getElementById('cost-display').innerText = localFormatMoney(state.cost);
-            document.getElementById('downpayment-percent').innerText = state.cost > 0 ? Math.round((state.downPayment / state.cost) * 100) + '%' : '0%';
-            document.getElementById('rate-display').innerText = state.rate + '%';
-            document.getElementById('term-display').innerText = state.termYears + ' ' + localGetYearWord(state.termYears);
-            if (document.getElementById('payment-display')) document.getElementById('payment-display').innerText = localFormatMoney(state.targetPayment);
-            document.getElementById('recurring-display').innerText = localFormatMoney(state.recurringPrepayment);
-
-            renderAmortizationTable(preRes.schedule); updateChart(preRes.schedule, baseRes.schedule);
-            mortgageStateController.transition(CalculatorState.STATES.READY, { clearResults: false });
-            if (mortgageCalculationRequested && !mortgageSuccessTracked) {
+            try {
+                renderAmortizationTable(preRes.schedule);
+            } catch (error) {
+                resultDetailsRendered = false;
+                console.error('Mortgage amortization table rendering skipped:', error);
+                reportMortgageDiagnostic('schedule_render', 'render_exception');
+            }
+            try {
+                updateChart(preRes.schedule, baseRes.schedule);
+            } catch (error) {
+                resultDetailsRendered = false;
+                console.error('Mortgage balance chart rendering skipped:', error);
+                reportMortgageDiagnostic('chart_render', 'render_exception');
+            }
+            if (resultDetailsRendered && mortgageCalculationRequested && !mortgageSuccessTracked) {
                 reachGoal('calculate_success');
                 mortgageSuccessTracked = true;
-            }
-            } catch (error) {
-                console.error('Mortgage calculation failed:', error);
-                mortgageStateController.transition(CalculatorState.STATES.CALCULATION_IMPOSSIBLE, {
-                    message: 'При текущих параметрах невозможно построить корректный ипотечный график.'
-                });
             }
         }
 
