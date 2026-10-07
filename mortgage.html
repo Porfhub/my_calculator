@@ -99,7 +99,7 @@
             #active-balance-range {
                 display: none !important;
             }
-            body.mortgage-input-focused .mobile-sticky-results {
+            body.mortgage-keyboard-open .mobile-sticky-results {
                 display: none !important;
             }
             body {
@@ -459,7 +459,7 @@
                             <span class="text-sm font-bold text-slate-950 dark:text-white" id="payment-display">0 ₽</span>
                         </div>
                         <div class="relative rounded-lg shadow-sm">
-                            <input type="text" id="payment-input" oninput="handleTargetPaymentInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
+                            <input type="text" inputmode="numeric" id="payment-input" oninput="handleTargetPaymentInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                         </div>
                         <input type="range" id="payment-range" min="10000" max="500000" step="5000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('payment', this.value)">
@@ -483,7 +483,7 @@
                     <div id="active-payment-container" class="space-y-2 hidden">
                         <label for="active-payment-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Фактический ежемесячный платеж</label>
                         <div class="relative rounded-lg shadow-sm">
-                            <input type="text" id="active-payment-input" oninput="handleActivePaymentInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
+                            <input type="text" inputmode="numeric" id="active-payment-input" oninput="handleActivePaymentInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                         </div>
                     </div>
@@ -492,7 +492,7 @@
                     <div id="active-amount-container" class="space-y-2">
                         <label for="active-amount-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Сколько взяли в кредит первоначально</label>
                         <div class="relative rounded-lg shadow-sm">
-                            <input type="text" id="active-amount-input" oninput="handleActiveAmountInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
+                            <input type="text" inputmode="numeric" id="active-amount-input" oninput="handleActiveAmountInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                         </div>
                     </div>
@@ -543,7 +543,7 @@
                             <button id="btn-calc-theoretical" onclick="calcTheoreticalBalance()" class="text-[11px] text-brand-700 dark:text-brand-400 underline font-semibold">По графику</button>
                         </div>
                         <div class="relative shadow-sm">
-                            <input type="text" id="active-balance-input" oninput="handleActiveBalanceInput(this)" class="w-full pl-4 pr-12 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-extrabold text-lg text-slate-900 dark:text-white shadow-inner">
+                            <input type="text" inputmode="numeric" id="active-balance-input" oninput="handleActiveBalanceInput(this)" class="w-full pl-4 pr-12 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-extrabold text-lg text-slate-900 dark:text-white shadow-inner">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                         </div>
                         <input type="range" id="active-balance-range" min="100000" max="30000000" step="50000" class="w-full accent-brand-600 h-1 mt-2 cursor-pointer" oninput="syncActiveBalanceRange(this.value)">
@@ -602,7 +602,7 @@
                             <span class="text-sm font-bold text-emerald-600" id="recurring-display">0 ₽</span>
                         </div>
                         <div class="relative rounded-lg shadow-sm">
-                            <input type="text" id="recurring-input" oninput="handleRecurringInput(this)" class="w-full pl-4 pr-12 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-slate-800 dark:text-white">
+                            <input type="text" inputmode="numeric" id="recurring-input" oninput="handleRecurringInput(this)" class="w-full pl-4 pr-12 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                         </div>
                         <!-- Варианты пресетов для быстрой досрочки -->
@@ -846,6 +846,7 @@
 
         let chartInstance = null;
         let ratioDonutInstance = null;
+        let targetPaymentWasEdited = false;
         const mortgageStateController = CalculatorState.createController({
             root: 'screenshot-area',
             messageElement: 'mortgage-state-message',
@@ -914,9 +915,49 @@
             '#panel-existing input[type="number"]'
         ].join(', ');
         let mortgageFocusScrollTimer = null;
+        const mortgageVisualViewport = window.visualViewport;
+
+        function getMortgageViewportExtent() {
+            if (mortgageVisualViewport && Number.isFinite(mortgageVisualViewport.height)) {
+                return mortgageVisualViewport.height + (Number(mortgageVisualViewport.offsetTop) || 0);
+            }
+            return Number.isFinite(window.innerHeight) ? window.innerHeight : 0;
+        }
+
+        let mortgageViewportBaseline = getMortgageViewportExtent();
 
         function isMortgageEditableInput(target) {
             return target && typeof target.matches === 'function' && target.matches(mortgageEditableInputSelector);
+        }
+
+        function updateMortgageKeyboardVisibility() {
+            const isMobile = typeof window.matchMedia === 'function'
+                && window.matchMedia('(max-width: 1023px)').matches;
+            const viewportExtent = getMortgageViewportExtent();
+            const hasEditableFocus = isMortgageEditableInput(document.activeElement);
+
+            if (!isMobile || !hasEditableFocus) {
+                document.body.classList.remove('mortgage-keyboard-open');
+                if (viewportExtent > 0) mortgageViewportBaseline = viewportExtent;
+                return;
+            }
+
+            if (viewportExtent <= 0 || mortgageViewportBaseline <= 0) {
+                document.body.classList.remove('mortgage-keyboard-open');
+                return;
+            }
+
+            if (viewportExtent > mortgageViewportBaseline) mortgageViewportBaseline = viewportExtent;
+            const keyboardThreshold = Math.max(120, mortgageViewportBaseline * 0.15);
+            const keyboardIsOpen = mortgageViewportBaseline - viewportExtent > keyboardThreshold;
+            document.body.classList[keyboardIsOpen ? 'add' : 'remove']('mortgage-keyboard-open');
+        }
+
+        if (mortgageVisualViewport && typeof mortgageVisualViewport.addEventListener === 'function') {
+            mortgageVisualViewport.addEventListener('resize', updateMortgageKeyboardVisibility);
+            mortgageVisualViewport.addEventListener('scroll', updateMortgageKeyboardVisibility);
+        } else if (typeof window.addEventListener === 'function') {
+            window.addEventListener('resize', updateMortgageKeyboardVisibility);
         }
 
         function minimumPaymentForMonths(principal, annualRate, months) {
@@ -925,9 +966,22 @@
             return principal * monthlyRate / (1 - Math.pow(1 + monthlyRate, -months));
         }
 
+        function syncTargetPaymentControls({ syncInput = true } = {}) {
+            const paymentInput = document.getElementById('payment-input');
+            const paymentRange = document.getElementById('payment-range');
+            const paymentDisplay = document.getElementById('payment-display');
+            if (syncInput && paymentInput) paymentInput.value = localFormatNumber(state.targetPayment);
+            if (paymentRange) {
+                const rangeStep = Number(paymentRange.step) || 5000;
+                paymentRange.max = Math.max(500000, Math.ceil(state.targetPayment / rangeStep) * rangeStep);
+                paymentRange.value = state.targetPayment;
+            }
+            if (paymentDisplay) paymentDisplay.innerText = localFormatMoney(state.targetPayment);
+        }
+
         document.addEventListener('focusin', (event) => {
             if (!isMortgageEditableInput(event.target)) return;
-            document.body.classList.add('mortgage-input-focused');
+            updateMortgageKeyboardVisibility();
             if (typeof window.matchMedia === 'function' && !window.matchMedia('(max-width: 1023px)').matches) return;
 
             if (mortgageFocusScrollTimer !== null) window.clearTimeout(mortgageFocusScrollTimer);
@@ -942,9 +996,7 @@
         document.addEventListener('focusout', (event) => {
             if (!isMortgageEditableInput(event.target)) return;
             window.setTimeout(() => {
-                if (!isMortgageEditableInput(document.activeElement)) {
-                    document.body.classList.remove('mortgage-input-focused');
-                }
+                updateMortgageKeyboardVisibility();
             }, 0);
         }, true);
 
@@ -1102,8 +1154,9 @@
         }
 
         function handleTargetPaymentInput(el) {
+            targetPaymentWasEdited = true;
             state.targetPayment = formatInputField(el, el.value);
-            document.getElementById('payment-range').value = state.targetPayment; updateCalculations();
+            syncTargetPaymentControls({ syncInput: false }); updateCalculations();
         }
 
         function handleTermInput(el) {
@@ -1137,6 +1190,7 @@
             } else if (field === 'term') {
                 state.termYears = v;
             } else if (field === 'payment') {
+                targetPaymentWasEdited = true;
                 state.targetPayment = v;
             }
             updateInputsDOM(); updateCalculations();
@@ -1165,6 +1219,15 @@
         function toggleInsurance() { state.includeInsurance = document.getElementById('insurance-toggle').checked; updateCalculations(); }
 
         function switchCalculationMode(mode) {
+            if (mode === 'payment' && state.mode !== 'payment' && !targetPaymentWasEdited) {
+                const principal = state.cost - state.downPayment;
+                const months = state.termYears * 12;
+                const derivedPayment = minimumPaymentForMonths(principal, state.rate, months);
+                if (Number.isFinite(derivedPayment) && derivedPayment > 0) {
+                    state.targetPayment = Math.ceil(derivedPayment);
+                    syncTargetPaymentControls();
+                }
+            }
             state.mode = mode;
             const bT = document.getElementById('mode-term-btn'); const bP = document.getElementById('mode-payment-btn');
             const cT = document.getElementById('term-input-container'); const cP = document.getElementById('payment-input-container');
@@ -1229,6 +1292,7 @@
         }
         function resetAll() {
             state.cost = 10000000; state.downPayment = 2000000; state.rate = 16.0; state.mode = 'term'; state.termYears = 20; state.targetPayment = 100000;
+            targetPaymentWasEdited = false;
             state.activeOriginalLoan = 8000000; state.activeRate = 12.0; state.activeOriginalTermYears = 20; state.activePaidMonths = 36;
             state.recurringPrepayment = 0; state.customPrepayments = {}; state.includeInsurance = false;
             document.getElementById('insurance-toggle').checked = false;
@@ -1371,7 +1435,7 @@
                             </div>
                             <div class="col-span-1 lg:col-span-2 min-w-0 lg:text-center">
                                 <span class="lg:hidden block mb-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Досрочно</span>
-                                <input type="text" aria-label="Досрочный платёж за месяц ${m.month}" value="${state.customPrepayments[m.month] ? localFormatNumber(state.customPrepayments[m.month]) : ''}" oninput="formatTableInputVisual(this)" class="w-full max-w-24 lg:w-20 text-center py-0.5 bg-brand-50 dark:bg-slate-800 border rounded font-bold text-xs outline-none text-slate-900 dark:text-white">
+                                <input type="text" inputmode="numeric" aria-label="Досрочный платёж за месяц ${m.month}" value="${state.customPrepayments[m.month] ? localFormatNumber(state.customPrepayments[m.month]) : ''}" oninput="formatTableInputVisual(this)" class="w-full max-w-24 lg:w-20 text-center py-0.5 bg-brand-50 dark:bg-slate-800 border rounded font-bold text-xs outline-none text-slate-900 dark:text-white">
                             </div>
                             <div class="col-span-2 lg:col-span-2 min-w-0 lg:text-right">
                                 <span class="lg:hidden block mb-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Остаток долга</span>
@@ -1812,8 +1876,7 @@
             document.getElementById('downpayment-range').max = state.cost; document.getElementById('downpayment-range').value = state.downPayment;
             document.getElementById('rate-input').value = state.rate; document.getElementById('rate-range').value = state.rate;
             document.getElementById('term-input').value = state.termYears; document.getElementById('term-range').value = state.termYears;
-            if (document.getElementById('payment-input')) document.getElementById('payment-input').value = localFormatNumber(state.targetPayment); 
-            if (document.getElementById('payment-range')) document.getElementById('payment-range').value = state.targetPayment;
+            syncTargetPaymentControls();
             document.getElementById('active-amount-input').value = localFormatNumber(state.activeOriginalLoan); document.getElementById('active-rate-input').value = state.activeRate;
             document.getElementById('active-term-input').value = state.activeOriginalTermYears; document.getElementById('active-paid-months-input').value = state.activePaidMonths;
             document.getElementById('active-balance-input').value = localFormatNumber(state.activeCurrentBalance);

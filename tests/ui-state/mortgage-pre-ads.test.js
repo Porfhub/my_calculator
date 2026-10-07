@@ -9,9 +9,11 @@ const trust = fs.readFileSync(path.join(__dirname, '../../js/trust-layer.js'), '
 const utilities = fs.readFileSync(path.join(__dirname, '../../js/ui-utils.js'), 'utf8');
 const script = mortgage.slice(mortgage.indexOf('<script>', mortgage.indexOf('id="mobile-overpayment"')) + 8, mortgage.lastIndexOf('</script>'));
 
-function page({ withCanvases = false, stubChart = true } = {}) {
+function page({ withCanvases = false, stubChart = true, withVisualViewport = true, mobile = true } = {}) {
     const elements = new Map();
     const listeners = {};
+    const viewportListeners = {};
+    const windowListeners = {};
     const goals = [];
     const transitions = [];
     const transitionDetails = [];
@@ -20,7 +22,8 @@ function page({ withCanvases = false, stubChart = true } = {}) {
     const scrollCalls = [];
     const element = (id) => {
         if (!elements.has(id)) elements.set(id, {
-            innerText: '', innerHTML: '', classList: { add() {}, remove() {} }, getContext: () => ({})
+            innerText: '', innerHTML: '', value: '', selectionStart: 0,
+            classList: { add() {}, remove() {} }, getContext: () => ({}), setSelectionRange() {}
         });
         return elements.get(id);
     };
@@ -31,11 +34,20 @@ function page({ withCanvases = false, stubChart = true } = {}) {
         body: { classList: { add: (name) => bodyClasses.add(name), remove: (name) => bodyClasses.delete(name) } },
         documentElement: { classList: { contains: () => false } }
     };
-    const window = {
-        matchMedia: () => ({ matches: true }),
-        setTimeout: (callback) => { callback(); return 1; },
-        clearTimeout() {}
+    const visualViewport = {
+        height: 844,
+        width: 390,
+        offsetTop: 0,
+        addEventListener: (name, listener) => { (viewportListeners[name] ??= []).push(listener); }
     };
+    const window = {
+        innerHeight: 844,
+        matchMedia: () => ({ matches: mobile }),
+        setTimeout: (callback) => { callback(); return 1; },
+        clearTimeout() {},
+        addEventListener: (name, listener) => { (windowListeners[name] ??= []).push(listener); }
+    };
+    if (withVisualViewport) window.visualViewport = visualViewport;
     const context = vm.createContext({
         document, window, Intl, console: { error: (...args) => errors.push(args.map(String).join(' ')) },
         reachGoal: (goal) => goals.push(goal),
@@ -53,21 +65,34 @@ function page({ withCanvases = false, stubChart = true } = {}) {
     if (stubChart) vm.runInContext('updateChart = () => {};', context);
     const run = (expression) => vm.runInContext(expression, context);
     const value = (id) => Number(element(id).innerText.replace(/[^\d]/g, ''));
-    const focusedInput = {
+    const focusedInputs = [0, 1].map(() => ({
         matches: () => true,
         scrollIntoView: (options) => scrollCalls.push(options)
-    };
+    }));
     return {
         run, value, element, goals, transitions, transitionDetails, errors, bodyClasses, scrollCalls,
         edit: () => listeners.input.forEach((listener) => listener({ target: { closest: () => ({}) } })),
-        focusInput: () => {
-            document.activeElement = focusedInput;
-            listeners.focusin.forEach((listener) => listener({ target: focusedInput }));
+        focusInput: (index = 0) => {
+            const previous = document.activeElement;
+            const next = focusedInputs[index];
+            document.activeElement = next;
+            if (previous) listeners.focusout.forEach((listener) => listener({ target: previous }));
+            listeners.focusin.forEach((listener) => listener({ target: next }));
         },
         blurInput: () => {
+            const previous = document.activeElement;
             document.activeElement = null;
-            listeners.focusout.forEach((listener) => listener({ target: focusedInput }));
-        }
+            if (previous) listeners.focusout.forEach((listener) => listener({ target: previous }));
+        },
+        resizeViewport: (height) => {
+            visualViewport.height = height;
+            (viewportListeners.resize ?? []).forEach((listener) => listener());
+        },
+        resizeWindow: (height) => {
+            window.innerHeight = height;
+            (windowListeners.resize ?? []).forEach((listener) => listener());
+        },
+        hasFocusedInput: () => focusedInputs.includes(document.activeElement)
     };
 }
 
@@ -498,13 +523,27 @@ test('valid inputs recover after invalid and extreme states, including the Famil
     assert.ok(!/NaN|Infinity/.test(p.element('res-total-interest').innerText));
 });
 
-test('mobile core sliders are hidden while typed values, focus visibility and sticky-summary recovery remain wired', () => {
-    assert.match(mortgage, /<input type="text" inputmode="numeric" id="cost-input"/);
-    assert.match(mortgage, /<input type="text" inputmode="numeric" id="downpayment-input"/);
+test('all mortgage money-entry text inputs request a numeric keyboard', () => {
+    const inputTags = [...mortgage.matchAll(/<input\b[^>]*>/g)].map((match) => match[0]);
+    for (const id of [
+        'cost-input', 'downpayment-input', 'payment-input', 'recurring-input',
+        'active-payment-input', 'active-amount-input', 'active-balance-input'
+    ]) {
+        const tag = inputTags.find((input) => input.includes(`id="${id}"`));
+        assert.ok(tag, `${id} must exist`);
+        assert.match(tag, /inputmode="numeric"/, `${id} must request a numeric keyboard`);
+    }
+    const customPrepayment = inputTags.find((input) => input.includes('aria-label="Досрочный платёж за месяц'));
+    assert.ok(customPrepayment, 'custom prepayment input template must exist');
+    assert.match(customPrepayment, /inputmode="numeric"/);
+});
+
+test('mobile core sliders stay hidden and sticky summary follows keyboard viewport geometry', () => {
     for (const id of ['cost-range', 'downpayment-range', 'rate-range', 'term-range', 'payment-range', 'active-balance-range']) {
         assert.match(mortgage, new RegExp(`#${id}[\\s\\S]*?display: none !important;`));
     }
-    assert.match(mortgage, /body\.mortgage-input-focused \.mobile-sticky-results\s*{\s*display: none !important;/);
+    assert.match(mortgage, /body\.mortgage-keyboard-open \.mobile-sticky-results\s*{\s*display: none !important;/);
+    assert.doesNotMatch(mortgage, /body\.mortgage-input-focused \.mobile-sticky-results/);
     assert.match(mortgage, /scroll-margin-bottom: calc\(11rem \+ env\(safe-area-inset-bottom\)\)/);
 
     const p = page();
@@ -514,10 +553,91 @@ test('mobile core sliders are hidden while typed values, focus visibility and st
     assert.equal(p.transitions.at(-1), 'READY');
 
     p.focusInput();
-    assert.equal(p.bodyClasses.has('mortgage-input-focused'), true);
+    assert.equal(p.bodyClasses.has('mortgage-keyboard-open'), false);
     assert.equal(p.scrollCalls.at(-1).block, 'center');
     assert.equal(p.scrollCalls.at(-1).inline, 'nearest');
     assert.equal(p.scrollCalls.at(-1).behavior, 'smooth');
+
+    p.resizeViewport(500);
+    assert.equal(p.bodyClasses.has('mortgage-keyboard-open'), true);
+    p.focusInput(1);
+    assert.equal(p.bodyClasses.has('mortgage-keyboard-open'), true);
+
+    p.resizeViewport(844);
+    assert.equal(p.hasFocusedInput(), true);
+    assert.equal(p.bodyClasses.has('mortgage-keyboard-open'), false);
+
+    p.resizeViewport(500);
+    assert.equal(p.bodyClasses.has('mortgage-keyboard-open'), true);
     p.blurInput();
-    assert.equal(p.bodyClasses.has('mortgage-input-focused'), false);
+    assert.equal(p.bodyClasses.has('mortgage-keyboard-open'), false);
+
+    p.resizeViewport(844);
+    assert.equal(p.bodyClasses.has('mortgage-keyboard-open'), false);
+
+    const fallback = page({ withVisualViewport: false });
+    fallback.focusInput();
+    fallback.resizeWindow(500);
+    assert.equal(fallback.bodyClasses.has('mortgage-keyboard-open'), true);
+    fallback.resizeWindow(844);
+    assert.equal(fallback.hasFocusedInput(), true);
+    assert.equal(fallback.bodyClasses.has('mortgage-keyboard-open'), false);
+
+    const desktop = page({ mobile: false });
+    desktop.focusInput();
+    desktop.resizeViewport(500);
+    assert.equal(desktop.bodyClasses.has('mortgage-keyboard-open'), false);
+});
+
+test('payment mode seeds the current term payment until the user explicitly edits it', () => {
+    const fresh = page();
+    fresh.run('updateCalculations()');
+    const displayedTermPayment = fresh.value('res-monthly-payment');
+    fresh.run("switchCalculationMode('payment')");
+    assert.equal(fresh.transitions.at(-1), 'READY');
+    assert.ok(Math.abs(fresh.run('state.targetPayment') - displayedTermPayment) <= 1);
+    assert.equal(Number(String(fresh.element('payment-input').value).replace(/\D/g, '')), fresh.run('state.targetPayment'));
+    assert.equal(Number(fresh.element('payment-range').value), fresh.run('state.targetPayment'));
+
+    const changed = page();
+    changed.run('state.cost = 13000000; state.downPayment = 2600000; state.rate = 14; state.termYears = 25; updateInputsDOM(); updateCalculations()');
+    const changedTermPayment = changed.value('res-monthly-payment');
+    changed.run("switchCalculationMode('payment')");
+    assert.equal(changed.transitions.at(-1), 'READY');
+    assert.ok(Math.abs(changed.run('state.targetPayment') - changedTermPayment) <= 1);
+
+    changed.run(`(() => {
+        const input = document.getElementById('payment-input');
+        input.value = '150 000';
+        input.selectionStart = input.value.length;
+        handleTargetPaymentInput(input);
+    })()`);
+    assert.equal(changed.run('state.targetPayment'), 150000);
+    changed.run("switchCalculationMode('term'); switchCalculationMode('payment')");
+    assert.equal(changed.run('state.targetPayment'), 150000);
+    assert.equal(changed.transitions.at(-1), 'READY');
+
+    changed.run(`(() => {
+        const input = document.getElementById('payment-input');
+        input.value = '100 000';
+        input.selectionStart = input.value.length;
+        handleTargetPaymentInput(input);
+    })()`);
+    assert.equal(changed.transitions.at(-1), 'INVALID_INPUT');
+    assert.match(changed.transitionDetails.at(-1).message, /не покрывает ежемесячные проценты/);
+
+    changed.run("resetAll(); switchCalculationMode('payment')");
+    assert.equal(changed.run('targetPaymentWasEdited'), false);
+    assert.equal(changed.transitions.at(-1), 'READY');
+    assert.notEqual(changed.run('state.targetPayment'), 100000);
+
+    const highPayment = page();
+    highPayment.run('state.cost = 50000000; state.downPayment = 0; state.rate = 50; state.termYears = 1; updateInputsDOM(); switchCalculationMode("payment")');
+    assert.equal(highPayment.transitions.at(-1), 'READY');
+    assert.ok(Number(highPayment.element('payment-range').max) >= highPayment.run('state.targetPayment'));
+
+    const fiftyYears = page();
+    fiftyYears.run('state.cost = 1000000; state.downPayment = 0; state.rate = 0.1; state.termYears = 50; updateInputsDOM(); switchCalculationMode("payment")');
+    assert.equal(fiftyYears.transitions.at(-1), 'READY');
+    assert.ok(fiftyYears.run('simulateMortgage(true).schedule.length') <= 600);
 });
