@@ -9,37 +9,66 @@ const trust = fs.readFileSync(path.join(__dirname, '../../js/trust-layer.js'), '
 const utilities = fs.readFileSync(path.join(__dirname, '../../js/ui-utils.js'), 'utf8');
 const script = mortgage.slice(mortgage.indexOf('<script>', mortgage.indexOf('id="mobile-overpayment"')) + 8, mortgage.lastIndexOf('</script>'));
 
-function page() {
+function page({ withCanvases = false, stubChart = true } = {}) {
     const elements = new Map();
     const listeners = {};
     const goals = [];
     const transitions = [];
+    const transitionDetails = [];
+    const errors = [];
+    const bodyClasses = new Set();
+    const scrollCalls = [];
     const element = (id) => {
         if (!elements.has(id)) elements.set(id, {
-            innerText: '', innerHTML: '', classList: { add() {}, remove() {} }
+            innerText: '', innerHTML: '', classList: { add() {}, remove() {} }, getContext: () => ({})
         });
         return elements.get(id);
     };
     const document = {
-        getElementById: (id) => ['ratioDonutChart', 'balanceChart'].includes(id) ? null : element(id),
-        addEventListener: (name, listener) => { (listeners[name] ??= []).push(listener); }
+        getElementById: (id) => ['ratioDonutChart', 'balanceChart'].includes(id) && !withCanvases ? null : element(id),
+        addEventListener: (name, listener) => { (listeners[name] ??= []).push(listener); },
+        activeElement: null,
+        body: { classList: { add: (name) => bodyClasses.add(name), remove: (name) => bodyClasses.delete(name) } },
+        documentElement: { classList: { contains: () => false } }
+    };
+    const window = {
+        matchMedia: () => ({ matches: true }),
+        setTimeout: (callback) => { callback(); return 1; },
+        clearTimeout() {}
     };
     const context = vm.createContext({
-        document, window: {}, Intl, console: { error() {} },
+        document, window, Intl, console: { error: (...args) => errors.push(args.map(String).join(' ')) },
         reachGoal: (goal) => goals.push(goal),
         CalculatorState: {
             STATES: { READY: 'READY', INVALID_INPUT: 'INVALID_INPUT', CALCULATION_IMPOSSIBLE: 'CALCULATION_IMPOSSIBLE' },
-            createController: () => ({ transition: (status) => {
+            createController: () => ({ transition: (status, details = {}) => {
                 transitions.push(status);
+                transitionDetails.push({ status, ...details });
                 if (status !== 'READY') for (const id of ['res-total-interest', 'res-bank-interest', 'res-insurance', 'res-all-paid']) element(id).innerText = '—';
             }, getState: () => transitions.at(-1) })
         }
     });
     vm.runInContext(script, context);
-    vm.runInContext('renderAmortizationTable = () => {}; updateChart = () => {};', context);
+    vm.runInContext('renderAmortizationTable = () => {};', context);
+    if (stubChart) vm.runInContext('updateChart = () => {};', context);
     const run = (expression) => vm.runInContext(expression, context);
     const value = (id) => Number(element(id).innerText.replace(/[^\d]/g, ''));
-    return { run, value, element, goals, transitions, edit: () => listeners.input.forEach((listener) => listener({ target: { closest: () => ({}) } })) };
+    const focusedInput = {
+        matches: () => true,
+        scrollIntoView: (options) => scrollCalls.push(options)
+    };
+    return {
+        run, value, element, goals, transitions, transitionDetails, errors, bodyClasses, scrollCalls,
+        edit: () => listeners.input.forEach((listener) => listener({ target: { closest: () => ({}) } })),
+        focusInput: () => {
+            document.activeElement = focusedInput;
+            listeners.focusin.forEach((listener) => listener({ target: focusedInput }));
+        },
+        blurInput: () => {
+            document.activeElement = null;
+            listeners.focusout.forEach((listener) => listener({ target: focusedInput }));
+        }
+    };
 }
 
 test('insurance accounting, labels and methodology agree for both settings', () => {
@@ -210,12 +239,123 @@ test('calculate_success follows a valid result update, never invalid input or re
     assert.deepEqual(p.goals, ['calculate_success']);
 });
 
-test('a failed result update cannot send the success goal', () => {
+test('detail and chart rendering failures keep the calculated result ready without sending the success goal', () => {
+    for (const [renderer, logMessage, stage] of [
+        ['renderAmortizationTable', 'Mortgage amortization table rendering skipped', 'schedule_render'],
+        ['updateChart', 'Mortgage balance chart rendering skipped', 'chart_render']
+    ]) {
+        const p = page();
+        p.run('window.__diagnosticCalls = []; window.ym = (...args) => window.__diagnosticCalls.push(args)');
+        p.edit();
+        p.run(`${renderer} = () => { throw new Error("render failed"); }; updateCalculations()`);
+        assert.equal(p.transitions.at(-1), 'READY');
+        assert.equal(p.value('res-loan-amount'), 8000000);
+        assert.ok(p.value('res-monthly-payment') > 0);
+        assert.ok(p.errors.some((message) => message.includes(logMessage)));
+        assert.equal(p.run('window.__diagnosticCalls.length'), 1);
+        assert.equal(p.run('window.__diagnosticCalls[0][2].mortgage_diagnostic.stage'), stage);
+        assert.equal(p.run('window.__diagnosticCalls[0][2].mortgage_diagnostic.kind'), 'render_exception');
+        assert.deepEqual(p.goals, []);
+    }
+});
+
+test('financial failures remain separate from rendering failures and use neutral recovery copy', () => {
     const p = page();
-    p.edit();
-    p.run('renderAmortizationTable = () => { throw new Error("render failed"); }; updateCalculations()');
+    p.run('window.__diagnosticCalls = []; window.ym = (...args) => window.__diagnosticCalls.push(args)');
+    p.run('simulateMortgage = () => { throw new Error("model failed"); }; updateCalculations()');
     assert.equal(p.transitions.at(-1), 'CALCULATION_IMPOSSIBLE');
-    assert.deepEqual(p.goals, []);
+    assert.equal(p.transitionDetails.at(-1).message, 'Расчёт временно не выполнен. Измените любой параметр и попробуйте снова.');
+    assert.ok(p.errors.some((message) => message.includes('Mortgage financial calculation failed')));
+    assert.doesNotMatch(p.transitionDetails.at(-1).message, /невозможно построить.*график/i);
+    assert.equal(p.run('JSON.stringify(window.__diagnosticCalls[0])'), JSON.stringify([
+        110360838,
+        'params',
+        { mortgage_diagnostic: { stage: 'simulation', kind: 'model_exception' } }
+    ]));
+});
+
+test('mortgage diagnostics are defensive, categorical session params and never goals', () => {
+    const helper = mortgage.slice(
+        mortgage.indexOf('const mortgageDiagnosticStages'),
+        mortgage.indexOf('// Capture calculator edits')
+    );
+    assert.match(helper, /window\.ym\(110360838, 'params'/);
+    assert.doesNotMatch(helper, /reachGoal|exception\.message|error\.message|stack|location|href/);
+
+    const p = page();
+    assert.doesNotThrow(() => p.run("reportMortgageDiagnostic('simulation', 'model_exception')"));
+    p.run('window.__diagnosticCalls = []; window.ym = (...args) => window.__diagnosticCalls.push(args)');
+    p.run("reportMortgageDiagnostic('chart_render', 'dependency_unavailable'); reportMortgageDiagnostic('chart_render', 'dependency_unavailable'); reportMortgageDiagnostic('unknown_stage', 'render_exception')");
+    assert.equal(p.run('window.__diagnosticCalls.length'), 1);
+    assert.equal(p.run('window.__diagnosticCalls[0][0]'), 110360838);
+    assert.equal(p.run('window.__diagnosticCalls[0][1]'), 'params');
+    assert.equal(p.run('Object.keys(window.__diagnosticCalls[0][2]).join()'), 'mortgage_diagnostic');
+    assert.equal(p.run('Object.keys(window.__diagnosticCalls[0][2].mortgage_diagnostic).sort().join()'), 'kind,stage');
+    assert.equal(p.run('window.__diagnosticCalls[0][2].mortgage_diagnostic.stage'), 'chart_render');
+    assert.equal(p.run('window.__diagnosticCalls[0][2].mortgage_diagnostic.kind'), 'dependency_unavailable');
+    assert.doesNotThrow(() => p.run("window.ym = () => { throw new Error('collector failed') }; reportMortgageDiagnostic('history_render', 'render_exception')"));
+});
+
+test('Chart.js unavailable or throwing degrades charts without destroying the primary result', () => {
+    for (const [chartSetup, expectedKind] of [
+        ['', 'dependency_unavailable'],
+        ['Chart = function() { throw new Error("chart failed"); }', 'render_exception']
+    ]) {
+        const p = page({ withCanvases: true, stubChart: false });
+        p.run('window.__diagnosticCalls = []; window.ym = (...args) => window.__diagnosticCalls.push(args)');
+        if (chartSetup) p.run(chartSetup);
+        p.edit();
+        p.run('updateCalculations()');
+        assert.equal(p.transitions.at(-1), 'READY');
+        assert.equal(p.value('res-loan-amount'), 8000000);
+        assert.ok(p.value('res-monthly-payment') > 0);
+        assert.equal(p.run('window.__diagnosticCalls.length'), 1);
+        assert.equal(p.run('window.__diagnosticCalls[0][2].mortgage_diagnostic.stage'), 'chart_render');
+        assert.equal(p.run('window.__diagnosticCalls[0][2].mortgage_diagnostic.kind'), expectedKind);
+        assert.deepEqual(p.goals, ['calculate_success']);
+    }
+});
+
+test('available Chart.js receives finite donut and balance-series data', () => {
+    const p = page({ withCanvases: true, stubChart: false });
+    p.run(`
+        window.__chartConfigs = [];
+        Chart = function(target, config) {
+            window.__chartConfigs.push(config);
+            this.destroy = () => {};
+        };
+        updateCalculations();
+    `);
+    assert.equal(p.transitions.at(-1), 'READY');
+    assert.equal(p.run('window.__chartConfigs.length'), 2);
+    assert.equal(p.run('window.__chartConfigs[0].type'), 'doughnut');
+    assert.equal(p.run('window.__chartConfigs[0].data.datasets[0].data.every(Number.isFinite)'), true);
+    assert.equal(p.run('window.__chartConfigs[1].type'), 'line');
+    assert.equal(p.run('window.__chartConfigs[1].data.datasets.every(dataset => dataset.data.every(Number.isFinite))'), true);
+});
+
+test('a primary DOM failure is diagnostic-only and does not become a financial error', () => {
+    const p = page();
+    p.run('updateCalculations()');
+    assert.equal(p.transitions.at(-1), 'READY');
+    assert.equal(p.value('res-loan-amount'), 8000000);
+
+    p.run(`
+        window.__diagnosticCalls = [];
+        window.ym = (...args) => window.__diagnosticCalls.push(args);
+        window.__getElementById = document.getElementById;
+        document.getElementById = (id) => {
+            if (id === 'res-loan-amount') throw new Error('primary render failed');
+            return window.__getElementById(id);
+        };
+        state.cost = 13000000;
+        updateCalculations();
+    `);
+    assert.equal(p.transitions.at(-1), 'READY');
+    assert.equal(p.value('res-loan-amount'), 8000000);
+    assert.equal(p.run('window.__diagnosticCalls[0][2].mortgage_diagnostic.stage'), 'primary_render');
+    assert.equal(p.run('window.__diagnosticCalls[0][2].mortgage_diagnostic.kind'), 'render_exception');
+    assert.ok(p.errors.some((message) => message.includes('Mortgage primary result rendering failed')));
 });
 
 test('mortgage scenarios preserve payment and interest direction and finite results', () => {
@@ -238,4 +378,146 @@ test('mortgage scenarios preserve payment and interest direction and finite resu
     assert.ok(c.payment > a.payment && c.interest < a.interest);
     assert.ok(d.payment < a.payment && d.interest > a.interest);
     assert.ok(e.payment < a.payment && e.interest < a.interest);
+});
+
+test('term mode stays finite and ready across the paid-traffic boundary matrix', () => {
+    const p = page();
+    const outcome = p.run(`(() => {
+        const costs = [1000000, 4500000, 7500000, 13000000, 30000000, 43000000, 50000000];
+        const rates = [0.1, 14, 16, 23.8, 35, 50];
+        const terms = [1, 5, 20, 25, 34, 50];
+        const failures = [];
+        let checked = 0;
+        state.mode = 'term';
+        state.recurringPrepayment = 0;
+        state.customPrepayments = {};
+        for (const cost of costs) {
+            const downPayments = [0, cost * 0.15, cost * 0.2, cost * 0.3, cost * 0.9, cost - 50000];
+            for (const downPayment of downPayments) {
+                for (const rate of rates) {
+                    for (const termYears of terms) {
+                        state.cost = cost;
+                        state.downPayment = Math.round(downPayment);
+                        state.rate = rate;
+                        state.termYears = termYears;
+                        updateCalculations();
+                        const result = simulateMortgage(true);
+                        const last = result.schedule.at(-1);
+                        checked++;
+                        if (mortgageStateController.getState() !== CalculatorState.STATES.READY
+                            || !Number.isFinite(result.totalInterest)
+                            || !Number.isFinite(result.totalPaid)
+                            || !last || !Number.isFinite(last.balance) || last.balance > 0.01
+                            || result.schedule.some(month => ![month.payment, month.interest, month.principal, month.balance].every(Number.isFinite))) {
+                            failures.push({ cost, downPayment, rate, termYears, state: mortgageStateController.getState(), lastBalance: last && last.balance });
+                        }
+                    }
+                }
+            }
+        }
+        return { checked, failures };
+    })()`);
+    assert.equal(outcome.checked, 1512);
+    assert.equal(outcome.failures.length, 0, JSON.stringify(outcome.failures));
+});
+
+test('valid payment mode remains finite across representative costs and rates', () => {
+    const p = page();
+    const outcome = p.run(`(() => {
+        const costs = [1000000, 4500000, 7500000, 13000000, 30000000, 43000000, 50000000];
+        const rates = [0.1, 14, 16, 23.8, 35, 50];
+        const failures = [];
+        let checked = 0;
+        state.mode = 'payment';
+        state.recurringPrepayment = 0;
+        state.customPrepayments = {};
+        for (const cost of costs) {
+            for (const rate of rates) {
+                state.cost = cost;
+                state.downPayment = Math.round(cost * 0.2);
+                state.rate = rate;
+                const balance = state.cost - state.downPayment;
+                const monthlyRate = rate / 1200;
+                const months = 20 * 12;
+                const annuity = monthlyRate === 0
+                    ? balance / months
+                    : balance * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+                state.targetPayment = annuity * 1.05;
+                updateCalculations();
+                const result = simulateMortgage(true);
+                const last = result.schedule.at(-1);
+                checked++;
+                if (mortgageStateController.getState() !== CalculatorState.STATES.READY
+                    || !last || last.balance > 0.01
+                    || result.schedule.some(month => ![month.payment, month.interest, month.principal, month.balance].every(Number.isFinite))) {
+                    failures.push({ cost, rate, state: mortgageStateController.getState(), lastBalance: last && last.balance });
+                }
+            }
+        }
+        return { checked, failures };
+    })()`);
+    assert.equal(outcome.checked, 42);
+    assert.equal(outcome.failures.length, 0, JSON.stringify(outcome.failures));
+});
+
+test('payment mode rejects schedules beyond the supported 50-year horizon and recovers', () => {
+    const p = page();
+    p.run("state.mode = 'payment'; state.cost = 50000000; state.downPayment = 10000000; state.rate = 0.1; state.targetPayment = 3334; updateCalculations()");
+    assert.equal(p.transitions.at(-1), 'INVALID_INPUT');
+    assert.match(p.transitionDetails.at(-1).message, /превысит 50 лет/);
+
+    p.run('state.targetPayment = minimumPaymentForMonths(state.cost - state.downPayment, state.rate, 240); updateCalculations()');
+    assert.equal(p.transitions.at(-1), 'READY');
+    const result = p.run('simulateMortgage(true)');
+    assert.ok(result.schedule.length <= 240);
+    assert.ok(result.schedule.at(-1).balance <= 0.01);
+});
+
+test('valid inputs recover after invalid and extreme states, including the Family preset', () => {
+    const p = page();
+    p.run('updateCalculations()');
+    assert.equal(p.transitions.at(-1), 'READY');
+
+    p.run('state.cost = 43000000; state.downPayment = 43000000; state.rate = 23.8; state.termYears = 34; updateCalculations()');
+    assert.equal(p.transitions.at(-1), 'INVALID_INPUT');
+
+    p.run("applyFlatPreset('family')");
+    assert.equal(p.transitions.at(-1), 'READY');
+    assert.equal(p.value('res-loan-amount'), 10400000);
+
+    p.run('state.cost = 50000000; state.downPayment = 45000000; state.rate = 50; state.termYears = 50; updateCalculations()');
+    assert.equal(p.transitions.at(-1), 'READY');
+
+    p.run('state.downPayment = state.cost; updateCalculations()');
+    assert.equal(p.transitions.at(-1), 'INVALID_INPUT');
+    p.run('state.downPayment = 15000000; state.rate = 35; state.termYears = 25; updateCalculations()');
+    assert.equal(p.transitions.at(-1), 'READY');
+
+    p.run('for (let i = 0; i < 25; i++) updateCalculations()');
+    assert.equal(p.transitions.at(-1), 'READY');
+    assert.ok(!/NaN|Infinity/.test(p.element('res-total-interest').innerText));
+});
+
+test('mobile core sliders are hidden while typed values, focus visibility and sticky-summary recovery remain wired', () => {
+    assert.match(mortgage, /<input type="text" inputmode="numeric" id="cost-input"/);
+    assert.match(mortgage, /<input type="text" inputmode="numeric" id="downpayment-input"/);
+    for (const id of ['cost-range', 'downpayment-range', 'rate-range', 'term-range', 'payment-range', 'active-balance-range']) {
+        assert.match(mortgage, new RegExp(`#${id}[\\s\\S]*?display: none !important;`));
+    }
+    assert.match(mortgage, /body\.mortgage-input-focused \.mobile-sticky-results\s*{\s*display: none !important;/);
+    assert.match(mortgage, /scroll-margin-bottom: calc\(11rem \+ env\(safe-area-inset-bottom\)\)/);
+
+    const p = page();
+    p.run('state.cost = 43000000; state.downPayment = 12900000; state.rate = 23.8; state.termYears = 34; updateInputsDOM(); updateCalculations()');
+    assert.equal(p.element('cost-range').value, 43000000);
+    assert.equal(p.element('downpayment-range').value, 12900000);
+    assert.equal(p.transitions.at(-1), 'READY');
+
+    p.focusInput();
+    assert.equal(p.bodyClasses.has('mortgage-input-focused'), true);
+    assert.equal(p.scrollCalls.at(-1).block, 'center');
+    assert.equal(p.scrollCalls.at(-1).inline, 'nearest');
+    assert.equal(p.scrollCalls.at(-1).behavior, 'smooth');
+    p.blurInput();
+    assert.equal(p.bodyClasses.has('mortgage-input-focused'), false);
 });
