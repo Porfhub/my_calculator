@@ -14,10 +14,9 @@ const {
     unavailableDataset,
     validateDataset
 } = require('../../data_validation/validate');
+const { getPolicy } = require('../../data_validation/policies');
 
 const NOW = new Date('2026-09-01T06:00:00.000Z');
-const INFLATION_SOURCE_PUBLISHED_AT = '2026-08-31';
-const INFLATION_FETCHED_AT = '2026-09-01T05:00:00.000Z';
 
 function validRates(overrides = {}) {
     const keyRate = overrides.keyRate || { value_percent: 14, effective_from: '2026-07-27' };
@@ -50,12 +49,8 @@ function validRates(overrides = {}) {
 }
 
 function inflationFixture() {
-    const fixture = parseJsonStrict(fs.readFileSync(path.join(__dirname, '..', '..', 'inflation.json'), 'utf8'));
-    // Production provenance moves forward; these tests own a fixed, valid timeline.
-    fixture.metadata.source_published_at = INFLATION_SOURCE_PUBLISHED_AT;
-    fixture.metadata.last_successful_fetch_at = INFLATION_FETCHED_AT;
-    fixture.metadata.last_attempt_at = NOW.toISOString();
-    return fixture;
+    // Own the complete state, including status and payload, independently of daily updates.
+    return parseJsonStrict(fs.readFileSync(path.join(__dirname, 'fixtures', 'inflation.json'), 'utf8'));
 }
 
 test('strict parser rejects duplicate object keys', () => {
@@ -128,7 +123,7 @@ test('rate anomaly threshold quarantines a large official jump', () => {
     );
 });
 
-test('inflation schema and semantic invariants accept the repository snapshot', () => {
+test('inflation schema and semantic invariants accept the fixed complete fixture', () => {
     validateDataset('inflation', inflationFixture(), { now: NOW });
 });
 
@@ -178,6 +173,29 @@ test('inflation freshness follows publication grace and hard TTL', () => {
     assert.equal(unavailable.metadata.status, 'unavailable');
     assert.equal(unavailable.metadata.status_reason, 'freshness_exceeded');
     assert.deepEqual(unavailable.annual, []);
+});
+
+test('inflation freshness enforces exact UTC publication and hard TTL boundaries', () => {
+    const policy = getPolicy('inflation');
+    const fixture = inflationFixture();
+    const scenarioYear = fixture.metadata.data_through + 2;
+    const deadline = Date.UTC(scenarioYear, policy.completedYearPublicationMonth - 1,
+        policy.completedYearPublicationDay, 23, 59, 59, 999);
+    const at = (timestamp, status = 'ok') => {
+        const value = inflationFixture();
+        value.metadata.status = status;
+        value.metadata.status_reason = status === 'ok' ? null : 'fetch_failed';
+        value.metadata.last_attempt_at = new Date(timestamp).toISOString();
+        return () => validateDataset('inflation', value, { now: new Date(timestamp) });
+    };
+
+    at(deadline - 1)();
+    at(deadline)();
+    assert.throws(at(deadline + 1), { stage: 'freshness', reason: 'freshness_exceeded' });
+    at(deadline + 1, 'stale')();
+    at(deadline + policy.missingYearHardTtlMs, 'stale')();
+    assert.throws(at(deadline + policy.missingYearHardTtlMs + 1, 'stale'),
+        { stage: 'freshness', reason: 'freshness_exceeded' });
 });
 
 test('stale inflation cannot mutate the last verified payload', () => {
