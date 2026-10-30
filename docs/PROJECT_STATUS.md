@@ -1,5 +1,9 @@
 # Статус проекта «Ясномера»
 
+> Исторический сентябрьский статус. Текущая стадия, production/прототипы и следующий шаг:
+> [project-context/00_PROJECT_MASTER_STATUS.md](project-context/00_PROJECT_MASTER_STATUS.md).
+> Приведённые ниже проценты не являются текущей проверкой готовности.
+
 ## Current Status
 
 - **Release stage:** Public Launch Candidate.

@@ -10,7 +10,6 @@ const { buildRatesData, parseControlRateHtml, parseKeyRateXml, updateRates } = r
 const { updateInflation } = require('../../update_inflation');
 
 const NOW = new Date('2026-09-01T06:00:00.000Z');
-const INFLATION_SOURCE_PUBLISHED_AT = '2026-08-31';
 
 function officialRate(valuePercent = 14) {
     return {
@@ -21,11 +20,10 @@ function officialRate(valuePercent = 14) {
 }
 
 function officialInflation() {
-    const current = parseJsonStrict(fs.readFileSync(path.join(__dirname, '..', '..', 'inflation.json'), 'utf8'));
+    const current = parseJsonStrict(fs.readFileSync(path.join(__dirname, 'fixtures', 'inflation.json'), 'utf8'));
     return {
         exportUrl: current.metadata.source_export_url,
-        // The updater scenario owns its clock instead of inheriting moving production provenance.
-        sourcePublishedAt: INFLATION_SOURCE_PUBLISHED_AT,
+        sourcePublishedAt: current.metadata.source_published_at,
         checksum: current.metadata.source_checksum_sha256,
         annual: current.annual
     };
@@ -65,6 +63,38 @@ test('invalid rate candidate is fail-closed and never published as a number', as
     });
     assert.equal(result.metadata.status, 'unavailable');
     assert.equal(result.cb_rate, null);
+});
+
+test('unchanged official rate refreshes fetch timestamps even after the saved snapshot expires', async () => {
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'yasnomera-rates-refresh-'));
+    const ratesPath = path.join(directory, 'rates.json');
+    try {
+        const first = await updateRates({ ratesPath, now: NOW, loader: async () => officialRate() });
+        const nextNow = new Date(NOW.getTime() + 8 * 24 * 60 * 60 * 1000);
+        assert.throws(() => validateDataset('rates', first, { now: nextNow }), { reason: 'freshness_exceeded' });
+        const refreshed = await updateRates({ ratesPath, now: nextNow, loader: async () => officialRate() });
+        assert.deepEqual(refreshed.key_rate, first.key_rate);
+        assert.equal(refreshed.metadata.status, 'ok');
+        assert.equal(refreshed.metadata.last_successful_fetch_at, nextNow.toISOString());
+        assert.equal(refreshed.fetched_at, nextNow.toISOString());
+        validateDataset('rates', parseJsonStrict(fs.readFileSync(ratesPath, 'utf8')), { now: nextNow });
+    } finally {
+        fs.rmSync(directory, { recursive: true, force: true });
+    }
+});
+
+test('failed rate refresh after hard TTL clears the expired number without advancing successful fetch', async () => {
+    const previous = await buildRatesData({ previousData: null, now: NOW, loader: async () => officialRate() });
+    const nextNow = new Date(NOW.getTime() + 8 * 24 * 60 * 60 * 1000);
+    const failed = await buildRatesData({ previousData: previous, now: nextNow, loader: async () => {
+        throw new Error('official source unavailable');
+    } });
+    assert.equal(failed.metadata.status, 'unavailable');
+    assert.equal(failed.metadata.status_reason, 'freshness_exceeded');
+    assert.equal(failed.key_rate, null);
+    assert.equal(failed.cb_rate, null);
+    assert.equal(failed.metadata.last_successful_fetch_at, null);
+    validateDataset('rates', failed, { now: nextNow });
 });
 
 test('network failure without a trusted rate snapshot publishes unavailable', async () => {

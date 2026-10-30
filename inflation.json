@@ -1,12 +1,12 @@
 {
   "metadata": {
     "schema_version": 2,
-    "status": "stale",
+    "status": "ok",
     "source_name": "Росстат / ЕМИСС",
     "source_url": "https://www.fedstat.ru/indicator/31074",
     "source_landing_url": "https://rosstat.gov.ru/statistics/price",
-    "source_export_url": "https://rosstat.gov.ru/storage/mediabank/ipc_mes_08-2026.xlsx",
-    "source_checksum_sha256": "4ef8b1d7a70d3b3e40260d4374b063a176b6fd628d7bf7289a7343ab621f6ebf",
+    "source_export_url": "https://rosstat.gov.ru/storage/mediabank/ipc_mes_09-2026.xlsx",
+    "source_checksum_sha256": "540553b4fce35ed2c57e5497f1f1fa1011c3da4dcf39d7191185760568f97d3e",
     "indicator_id": "31074",
     "showcase_indicator_id": "11521100300010200001",
     "indicator_name": "Индекс потребительских цен на товары и услуги",
@@ -16,10 +16,10 @@
     "unit": "percent",
     "frequency": "annual",
     "data_through": 2025,
-    "source_published_at": "2026-09-11",
-    "last_successful_fetch_at": "2026-09-12T07:25:46.027Z",
-    "last_attempt_at": "2026-10-07T09:30:05.709Z",
-    "status_reason": "timeout"
+    "source_published_at": "2026-10-09",
+    "last_successful_fetch_at": "2026-10-30T15:51:53.311Z",
+    "last_attempt_at": "2026-10-30T15:51:53.311Z",
+    "status_reason": null
   },
   "annual": [
     {

@@ -186,7 +186,7 @@ test('financial data helpers accept ok/stale datasets and reject unavailable pay
         key_rate: { value_percent: 14 },
         cb_rate: 14
     };
-    const inflation = JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'inflation.json'), 'utf8'));
+    const inflation = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data-validation', 'fixtures', 'inflation.json'), 'utf8'));
     inflation.metadata.status = 'stale';
     inflation.metadata.status_reason = 'fetch_failed';
 

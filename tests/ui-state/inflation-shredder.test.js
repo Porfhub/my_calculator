@@ -12,12 +12,12 @@ const {
     normalizeInflationData
 } = require('../../js/api.js');
 
-function repositoryInflation() {
-    return JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'inflation.json'), 'utf8'));
+function inflationFixture() {
+    return JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data-validation', 'fixtures', 'inflation.json'), 'utf8'));
 }
 
 test('schema v2 normalization exposes the complete official annual series', () => {
-    const dataset = normalizeInflationData(repositoryInflation());
+    const dataset = normalizeInflationData(inflationFixture());
     const records = getInflationRecords(dataset);
 
     assert.equal(dataset.metadata.schema_version, 2);
@@ -28,7 +28,7 @@ test('schema v2 normalization exposes the complete official annual series', () =
 });
 
 test('default shredder period produces a finite non-zero inflation impact', () => {
-    const records = getInflationRecords(repositoryInflation());
+    const records = getInflationRecords(inflationFixture());
     const result = calculateInflationImpact(records, 2016, 1000);
     const expectedFactor = records
         .filter((record) => record.year >= 2016)
@@ -46,7 +46,7 @@ test('default shredder period produces a finite non-zero inflation impact', () =
 });
 
 test('every selectable official year produces a complete finite series', () => {
-    const records = getInflationRecords(repositoryInflation());
+    const records = getInflationRecords(inflationFixture());
 
     for (const record of records) {
         const result = calculateInflationImpact(records, record.year, 125000);
@@ -58,7 +58,7 @@ test('every selectable official year produces a complete finite series', () => {
 });
 
 test('impossible input and incomplete series fail closed', () => {
-    const records = getInflationRecords(repositoryInflation());
+    const records = getInflationRecords(inflationFixture());
 
     assert.throws(() => calculateInflationImpact(records, 2016, 0), /Invalid inflation calculation input/);
     assert.throws(() => calculateInflationImpact(records, 1999, 1000), /Selected year is unavailable/);
@@ -71,16 +71,16 @@ test('impossible input and incomplete series fail closed', () => {
 test('legacy, incomplete and unofficial inflation payloads are rejected', () => {
     assert.throws(() => normalizeInflationData({ 2025: 5.59 }), /Unsupported inflation schema/);
 
-    const incomplete = repositoryInflation();
+    const incomplete = inflationFixture();
     incomplete.annual.splice(3, 1);
     assert.throws(() => normalizeInflationData(incomplete), /unique and consecutive/);
 
-    const technical = repositoryInflation();
+    const technical = inflationFixture();
     technical.annual[0].inflation_percent = null;
     technical.annual[0].cpi_index = 100;
     assert.throws(() => normalizeInflationData(technical), /Invalid inflation record/);
 
-    const unofficial = repositoryInflation();
+    const unofficial = inflationFixture();
     unofficial.metadata.source_url = 'https://example.com/inflation';
     assert.throws(() => normalizeInflationData(unofficial), /Unsupported inflation source/);
 });
@@ -99,13 +99,13 @@ test('inflation fetch fails closed when the response is not schema v2', async (c
 });
 
 test('stale remains usable with disclosure while unavailable contains no calculation data', () => {
-    const stale = repositoryInflation();
+    const stale = inflationFixture();
     stale.metadata.status = 'stale';
     stale.metadata.status_reason = 'fetch_failed';
     assert.equal(getInflationRecords(stale).length, 26);
     assert.match(getInflationStatusMessage(stale), /последние доступные официальные данные/);
 
-    const unavailable = repositoryInflation();
+    const unavailable = inflationFixture();
     unavailable.metadata.status = 'unavailable';
     unavailable.metadata.status_reason = 'freshness_exceeded';
     unavailable.metadata.data_through = null;
