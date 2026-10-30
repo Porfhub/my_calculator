@@ -13,7 +13,7 @@
 - Код и история: `Porfhub/my_calculator`, проверенная база `origin/main` **bf9e38771a578043d3eaf642e9fb04ed7e9c5edf** от 07.10.2026. Рабочая копия: `C:\Users\Porf\Documents\GitHub\my_calculator`.
 - Production прочитан 30.10.2026: HTML `https://yasnomera.ru/mortgage.html` совпадает с этой базой main после нормализации переводов строк. Production `rates.json` по-прежнему имеет fetch от 07.10.2026. Никакие production-файлы этой задачей не изменялись.
 - Продуктовая история вне Git восстановлена из чатов **«PM 2.0»** (`6aaf9a56-a228-83eb-a94c-535cec552a4a`, сообщения 30.10) и **«Continue redesign audit»** (`6ac62fd4-8294-83ed-a860-582981fdf180`, итерации B+/Final). Это исторические отчёты, не новая проверка кабинетов рекламы/аналитики или архивов прототипов.
-- Ветка текущего исправления: **`codex/repair-data-pipeline-project-context`**. Пока PR не принят и не прошёл production workflow, локальное исправление нельзя называть исправлением production.
+- Ветка текущего исправления: **`codex/repair-data-pipeline-project-context`**, [PR #91](https://github.com/Porfhub/my_calculator/pull/91), **open, не merged**. Пока PR не принят и не прошёл production workflow, локальное исправление нельзя называть исправлением production.
 
 ## Production и инфраструктура
 
