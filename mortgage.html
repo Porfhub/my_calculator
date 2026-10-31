@@ -158,7 +158,7 @@
                 margin-left: 0;
             }
         }
-        
+
         .scrollbar-hide::-webkit-scrollbar {
             display: none;
         }
@@ -313,69 +313,240 @@
     <script src="js/ui-utils.js"></script>
     <script src="js/trust-layer.js"></script>
     <link rel="stylesheet" href="css/product-polish.css">
+<style>
+/* All overrides are confined to the mortgage page and its isolated PNG clone. */
+.mortgage-page{--page:#f3f6f7;--surface:#fff;--soft:#eef3f5;--line:#dce3e8;--text:#15212c;--muted:#5c6c7b;--accent:#087f63;--interest:#986419;background:var(--page)!important;color:var(--text)!important;font-family:Arial,Helvetica,sans-serif}
+.dark .mortgage-page{--page:#181f25;--surface:#232d37;--soft:#2b3743;--line:#43515e;--text:#f1f5f8;--muted:#bbc7d3;--accent:#65dec1;--interest:#e7af61}
+.mortgage-page [hidden]{display:none!important}
+.mortgage-page .surface{background:var(--surface)!important;color:var(--text);border:1px solid var(--line)!important;border-radius:16px;box-shadow:0 3px 14px #10202c04;padding:24px}
+.mortgage-page h2{font-size:21px;line-height:1.3;font-weight:700;letter-spacing:-.3px}
+.mortgage-page .muted{color:var(--muted)}.mortgage-page .small{font-size:12px;line-height:1.6}
+.mortgage-page button,.mortgage-page summary{min-height:44px}
+.mortgage-page button{font-weight:600}
+.mortgage-page input:not([type=checkbox]):not([type=radio]):not([type=range]){background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:9px;min-width:0;max-width:100%;min-height:48px;font-size:19px;font-weight:600}
+.dark .mortgage-page input:not([type=checkbox]):not([type=radio]):not([type=range]){background:#2b3743}
+.mortgage-page input[type=range]{accent-color:#07876b;height:6px}
+.mortgage-page input[type=checkbox],.mortgage-page input[type=radio]{accent-color:#07876b}
+.mortgage-page input:focus-visible,.mortgage-page button:focus-visible,.mortgage-page a:focus-visible,.mortgage-page summary:focus-visible{outline:3px solid #29b698!important;outline-offset:3px}
+.mortgage-page :is(.text-slate-400,.text-slate-500){color:var(--muted)}
+.dark .mortgage-page :is(.text-slate-400,.text-slate-500,.dark\:text-slate-400,.dark\:text-slate-500){color:var(--muted)}
+.mortgage-page .mortgage-header{background:linear-gradient(110deg,#087b58,#10463c 48%,#142030);color:#fff}
+.mortgage-page .mortgage-header>div{max-width:1248px;margin:auto;display:flex;align-items:center;gap:22px;min-height:76px;padding:12px 84px 12px 24px!important}
+.mortgage-page .brand-link{display:flex;align-items:center;gap:10px;font-size:24px;font-weight:800;letter-spacing:-.5px;white-space:nowrap}
+.mortgage-page .brand-link img{width:32px;height:32px}
+.mortgage-page .mortgage-header p{font-size:12px;color:#e0efea;line-height:1.4}
+.mortgage-page .catalog-link{margin-left:auto;font-size:13px;white-space:nowrap}
+.mortgage-page .product-theme-control{top:16px!important;right:max(24px,calc((100vw - 1200px)/2))!important}
+.mortgage-page #theme-toggle{background:#ffffff18!important;color:#fff!important;border-color:#ffffff40}
+.mortgage-page .mortgage-main{max-width:1248px;margin:auto;padding:24px!important}
+.mortgage-intro{margin-bottom:26px}.mortgage-intro>a{display:inline-flex;align-items:center;min-height:32px;color:var(--muted);font-size:13px;margin-bottom:12px}
+.mortgage-intro h1{font-size:34px;line-height:1.2;font-weight:750;letter-spacing:-1px}.mortgage-intro>p{font-size:18px;margin-top:8px;color:var(--muted)}
+.mortgage-layout{display:grid;grid-template-columns:minmax(340px,420px) minmax(0,1fr);gap:20px 24px;align-items:start}
+.mortgage-layout>*{min-width:0}
+.mortgage-results,.mortgage-detail-results{display:contents}
+.mortgage-conditions{grid-column:1;grid-row:1/4}
+.mortgage-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--soft);padding:4px;border-radius:11px;margin-bottom:14px}
+.mortgage-tabs button{font-size:14px;border-radius:8px;color:var(--muted)!important;background:transparent;box-shadow:none!important;padding:8px!important}
+.mortgage-tabs button[aria-pressed=true]{background:var(--surface)!important;color:var(--text)!important;box-shadow:0 1px 4px #14253020!important;border:1px solid var(--line)}
+.dark .mortgage-tabs button[aria-pressed=true]{background:#19584a!important;color:#fff!important;border-color:#449f87}
+.conditions-heading{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:16px}
+.mortgage-page .conditions-heading h2{font-size:13px;color:var(--muted);font-weight:500}.conditions-heading button{font-size:12px;color:var(--accent);text-decoration:underline}
+.mortgage-page #panel-new{display:flex;flex-direction:column;gap:24px}.mortgage-page #panel-new>*{margin:0!important}
+.mortgage-page #panel-new.hidden{display:none}
+.mortgage-page #cost-display,.mortgage-page #rate-display,.mortgage-page #term-display{display:none}
+.mortgage-page #downpayment-percent{background:transparent;color:var(--muted);font-size:12px}
+.rate-term-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px 16px;align-items:start}
+.rate-term-grid>div:nth-child(n+3){grid-column:1/-1}
+.mortgage-page #rate-range,.mortgage-page #term-range{display:none}
+.mortgage-page #mode-term-btn,.mortgage-page #mode-payment-btn{font-size:12px;padding:8px;line-height:1.4;min-width:0}
+.mortgage-page .term-precision{font-size:12px;line-height:1.5;margin-top:4px}
+.term-precision summary{color:var(--accent);text-decoration:underline;display:flex;align-items:center;cursor:pointer}
+.term-precision label,.term-precision .muted{display:block;margin:5px 0}
+.mortgage-page #term-months-input{width:100%;padding:8px 10px}
+.cbr-reference{font-size:11px;color:var(--muted);line-height:1.65}.cbr-reference strong{font-weight:600}.cbr-reference a{text-decoration:underline}
+.mortgage-page #conditions>div:last-of-type{margin-top:20px}
+.mortgage-page .housing-presets{font-size:12px;color:var(--muted);margin-top:12px}
+.mortgage-page .housing-presets summary{display:flex;align-items:center;cursor:pointer}
+.mortgage-page .housing-presets+ p{margin-top:8px}
+.payment-hero{grid-column:2;grid-row:1;background:linear-gradient(125deg,#075740,#103d33);border:1px solid #12634e;border-radius:16px;color:#fff;padding:26px 28px}
+.hero-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.mortgage-page .hero-top h2{font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:.25px}
+.hero-top>span{font-size:12px;color:#d1e7df;white-space:nowrap}
+.hero-payment{margin:16px 0 2px;white-space:nowrap;letter-spacing:-1.5px}
+.hero-payment strong{font-size:56px;line-height:1.12;font-weight:750;font-variant-numeric:tabular-nums}
+.hero-payment>span{font-size:24px;letter-spacing:-.5px}
+#payment-context{font-size:13px;color:#e1efe9;line-height:1.6}
+.hero-meta{display:grid;grid-template-columns:1fr 1fr;gap:20px;border-top:1px solid #ffffff30;margin-top:20px;padding-top:18px}
+.hero-meta span{display:block;font-size:12px;color:#c9dfd5}.hero-meta strong{display:block;font-size:23px;margin-top:6px;font-weight:650}
+.payment-composition{grid-column:2;grid-row:2}
+.mortgage-page #ratio-heading{font-size:20px;color:var(--text);text-transform:none;font-weight:700;letter-spacing:-.3px}
+.composition-total{display:flex;align-items:baseline;justify-content:space-between;margin:10px 0 2px;gap:10px}
+.composition-total strong{font-size:30px;line-height:1.3;font-variant-numeric:tabular-nums}.composition-total>span{font-size:12px;color:var(--muted)}
+.mortgage-page .ratio-legend-row{border:0;background:transparent!important;padding:5px 0;min-height:32px;border-radius:0}
+.mortgage-page .ratio-percentage{background:var(--soft);color:var(--text);box-shadow:none}
+.mortgage-page .ratio-dot--interest{background:var(--interest);box-shadow:0 0 0 3px #b7792518}
+.mortgage-page .ratio-composition{grid-template-columns:100px minmax(0,1fr);gap:20px;margin-top:12px}
+.mortgage-page .ratio-chart-wrap{width:100px;height:100px}
+.mortgage-page .ratio-amount-card{background:var(--soft);border-color:var(--line);padding:10px;border-radius:9px}
+.mortgage-page .ratio-amount-value{font-size:17px;color:var(--text)}
+.composition-details{font-size:12px;border-top:1px solid var(--line);margin-top:16px;padding-top:8px;line-height:1.65;color:var(--muted)}
+.composition-details summary{cursor:pointer;align-content:center}.composition-details strong{color:var(--text)}
+.mortgage-page .result-actions{grid-column:2;grid-row:3}
+.result-actions button{border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--accent);padding:10px}
+.result-actions p{grid-column:1/-1;margin:0}
+#mortgage-state-message{grid-column:2;grid-row:1;border:1px solid #d39a3f;background:#fff3da;color:#753c0a;padding:16px;border-radius:12px;z-index:1}
+.mortgage-page:not([data-calculation-state=READY]) .payment-hero{opacity:.6}
+.early-section{grid-row:4;grid-column:1/-1;display:grid;grid-template-columns:1.1fr 1fr;gap:36px}
+.early-controls>p,.one-time-controls>p{font-size:13px;line-height:1.6;margin:6px 0 20px}
+.mortgage-page #recurring-display{display:none}
+.early-controls .space-y-2>div:last-child button{min-height:44px}
+.strategy-field{margin-top:20px;font-size:13px}.strategy-field legend{font-size:13px;font-weight:600;margin-bottom:6px}
+.strategy-field label{display:inline-flex;align-items:center;gap:8px;min-height:44px;margin-right:14px;cursor:pointer}
+.strategy-field input[type=radio]{width:20px;height:20px}
+.strategy-field p{font-size:12px;line-height:1.6}
+.benefit-panel{background:#eaf7f2;border:1px solid #d2ece1;padding:24px;border-radius:12px;align-self:stretch;display:flex;flex-direction:column;justify-content:center;gap:8px}
+.dark .benefit-panel{background:#183d34;border-color:#2d6e5b}
+.benefit-panel h3{font-size:15px;font-weight:650}
+.benefit-panel .benefit-money{font-size:32px;line-height:1.3;letter-spacing:-1px;font-weight:750;font-variant-numeric:tabular-nums}
+.benefit-panel p{font-size:12px;line-height:1.65}
+.benefit-facts{display:grid;grid-template-columns:1fr 1fr;gap:14px;border-top:1px solid var(--line);padding-top:14px;margin-top:6px}
+.benefit-facts span{font-size:11px;color:var(--muted)}.benefit-facts strong{display:block;font-size:17px;line-height:1.4;margin-top:4px}
+.mortgage-page .one-time-section{grid-row:5;grid-column:1/-1;background:var(--soft)!important;border:1px solid var(--line)!important;display:grid;grid-template-columns:1.1fr 1fr;gap:36px}
+.one-time-section .benefit-panel{border-color:#9ecbbb}
+.one-time-controls form{display:grid;grid-template-columns:1fr 1.3fr;gap:14px}
+.one-time-controls label{font-size:13px;display:block;margin-bottom:6px;font-weight:600}
+.one-time-controls input{width:100%;padding:10px 12px}
+.one-time-controls form button{grid-column:1/-1;border:1px solid var(--accent);border-radius:9px;color:var(--accent);background:var(--surface)}
+.mortgage-page #one-time-error{color:#b52634;font-size:13px;line-height:1.5;margin-top:8px}
+.dark .mortgage-page #one-time-error{color:#ffb2ba}
+.text-action{color:var(--accent);text-decoration:underline;font-size:13px}
+#one-time-list{font-size:13px;margin-top:8px}
+.one-time-item{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding:6px 0}
+.one-time-item button{padding:6px 8px;color:var(--accent)}
+.one-time-item span{font-variant-numeric:tabular-nums}
+.mortgage-page .debt-chart{grid-column:1/-1;grid-row:6;height:360px;display:flex;flex-direction:column}
+.debt-chart>div:nth-child(2){min-height:210px;flex:1}
+.mortgage-page #existing-history-card{grid-column:1/-1;grid-row:7;background:var(--surface);color:var(--text);border-color:var(--line);box-shadow:none}
+.mortgage-page #existing-history-card .text-white{color:var(--text)}
+.schedule-section{grid-column:1/-1;grid-row:8}
+.schedule-section>summary{font-size:19px;font-weight:700;cursor:pointer;line-height:1.5}
+.schedule-section>summary span{font-size:12px;font-weight:400;float:right}
+.mortgage-page .schedule-section>div{padding:16px 0}
+.mortgage-page [data-month] input{max-width:100%;min-height:44px!important;font-size:14px!important;padding:8px!important}
+.mortgage-page [data-month]{scroll-margin-top:24px;scroll-margin-bottom:100px}
+.mortgage-page [data-month] .text-xs{font-size:13px;line-height:1.5}
+.mortgage-page [data-month] .text-\[10px\]{font-size:11px}
+.mortgage-page :is(.text-rose-500,.text-rose-600,.text-rose-400){color:var(--interest)}
+.mortgage-page .export-summary{display:none}
+.mortgage-page dialog{width:min(92vw,560px);border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--text);padding:24px}
+.mortgage-page dialog::backdrop{background:#14212da0}.mortgage-page dialog input{width:100%;margin:12px 0;padding:10px}.mortgage-page dialog button{padding:8px 16px;color:var(--accent)}
+.mortgage-page [data-screenshot-stage]>.mortgage-results{display:flex!important;flex-direction:column;gap:18px}
+.mortgage-page [data-screenshot-stage] .mortgage-detail-results{display:contents}
+.mortgage-page [data-screenshot-stage] .export-summary{display:block!important}
+.mortgage-page [data-screenshot-stage] .export-summary>div{display:flex;flex-direction:column;gap:10px}
+.mortgage-page [data-screenshot-stage] .export-summary .text-white{color:var(--text)}
+.mortgage-page [data-screenshot-stage] .export-summary h3{font-size:17px;font-weight:700}
+.mortgage-page [data-screenshot-stage] .export-conditions{font-size:13px;line-height:1.8}
+.mortgage-page [data-screenshot-stage] .debt-chart{height:350px}
+.mortgage-page [data-screenshot-stage] .payment-hero{padding:24px}
+.mortgage-page [data-screenshot-stage] .hero-payment strong{font-size:48px}
+.mortgage-page [data-screenshot-stage] .ratio-composition{grid-template-columns:100px minmax(0,1fr)}
+@media(min-width:1024px){.mortgage-page .mobile-sticky-results{display:none!important}}
+@media(max-width:1023px){
+ .mortgage-page .mortgage-header>div{min-height:64px;padding:10px 72px 10px 16px!important;gap:8px}
+ .mortgage-page .mortgage-header p,.mortgage-page .catalog-link{display:none}
+ .mortgage-page .brand-link{font-size:23px}.mortgage-page .brand-link img{width:28px;height:28px}
+ .mortgage-page .product-theme-control{top:10px!important;right:16px!important}
+ .mortgage-page .mortgage-main{padding:18px 16px 24px!important}
+ .mortgage-intro{margin-bottom:18px}.mortgage-intro>a{font-size:12px;margin-bottom:8px;min-height:30px}
+ .mortgage-intro h1{font-size:27px;letter-spacing:-.8px}
+ .mortgage-intro>p{font-size:13px;line-height:1.45;margin-top:6px}
+ .mortgage-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:16px!important}
+ .mortgage-layout .surface{padding:18px;border-radius:12px}
+ .payment-hero{grid-column:1;grid-row:1;padding:20px;border-radius:12px}
+ .hero-payment{margin-top:14px;letter-spacing:-1.7px}.hero-payment strong{font-size:42px}.hero-payment>span{font-size:18px}
+ .hero-meta{gap:14px;margin-top:16px;padding-top:14px}.hero-meta strong{font-size:20px}.hero-meta span{font-size:11px}
+ .mortgage-page .hero-top h2{font-size:11px}.hero-top>span{font-size:11px}
+ .mortgage-conditions{grid-column:1;grid-row:2}
+ .payment-composition{grid-column:1;grid-row:3}
+ .mortgage-page .result-actions{grid-column:1;grid-row:4}
+ .early-section{grid-column:1;grid-row:5;grid-template-columns:1fr;gap:20px}
+ .mortgage-page .one-time-section{grid-column:1;grid-row:6;grid-template-columns:1fr;gap:20px}
+ .mortgage-page .debt-chart{grid-column:1;grid-row:7;height:360px}
+ .mortgage-page #existing-history-card{grid-column:1;grid-row:8}
+ .schedule-section{grid-column:1;grid-row:9}
+ #mortgage-state-message{grid-column:1;grid-row:1}
+ .mortgage-page .payment-composition h2,.mortgage-page #ratio-heading{font-size:19px}
+ .mortgage-page h2{font-size:20px}
+ .composition-total strong{font-size:26px}
+ .mortgage-page .ratio-composition{grid-template-columns:88px minmax(0,1fr);gap:12px}
+ .mortgage-page .ratio-chart-wrap{width:88px;height:88px}
+ .mortgage-page .ratio-amount-grid{grid-template-columns:1fr;gap:8px}
+ .mortgage-page .ratio-amount-value{font-size:17px}
+ .benefit-panel{padding:18px}.benefit-panel .benefit-money{font-size:30px}
+ .mortgage-page .mobile-sticky-results{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface)!important;color:var(--text);border-color:var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));border-radius:0;box-shadow:0 -4px 20px #14212d12}
+ .mobile-sticky-results>div>span{font-size:10px;display:block;color:var(--muted)}
+ .mobile-sticky-results strong{display:block;font-size:20px}
+ .mobile-sticky-results button{background:#08795d;color:#fff;border-radius:9px;padding:8px 14px;white-space:nowrap;font-size:13px}
+ .mortgage-page.mortgage-hero-visible .mobile-sticky-results,.mortgage-page.mortgage-keyboard-open .mobile-sticky-results,.mortgage-page.mortgage-input-focused .mobile-sticky-results{display:none!important}
+ .mortgage-page .conditions-heading{margin-bottom:10px}
+ .mortgage-page #panel-new{gap:20px}
+ .mortgage-page #conditions input{scroll-margin-top:20px;scroll-margin-bottom:100px}
+ .mortgage-page .schedule-section>summary span{display:block;float:none}
+ .mortgage-page .schedule-section>div{padding:12px 0}
+ .mortgage-page .year-heading{align-items:stretch;display:grid;grid-template-columns:1fr 1fr;text-align:left}
+ .mortgage-page .year-heading>div:first-child{grid-column:1/-1}
+ .mortgage-page .year-heading>div:last-child{grid-column:1/-1}
+}
+@media(prefers-reduced-motion:reduce){.mortgage-page *{scroll-behavior:auto!important}}
+
+.mortgage-page .mortgage-results>*,.mortgage-page .mortgage-detail-results>*{margin:0!important}
+.mortgage-page .composition-export{display:none}
+.mortgage-page [data-screenshot-stage] .composition-export{display:block;margin-top:16px;border-top:1px solid var(--line);padding-top:12px;font-size:13px;line-height:1.8;color:var(--muted)}
+.mortgage-page [data-screenshot-stage] .composition-export strong{color:var(--text)}
+.mortgage-page label:has(>input[type=checkbox]){min-height:44px;min-width:44px}
+.mortgage-page button[aria-pressed=true][onclick^="applyDownpaymentPercentPreset"]{background:#e0f3ec!important;color:#075b43!important;border-color:#188b6b!important}
+.dark .mortgage-page button[aria-pressed=true][onclick^="applyDownpaymentPercentPreset"]{background:#19584a!important;color:#ecfff8!important;border-color:#449f87!important}
+.mortgage-page .mortgage-tabs button[aria-pressed=true]{transition:none!important}
+
+.mortgage-page .debt-chart>div:nth-child(2){width:100%;max-width:560px;margin-inline:auto}
+@media(max-width:1023px){.mortgage-page .year-heading>div{grid-column:auto!important;text-align:left}.mortgage-page .year-heading>div:first-child,.mortgage-page .year-heading>div:last-child{grid-column:1/-1!important}}
+
+.mortgage-page .donut-value,.mortgage-page .text-emerald-600,.mortgage-page #existing-history-card .text-emerald-400{color:var(--accent)!important}
+.mortgage-page input::placeholder{color:var(--muted);opacity:1}
+.mortgage-page label:has(>input:focus-visible){outline:3px solid #29b698;outline-offset:3px}
+
+.result-overview{display:contents}
+@media(min-width:1024px){
+ .mortgage-page .mortgage-conditions{grid-row:1}
+ .mortgage-page .result-overview{grid-column:2;grid-row:1;display:flex;flex-direction:column;gap:20px}
+ .mortgage-page .result-overview>*{margin:0!important}
+ .mortgage-page .early-section{grid-row:2}
+ .mortgage-page .one-time-section{grid-row:3}
+ .mortgage-page .debt-chart{grid-row:4}
+ .mortgage-page #existing-history-card{grid-row:5}
+ .mortgage-page .schedule-section{grid-row:6}
+}
+.mortgage-page [data-screenshot-stage] .result-overview{display:flex!important;flex-direction:column;gap:18px}
+</style>
 </head>
-<body class="calculator-page bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
+<body class="calculator-page mortgage-page bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
 
     <div class="product-theme-control fixed top-24 right-4 z-50 md:top-6 md:right-8">
-        <button id="theme-toggle" onclick="toggleDarkMode()" aria-label="Переключить тему" class="p-3 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:scale-110 transition-all active:scale-95">
+        <button id="theme-toggle" onclick="toggleDarkMode(); refreshMortgageChartTheme()" aria-label="Переключить тему" class="p-3 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:scale-110 transition-all active:scale-95">
             <svg id="sun-icon" class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
             <svg id="moon-icon" class="w-6 h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
         </button>
     </div>
 
-    <header class="bg-gradient-to-r from-brand-800 to-slate-900 text-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div class="flex items-center space-x-4">
-                <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
-                    <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">Ясномера</span>
-                </a>
-                <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
-                <div class="flex items-center space-x-3">
-                    <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h1 class="text-2xl font-black tracking-tight">Ипотечный калькулятор</h1>
-                        <p class="text-xs text-brand-200">Платёж, график и влияние досрочных погашений</p>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-slate-800/80 p-1 rounded-xl grid grid-cols-2 sm:flex border border-slate-700 w-full sm:w-auto">
-                <button id="tab-new" onclick="switchMainTab('new')" class="px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 bg-brand-600 text-white shadow-md">
-                    Новая ипотека
-                </button>
-                <button id="tab-existing" onclick="switchMainTab('existing')" class="px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 text-slate-300 hover:text-white">
-                    Действующая ипотека
-                </button>
-            </div>
-        </div>
-    </header>
-
-
-    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
-            <div class="lg:col-span-5 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
-                <div class="flex items-center justify-between border-b dark:border-slate-800 pb-3">
-                    <h2 class="text-base font-bold text-slate-900 dark:text-white" id="params-title">Параметры новой ипотеки</h2>
-                    <button onclick="resetAll()" class="text-xs text-rose-600 hover:text-rose-700 font-semibold flex items-center gap-1 transition">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                        Сбросить всё
-                    </button>
-                </div>
-
-                <div id="panel-new" class="space-y-6">
+<header class="mortgage-header"><div><a class="brand-link" href="index.html"><img src="yasnomera-mark.svg" alt="" width="32" height="32"><span>ЯСНОМЕРА</span></a><p>Понятные расчёты для финансовых решений</p><a class="catalog-link" href="index.html">Все калькуляторы</a></div></header><main class="mortgage-main"><div class="mortgage-intro"><a href="index.html">← Все калькуляторы</a><h1>Ипотечный калькулятор</h1><p>Платёж, график и влияние досрочных погашений</p></div>
+<div class="mortgage-layout"><section id="conditions" class="mortgage-conditions surface">
+<div class="mortgage-tabs" role="group" aria-label="Вид ипотеки">
+<button id="tab-new" onclick="switchMainTab('new')" aria-pressed="true">Новая ипотека</button>
+<button id="tab-existing" onclick="switchMainTab('existing')" aria-pressed="false">Действующая</button></div><div class="conditions-heading"><h2 id="params-title">Параметры новой ипотеки</h2>
+<button onclick="resetAll()">Сбросить пример</button></div><div id="panel-new" class="space-y-6">
                     <!-- Быстрые пресеты недвижимости -->
-                    <div class="space-y-2">
-                        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Быстрый выбор жилья</span>
-                        <div class="grid grid-cols-3 gap-2">
-                            <button onclick="applyFlatPreset('studio')" class="py-2.5 bg-slate-50 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all uppercase">Студия</button>
-                            <button onclick="applyFlatPreset('1bed')" class="py-2.5 bg-slate-50 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all uppercase">1-комнатная</button>
-                            <button onclick="applyFlatPreset('family')" class="py-2.5 bg-slate-50 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all uppercase">Семейная</button>
-                        </div>
-                    </div>
+
 
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
@@ -408,52 +579,47 @@
                     </div>
 
                     <!-- Official Bank of Russia key rate -->
-                    <div class="space-y-2 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200/60 dark:border-slate-800">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-                                <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
-                                Ключевая ставка Банка России
-                            </span>
-                            <span class="inline-flex items-center gap-1 text-[10px] font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-400 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">
-                                ЦБ: <strong id="cb-rate-display" class="text-slate-900 dark:text-white">данные загружаются</strong>
-                            </span>
-                        </div>
-                    </div>
 
-                    <div class="space-y-2">
+
+
+
+
+
+
+
+
+                <div class="rate-term-grid"><div class="space-y-2">
                         <div class="flex justify-between items-center">
                             <label for="rate-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Процентная ставка</label>
                             <span class="text-sm font-bold text-brand-700 dark:text-brand-500" id="rate-display">16%</span>
                         </div>
                         <div class="relative rounded-lg shadow-sm">
-                            <input type="number" id="rate-input" step="0.1" min="0.1" max="50" oninput="handleRateInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
+                            <input type="number" id="rate-input" inputmode="decimal" step="0.1" min="0" max="50" oninput="handleRateInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">%</div>
                         </div>
                         <input type="range" id="rate-range" min="1" max="35" step="0.1" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('rate', this.value)">
-                    </div>
+                    </div><div id="term-input-container" class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label for="term-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Срок кредита</label>
+                            <span class="text-sm font-bold text-slate-950 dark:text-white" id="term-display">20 лет</span>
+                        </div>
+                        <div class="relative rounded-lg shadow-sm">
+                            <input type="number" id="term-input" min="0" max="50" step="1" oninput="handleTermInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">лет</div>
+                        </div>
+                        <input type="range" id="term-range" min="1" max="40" step="1" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('term', this.value)">
 
-                    <div class="p-1 bg-slate-100 dark:bg-slate-800 rounded-xl flex gap-1">
+<details class="term-precision"><summary>Уточнить срок до месяцев</summary>
+<label for="term-months-input">Месяцы сверх полных лет</label>
+<input type="number" id="term-months-input" min="0" max="11" step="1" value="0" inputmode="numeric" oninput="handleTermMonthsInput(this)" aria-describedby="term-months-note">
+<span id="term-months-note" class="muted">От 0 до 11 месяцев</span></details></div><div class="p-1 bg-slate-100 dark:bg-slate-800 rounded-xl flex gap-1">
                         <button id="mode-term-btn" onclick="switchCalculationMode('term')" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all text-slate-900 bg-white dark:bg-slate-700 dark:text-white shadow-sm">
                             Я знаю срок
                         </button>
                         <button id="mode-payment-btn" onclick="switchCalculationMode('payment')" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all text-slate-600 dark:text-slate-400">
                             Я знаю комфортный платеж
                         </button>
-                    </div>
-
-                    <div id="term-input-container" class="space-y-2">
-                        <div class="flex justify-between items-center">
-                            <label for="term-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Срок кредита</label>
-                            <span class="text-sm font-bold text-slate-950 dark:text-white" id="term-display">20 лет</span>
-                        </div>
-                        <div class="relative rounded-lg shadow-sm">
-                            <input type="number" id="term-input" min="1" max="50" oninput="handleTermInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">лет</div>
-                        </div>
-                        <input type="range" id="term-range" min="1" max="40" step="1" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('term', this.value)">
-                    </div>
-
-                    <div id="payment-input-container" class="space-y-2 hidden">
+                    </div><div id="payment-input-container" class="space-y-2 hidden">
                         <div class="flex justify-between items-center">
                             <label for="payment-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Желаемый платеж</label>
                             <span class="text-sm font-bold text-slate-950 dark:text-white" id="payment-display">0 ₽</span>
@@ -463,10 +629,7 @@
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
                         </div>
                         <input type="range" id="payment-range" min="10000" max="500000" step="5000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('payment', this.value)">
-                    </div>
-                </div>
-
-                <div id="panel-existing" class="space-y-6 hidden">
+                    </div><div class="cbr-reference"><p>Ключевая ставка ЦБ: <strong id="cb-rate-display">данные загружаются</strong> · справочно</p><p><a href="https://www.cbr.ru/hd_base/keyrate/" target="_blank" rel="noopener">Банк России</a><span id="cb-rate-date"></span>. Это не ставка вашей ипотеки.</p></div></div></div><div id="panel-existing" class="space-y-6 hidden">
                     <!-- Toggle 'I know my monthly payment' -->
                     <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-150 dark:border-slate-800">
                         <div class="flex flex-col">
@@ -500,7 +663,7 @@
                     <div class="space-y-2">
                         <label for="active-rate-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Процентная ставка</label>
                         <div class="relative rounded-lg shadow-sm">
-                            <input type="number" id="active-rate-input" step="0.1" min="0.1" max="50" oninput="handleActiveRateInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
+                            <input type="number" id="active-rate-input" inputmode="decimal" step="0.1" min="0" max="50" oninput="handleActiveRateInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
                             <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">%</div>
                         </div>
                     </div>
@@ -511,7 +674,7 @@
                             <label for="active-term-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Первоначальный срок кредита (лет)</label>
                             <input type="number" id="active-term-input" oninput="recalcAndSyncBalance()" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold text-slate-800 dark:text-white">
                         </div>
-                        
+
                         <div class="grid grid-cols-2 gap-4">
                             <div class="space-y-1">
                                 <label class="text-xs font-bold text-slate-400 uppercase">Осталось платить</label>
@@ -539,7 +702,7 @@
                     <!-- Current Balance Card -->
                     <div class="space-y-2 bg-brand-50/50 dark:bg-brand-900/10 p-4 rounded-xl border border-brand-100 dark:border-brand-900/30">
                         <div class="flex justify-between items-center">
-                            <label class="text-xs font-bold text-brand-800 dark:text-brand-400 uppercase">Текущий остаток долга</label>
+                            <label for="active-balance-input" class="text-xs font-bold text-brand-800 dark:text-brand-400 uppercase">Текущий остаток долга</label>
                             <button id="btn-calc-theoretical" onclick="calcTheoreticalBalance()" class="text-[11px] text-brand-700 dark:text-brand-400 underline font-semibold">По графику</button>
                         </div>
                         <div class="relative shadow-sm">
@@ -548,10 +711,7 @@
                         </div>
                         <input type="range" id="active-balance-range" min="100000" max="30000000" step="50000" class="w-full accent-brand-600 h-1 mt-2 cursor-pointer" oninput="syncActiveBalanceRange(this.value)">
                     </div>
-                </div>
-
-                <div class="border-t dark:border-slate-800 pt-4 space-y-4">
-                    <div class="grid grid-cols-2 gap-3">
+                </div><div class="grid gap-3">
                         <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-150 dark:border-slate-800">
                             <div class="flex flex-col">
                                 <span class="text-[10px] font-bold text-slate-500 uppercase flex items-center gap-1">
@@ -569,28 +729,84 @@
                             </label>
                         </div>
                     </div>
-
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-center">
-                            <label class="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1">
-                                Стратегия досрочных
-                                <span class="tooltip">
-                                    <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <span class="tooltiptext">Выбор того, что уменьшается при внесении досрочных платежей: «Срок кредита» (максимально экономит проценты) или «Размер платежа» (снижает ежемесячную нагрузку и риски).</span>
-                                </span>
-                            </label>
-                            <span id="strategy-badge" class="text-[10px] uppercase font-black px-2 py-0.5 rounded-full bg-brand-100 text-brand-800">Срок кредита</span>
+<details class="housing-presets"><summary>Примеры стоимости жилья</summary><div class="space-y-2">
+                        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Быстрый выбор жилья</span>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="applyFlatPreset('studio')" class="py-2.5 bg-slate-50 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all uppercase">Студия</button>
+                            <button onclick="applyFlatPreset('1bed')" class="py-2.5 bg-slate-50 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all uppercase">1-комнатная</button>
+                            <button onclick="applyFlatPreset('family')" class="py-2.5 bg-slate-50 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all uppercase">Семейная</button>
                         </div>
-                        <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-150 dark:border-slate-800">
-                            <span class="text-xs text-slate-500">Уменьшать платеж вместо срока</span>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="strategy-toggle" onchange="toggleStrategy()" class="sr-only peer" aria-label="Уменьшать ежемесячный платёж вместо срока">
-                                <div class="w-14 h-7 bg-brand-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-slate-700 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all"></div>
-                            </label>
+                    </div></details>
+<p class="muted small">Расчёт обновляется автоматически.</p></section><div class="mortgage-results space-y-6" id="results-panel" data-screenshot-width="560"><div class="result-overview">
+<p id="mortgage-state-message" data-screenshot-exclude hidden role="status"></p><section class="payment-hero" id="payment-hero" aria-labelledby="payment-heading" tabindex="-1">
+<div class="hero-top"><h2 id="payment-heading">Обязательный платёж</h2><span id="scenario-label">По примеру</span></div>
+<p class="hero-payment"><strong id="res-monthly-payment">0 ₽</strong> <span>/ мес.</span></p>
+<p id="payment-context">Без страховки и досрочных</p>
+<div class="hero-meta"><div><span id="label-amount">Сумма кредита</span><strong id="res-loan-amount">0 ₽</strong></div>
+<div><span id="label-term">Срок по условиям</span><strong id="res-real-term">0 мес.</strong></div></div></section><section class="payment-composition surface" aria-labelledby="ratio-heading">
+                    <span id="ratio-heading" class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Из чего складываются выплаты</span>
+                    <div class="composition-total"><strong id="res-all-paid">0 ₽</strong><span>за весь срок</span></div>
+<p id="composition-scope" class="muted small">Без досрочных доплат</p><div class="grid gap-2" role="list" aria-label="Доли основного долга и процентов">
+                        <div class="ratio-legend-row" role="listitem">
+                            <span class="ratio-legend-label text-[13px] sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                <span class="ratio-dot ratio-dot--body" aria-hidden="true"></span>
+                                <span>Основной долг <span class="text-slate-500 dark:text-slate-400"></span></span>
+                            </span>
+                            <span id="ratio-body-text" class="ratio-percentage text-sm font-extrabold text-slate-900 dark:text-white">50%</span>
+                        </div>
+                        <div class="ratio-legend-row" role="listitem">
+                            <span class="ratio-legend-label text-[13px] sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                <span class="ratio-dot ratio-dot--interest" aria-hidden="true"></span>
+                                <span>Проценты банку <span class="text-slate-500 dark:text-slate-400"></span></span>
+                            </span>
+                            <span id="ratio-interest-text" class="ratio-percentage text-sm font-extrabold text-slate-900 dark:text-white">50%</span>
                         </div>
                     </div>
-
-                    <div class="space-y-2">
+                    <div class="ratio-composition pt-1">
+                        <div class="ratio-chart-wrap relative shrink-0 flex items-center justify-center" aria-label="Диаграмма соотношения тела долга и процентов">
+                            <canvas id="ratioDonutChart" class="absolute inset-0 w-full h-full"></canvas>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+                                <span class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase block tracking-wide leading-tight">Тело долга</span>
+                                <span id="donut-efficiency" class="donut-value mt-0.5 text-lg font-black text-emerald-500 leading-none tabular-nums">50%</span>
+                            </div>
+                        </div>
+                        <div id="ratio-text" class="ratio-amount-grid text-slate-700 dark:text-slate-300"></div>
+                    </div>
+                <details class="composition-details" data-screenshot-exclude><summary>Подробнее о составе выплат</summary>
+<div id="mortgage-cost-breakdown">
+<p>Переплата = проценты по ипотеке + учтённая страховка</p>
+<p>Проценты банку: <strong id="res-bank-interest">0 ₽</strong></p>
+<p>Страховка: <strong id="res-insurance">0 ₽</strong></p>
+<p><span id="label-interest">Переплата</span>: <strong id="res-total-interest">0 ₽</strong></p>
+<p><span id="label-total-paid">Сумма выплат</span> <span id="total-paid-note">без первоначального взноса</span></p>
+</div></details><div id="composition-export" class="composition-export"></div></section><div data-screenshot-exclude class="grid grid-cols-2 gap-3 result-actions">
+<button onclick="shareLink()">Поделиться</button>
+<button onclick="takeScreenshot('results-panel', 'yasnomera-mortgage-calculation.png')">Сохранить PNG</button>
+<p class="muted small">Расчёт — сценарий. Условия банка могут отличаться.</p></div>
+</div><div id="screenshot-area" data-screenshot-flush class="space-y-6 mortgage-detail-results">
+<div id="savings-card" class="export-summary surface"></div><div id="existing-history-card" data-screenshot-exclude class="bg-slate-900 border border-slate-800 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300 hidden">
+                        <!-- Content is populated dynamically via updateCalculations() -->
+                    </div><div class="debt-chart surface">
+                        <div class="flex justify-between items-center mb-1">
+                            <h3 class="text-sm font-bold text-slate-800 dark:text-white" id="chart-title">Динамика остатка долга</h3>
+                        </div>
+                        <div class="relative flex-1 h-full min-h-[200px]">
+                            <canvas id="balanceChart"></canvas>
+                        </div>
+                        <!-- Subtle, high-contrast legend explaining the lines -->
+                        <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-1 text-[11px] text-slate-600 dark:text-slate-400">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3.5 h-0.5 bg-[#10b981] inline-block rounded"></span>
+                                <span><strong class="text-slate-900 dark:text-white font-bold">Зеленая линия (сплошная):</strong> Прогноз с учетом ваших досрочных платежей.</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-3.5 h-0 border-t-2 border-dashed border-slate-400 dark:border-slate-600 inline-block"></span>
+                                <span><strong class="text-slate-900 dark:text-white font-bold">Серая линия (пунктир):</strong> Базовый график банка без досрочного погашения.</span>
+                            </div>
+                        </div>
+                    </div></div></div><section id="early" class="early-section surface" aria-labelledby="early-heading">
+<div class="early-controls"><h2 id="early-heading">Регулярная доплата каждый месяц</h2>
+<p class="muted">Уменьшает срок или платёж. Можно использовать вместе с разовыми.</p><div class="space-y-2">
                         <div class="flex justify-between items-center">
                             <label for="recurring-input" class="text-xs font-bold text-slate-500 uppercase tracking-wide flex items-center gap-1">
                                 Регулярная доплата (каждый месяц)
@@ -611,125 +827,26 @@
                             <button onclick="applyRecurringPreset(10000)" class="py-1.5 bg-slate-100 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all">10 000 ₽</button>
                             <button onclick="applyRecurringPreset(20000)" class="py-1.5 bg-slate-100 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all">20 000 ₽</button>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="lg:col-span-7 lg:sticky lg:top-6 self-start flex flex-col space-y-6" id="results-panel" data-screenshot-width="560">
-                <p id="mortgage-state-message" data-screenshot-exclude hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
-                <!-- Hero Results Card with Premium Overpayment Focus -->
-                <div class="bg-gradient-to-br from-slate-900 to-slate-950 dark:from-slate-900 dark:to-black text-white rounded-3xl p-6 shadow-xl border border-slate-800 relative overflow-hidden flex flex-col justify-between">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                    <div class="absolute bottom-0 left-0 w-32 h-32 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                    <div class="relative z-10 text-center md:text-left space-y-4">
-                        <div>
-                            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1" id="label-interest">Итоговая переплата (чистый перерасход)</span>
-                            <span id="res-total-interest" class="text-4xl md:text-5xl font-black text-rose-500 tracking-tight drop-shadow-md">0 ₽</span>
-                        </div>
-                        <div class="grid grid-cols-3 gap-4 pt-4 border-t border-slate-800">
-                            <div>
-                                <span class="text-[10px] font-bold text-slate-400 block mb-1 flex items-center gap-1">
-                                    Обязательный платёж
-                                    <span class="tooltip">
-                                        <svg class="w-3.5 h-3.5 text-slate-400 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                        <span class="tooltiptext">💡 <strong>Совет:</strong> Вносите досрочные платежи строго в день обязательного платежа. В этот день списываются все накопленные проценты за месяц, поэтому 100% вашей досрочки уйдет на уменьшение основного долга.</span>
-                                    </span>
-                                </span>
-                                <span id="res-monthly-payment" class="text-sm sm:text-lg font-extrabold text-slate-100 tabular-nums">0 ₽</span>
-                            </div>
-                            <div>
-                                <span class="text-[10px] font-bold text-slate-400 block mb-1" id="label-amount">Сумма кредита</span>
-                                <span id="res-loan-amount" class="text-sm sm:text-lg font-extrabold text-slate-100 tabular-nums">0 ₽</span>
-                            </div>
-                            <div>
-                                <span class="text-[10px] font-bold text-slate-400 block mb-1" id="label-term">Реальный срок</span>
-                                <span id="res-real-term" class="text-base sm:text-lg font-extrabold text-brand-400">0 мес.</span>
-                            </div>
-                        </div>
-                        <div class="pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-1" id="mortgage-cost-breakdown">
-                            <p>Переплата = проценты по ипотеке + учтённая страховка</p>
-                            <p>Проценты банку: <strong id="res-bank-interest" class="text-white">0 ₽</strong></p>
-                            <p>Страховка: <strong id="res-insurance" class="text-white">0 ₽</strong></p>
-                            <p><span id="label-total-paid">Сумма выплат</span>: <strong id="res-all-paid" class="text-white">0 ₽</strong><span id="total-paid-note" class="block text-[10px] text-slate-400">без первоначального взноса</span></p>
-                        </div>
-                    </div>
-                </div>
-
-
-                <section class="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-2xl border border-slate-150 dark:border-slate-800 shadow-sm space-y-4" aria-labelledby="ratio-heading">
-                    <span id="ratio-heading" class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Соотношение тела долга и процентов</span>
-                    <div class="grid gap-2" role="list" aria-label="Доли основного долга и процентов">
-                        <div class="ratio-legend-row" role="listitem">
-                            <span class="ratio-legend-label text-[13px] sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
-                                <span class="ratio-dot ratio-dot--body" aria-hidden="true"></span>
-                                <span>Основной долг <span class="text-slate-500 dark:text-slate-400">(Тело)</span></span>
-                            </span>
-                            <span id="ratio-body-text" class="ratio-percentage text-sm font-extrabold text-slate-900 dark:text-white">50%</span>
-                        </div>
-                        <div class="ratio-legend-row" role="listitem">
-                            <span class="ratio-legend-label text-[13px] sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
-                                <span class="ratio-dot ratio-dot--interest" aria-hidden="true"></span>
-                                <span>Проценты банку <span class="text-slate-500 dark:text-slate-400">(Наценка)</span></span>
-                            </span>
-                            <span id="ratio-interest-text" class="ratio-percentage text-sm font-extrabold text-slate-900 dark:text-white">50%</span>
-                        </div>
-                    </div>
-                    <div class="ratio-composition pt-1">
-                        <div class="ratio-chart-wrap relative shrink-0 flex items-center justify-center" aria-label="Диаграмма соотношения тела долга и процентов">
-                            <canvas id="ratioDonutChart" class="absolute inset-0 w-full h-full"></canvas>
-                            <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-                                <span class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase block tracking-wide leading-tight">Тело долга</span>
-                                <span id="donut-efficiency" class="mt-0.5 text-lg font-black text-emerald-500 leading-none tabular-nums">50%</span>
-                            </div>
-                        </div>
-                        <div id="ratio-text" class="ratio-amount-grid text-slate-700 dark:text-slate-300"></div>
-                    </div>
-                </section>
-
-                <div id="screenshot-area" data-screenshot-flush class="space-y-6 bg-slate-50 dark:bg-slate-950 p-4 -m-4 rounded-3xl">
-                    <div id="savings-card" class="bg-emerald-950 border border-emerald-800/30 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300">
-                        <!-- Content is populated dynamically via updateCalculations() to show either stats or empty-state encouraging microcopy -->
-                    </div>
-
-                    <div id="existing-history-card" data-screenshot-exclude class="bg-slate-900 border border-slate-800 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300 hidden">
-                        <!-- Content is populated dynamically via updateCalculations() -->
-                    </div>
-
-                    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between h-[310px]">
-                        <div class="flex justify-between items-center mb-1">
-                            <h3 class="text-sm font-bold text-slate-800 dark:text-white" id="chart-title">Динамика остатка долга</h3>
-                        </div>
-                        <div class="relative flex-1 h-full min-h-[200px]">
-                            <canvas id="balanceChart"></canvas>
-                        </div>
-                        <!-- Subtle, high-contrast legend explaining the lines -->
-                        <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-1 text-[11px] text-slate-600 dark:text-slate-400">
-                            <div class="flex items-center gap-2">
-                                <span class="w-3.5 h-0.5 bg-[#10b981] inline-block rounded"></span>
-                                <span><strong class="text-slate-900 dark:text-white font-bold">Зеленая линия (сплошная):</strong> Прогноз с учетом ваших досрочных платежей.</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="w-3.5 h-0 border-t-2 border-dashed border-slate-400 dark:border-slate-600 inline-block"></span>
-                                <span><strong class="text-slate-900 dark:text-white font-bold">Серая линия (пунктир):</strong> Базовый график банка без досрочного погашения.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div data-screenshot-exclude class="grid grid-cols-2 gap-3">
-                        <button onclick="shareLink()" class="flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 transition shadow-sm active:scale-[0.98]">Поделиться</button>
-                        <button onclick="takeScreenshot('results-panel', 'yasnomera-mortgage-calculation.png')" class="flex items-center justify-center gap-2 py-3 bg-brand-600 text-white font-bold rounded-2xl transition shadow-sm active:scale-[0.98]">Скриншот</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden relative">
+                    </div><fieldset class="strategy-field"><legend>Общая стратегия досрочных</legend>
+<label><input type="radio" name="prepayment-strategy" value="term" checked onchange="setMortgageStrategy('term')"> Уменьшать срок</label>
+<label><input type="radio" name="prepayment-strategy" value="payment" onchange="setMortgageStrategy('payment')"> Уменьшать платёж</label>
+<p class="muted">Действует и на регулярную доплату, и на все разовые платежи.</p>
+<input id="strategy-toggle" type="checkbox" hidden aria-hidden="true" tabindex="-1"><span id="strategy-badge" hidden>Срок кредита</span></fieldset></div>
+<div id="regular-result" class="benefit-panel" aria-live="polite"></div></section><section id="one-time" class="one-time-section surface" aria-labelledby="one-time-heading">
+<div class="one-time-controls"><h2 id="one-time-heading">Разовые досрочные платежи</h2>
+<p class="muted">Можно использовать отдельно или вместе с регулярной доплатой. Общая стратегия — выше.</p>
+<form id="one-time-form" onsubmit="event.preventDefault(); addMortgagePrepayment()">
+<div><label for="one-time-month">Месяц расчёта</label><input id="one-time-month" type="number" min="1" max="600" step="1" value="12" inputmode="numeric" required></div>
+<div><label for="one-time-amount">Сумма доплаты, ₽</label><input id="one-time-amount" type="text" inputmode="numeric" placeholder="150 000" required></div>
+<button type="submit">Добавить</button></form><p id="one-time-error" role="status"></p>
+<button class="text-action" onclick="openMortgageSchedule()">Выбрать месяц в графике →</button>
+<div id="one-time-list"></div></div><div id="one-time-result" class="benefit-panel" aria-live="polite"></div></section><details id="mortgage-schedule" class="schedule-section surface"><summary>Платежи по месяцам <span class="muted">График и разовые доплаты</span></summary>
             <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h2 class="text-lg font-black text-slate-900 dark:text-white" id="table-main-title">Интерактивный график платежей</h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400" id="table-subtitle">Раскройте годы для точечного планирования</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400" id="table-subtitle">Укажите разовую доплату в нужном месяце. Она добавится к регулярной, если та задана.</p>
                 </div>
-                <button onclick="clearCustomPrepayments()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-bold rounded-xl transition">Сбросить досрочные</button>
+                <button onclick="clearCustomPrepayments()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-bold rounded-xl transition">Сбросить все доплаты</button>
             </div>
 
             <div class="p-6 relative">
@@ -744,34 +861,10 @@
 
                 <div id="years-accordion-container" class="space-y-3 relative"></div>
             </div>
-        </div>
-
-        <div class="lg:hidden mobile-sticky-results">
-            <div class="flex items-center justify-between gap-3 mb-2.5 w-full">
-                <div class="flex-1 min-w-0">
-                    <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block truncate">Переплата</span>
-                    <span id="mobile-overpayment" class="text-sm font-black text-rose-600 dark:text-rose-500 block truncate tabular-nums">0 ₽</span>
-                </div>
-                <div class="flex-1 min-w-0 text-center">
-                    <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block truncate">Платёж</span>
-                    <span id="mobile-payment" class="text-sm font-black text-slate-900 dark:text-white block truncate tabular-nums">0 ₽</span>
-                </div>
-                <div class="flex-1 min-w-0 text-right" id="mobile-saving-container">
-                    <p id="mobile-saving-label" class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider truncate">Экономия</p>
-                    <p id="mobile-saving" class="text-sm font-black text-brand-600 truncate tabular-nums">0 ₽</p>
-                    <span id="mobile-cta-text" class="text-sm font-black text-slate-900 dark:text-white hidden whitespace-nowrap">0 ₽/мес.</span>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 gap-2">
-                <button onclick="shareLinkCustom('Ипотечный расчёт — Ясномера', 'Я оценил ипотечный сценарий в Ясномере. Расчётная экономия на процентах: ' + (document.getElementById('saving-money') ? document.getElementById('saving-money').innerText : '0 ₽') + '. Условия кредита следует сверить с банком.')" class="w-full py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-bold rounded-xl text-xs border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
-                    Поделиться
-                </button>
-            </div>
-        </div>
-    </main>
-
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8" data-webwisor="mortgage"></section>
+        </details></div><div class="mobile-sticky-results"><div><span>Обязательный платёж</span><strong id="mobile-payment">0 ₽</strong></div>
+<button onclick="document.getElementById('payment-hero').scrollIntoView({behavior: 'smooth', block: 'start'})">К результату ↑</button>
+<span id="mobile-overpayment" hidden></span><span id="mobile-saving" hidden></span><span id="mobile-saving-label" hidden></span><span id="mobile-cta-text" hidden></span></div></main>
+<dialog id="mortgage-share-dialog"><form method="dialog"><h2>Ссылка на ваш сценарий</h2><label for="mortgage-share-url">Скопируйте ссылку</label><input id="mortgage-share-url" type="text" readonly><button>Закрыть</button></form></dialog>    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8" data-webwisor="mortgage"></section>
 
     <footer class="max-w-7xl mx-auto px-4 pb-8 text-center text-xs text-slate-400">© 2026 Ясномера. Расчёт показывает сценарий и не заменяет условия банка.</footer>
 
@@ -823,6 +916,241 @@
             return parsed;
         }
 
+
+        // B+ presentation adapters; every scenario uses the production simulator.
+        function mortgageDuration(months) {
+            const years = Math.floor(months / 12), rest = months % 12;
+            return [years ? years + ' ' + localGetYearWord(years) : '', rest ? rest + ' мес.' : ''].filter(Boolean).join(' ') || '0 мес.';
+        }
+
+        function handleTermMonthsInput(input) {
+            state.termMonths = Number(input.value);
+            if (input.value.trim() === '') state.termMonths = NaN;
+            updateCalculations();
+        }
+
+        function setMortgageStrategy(strategy) {
+            document.getElementById('strategy-toggle').checked = strategy === 'payment';
+            toggleStrategy();
+        }
+
+        function simulateMortgageRegularOnly() {
+            // Restore the original object even if the production engine throws.
+            const custom = state.customPrepayments;
+            try {
+                state.customPrepayments = {};
+                return simulateMortgage(true);
+            } finally {
+                state.customPrepayments = custom;
+            }
+        }
+
+        function mortgageBenefitMarkup(base, scenario, scope) {
+            const interestSaving = Math.max(0, base.totalInterest - scenario.totalInterest);
+            const insuranceSaving = Math.max(0, base.totalInsurance - scenario.totalInsurance);
+            return '<h3>' + scope + '</h3>'
+                + '<p>Экономия на процентах</p><strong class="benefit-money">' + localFormatMoney(interestSaving) + '</strong>'
+                + (state.includeInsurance ? '<p>Дополнительно экономия на страховке: <strong>' + localFormatMoney(insuranceSaving) + '</strong></p>' : '')
+                + '<p class="muted">По сравнению с теми же условиями без любых досрочных.</p>'
+                + '<div class="benefit-facts"><div><span>Закроете ипотеку через</span><strong>' + mortgageDuration(scenario.realTerm) + '</strong></div>'
+                + '<div><span>Срок меньше на</span><strong>' + mortgageDuration(Math.max(0, base.realTerm - scenario.realTerm)) + '</strong></div></div>';
+        }
+
+        function mortgageConditionsMarkup(base) {
+            const derived = activeTab === 'new' ? state.mode === 'payment' : state.isExistingKnowPayment;
+            return '<div class="export-conditions"><h3>Параметры расчёта · Ясномера</h3>'
+                + (activeTab === 'new'
+                    ? '<p>Стоимость жилья: <strong class="text-white">' + localFormatMoney(state.cost) + '</strong></p><p>Первоначальный взнос: <strong class="text-white">' + localFormatMoney(state.downPayment) + '</strong></p>'
+                    : '<p>Остаток долга: <strong class="text-white">' + localFormatMoney(state.activeCurrentBalance) + '</strong></p>')
+                + '<p>Ставка: <strong class="text-white">' + (activeTab === 'new' ? state.rate : state.activeRate) + '%</strong></p>'
+                + '<p>' + (derived ? 'Срок без досрочных' : activeTab === 'new' ? 'Срок по условиям' : 'Осталось по условиям') + ': <strong class="text-white">' + mortgageDuration(base.realTerm) + '</strong></p>'
+                + '<p>Регулярная доплата: ' + localFormatMoney(state.recurringPrepayment) + '/мес.</p>'
+                + '<p>Разовые доплаты: ' + (Object.entries(state.customPrepayments).filter(([,v]) => v > 0).map(([m,v]) => 'месяц ' + m + ' — ' + localFormatMoney(v)).join('; ') || 'нет') + '</p>'
+                + '<p>Общая стратегия: ' + (state.prepaymentStrategy === 'payment' ? 'уменьшать платёж' : 'уменьшать срок') + '.</p>'
+                + '<p>Страховка ' + (state.includeInsurance ? 'учтена отдельно, около 1% остатка в начале каждого года' : 'не учтена') + '.</p></div>';
+        }
+
+        function renderMortgageBenefits(base, regular, combined) {
+            const hasCustom = Object.values(state.customPrepayments).some(value => value > 0);
+            const hasRegular = state.recurringPrepayment > 0;
+            const scope = hasCustom ? (hasRegular ? 'Регулярные + разовые доплаты' : 'Только разовые доплаты') : 'Только регулярная доплата';
+            document.getElementById('regular-result').innerHTML = hasRegular
+                ? mortgageBenefitMarkup(base, regular, 'Только регулярная доплата')
+                : '<h3>Узнайте, сколько сэкономите</h3><p class="muted">Введите ежемесячную доплату, чтобы увидеть, как изменятся срок и общие выплаты.</p>';
+            document.getElementById('one-time-result').innerHTML = hasCustom
+                ? mortgageBenefitMarkup(base, combined, scope) + (hasRegular ? '<p><strong>Эта экономия уже включает регулярную доплату. Две экономии не складываются.</strong></p>' : '')
+                : '<h3>Доплата в нужный месяц</h3><p class="muted">Добавьте разовый платёж в форме или выберите месяц в графике.</p>';
+            const savingsCard = document.getElementById('savings-card');
+            savingsCard.classList.remove('hidden');
+            savingsCard.innerHTML = '<div data-screenshot-fallback>' + mortgageConditionsMarkup(base)
+                + (hasCustom || hasRegular ? mortgageBenefitMarkup(base, combined, scope)
+                    + '<p id="saving-money">Экономия на процентах: ' + localFormatMoney(Math.max(0, base.totalInterest - combined.totalInterest)) + '</p>'
+                    + '<p id="saving-months">Сокращение срока: ' + mortgageDuration(Math.max(0, base.realTerm - combined.realTerm)) + '</p>'
+                    + '<p>Итого выплатим: <strong id="res-total-paid">' + localFormatMoney(Math.round(activeTab === 'new' ? state.cost-state.downPayment : state.activeCurrentBalance) + Math.round(combined.totalInterest) + Math.round(combined.totalInsurance)) + '</strong></p>'
+                    + '<p>Досрочный капитал: <strong id="res-total-prepaid">' + localFormatMoney(combined.totalPrepaid) + '</strong></p>' : '')
+                + '</div>';
+            document.getElementById('composition-scope').innerText = hasCustom || hasRegular ? 'С досрочными доплатами · выбранный совокупный сценарий' : 'Без досрочных доплат';
+            document.getElementById('scenario-label').innerText = (mortgageCalculationRequested || mortgageRestoredScenario) ? 'Ваш сценарий' : 'По примеру';
+            document.getElementById('label-term').innerText = (activeTab === 'new' && state.mode === 'payment') || (activeTab === 'existing' && state.isExistingKnowPayment)
+                ? 'Срок без досрочных' : activeTab === 'new' ? 'Срок по условиям' : 'Осталось по условиям';
+            document.getElementById('res-real-term').innerText = mortgageDuration(base.realTerm);
+            document.getElementById('payment-context').innerText = state.prepaymentStrategy === 'payment' && (hasCustom || hasRegular)
+                ? 'Первый обязательный платёж. Последующие уменьшаются по графику. Без страховки и доплат.'
+                : 'Без страховки и досрочных';
+            const interest = Math.round(combined.totalInterest), insurance = Math.round(combined.totalInsurance);
+            document.getElementById('composition-export').innerHTML =
+                '<p>Проценты банку: <strong>' + localFormatMoney(interest) + '</strong></p>'
+                + '<p>Страховка: <strong>' + localFormatMoney(insurance) + '</strong></p>'
+                + '<p>Переплата: <strong>' + localFormatMoney(interest + insurance) + '</strong></p>'
+                + '<p>' + (activeTab === 'new' ? 'Без первоначального взноса.' : 'Только будущие выплаты по текущему остатку.') + ' Страховка показана отдельно.</p>';
+            renderMortgagePrepaymentList();
+            syncMortgageSelectedControls();
+        }
+
+        function syncMortgageSelectedControls() {
+            // Querying is optional in non-browser model tests.
+            if (typeof document.querySelectorAll !== 'function') return;
+            document.getElementById('tab-new').setAttribute('aria-pressed', String(activeTab === 'new'));
+            document.getElementById('tab-existing').setAttribute('aria-pressed', String(activeTab === 'existing'));
+            document.getElementById('mode-term-btn').setAttribute('aria-pressed', String(state.mode === 'term'));
+            document.getElementById('mode-payment-btn').setAttribute('aria-pressed', String(state.mode === 'payment'));
+            document.querySelectorAll('input[name="prepayment-strategy"]').forEach(input => input.checked = input.value === state.prepaymentStrategy);
+            document.querySelectorAll('[onclick^="applyDownpaymentPercentPreset"]').forEach(button => {
+                const percent = Number(button.getAttribute('onclick').match(/\d+/)[0]);
+                button.setAttribute('aria-pressed', String(Math.abs(state.downPayment / state.cost * 100 - percent) < .01));
+            });
+        }
+
+        function renderMortgagePrepaymentList() {
+            const list = document.getElementById('one-time-list');
+            list.innerHTML = Object.entries(state.customPrepayments).filter(([,value]) => value > 0).sort((a,b) => Number(a[0])-Number(b[0])).map(([month,value]) =>
+                '<div class="one-time-item"><span>Месяц ' + month + ' · ' + localFormatMoney(value) + '</span><button type="button" onclick="removeMortgagePrepayment(' + Number(month) + ')" aria-label="Удалить доплату за месяц ' + month + '">Удалить</button></div>'
+            ).join('') || '<p class="muted">Разовых платежей пока нет.</p>';
+        }
+
+        function addMortgagePrepayment() {
+            const error = document.getElementById('one-time-error');
+            const month = Number(document.getElementById('one-time-month').value);
+            const raw = document.getElementById('one-time-amount').value.replace(/\s/g, '');
+            const amount = /^\d+$/.test(raw) ? Number(raw) : NaN;
+            const base = mortgageValidationMessage() ? null : simulateMortgage(false);
+            if (!base || !Number.isInteger(month) || month < 1 || month > base.realTerm || !Number.isFinite(amount) || amount <= 0) {
+                error.innerText = 'Укажите месяц в пределах базового срока и положительную целую сумму.';
+                return;
+            }
+            error.innerText = '';
+            state.customPrepayments[month] = amount;
+            mortgageCalculationRequested = true;
+            updateCalculations();
+        }
+
+        function removeMortgagePrepayment(month) {
+            delete state.customPrepayments[month];
+            mortgageCalculationRequested = true;
+            updateCalculations();
+        }
+
+        function openMortgageSchedule() {
+            const details = document.getElementById('mortgage-schedule');
+            details.open = true;
+            const year = document.getElementById('content-year-1');
+            if (year) year.classList.remove('hidden');
+            const header = document.getElementById('heading-year-1');
+            if (header) header.setAttribute('aria-expanded', 'true');
+            details.scrollIntoView({behavior: 'smooth', block: 'start'});
+        }
+
+        const mortgageShareNumberKeys = ['cost', 'downPayment', 'rate', 'termYears', 'termMonths', 'targetPayment',
+            'activeOriginalLoan', 'activeRate', 'activeOriginalTermYears', 'activePaidMonths', 'activeCurrentBalance',
+            'recurringPrepayment', 'activePayment'];
+        function buildMortgageShareURL() {
+            const url = new URL(window.location.href);
+            // Leave unrelated tracking parameters in place.
+            url.searchParams.set('mortgage', '1');
+            url.searchParams.set('tab', activeTab);
+            mortgageShareNumberKeys.forEach(key => url.searchParams.set(key, String(state[key] ?? 0)));
+            ['mode', 'prepaymentStrategy'].forEach(key => url.searchParams.set(key, state[key]));
+            ['includeInsurance', 'isExistingKnowPayment'].forEach(key => url.searchParams.set(key, state[key] ? '1' : '0'));
+            url.searchParams.set('customPrepayments', JSON.stringify(state.customPrepayments));
+            return url.toString();
+        }
+
+        function restoreMortgageShareURL() {
+            const query = new URLSearchParams(window.location.search);
+            // Earlier production links contain only the page URL; they still open the example.
+            if (!query.has('mortgage') && !query.has('cost') && !query.has('activeCurrentBalance')) return false;
+            mortgageShareNumberKeys.forEach(key => {
+                if (query.has(key)) state[key] = query.get(key).trim() === '' ? NaN : Number(query.get(key));
+            });
+            activeTab = query.get('tab') === 'existing' ? 'existing' : 'new';
+            state.mode = query.get('mode') === 'payment' ? 'payment' : 'term';
+            state.prepaymentStrategy = query.get('prepaymentStrategy') === 'payment' ? 'payment' : 'term';
+            ['includeInsurance', 'isExistingKnowPayment'].forEach(key => state[key] = query.get(key) === '1');
+            try {
+                const custom = JSON.parse(query.get('customPrepayments') || '{}');
+                if (!custom || Array.isArray(custom) || typeof custom !== 'object') throw new Error('Invalid payments');
+                state.customPrepayments = custom;
+            } catch (_) { state.customPrepayments = {'invalid': NaN}; }
+            targetPaymentWasEdited = state.mode === 'payment';
+            mortgageRestoredScenario = true;
+            return true;
+        }
+
+        async function shareLink() {
+            if (!canExportCurrentCalculation()) return;
+            reachGoal('share_click');
+            const url = buildMortgageShareURL();
+            try {
+                if (!navigator.clipboard) throw new Error('Clipboard unavailable');
+                await navigator.clipboard.writeText(url);
+                showToast('Ссылка на сценарий скопирована!');
+            } catch (_) {
+                const input = document.getElementById('mortgage-share-url');
+                input.value = url;
+                document.getElementById('mortgage-share-dialog').showModal();
+                input.focus(); input.select();
+            }
+        }
+
+
+        function refreshMortgageChartTheme() {
+            const dark = document.documentElement.classList.contains('dark');
+            if (chartInstance) {
+                chartInstance.data.datasets[1].borderColor = dark ? '#a8b7c4' : '#8b9aa8';
+                chartInstance.options.scales.y.grid.color = dark ? '#465360' : '#e5ebee';
+                ['x','y'].forEach(axis => chartInstance.options.scales[axis].ticks.color = dark ? '#c3ced8' : '#526270');
+                chartInstance.options.scales.x.title.color = dark ? '#c3ced8' : '#526270';
+                chartInstance.update('none');
+            }
+            if (ratioDonutInstance) {
+                ratioDonutInstance.data.datasets[0].borderColor = dark ? '#232d37' : '#ffffff';
+                ratioDonutInstance.update('none');
+            }
+        }
+
+        function initializeMortgagePresentation() {
+            if (typeof document.querySelectorAll !== 'function') return;
+            const hero = document.getElementById('payment-hero');
+            if (typeof IntersectionObserver === 'function') {
+                new IntersectionObserver(entries => {
+                    document.body.classList.toggle('mortgage-hero-visible', entries[0].isIntersecting);
+                }, {threshold: 0}).observe(hero);
+            }
+            document.getElementById('mortgage-schedule').addEventListener('toggle', event => {
+                if (event.target.open && !document.querySelector('#mortgage-schedule [aria-expanded="true"]')) {
+                    const first = document.getElementById('content-year-1');
+                    if (first) first.classList.remove('hidden');
+                    document.getElementById('heading-year-1')?.setAttribute('aria-expanded', 'true');
+                }
+            });
+            document.addEventListener('focusin', event => {
+                document.body.classList.toggle('mortgage-input-focused', isMortgageEditableInput(event.target));
+            });
+            document.addEventListener('focusout', () => window.setTimeout(() => {
+                document.body.classList.toggle('mortgage-input-focused', isMortgageEditableInput(document.activeElement));
+            }, 0));
+        }
+
         let activeTab = 'new';
         let state = {
             cost: 10000000,
@@ -830,6 +1158,7 @@
             rate: 16.0,
             mode: 'term',
             termYears: 20,
+            termMonths: 0,
             targetPayment: 100000,
             activeOriginalLoan: 8000000,
             activeRate: 12.0,
@@ -855,9 +1184,13 @@
                 'res-bank-interest', 'res-insurance', 'res-all-paid',
                 'mobile-overpayment', 'mobile-payment', 'ratio-body-text', 'ratio-interest-text',
                 'ratio-text', 'donut-efficiency', 'cost-display', 'downpayment-percent',
-                'rate-display', 'term-display', 'payment-display', 'recurring-display'
+                'rate-display', 'term-display', 'payment-display', 'recurring-display', 'composition-scope', 'scenario-label', 'composition-export'
             ],
             onClear: () => {
+                ['regular-result', 'one-time-result', 'one-time-list'].forEach(id => {
+                    const node = document.getElementById(id);
+                    if (node) node.innerHTML = '';
+                });
                 if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
                 if (ratioDonutInstance) { ratioDonutInstance.destroy(); ratioDonutInstance = null; }
                 const savings = document.getElementById('savings-card');
@@ -870,9 +1203,12 @@
         });
 
         window.canExportCalculation = () =>
-            mortgageStateController.getState() === CalculatorState.STATES.READY;
+            mortgageStateController.getState() === CalculatorState.STATES.READY
+            && mortgageReadySignature === JSON.stringify({activeTab, state});
+        let mortgageReadySignature = null;
 
         let mortgageCalculationRequested = false;
+        let mortgageRestoredScenario = false;
         let mortgageSuccessTracked = false;
         const mortgageDiagnosticStages = new Set([
             'simulation', 'primary_render', 'schedule_render', 'chart_render', 'history_render'
@@ -902,7 +1238,9 @@
 
         // Capture calculator edits before inline handlers recalculate; ignore unrelated page controls.
         function noteMortgageInput(event) {
-            if (event.target.closest('#panel-new, #panel-existing')) mortgageCalculationRequested = true;
+            if (event.type === 'click' && !event.target.closest('button[onclick^="apply"], button[onclick^="switch"], button[onclick^="remove"], button[onclick^="clear"], button[onclick^="calcTheoreticalBalance"]')) return;
+            if (event.target.closest('#one-time-form')) return;
+            if (event.target.closest('#conditions, #early, #one-time, #mortgage-schedule')) mortgageCalculationRequested = true;
         }
         document.addEventListener('input', noteMortgageInput, true);
         document.addEventListener('change', noteMortgageInput, true);
@@ -912,7 +1250,9 @@
             '#panel-new input[type="text"]',
             '#panel-new input[type="number"]',
             '#panel-existing input[type="text"]',
-            '#panel-existing input[type="number"]'
+            '#panel-existing input[type="number"]',
+            '#early input[type="text"]', '#one-time input[type="text"]', '#one-time input[type="number"]',
+            '#mortgage-schedule input[type="text"]'
         ].join(', ');
         let mortgageFocusScrollTimer = null;
         const mortgageVisualViewport = window.visualViewport;
@@ -1005,7 +1345,7 @@
                 if (!Number.isFinite(state.cost) || state.cost <= 0) return 'Укажите положительную стоимость недвижимости.';
                 if (!Number.isFinite(state.downPayment) || state.downPayment < 0 || state.downPayment >= state.cost) return 'Первоначальный взнос должен быть меньше стоимости недвижимости.';
                 if (!Number.isFinite(state.rate) || state.rate < 0 || state.rate > 50) return 'Укажите допустимую ставку по ипотеке.';
-                if (state.mode === 'term' && (!Number.isInteger(state.termYears) || state.termYears < 1 || state.termYears > 50)) return 'Укажите срок ипотеки от 1 до 50 лет.';
+                if (state.mode === 'term' && (!Number.isInteger(state.termYears) || state.termYears < 0 || !Number.isInteger(state.termMonths ?? 0) || (state.termMonths ?? 0) < 0 || (state.termMonths ?? 0) > 11 || state.termYears * 12 + (state.termMonths ?? 0) < 1 || state.termYears * 12 + (state.termMonths ?? 0) > 600)) return 'Укажите срок от 1 месяца до 50 лет; месяцы — от 0 до 11.';
                 if (state.mode === 'payment') {
                     const minimum = (state.cost - state.downPayment) * (state.rate / 1200);
                     if (!Number.isFinite(state.targetPayment) || state.targetPayment <= minimum) return 'Желаемый платёж не покрывает ежемесячные проценты. Увеличьте его или измените параметры кредита.';
@@ -1020,17 +1360,19 @@
                     if (!Number.isFinite(state.activePayment) || state.activePayment <= minimum) return 'Введённый платёж не покрывает ежемесячные проценты. Расчёт невозможен.';
                     const maximumTermPayment = minimumPaymentForMonths(state.activeCurrentBalance, state.activeRate, 600);
                     if (state.activePayment < maximumTermPayment) return 'При таком платеже срок погашения превысит 50 лет. Увеличьте ежемесячный платёж.';
-                } else if (!Number.isInteger(state.activeOriginalTermYears) || state.activeOriginalTermYears < 1 || state.activePaidMonths < 0 || state.activePaidMonths >= state.activeOriginalTermYears * 12) {
+                } else if (!Number.isInteger(state.activeOriginalTermYears) || state.activeOriginalTermYears < 1 || state.activeOriginalTermYears > 50 || !Number.isInteger(state.activePaidMonths) || state.activePaidMonths < 0 || state.activePaidMonths >= state.activeOriginalTermYears * 12) {
                     return 'Проверьте первоначальный срок и количество уже выплаченных месяцев.';
                 }
             }
+            if (Object.entries(state.customPrepayments).some(([month,value]) =>
+                !Number.isInteger(Number(month)) || Number(month) < 1 || Number(month) > 600 || !Number.isFinite(value) || value < 0)) return 'Проверьте разовые доплаты: месяц от 1 до 600, сумма не отрицательная.';
             if (!Number.isFinite(state.recurringPrepayment) || state.recurringPrepayment < 0) return 'Досрочный платёж не может быть отрицательным.';
             return null;
         }
 
         function toggleExistingKnowPayment() {
             state.isExistingKnowPayment = document.getElementById('existing-know-payment-toggle').checked;
-            
+
             const payContainer = document.getElementById('active-payment-container');
             const amtContainer = document.getElementById('active-amount-container');
             const termContainer = document.getElementById('active-term-container');
@@ -1069,7 +1411,7 @@
 
         function handlePaidMonthsChange() {
             state.activePaidMonths = parseInt(document.getElementById('active-paid-months-input').value) || 0;
-            
+
             const remainingTotalMonths = Math.max(0, (state.activeOriginalTermYears * 12) - state.activePaidMonths);
             if (document.getElementById('active-remaining-years')) {
                 document.getElementById('active-remaining-years').value = Math.floor(remainingTotalMonths / 12) || '';
@@ -1080,9 +1422,9 @@
             updateCalculations();
         }
 
-        function switchMainTab(tab) {
+        function switchMainTab(tab, preserveScenario = false) {
             activeTab = tab;
-            state.customPrepayments = {};
+            if (!preserveScenario) state.customPrepayments = {};
 
             const tNew = document.getElementById('tab-new');
             const tExist = document.getElementById('tab-existing');
@@ -1106,7 +1448,7 @@
                 document.getElementById('label-amount').innerText = "Остаток долга";
                 document.getElementById('label-term').innerText = "Осталось платить";
                 document.getElementById('label-interest').innerText = "Будущие проценты";
-                calcTheoreticalBalance();
+                if (!preserveScenario) calcTheoreticalBalance();
             }
             updateCalculations();
         }
@@ -1120,7 +1462,7 @@
             if (loan <= 0 || termMonths <= 0) return;
             const mRate = rate / 12 / 100;
             let pmt = mRate === 0 ? (loan / termMonths) : (loan * (mRate * Math.pow(1 + mRate, termMonths)) / (Math.pow(1 + mRate, termMonths) - 1));
-            
+
             let bal = loan;
             for (let i = 1; i <= Math.min(paid, termMonths); i++) {
                 bal -= (pmt - (bal * mRate));
@@ -1221,7 +1563,7 @@
         function switchCalculationMode(mode) {
             if (mode === 'payment' && state.mode !== 'payment' && !targetPaymentWasEdited) {
                 const principal = state.cost - state.downPayment;
-                const months = state.termYears * 12;
+                const months = state.termYears * 12 + (state.termMonths || 0);
                 const derivedPayment = minimumPaymentForMonths(principal, state.rate, months);
                 if (Number.isFinite(derivedPayment) && derivedPayment > 0) {
                     state.targetPayment = Math.ceil(derivedPayment);
@@ -1291,19 +1633,23 @@
             }
         }
         function resetAll() {
-            state.cost = 10000000; state.downPayment = 2000000; state.rate = 16.0; state.mode = 'term'; state.termYears = 20; state.targetPayment = 100000;
+            mortgageCalculationRequested = false;
+            mortgageRestoredScenario = false;
+            state.mode = 'term'; state.isExistingKnowPayment = false; state.prepaymentStrategy = 'term';
+            document.getElementById('one-time-error').innerText = '';
+            state.cost = 10000000; state.downPayment = 2000000; state.rate = 16.0; state.mode = 'term'; state.termYears = 20; state.termMonths = 0; state.targetPayment = 100000;
             targetPaymentWasEdited = false;
             state.activeOriginalLoan = 8000000; state.activeRate = 12.0; state.activeOriginalTermYears = 20; state.activePaidMonths = 36;
             state.recurringPrepayment = 0; state.customPrepayments = {}; state.includeInsurance = false;
             document.getElementById('insurance-toggle').checked = false;
-            document.getElementById('strategy-toggle').checked = false; calcTheoreticalBalance(); updateInputsDOM(); updateCalculations();
+            document.getElementById('strategy-toggle').checked = false; calcTheoreticalBalance(); updateInputsDOM(); switchMainTab(activeTab); switchCalculationMode('term'); toggleExistingKnowPayment();
         }
 
         function simulateMortgage(withPrepayments = true) {
             let balance = Number(activeTab === 'new' ? (state.cost - state.downPayment) : state.activeCurrentBalance) || 0;
             let rate = Number(activeTab === 'new' ? state.rate : state.activeRate) || 0;
-            let plannedMonths = Number(activeTab === 'new' ? (state.termYears * 12) : ((state.activeOriginalTermYears * 12) - state.activePaidMonths)) || 0;
-            
+            let plannedMonths = Number(activeTab === 'new' ? (state.termYears * 12 + (state.termMonths || 0)) : ((state.activeOriginalTermYears * 12) - state.activePaidMonths)) || 0;
+
             if (plannedMonths <= 0) plannedMonths = 12;
             if (balance <= 0) return { schedule: [], totalInterest: 0, totalPaid: 0, totalPrepaid: 0, realTerm: 0, totalInsurance: 0 };
 
@@ -1327,7 +1673,7 @@
                 m++;
                 let ins = 0;
                 if (state.includeInsurance && (m % 12 === 1)) { ins = balance * 0.01; totalInsurance += ins; }
-                
+
                 let interest = balance * mRate;
                 // Floating-point drift can leave a small balance after the final
                 // planned instalment at extreme rates and 50-year terms.
@@ -1390,16 +1736,20 @@
             if (prepayCounter) prepayCounter.innerText = `Спецплатежей: ${Object.keys(state.customPrepayments).length}`;
 
             const sortedYears = Object.keys(years).map(Number).sort((a,b)=>a-b);
-            
+
             sortedYears.forEach(yNum => {
                 const yData = years[yNum]; const yearId = `year-${yNum}`;
 
-                let yPaid = 0, yInt = 0, yPrep = 0;
-                yData.forEach(m => { yPaid += m.payment; yInt += m.interest; yPrep += m.prepayment; });
+                let yPaid = 0, yInt = 0, yPrep = 0, yPrincipal = 0;
+                yData.forEach(m => { yPaid += m.payment; yInt += m.interest; yPrep += m.prepayment; yPrincipal += m.principal; });
                 const lastBal = yData[yData.length - 1].balance;
 
-                const header = document.createElement('div');
-                header.className = 'bg-slate-50 border border-slate-150 hover:bg-slate-100 dark:bg-slate-800/50 dark:border-slate-700 rounded-xl transition p-4 flex flex-col lg:grid lg:grid-cols-12 gap-3 items-start lg:items-center cursor-pointer';
+                const header = document.createElement('button');
+                header.type = 'button';
+                header.id = 'heading-' + yearId;
+                header.setAttribute('aria-expanded', String(openYearIds.includes('content-' + yearId) || (yNum === 1 && contents.length === 0)));
+                header.setAttribute('aria-controls', 'content-' + yearId);
+                header.className = 'year-heading w-full bg-slate-50 border border-slate-150 hover:bg-slate-100 dark:bg-slate-800/50 dark:border-slate-700 rounded-xl transition p-4 flex flex-col lg:grid lg:grid-cols-12 gap-3 items-start lg:items-center cursor-pointer';
                 header.onclick = () => toggleYearAccordion(yearId);
 
                 header.innerHTML = `
@@ -1407,10 +1757,11 @@
                         <span class="p-1 bg-brand-600 text-white rounded text-xs font-bold w-6 h-6 flex items-center justify-center">${yNum}</span>
                         <span class="font-bold text-slate-800 dark:text-slate-200 text-sm">${yNum}-й год</span>
                     </div>
-                    <div class="col-span-2 text-right"><span class="text-xs font-bold text-slate-700 dark:text-slate-300">${localFormatMoney(yPaid)}</span></div>
-                    <div class="col-span-2 text-right"><span class="text-xs font-bold text-rose-600">${localFormatMoney(yInt)}</span></div>
-                    <div class="col-span-2 text-right"><span class="text-xs font-bold text-emerald-600">${yPrep > 0 ? localFormatMoney(yPrep) : '—'}</span></div>
-                    <div class="col-span-4 flex justify-between items-center w-full">
+                    <div class="col-span-2 text-right"><span class="lg:hidden block text-xs text-slate-500">Платежи за год</span><span class="text-xs font-bold text-slate-700 dark:text-slate-300">${localFormatMoney(yPaid)}</span></div>
+                    <div class="col-span-2 text-right"><span class="lg:hidden block text-xs text-slate-500">Проценты за год</span><span class="text-xs font-bold text-rose-600">${localFormatMoney(yInt)}</span></div>
+                    <div class="col-span-2 text-right"><span class="lg:hidden block text-xs text-slate-500">В погашение долга</span><span class="text-xs font-bold text-slate-700 dark:text-slate-300">${localFormatMoney(yPrincipal)}</span></div>
+                    <div class="col-span-2 text-right"><span class="lg:hidden block text-xs text-slate-500">Все досрочные за год</span><span class="text-xs font-bold text-emerald-600">${yPrep > 0 ? localFormatMoney(yPrep) : '—'}</span></div>
+                    <div class="col-span-2 flex justify-between items-center w-full"><span class="lg:hidden text-xs text-slate-500">Остаток долга</span>
                         <span class="text-xs font-bold text-slate-900 dark:text-white text-right w-full pr-4">${localFormatMoney(lastBal)}</span>
                         <svg id="arrow-${yearId}" class="w-5 h-5 text-slate-400 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
@@ -1448,8 +1799,9 @@
                 const content = document.createElement('div'); content.id = `content-${yearId}`;
                 content.className = 'hidden border-x border-b dark:border-slate-800 rounded-b-xl p-1 bg-slate-50 dark:bg-slate-900';
                 content.innerHTML = mHtml;
+                if (yNum === 1 && contents.length === 0) content.classList.remove('hidden');
 
-                const wrap = document.createElement('div'); wrap.appendChild(header); wrap.appendChild(content); 
+                const wrap = document.createElement('div'); wrap.appendChild(header); wrap.appendChild(content);
                 container.appendChild(wrap);
 
             });
@@ -1479,15 +1831,26 @@
         }
 
         function formatTableInputVisual(input) {
-            let clean = input.value.replace(/\s+/g, '').replace(/\D/g, ''); if (!clean) { input.value = ''; return; }
-            let parsed = parseInt(clean, 10); input.value = localFormatNumber(parsed);
-            let m = parseInt(input.closest('[data-month]').dataset.month); state.customPrepayments[m] = parsed; updateCalculations();
+            const raw = input.value.replace(/\s+/g, '');
+            const month = Number(input.closest('[data-month]').dataset.month);
+            if (raw === '' || raw === '0') {
+                delete state.customPrepayments[month]; input.value = '';
+            } else {
+                const parsed = /^\d+$/.test(raw) ? Number(raw) : NaN;
+                state.customPrepayments[month] = parsed;
+                if (Number.isFinite(parsed)) input.value = localFormatNumber(parsed);
+            }
+            mortgageCalculationRequested = true;
+            updateCalculations();
         }
 
         function toggleYearAccordion(id) {
             const content = document.getElementById(`content-${id}`);
             const arrow = document.getElementById(`arrow-${id}`);
-            if (content) content.classList.toggle('hidden');
+            if (content) {
+                content.classList.toggle('hidden');
+                document.getElementById('heading-' + id)?.setAttribute('aria-expanded', String(!content.classList.contains('hidden')));
+            }
             if (arrow) arrow.classList.toggle('rotate-180');
         }
 
@@ -1502,9 +1865,9 @@
             const ctx = canvas.getContext('2d');
             let labels = [], dWith = [], dWithout = []; let len = Math.max(sWith.length, sWithout.length); let step = len > 120 ? 6 : 2;
             for (let i = 0; i < len; i += step) { labels.push(`${Math.floor(i/12)+1}г`); dWith.push(i < sWith.length ? sWith[i].balance : 0); dWithout.push(i < sWithout.length ? sWithout[i].balance : 0); }
-            
+
             try {
-                if (chartInstance) chartInstance.destroy(); 
+                if (chartInstance) chartInstance.destroy();
                 const isDark = document.documentElement.classList.contains('dark');
                 chartInstance = new Chart(ctx, {
                     type: 'line',
@@ -1512,13 +1875,13 @@
                         labels: labels,
                         datasets: [
                             { data: dWith, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.02)', borderWidth: 3, fill: true, tension: 0.4, pointRadius: 1 },
-                            { data: dWithout, borderColor: isDark ? '#475569' : '#cbd5e1', backgroundColor: 'transparent', borderWidth: 2, borderDash: [4,4], tension: 0.4, pointRadius: 0 }
+                            { data: dWithout, borderColor: isDark ? '#a8b7c4' : '#8b9aa8', backgroundColor: 'transparent', borderWidth: 2, borderDash: [4,4], tension: 0.4, pointRadius: 0 }
                         ]
                     },
-                    options: { 
-                        responsive: true, 
-                        maintainAspectRatio: false, 
-                        plugins: { 
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
                             legend: { display: false },
                             tooltip: {
                                 enabled: true,
@@ -1531,20 +1894,22 @@
                                     }
                                 }
                             }
-                        }, 
-                        scales: { 
-                            y: { 
-                                grid: { color: isDark ? '#1e293b' : '#f1f5f9' }, 
-                                ticks: { 
-                                    font: { size: 9 }, 
+                        },
+                        scales: {
+                            y: {
+                                grid: { color: isDark ? '#465360' : '#e5ebee' },
+                                ticks: {
+                                    font: { size: 11 },
+                                    color: isDark ? '#c3ced8' : '#526270',
                                     maxTicksLimit: 5,
-                                    callback: v => (v / 1000000).toFixed(1) + ' млн ₽' 
-                                } 
-                            }, 
-                            x: { 
-                                grid: { display: false }, 
-                                ticks: { 
-                                    font: { size: 9 },
+                                    callback: v => (v / 1000000).toFixed(1) + ' млн ₽'
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 11 },
+                                    color: isDark ? '#c3ced8' : '#526270',
                                     maxTicksLimit: 4
                                 },
                                 title: {
@@ -1556,9 +1921,9 @@
                                         weight: 'bold'
                                     }
                                 }
-                            } 
-                        } 
-                    } 
+                            }
+                        }
+                    }
                 });
             } catch (e) {
                 console.error("Chart rendering skipped inside cycle:", e);
@@ -1574,7 +1939,7 @@
                 return;
             }
 
-            let baseRes, preRes, loanAmount, monthlyPmt, savedInt, savedM;
+            let baseRes, preRes, regularRes, loanAmount, monthlyPmt, savedInt, savedM;
             let financialFailureKind = 'model_exception';
             try {
                 if (typeof simulateMortgage !== 'function') {
@@ -1583,11 +1948,12 @@
                 }
                 baseRes = simulateMortgage(false);
                 preRes = simulateMortgage(true);
+                regularRes = state.recurringPrepayment > 0 ? simulateMortgageRegularOnly() : baseRes;
                 loanAmount = activeTab === 'new' ? (state.cost - state.downPayment) : state.activeCurrentBalance;
                 monthlyPmt = preRes.schedule.length > 0 ? preRes.schedule[0].payment : 0;
                 savedInt = baseRes.totalInterest - preRes.totalInterest;
                 savedM = baseRes.realTerm - preRes.realTerm;
-                const schedulesAreFinite = [baseRes, preRes].every(result =>
+                const schedulesAreFinite = [baseRes, preRes, regularRes].every(result =>
                     result && Array.isArray(result.schedule) && result.schedule.every(month =>
                         [month.payment, month.interest, month.principal, month.prepayment, month.balance, month.insurance].every(Number.isFinite)
                     )
@@ -1597,7 +1963,7 @@
                     financialFailureKind = 'non_finite_result';
                     throw new Error('Non-finite mortgage outcome');
                 }
-                const schedulesAreComplete = [baseRes, preRes].every(result =>
+                const schedulesAreComplete = [baseRes, preRes, regularRes].every(result =>
                     result.schedule.length > 0 && result.schedule[result.schedule.length - 1].balance <= 0.01
                 );
                 if (!schedulesAreComplete) {
@@ -1635,76 +2001,32 @@
             document.getElementById('label-total-paid').innerText = activeTab === 'new' ? 'Сумма выплат' : 'Сумма будущих выплат';
             document.getElementById('total-paid-note').innerText = activeTab === 'new' ? 'без первоначального взноса' : 'по текущему остатку долга';
             document.getElementById('mobile-payment').innerText = localFormatMoney(monthlyPmt);
-            
+
             const mobileOverpay = document.getElementById('mobile-overpayment');
             if (mobileOverpay) {
                 mobileOverpay.innerText = localFormatMoney(overpayment);
             }
 
-            // Populate the newly redesigned solid Savings Card
-            const savingsCard = document.getElementById('savings-card');
-            if (savingsCard) {
-                if (savedInt <= 0 && savedM <= 0) {
-                    savingsCard.classList.add('hidden');
-                    // The live savings card stays hidden; the isolated PNG clone uses this current-state summary as its third result block.
-                    const summaryItems = activeTab === 'new'
-                        ? `<span>Стоимость жилья: <strong class="text-white">${localFormatMoney(state.cost)}</strong></span>
-                           <span>Первоначальный взнос: <strong class="text-white">${localFormatMoney(state.downPayment)}</strong></span>
-                           <span>Ставка: <strong class="text-white">${state.rate}%</strong></span>
-                           <span>Срок: <strong class="text-white">${state.termYears} ${localGetYearWord(state.termYears)}</strong></span>`
-                        : `<span>Остаток долга: <strong class="text-white">${localFormatMoney(loanAmount)}</strong></span>
-                           <span>Ставка: <strong class="text-white">${state.activeRate}%</strong></span>`;
-                    savingsCard.innerHTML = `<div data-screenshot-fallback class="space-y-3">
-                        <span class="text-xs uppercase font-black text-emerald-300">Параметры расчёта</span>
-                        <div class="grid grid-cols-2 gap-3 text-xs">
-                            ${summaryItems}
-                        </div>
-                    </div>`;
-                } else {
-                    savingsCard.classList.remove('hidden');
-                    savingsCard.innerHTML = `
-                        <div class="relative z-10 space-y-4">
-                            <div class="flex items-center justify-between">
-                                <span class="saving-badge" id="saving-badge">Экономия</span>
-                                <span class="text-xs text-emerald-300 font-semibold">за счёт досрочных платежей</span>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <p class="text-xs text-emerald-400 font-semibold" id="label-saved-interest">Сбережем процентов</p>
-                                    <p id="saving-money" class="text-2xl font-black text-white">${localFormatMoney(savedInt > 0 ? savedInt : 0)}</p>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-emerald-400 font-semibold">Сократим срок на</p>
-                                    <p id="saving-months" class="text-2xl font-black text-white">${savedM > 0 ? savedM : 0} мес.</p>
-                                </div>
-                            </div>
-                            <div class="border-t border-emerald-800/60 pt-3 text-[11px] text-emerald-300 flex flex-col sm:flex-row sm:justify-between gap-2">
-                                <span>Итого выплатим: <strong id="res-total-paid" class="text-white">${localFormatMoney(totalPaid)}</strong></span>
-                                <span>Досрочный капитал: <strong id="res-total-prepaid" class="text-emerald-400 font-extrabold">${localFormatMoney(preRes.totalPrepaid)}</strong></span>
-                            </div>
-                        </div>
-                    `;
-                }
-            }
+            renderMortgageBenefits(baseRes, regularRes, preRes);
 
             const valM = document.getElementById('mobile-saving');
             const ctaM = document.getElementById('mobile-cta-text');
             const labelM = document.getElementById('mobile-saving-label');
             if (ctaM) ctaM.innerText = `${localFormatMoney(state.recurringPrepayment)}/мес.`;
-            if (savedInt > 0 || savedM > 0) { 
+            if (savedInt > 0 || savedM > 0) {
                 if (valM) { valM.innerText = localFormatMoney(savedInt); valM.classList.remove('hidden'); }
                 if (ctaM) ctaM.classList.add('hidden');
                 if (labelM) labelM.innerText = 'Экономия';
-            } else { 
+            } else {
                 if (valM) valM.classList.add('hidden');
                 if (ctaM) ctaM.classList.remove('hidden');
                 if (labelM) labelM.innerText = 'Доп. платёж';
             }
 
-            let rTotal = loanAmount + preRes.totalInterest; 
+            let rTotal = loanAmount + preRes.totalInterest;
             bPct = rTotal > 0 ? (loanAmount / rTotal) * 100 : 50;
             iPct = 100 - bPct;
-            
+
             // Update percentage values
             const bodyTxt = document.getElementById('ratio-body-text');
             const intTxt = document.getElementById('ratio-interest-text');
@@ -1736,10 +2058,15 @@
             } catch (error) {
                 console.error('Mortgage primary result rendering failed:', error);
                 reportMortgageDiagnostic('primary_render', 'render_exception');
+                mortgageReadySignature = null;
+                mortgageStateController.transition(CalculatorState.STATES.ERROR, {
+                    message: 'Не удалось обновить результат. Измените параметр и попробуйте снова.'
+                });
                 return;
             }
 
             // The financial result is ready before optional detail and chart rendering.
+            mortgageReadySignature = JSON.stringify({activeTab, state});
             mortgageStateController.transition(CalculatorState.STATES.READY, { clearResults: false });
             let resultDetailsRendered = true;
 
@@ -1772,7 +2099,7 @@
                         // Theoretical annuity payment in the past
                         const mRate = rate / 12 / 100;
                         const pmt = mRate === 0 ? (originalLoan / termMonths) : (originalLoan * (mRate * Math.pow(1 + mRate, termMonths)) / (Math.pow(1 + mRate, termMonths) - 1));
-                        
+
                         let totalPaidPast = pmt * paidMonths;
                         let paidInterest = Math.max(0, totalPaidPast - paidBody);
 
@@ -1823,7 +2150,7 @@
                             labels: ['Тело кредита', 'Проценты банку'],
                             datasets: [{
                                 data: [bPct, iPct],
-                                backgroundColor: ['#10b981', '#f43f5e'],
+                                backgroundColor: ['#10b981', '#b77925'],
                                 borderWidth: isDark ? 2 : 1,
                                 borderColor: isDark ? '#0f172a' : '#ffffff'
                             }]
@@ -1875,6 +2202,7 @@
             document.getElementById('downpayment-input').value = localFormatNumber(state.downPayment);
             document.getElementById('downpayment-range').max = state.cost; document.getElementById('downpayment-range').value = state.downPayment;
             document.getElementById('rate-input').value = state.rate; document.getElementById('rate-range').value = state.rate;
+            document.getElementById('term-months-input').value = state.termMonths || 0;
             document.getElementById('term-input').value = state.termYears; document.getElementById('term-range').value = state.termYears;
             syncTargetPaymentControls();
             document.getElementById('active-amount-input').value = localFormatNumber(state.activeOriginalLoan); document.getElementById('active-rate-input').value = state.activeRate;
@@ -1925,6 +2253,14 @@
                     if (rateDisplay && data && data.effective_from) {
                         rateDisplay.title = `Действует с ${data.effective_from}`;
                     }
+                    const dateLabel = document.getElementById('cb-rate-date');
+                    if (dateLabel) {
+                        const effective = data && data.effective_from;
+                        const checked = data && data.metadata && data.metadata.last_successful_fetch_at;
+                        dateLabel.innerText = (effective ? ', действует с ' + effective.split('-').reverse().join('.') : '')
+                            + (checked ? ' · проверено ' + new Date(checked).toLocaleDateString('ru-RU') : '');
+                    }
+
                 } catch (err) {
                     console.error('Не удалось отобразить ключевую ставку Банка России:', err);
                 }
@@ -1934,7 +2270,16 @@
 
         window.onload = function() {
             if (typeof initTheme === 'function') initTheme();
-            calcTheoreticalBalance(); updateInputsDOM(); switchMainTab('new'); loadLiveRates();
+            const restored = restoreMortgageShareURL();
+            if (!restored) calcTheoreticalBalance();
+            updateInputsDOM();
+            document.getElementById('insurance-toggle').checked = state.includeInsurance;
+            document.getElementById('strategy-toggle').checked = state.prepaymentStrategy === 'payment';
+            switchMainTab(activeTab, true);
+            switchCalculationMode(state.mode);
+            toggleExistingKnowPayment();
+            initializeMortgagePresentation();
+            loadLiveRates();
         };
     </script>
 </body>

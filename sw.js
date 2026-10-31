@@ -1,4 +1,4 @@
-const CACHE_NAME = 'yasnomera-cache-v16';
+const CACHE_NAME = 'yasnomera-cache-v17';
 const EXTERNAL_LIBS = [
     'https://cdn.tailwindcss.com',
     'https://cdn.jsdelivr.net/npm/chart.js',

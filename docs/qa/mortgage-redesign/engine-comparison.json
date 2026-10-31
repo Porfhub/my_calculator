@@ -1,0 +1,4488 @@
+{
+  "baseline": "fd292a727ce7cace1f785dfcdcf6aaf7bb46cf45",
+  "scenarios": 66,
+  "identical": true,
+  "rows": [
+    {
+      "name": "new/term/term/uninsured/none",
+      "inputs": {
+        "tab": "new",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": false,
+        "recurringPrepayment": 0,
+        "customPrepayments": {}
+      },
+      "payment": 67809.49550817051,
+      "interest": 6555709.1914706975,
+      "insurance": 0,
+      "paid": 12205709.191470662,
+      "months": 180,
+      "schedule_sha256": "bb7671643120dc51b8553d60ff03f293ac27bee5de15fd794ab955a9aa936a3a",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 67809.49550817051,
+          "interest": 56500,
+          "principal": 11309.495508170512,
+          "prepayment": 0,
+          "balance": 5638690.504491829,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 67809.49550817051,
+          "interest": 55191.849352951096,
+          "principal": 12617.646155219416,
+          "prepayment": 0,
+          "balance": 5506567.28913989,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 67809.49550817051,
+          "interest": 47466.99733775587,
+          "principal": 20342.49817041464,
+          "prepayment": 0,
+          "balance": 4726357.235605172,
+          "insurance": 0
+        },
+        {
+          "month": 180,
+          "payment": 67809.49550816833,
+          "interest": 671.381143645231,
+          "principal": 67138.11436452309,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/term/term/uninsured/regular",
+      "inputs": {
+        "tab": "new",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": false,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {}
+      },
+      "payment": 67809.49550817051,
+      "interest": 3450640.8730093646,
+      "insurance": 0,
+      "paid": 9100640.873009369,
+      "months": 104,
+      "schedule_sha256": "523622362aad2f5931aeee964a65d89e82fb2759e5a42d2bf150e87ec74e7653",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 67809.49550817051,
+          "interest": 56500,
+          "principal": 11309.495508170512,
+          "prepayment": 20000,
+          "balance": 5618690.504491829,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 67809.49550817051,
+          "interest": 52878.48241964475,
+          "principal": 14931.01308852576,
+          "prepayment": 20000,
+          "balance": 5252917.228875949,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 67809.49550817051,
+          "interest": 31492.805286981773,
+          "principal": 36316.690221188735,
+          "prepayment": 20000,
+          "balance": 3092963.8384769885,
+          "insurance": 0
+        },
+        {
+          "month": 104,
+          "payment": 56262.83566780073,
+          "interest": 557.0577788891162,
+          "principal": 55705.777888911616,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/term/term/uninsured/once",
+      "inputs": {
+        "tab": "new",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": false,
+        "recurringPrepayment": 0,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 67809.49550817051,
+      "interest": 5179669.005735798,
+      "insurance": 0,
+      "paid": 10829669.00573579,
+      "months": 155,
+      "schedule_sha256": "34ae554ab18f43bed29b2b408cfb6a5e03167f594092959d7f429ad20a114764",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 67809.49550817051,
+          "interest": 56500,
+          "principal": 11309.495508170512,
+          "prepayment": 150000,
+          "balance": 5488690.504491829,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 67809.49550817051,
+          "interest": 53534.91616483428,
+          "principal": 14274.579343336234,
+          "prepayment": 200000,
+          "balance": 5139217.037140091,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 67809.49550817051,
+          "interest": 41603.11955639647,
+          "principal": 26206.37595177404,
+          "prepayment": 0,
+          "balance": 4134105.5796878734,
+          "insurance": 0
+        },
+        {
+          "month": 155,
+          "payment": 37006.69747754337,
+          "interest": 366.4029453222116,
+          "principal": 36640.29453222116,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/term/term/uninsured/combined",
+      "inputs": {
+        "tab": "new",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": false,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 67809.49550817051,
+      "interest": 2926525.7281851517,
+      "insurance": 0,
+      "paid": 8576525.728185162,
+      "months": 94,
+      "schedule_sha256": "f470843c2944286f3a1f7e9edaec62380e37355ad4e32e89606fd70768ca20f9",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 67809.49550817051,
+          "interest": 56500,
+          "principal": 11309.495508170512,
+          "prepayment": 170000,
+          "balance": 5468690.504491829,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 67809.49550817051,
+          "interest": 51221.54923152794,
+          "principal": 16587.94627664257,
+          "prepayment": 220000,
+          "balance": 4885566.976876152,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 67809.49550817051,
+          "interest": 25628.92750562243,
+          "principal": 42180.56800254808,
+          "prepayment": 20000,
+          "balance": 2500712.1825596946,
+          "insurance": 0
+        },
+        {
+          "month": 94,
+          "payment": 60242.64592529417,
+          "interest": 596.4618408444968,
+          "principal": 59646.18408444968,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/term/term/insured/none",
+      "inputs": {
+        "tab": "new",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": true,
+        "recurringPrepayment": 0,
+        "customPrepayments": {}
+      },
+      "payment": 67809.49550817051,
+      "interest": 6555709.1914706975,
+      "insurance": 571646.7765899271,
+      "paid": 12777355.968060587,
+      "months": 180,
+      "schedule_sha256": "f463b9a9f917696b3efd653e998b7cd780e705891a87c7c8f0653402476fa177",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 67809.49550817051,
+          "interest": 56500,
+          "principal": 11309.495508170512,
+          "prepayment": 0,
+          "balance": 5638690.504491829,
+          "insurance": 56500
+        },
+        {
+          "month": 12,
+          "payment": 67809.49550817051,
+          "interest": 55191.849352951096,
+          "principal": 12617.646155219416,
+          "prepayment": 0,
+          "balance": 5506567.28913989,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 67809.49550817051,
+          "interest": 47466.99733775587,
+          "principal": 20342.49817041464,
+          "prepayment": 0,
+          "balance": 4726357.235605172,
+          "insurance": 0
+        },
+        {
+          "month": 180,
+          "payment": 67809.49550816833,
+          "interest": 671.381143645231,
+          "principal": 67138.11436452309,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/term/term/insured/regular",
+      "inputs": {
+        "tab": "new",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": true,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {}
+      },
+      "payment": 67809.49550817051,
+      "interest": 3450640.8730093646,
+      "insurance": 314088.5024099129,
+      "paid": 9414729.37541928,
+      "months": 104,
+      "schedule_sha256": "1a104c920203472aa55e6a43d6f2caae6d816f152e57d3a8ee02dc1d10ca6a45",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 67809.49550817051,
+          "interest": 56500,
+          "principal": 11309.495508170512,
+          "prepayment": 20000,
+          "balance": 5618690.504491829,
+          "insurance": 56500
+        },
+        {
+          "month": 12,
+          "payment": 67809.49550817051,
+          "interest": 52878.48241964475,
+          "principal": 14931.01308852576,
+          "prepayment": 20000,
+          "balance": 5252917.228875949,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 67809.49550817051,
+          "interest": 31492.805286981773,
+          "principal": 36316.690221188735,
+          "prepayment": 20000,
+          "balance": 3092963.8384769885,
+          "insurance": 0
+        },
+        {
+          "month": 104,
+          "payment": 56262.83566780073,
+          "interest": 557.0577788891162,
+          "principal": 55705.777888911616,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/term/term/insured/once",
+      "inputs": {
+        "tab": "new",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": true,
+        "recurringPrepayment": 0,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 67809.49550817051,
+      "interest": 5179669.005735798,
+      "insurance": 457193.16043700033,
+      "paid": 11286862.166172786,
+      "months": 155,
+      "schedule_sha256": "1f425fcd48bb12da5dd7ceb9a1cfbbfbff11c9b3e2a3c1eb9cc4dc8e22b19d9b",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 67809.49550817051,
+          "interest": 56500,
+          "principal": 11309.495508170512,
+          "prepayment": 150000,
+          "balance": 5488690.504491829,
+          "insurance": 56500
+        },
+        {
+          "month": 12,
+          "payment": 67809.49550817051,
+          "interest": 53534.91616483428,
+          "principal": 14274.579343336234,
+          "prepayment": 200000,
+          "balance": 5139217.037140091,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 67809.49550817051,
+          "interest": 41603.11955639647,
+          "principal": 26206.37595177404,
+          "prepayment": 0,
+          "balance": 4134105.5796878734,
+          "insurance": 0
+        },
+        {
+          "month": 155,
+          "payment": 37006.69747754337,
+          "interest": 366.4029453222116,
+          "principal": 36640.29453222116,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/term/term/insured/combined",
+      "inputs": {
+        "tab": "new",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": true,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 67809.49550817051,
+      "interest": 2926525.7281851517,
+      "insurance": 269811.54667699384,
+      "paid": 8846337.274862152,
+      "months": 94,
+      "schedule_sha256": "1c66761a86470f4bc0010372a5b4e7834f96ec893218c8e56e99c7934f344082",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 67809.49550817051,
+          "interest": 56500,
+          "principal": 11309.495508170512,
+          "prepayment": 170000,
+          "balance": 5468690.504491829,
+          "insurance": 56500
+        },
+        {
+          "month": 12,
+          "payment": 67809.49550817051,
+          "interest": 51221.54923152794,
+          "principal": 16587.94627664257,
+          "prepayment": 220000,
+          "balance": 4885566.976876152,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 67809.49550817051,
+          "interest": 25628.92750562243,
+          "principal": 42180.56800254808,
+          "prepayment": 20000,
+          "balance": 2500712.1825596946,
+          "insurance": 0
+        },
+        {
+          "month": 94,
+          "payment": 60242.64592529417,
+          "interest": 596.4618408444968,
+          "principal": 59646.18408444968,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/term/payment/uninsured/none",
+      "inputs": {
+        "tab": "new",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": false,
+        "recurringPrepayment": 0,
+        "customPrepayments": {}
+      },
+      "payment": 67809.49550817051,
+      "interest": 6555709.1914706975,
+      "insurance": 0,
+      "paid": 12205709.191470662,
+      "months": 180,
+      "schedule_sha256": "bb7671643120dc51b8553d60ff03f293ac27bee5de15fd794ab955a9aa936a3a",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 67809.49550817051,
+          "interest": 56500,
+          "principal": 11309.495508170512,
+          "prepayment": 0,
+          "balance": 5638690.504491829,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 67809.49550817051,
+          "interest": 55191.849352951096,
+          "principal": 12617.646155219416,
+          "prepayment": 0,
+          "balance": 5506567.28913989,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 67809.49550817051,
+          "interest": 47466.99733775587,
+          "principal": 20342.49817041464,
+          "prepayment": 0,
+          "balance": 4726357.235605172,
+          "insurance": 0
+        },
+        {
+          "month": 180,
+          "payment": 67809.49550816833,
+          "interest": 671.381143645231,
+          "principal": 67138.11436452309,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/term/payment/uninsured/regular",
+      "inputs": {
+        "tab": "new",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": false,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {}
+      },
+      "payment": 67809.49550817051,
+      "interest": 4631026.566968428,
+      "insurance": 0,
+      "paid": 10281026.566968434,
+      "months": 164,
+      "schedule_sha256": "5b75448deaae7ecfc7b07d2c1255533f50185730557781a6e1dfaeb254368d00",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 67809.49550817051,
+          "interest": 56500,
+          "principal": 11309.495508170512,
+          "prepayment": 20000,
+          "balance": 5618690.504491829,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 65135.798445048255,
+          "interest": 53015.660245254665,
+          "principal": 12120.13819979359,
+          "prepayment": 20000,
+          "balance": 5269445.886325673,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 52485.08360085566,
+          "interest": 36739.82979645568,
+          "principal": 15745.253804399981,
+          "prepayment": 20000,
+          "balance": 3638237.725841168,
+          "insurance": 0
+        },
+        {
+          "month": 164,
+          "payment": 956.4758994810697,
+          "interest": 148.84918278268648,
+          "principal": 807.6267166983832,
+          "prepayment": 14077.291561570264,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/term/payment/uninsured/once",
+      "inputs": {
+        "tab": "new",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": false,
+        "recurringPrepayment": 0,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 67809.49550817051,
+      "interest": 6169057.420256538,
+      "insurance": 0,
+      "paid": 11819057.420256518,
+      "months": 180,
+      "schedule_sha256": "af9c48b2e26289670b7e2b5bd3e928c938794213bdbe079a57e01b31d1692a63",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 67809.49550817051,
+          "interest": 56500,
+          "principal": 11309.495508170512,
+          "prepayment": 150000,
+          "balance": 5488690.504491829,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 66005.6326577227,
+          "interest": 53723.640130198444,
+          "principal": 12281.992527524257,
+          "prepayment": 200000,
+          "balance": 5160082.02049232,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 63542.77360424649,
+          "interest": 44480.269951912065,
+          "principal": 19062.503652334424,
+          "prepayment": 0,
+          "balance": 4428964.491538872,
+          "insurance": 0
+        },
+        {
+          "month": 180,
+          "payment": 63542.77360425114,
+          "interest": 629.1363723193182,
+          "principal": 62913.63723193182,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/term/payment/uninsured/combined",
+      "inputs": {
+        "tab": "new",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": false,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 67809.49550817051,
+      "interest": 4250831.245287532,
+      "insurance": 0,
+      "paid": 9900831.245287532,
+      "months": 161,
+      "schedule_sha256": "2c15bbee8edc9a067bfe3977614ca8a5050993ead0d2093bf569f8a10b859597",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 67809.49550817051,
+          "interest": 56500,
+          "principal": 11309.495508170512,
+          "prepayment": 170000,
+          "balance": 5468690.504491829,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 63331.93559460044,
+          "interest": 51547.451022502006,
+          "principal": 11784.484572098438,
+          "prepayment": 220000,
+          "balance": 4922960.617678102,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 48218.361696931606,
+          "interest": 33753.10241061184,
+          "principal": 14465.259286319764,
+          "prepayment": 20000,
+          "balance": 3340844.9817748643,
+          "insurance": 0
+        },
+        {
+          "month": 161,
+          "payment": 355.5911274323795,
+          "interest": 64.16838524416832,
+          "principal": 291.42274218821115,
+          "prepayment": 6125.41578222862,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/term/payment/insured/none",
+      "inputs": {
+        "tab": "new",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": true,
+        "recurringPrepayment": 0,
+        "customPrepayments": {}
+      },
+      "payment": 67809.49550817051,
+      "interest": 6555709.1914706975,
+      "insurance": 571646.7765899271,
+      "paid": 12777355.968060587,
+      "months": 180,
+      "schedule_sha256": "f463b9a9f917696b3efd653e998b7cd780e705891a87c7c8f0653402476fa177",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 67809.49550817051,
+          "interest": 56500,
+          "principal": 11309.495508170512,
+          "prepayment": 0,
+          "balance": 5638690.504491829,
+          "insurance": 56500
+        },
+        {
+          "month": 12,
+          "payment": 67809.49550817051,
+          "interest": 55191.849352951096,
+          "principal": 12617.646155219416,
+          "prepayment": 0,
+          "balance": 5506567.28913989,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 67809.49550817051,
+          "interest": 47466.99733775587,
+          "principal": 20342.49817041464,
+          "prepayment": 0,
+          "balance": 4726357.235605172,
+          "insurance": 0
+        },
+        {
+          "month": 180,
+          "payment": 67809.49550816833,
+          "interest": 671.381143645231,
+          "principal": 67138.11436452309,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/term/payment/insured/regular",
+      "inputs": {
+        "tab": "new",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": true,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {}
+      },
+      "payment": 67809.49550817051,
+      "interest": 4631026.566968428,
+      "insurance": 412212.42693562555,
+      "paid": 10693238.99390406,
+      "months": 164,
+      "schedule_sha256": "1ae1b14ff904de2e4e02509866a0246508beb70d931dadbbc6f182141e7b3a97",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 67809.49550817051,
+          "interest": 56500,
+          "principal": 11309.495508170512,
+          "prepayment": 20000,
+          "balance": 5618690.504491829,
+          "insurance": 56500
+        },
+        {
+          "month": 12,
+          "payment": 65135.798445048255,
+          "interest": 53015.660245254665,
+          "principal": 12120.13819979359,
+          "prepayment": 20000,
+          "balance": 5269445.886325673,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 52485.08360085566,
+          "interest": 36739.82979645568,
+          "principal": 15745.253804399981,
+          "prepayment": 20000,
+          "balance": 3638237.725841168,
+          "insurance": 0
+        },
+        {
+          "month": 164,
+          "payment": 956.4758994810697,
+          "interest": 148.84918278268648,
+          "principal": 807.6267166983832,
+          "prepayment": 14077.291561570264,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/term/payment/insured/once",
+      "inputs": {
+        "tab": "new",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": true,
+        "recurringPrepayment": 0,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 67809.49550817051,
+      "interest": 6169057.420256538,
+      "insurance": 539232.6136627418,
+      "paid": 12358290.033919256,
+      "months": 180,
+      "schedule_sha256": "0ffd8ed4947d974be62f6753cf6a53f54870aeb24845c4182ead55e95cb01b3c",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 67809.49550817051,
+          "interest": 56500,
+          "principal": 11309.495508170512,
+          "prepayment": 150000,
+          "balance": 5488690.504491829,
+          "insurance": 56500
+        },
+        {
+          "month": 12,
+          "payment": 66005.6326577227,
+          "interest": 53723.640130198444,
+          "principal": 12281.992527524257,
+          "prepayment": 200000,
+          "balance": 5160082.02049232,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 63542.77360424649,
+          "interest": 44480.269951912065,
+          "principal": 19062.503652334424,
+          "prepayment": 0,
+          "balance": 4428964.491538872,
+          "insurance": 0
+        },
+        {
+          "month": 180,
+          "payment": 63542.77360425114,
+          "interest": 629.1363723193182,
+          "principal": 62913.63723193182,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/term/payment/insured/combined",
+      "inputs": {
+        "tab": "new",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": true,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 67809.49550817051,
+      "interest": 4250831.245287532,
+      "insurance": 380278.4868643047,
+      "paid": 10281109.732151834,
+      "months": 161,
+      "schedule_sha256": "85400bed21fa30ef3ee61a0edc116e33d2428a741f83b82cf673a729c93ac264",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 67809.49550817051,
+          "interest": 56500,
+          "principal": 11309.495508170512,
+          "prepayment": 170000,
+          "balance": 5468690.504491829,
+          "insurance": 56500
+        },
+        {
+          "month": 12,
+          "payment": 63331.93559460044,
+          "interest": 51547.451022502006,
+          "principal": 11784.484572098438,
+          "prepayment": 220000,
+          "balance": 4922960.617678102,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 48218.361696931606,
+          "interest": 33753.10241061184,
+          "principal": 14465.259286319764,
+          "prepayment": 20000,
+          "balance": 3340844.9817748643,
+          "insurance": 0
+        },
+        {
+          "month": 161,
+          "payment": 355.5911274323795,
+          "interest": 64.16838524416832,
+          "principal": 291.42274218821115,
+          "prepayment": 6125.41578222862,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/payment/term/uninsured/none",
+      "inputs": {
+        "tab": "new",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": false,
+        "recurringPrepayment": 0,
+        "customPrepayments": {}
+      },
+      "payment": 90000,
+      "interest": 3288873.6714378875,
+      "insurance": 0,
+      "paid": 8938873.671437887,
+      "months": 100,
+      "schedule_sha256": "753de462e7b4ea49bf4d8693aa33120566810fa72c17fe33f5798b32fa52eae5",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 90000,
+          "interest": 56500,
+          "principal": 33500,
+          "prepayment": 0,
+          "balance": 5616500,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 90000,
+          "interest": 52625.1103867119,
+          "principal": 37374.8896132881,
+          "prepayment": 0,
+          "balance": 5225136.149057901,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 90000,
+          "interest": 29743.22831495344,
+          "principal": 60256.77168504656,
+          "prepayment": 0,
+          "balance": 2914066.0598102976,
+          "insurance": 0
+        },
+        {
+          "month": 100,
+          "payment": 28873.67143788718,
+          "interest": 285.8779350285859,
+          "principal": 28587.793502858593,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/payment/term/uninsured/regular",
+      "inputs": {
+        "tab": "new",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": false,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {}
+      },
+      "payment": 90000,
+      "interest": 2318498.8670669436,
+      "insurance": 0,
+      "paid": 7968498.867066947,
+      "months": 73,
+      "schedule_sha256": "f06007575dfcfa19dcaf1d58da26758dedec7746e448b6ea82fd2c9891ee256c",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 90000,
+          "interest": 56500,
+          "principal": 33500,
+          "prepayment": 20000,
+          "balance": 5596500,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 90000,
+          "interest": 50311.74345340557,
+          "principal": 39688.25654659443,
+          "prepayment": 20000,
+          "balance": 4971486.088793963,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 90000,
+          "interest": 13769.036264179413,
+          "principal": 76230.96373582058,
+          "prepayment": 20000,
+          "balance": 1280672.6626821207,
+          "insurance": 0
+        },
+        {
+          "month": 73,
+          "payment": 48498.867066946994,
+          "interest": 480.1868026430396,
+          "principal": 48018.680264303955,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/payment/term/uninsured/once",
+      "inputs": {
+        "tab": "new",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": false,
+        "recurringPrepayment": 0,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 90000,
+      "interest": 2798814.787895344,
+      "insurance": 0,
+      "paid": 8448814.787895344,
+      "months": 90,
+      "schedule_sha256": "b2482abc38e4af203f5647abd866cb0184bebe2f68341344687fabc2fedd988b",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 90000,
+          "interest": 56500,
+          "principal": 33500,
+          "prepayment": 150000,
+          "balance": 5466500,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 90000,
+          "interest": 50968.1771985951,
+          "principal": 39031.8228014049,
+          "prepayment": 200000,
+          "balance": 4857785.897058105,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 90000,
+          "interest": 23879.350533594046,
+          "principal": 66120.64946640596,
+          "prepayment": 0,
+          "balance": 2321814.4038929986,
+          "insurance": 0
+        },
+        {
+          "month": 90,
+          "payment": 88814.78789534433,
+          "interest": 879.3543355974687,
+          "principal": 87935.43355974686,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/payment/term/uninsured/combined",
+      "inputs": {
+        "tab": "new",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": false,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 90000,
+      "interest": 2014591.6253085525,
+      "insurance": 0,
+      "paid": 7664591.625308552,
+      "months": 67,
+      "schedule_sha256": "de1f3493573ff52f2712a88f9d39ffacc5e8d457690302822b40093e71dc4fae",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 90000,
+          "interest": 56500,
+          "principal": 33500,
+          "prepayment": 170000,
+          "balance": 5446500,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 90000,
+          "interest": 48654.810265288776,
+          "principal": 41345.189734711224,
+          "prepayment": 220000,
+          "balance": 4604135.836794166,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 90000,
+          "interest": 7905.158482819995,
+          "principal": 82094.84151718,
+          "prepayment": 20000,
+          "balance": 688421.0067648195,
+          "insurance": 0
+        },
+        {
+          "month": 67,
+          "payment": 54591.6253085521,
+          "interest": 540.5111416688327,
+          "principal": 54051.11416688327,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/payment/term/insured/none",
+      "inputs": {
+        "tab": "new",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": true,
+        "recurringPrepayment": 0,
+        "customPrepayments": {}
+      },
+      "payment": 90000,
+      "interest": 3288873.6714378875,
+      "insurance": 300486.90162323636,
+      "paid": 9239360.573061125,
+      "months": 100,
+      "schedule_sha256": "4f9389f3c86f0591557cde963e0517d0e07499a7dfea42e582b1ef5e7a807ff1",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 90000,
+          "interest": 56500,
+          "principal": 33500,
+          "prepayment": 0,
+          "balance": 5616500,
+          "insurance": 56500
+        },
+        {
+          "month": 12,
+          "payment": 90000,
+          "interest": 52625.1103867119,
+          "principal": 37374.8896132881,
+          "prepayment": 0,
+          "balance": 5225136.149057901,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 90000,
+          "interest": 29743.22831495344,
+          "principal": 60256.77168504656,
+          "prepayment": 0,
+          "balance": 2914066.0598102976,
+          "insurance": 0
+        },
+        {
+          "month": 100,
+          "payment": 28873.67143788718,
+          "interest": 285.8779350285859,
+          "principal": 28587.793502858593,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/payment/term/insured/regular",
+      "inputs": {
+        "tab": "new",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": true,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {}
+      },
+      "payment": 90000,
+      "interest": 2318498.8670669436,
+      "insurance": 218770.74554278512,
+      "paid": 8187269.612609732,
+      "months": 73,
+      "schedule_sha256": "04659b82b5b2ae283fadc07295531dbd4768a9ec25a16228c80dc9b2762e1215",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 90000,
+          "interest": 56500,
+          "principal": 33500,
+          "prepayment": 20000,
+          "balance": 5596500,
+          "insurance": 56500
+        },
+        {
+          "month": 12,
+          "payment": 90000,
+          "interest": 50311.74345340557,
+          "principal": 39688.25654659443,
+          "prepayment": 20000,
+          "balance": 4971486.088793963,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 90000,
+          "interest": 13769.036264179413,
+          "principal": 76230.96373582058,
+          "prepayment": 20000,
+          "balance": 1280672.6626821207,
+          "insurance": 0
+        },
+        {
+          "month": 73,
+          "payment": 48498.867066946994,
+          "interest": 480.1868026430396,
+          "principal": 48018.680264303955,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 480.1868026430396
+        }
+      ]
+    },
+    {
+      "name": "new/payment/term/insured/once",
+      "inputs": {
+        "tab": "new",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": true,
+        "recurringPrepayment": 0,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 90000,
+      "interest": 2798814.787895344,
+      "insurance": 259713.16041741622,
+      "paid": 8708527.948312761,
+      "months": 90,
+      "schedule_sha256": "01bacdf64faef4552c8e44d48d3a6fcf36bc3388e8ae376f54a08d3f454a3cf6",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 90000,
+          "interest": 56500,
+          "principal": 33500,
+          "prepayment": 150000,
+          "balance": 5466500,
+          "insurance": 56500
+        },
+        {
+          "month": 12,
+          "payment": 90000,
+          "interest": 50968.1771985951,
+          "principal": 39031.8228014049,
+          "prepayment": 200000,
+          "balance": 4857785.897058105,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 90000,
+          "interest": 23879.350533594046,
+          "principal": 66120.64946640596,
+          "prepayment": 0,
+          "balance": 2321814.4038929986,
+          "insurance": 0
+        },
+        {
+          "month": 90,
+          "payment": 88814.78789534433,
+          "interest": 879.3543355974687,
+          "principal": 87935.43355974686,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/payment/term/insured/combined",
+      "inputs": {
+        "tab": "new",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": true,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 90000,
+      "interest": 2014591.6253085525,
+      "insurance": 194634.83891001565,
+      "paid": 7859226.464218567,
+      "months": 67,
+      "schedule_sha256": "389198d5a00429fb1a9748e784a8a306602d5e7b6cb84167a510efcf89849ed4",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 90000,
+          "interest": 56500,
+          "principal": 33500,
+          "prepayment": 170000,
+          "balance": 5446500,
+          "insurance": 56500
+        },
+        {
+          "month": 12,
+          "payment": 90000,
+          "interest": 48654.810265288776,
+          "principal": 41345.189734711224,
+          "prepayment": 220000,
+          "balance": 4604135.836794166,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 90000,
+          "interest": 7905.158482819995,
+          "principal": 82094.84151718,
+          "prepayment": 20000,
+          "balance": 688421.0067648195,
+          "insurance": 0
+        },
+        {
+          "month": 67,
+          "payment": 54591.6253085521,
+          "interest": 540.5111416688327,
+          "principal": 54051.11416688327,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/payment/payment/uninsured/none",
+      "inputs": {
+        "tab": "new",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": false,
+        "recurringPrepayment": 0,
+        "customPrepayments": {}
+      },
+      "payment": 90000,
+      "interest": 3288873.6714378875,
+      "insurance": 0,
+      "paid": 8938873.671437887,
+      "months": 100,
+      "schedule_sha256": "753de462e7b4ea49bf4d8693aa33120566810fa72c17fe33f5798b32fa52eae5",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 90000,
+          "interest": 56500,
+          "principal": 33500,
+          "prepayment": 0,
+          "balance": 5616500,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 90000,
+          "interest": 52625.1103867119,
+          "principal": 37374.8896132881,
+          "prepayment": 0,
+          "balance": 5225136.149057901,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 90000,
+          "interest": 29743.22831495344,
+          "principal": 60256.77168504656,
+          "prepayment": 0,
+          "balance": 2914066.0598102976,
+          "insurance": 0
+        },
+        {
+          "month": 100,
+          "payment": 28873.67143788718,
+          "interest": 285.8779350285859,
+          "principal": 28587.793502858593,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/payment/payment/uninsured/regular",
+      "inputs": {
+        "tab": "new",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": false,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {}
+      },
+      "payment": 90000,
+      "interest": 2755471.4805685864,
+      "insurance": 0,
+      "paid": 8405471.480568586,
+      "months": 98,
+      "schedule_sha256": "20ddcecd59dab732da86dc6ce53551ce19d0f17230365c08976b80b1ecc311d1",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 90000,
+          "interest": 56500,
+          "principal": 33500,
+          "prepayment": 20000,
+          "balance": 5596500,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 86011.93067917327,
+          "interest": 50534.151228878174,
+          "principal": 35477.77945029509,
+          "prepayment": 20000,
+          "balance": 4997937.343437522,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 64990.80736752252,
+          "interest": 21771.718490818967,
+          "principal": 43219.08887670355,
+          "prepayment": 20000,
+          "balance": 2113952.760205193,
+          "insurance": 0
+        },
+        {
+          "month": 98,
+          "payment": 5207.246269376616,
+          "interest": 153.14434248669227,
+          "principal": 5054.101926889924,
+          "prepayment": 10260.332321779302,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/payment/payment/uninsured/once",
+      "inputs": {
+        "tab": "new",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": false,
+        "recurringPrepayment": 0,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 90000,
+      "interest": 3125260.739471736,
+      "insurance": 0,
+      "paid": 8775260.739471728,
+      "months": 100,
+      "schedule_sha256": "07e5146ccf51b8e77799e7a68c3b169b1c5cbd3968a010b3bf1b65db79227da7",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 90000,
+          "interest": 56500,
+          "principal": 33500,
+          "prepayment": 150000,
+          "balance": 5466500,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 87241.82291797486,
+          "interest": 51256.74354717704,
+          "principal": 35985.07937079782,
+          "prepayment": 200000,
+          "balance": 4889689.275346906,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 83813.6441747046,
+          "interest": 28077.310323940077,
+          "principal": 55736.333850764524,
+          "prepayment": 0,
+          "balance": 2751994.698543243,
+          "insurance": 0
+        },
+        {
+          "month": 100,
+          "payment": 83813.64417471405,
+          "interest": 829.8380611357826,
+          "principal": 82983.80611357826,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/payment/payment/uninsured/combined",
+      "inputs": {
+        "tab": "new",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": false,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 90000,
+      "interest": 2566985.750110812,
+      "insurance": 0,
+      "paid": 8216985.7501108125,
+      "months": 97,
+      "schedule_sha256": "a4fb76b904d43f65d2b100167a56c1b1261bab410c9542a0f8ee34e4844e9887",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 90000,
+          "interest": 56500,
+          "principal": 33500,
+          "prepayment": 170000,
+          "balance": 5446500,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 83618.02718741503,
+          "interest": 49127.673312098406,
+          "principal": 34490.35387531663,
+          "prepayment": 220000,
+          "balance": 4658276.977334524,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 59168.725132494044,
+          "interest": 19821.339035850364,
+          "principal": 39347.38609664368,
+          "prepayment": 20000,
+          "balance": 1922786.5174883928,
+          "insurance": 0
+        },
+        {
+          "month": 97,
+          "payment": 6185.6062639775255,
+          "interest": 241.36022558533696,
+          "principal": 5944.246038392189,
+          "prepayment": 18191.776520141506,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/payment/payment/insured/none",
+      "inputs": {
+        "tab": "new",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": true,
+        "recurringPrepayment": 0,
+        "customPrepayments": {}
+      },
+      "payment": 90000,
+      "interest": 3288873.6714378875,
+      "insurance": 300486.90162323636,
+      "paid": 9239360.573061125,
+      "months": 100,
+      "schedule_sha256": "4f9389f3c86f0591557cde963e0517d0e07499a7dfea42e582b1ef5e7a807ff1",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 90000,
+          "interest": 56500,
+          "principal": 33500,
+          "prepayment": 0,
+          "balance": 5616500,
+          "insurance": 56500
+        },
+        {
+          "month": 12,
+          "payment": 90000,
+          "interest": 52625.1103867119,
+          "principal": 37374.8896132881,
+          "prepayment": 0,
+          "balance": 5225136.149057901,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 90000,
+          "interest": 29743.22831495344,
+          "principal": 60256.77168504656,
+          "prepayment": 0,
+          "balance": 2914066.0598102976,
+          "insurance": 0
+        },
+        {
+          "month": 100,
+          "payment": 28873.67143788718,
+          "interest": 285.8779350285859,
+          "principal": 28587.793502858593,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/payment/payment/insured/regular",
+      "inputs": {
+        "tab": "new",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": true,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {}
+      },
+      "payment": 90000,
+      "interest": 2755471.4805685864,
+      "insurance": 255890.78037830538,
+      "paid": 8661362.26094689,
+      "months": 98,
+      "schedule_sha256": "59ec62cb11b1db712c7246e2401342baafbcf24c64aee28a2d8a4f6d5e2917e0",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 90000,
+          "interest": 56500,
+          "principal": 33500,
+          "prepayment": 20000,
+          "balance": 5596500,
+          "insurance": 56500
+        },
+        {
+          "month": 12,
+          "payment": 86011.93067917327,
+          "interest": 50534.151228878174,
+          "principal": 35477.77945029509,
+          "prepayment": 20000,
+          "balance": 4997937.343437522,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 64990.80736752252,
+          "interest": 21771.718490818967,
+          "principal": 43219.08887670355,
+          "prepayment": 20000,
+          "balance": 2113952.760205193,
+          "insurance": 0
+        },
+        {
+          "month": 98,
+          "payment": 5207.246269376616,
+          "interest": 153.14434248669227,
+          "principal": 5054.101926889924,
+          "prepayment": 10260.332321779302,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/payment/payment/insured/once",
+      "inputs": {
+        "tab": "new",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": true,
+        "recurringPrepayment": 0,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 90000,
+      "interest": 3125260.739471736,
+      "insurance": 286706.3587650436,
+      "paid": 9061967.098236771,
+      "months": 100,
+      "schedule_sha256": "ea2463addfce0078eed092e5be875441efb36fd2eb2afea2ff0043fff5f4774d",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 90000,
+          "interest": 56500,
+          "principal": 33500,
+          "prepayment": 150000,
+          "balance": 5466500,
+          "insurance": 56500
+        },
+        {
+          "month": 12,
+          "payment": 87241.82291797486,
+          "interest": 51256.74354717704,
+          "principal": 35985.07937079782,
+          "prepayment": 200000,
+          "balance": 4889689.275346906,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 83813.6441747046,
+          "interest": 28077.310323940077,
+          "principal": 55736.333850764524,
+          "prepayment": 0,
+          "balance": 2751994.698543243,
+          "insurance": 0
+        },
+        {
+          "month": 100,
+          "payment": 83813.64417471405,
+          "interest": 829.8380611357826,
+          "principal": 82983.80611357826,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "new/payment/payment/insured/combined",
+      "inputs": {
+        "tab": "new",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": true,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 90000,
+      "interest": 2566985.750110812,
+      "insurance": 239899.58509078374,
+      "paid": 8456885.335201597,
+      "months": 97,
+      "schedule_sha256": "985f029cac770bfe3b85fe453638d62440b9aa6018fa0e24fcb6cfab67fec69f",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 90000,
+          "interest": 56500,
+          "principal": 33500,
+          "prepayment": 170000,
+          "balance": 5446500,
+          "insurance": 56500
+        },
+        {
+          "month": 12,
+          "payment": 83618.02718741503,
+          "interest": 49127.673312098406,
+          "principal": 34490.35387531663,
+          "prepayment": 220000,
+          "balance": 4658276.977334524,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 59168.725132494044,
+          "interest": 19821.339035850364,
+          "principal": 39347.38609664368,
+          "prepayment": 20000,
+          "balance": 1922786.5174883928,
+          "insurance": 0
+        },
+        {
+          "month": 97,
+          "payment": 6185.6062639775255,
+          "interest": 241.36022558533696,
+          "principal": 5944.246038392189,
+          "prepayment": 18191.776520141506,
+          "balance": 0,
+          "insurance": 241.36022558533696
+        }
+      ]
+    },
+    {
+      "name": "existing/term/term/uninsured/none",
+      "inputs": {
+        "tab": "existing",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": false,
+        "recurringPrepayment": 0,
+        "customPrepayments": {}
+      },
+      "payment": 61014.42292019617,
+      "interest": 7146942.275720045,
+      "insurance": 0,
+      "paid": 12446942.275720006,
+      "months": 204,
+      "schedule_sha256": "c52c1d8ea323682b6761434b5de897a8ce10b35c9dcd35fbca6004f701435081",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 61014.42292019617,
+          "interest": 53000,
+          "principal": 8014.422920196172,
+          "prepayment": 0,
+          "balance": 5291985.577079804,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 61014.42292019617,
+          "interest": 52072.984951344304,
+          "principal": 8941.437968851867,
+          "prepayment": 0,
+          "balance": 5198357.057165578,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 61014.42292019617,
+          "interest": 46598.80345483306,
+          "principal": 14415.61946536311,
+          "prepayment": 0,
+          "balance": 4645464.726017943,
+          "insurance": 0
+        },
+        {
+          "month": 204,
+          "payment": 61014.422920221594,
+          "interest": 604.1031972299168,
+          "principal": 60410.31972299168,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/term/term/uninsured/regular",
+      "inputs": {
+        "tab": "existing",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": false,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {}
+      },
+      "payment": 61014.42292019617,
+      "interest": 3346008.72689855,
+      "insurance": 0,
+      "paid": 8646008.726898558,
+      "months": 107,
+      "schedule_sha256": "4bf878999babc23673ab0387ec8a8bcfd0ba03b561cf1f38b29e235dea0934dc",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 61014.42292019617,
+          "interest": 53000,
+          "principal": 8014.422920196172,
+          "prepayment": 20000,
+          "balance": 5271985.577079804,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 61014.42292019617,
+          "interest": 49759.61801803796,
+          "principal": 11254.804902158212,
+          "prepayment": 20000,
+          "balance": 4944706.996901637,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 61014.42292019617,
+          "interest": 30624.611404058967,
+          "principal": 30389.811516137204,
+          "prepayment": 20000,
+          "balance": 3012071.3288897593,
+          "insurance": 0
+        },
+        {
+          "month": 107,
+          "payment": 58479.89735775716,
+          "interest": 579.008884730269,
+          "principal": 57900.88847302689,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/term/term/uninsured/once",
+      "inputs": {
+        "tab": "existing",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": false,
+        "recurringPrepayment": 0,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 61014.42292019617,
+      "interest": 5404200.651997905,
+      "insurance": 0,
+      "paid": 10704200.651997887,
+      "months": 170,
+      "schedule_sha256": "c9c88065caa0087a5a888e4bf9983ca8a7b06028af87edcfd3456c9dec8eda97",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 61014.42292019617,
+          "interest": 53000,
+          "principal": 8014.422920196172,
+          "prepayment": 150000,
+          "balance": 5141985.577079804,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 61014.42292019617,
+          "interest": 50416.05176322748,
+          "principal": 10598.371156968693,
+          "prepayment": 200000,
+          "balance": 4831006.805165779,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 61014.42292019617,
+          "interest": 40734.92567347365,
+          "principal": 20279.497246722523,
+          "prepayment": 0,
+          "balance": 4053213.0701006423,
+          "insurance": 0
+        },
+        {
+          "month": 170,
+          "payment": 42763.17848474943,
+          "interest": 423.3978067796973,
+          "principal": 42339.78067796973,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/term/term/uninsured/combined",
+      "inputs": {
+        "tab": "existing",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": false,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 61014.42292019617,
+      "interest": 2799738.608877941,
+      "insurance": 0,
+      "paid": 8099738.608877954,
+      "months": 96,
+      "schedule_sha256": "e92bda3c301376e87a1fee86387c7a7bef607ba33365518c91792cc8834f9c99",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 61014.42292019617,
+          "interest": 53000,
+          "principal": 8014.422920196172,
+          "prepayment": 170000,
+          "balance": 5121985.577079804,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 61014.42292019617,
+          "interest": 48102.684829921156,
+          "principal": 12911.738090275016,
+          "prepayment": 220000,
+          "balance": 4577356.744901841,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 61014.42292019617,
+          "interest": 24760.733622699598,
+          "principal": 36253.689297496574,
+          "prepayment": 20000,
+          "balance": 2419819.672972463,
+          "insurance": 0
+        },
+        {
+          "month": 96,
+          "payment": 53368.43145930737,
+          "interest": 528.4003114782909,
+          "principal": 52840.03114782908,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/term/term/insured/none",
+      "inputs": {
+        "tab": "existing",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": true,
+        "recurringPrepayment": 0,
+        "customPrepayments": {}
+      },
+      "payment": 61014.42292019617,
+      "interest": 7146942.275720045,
+      "insurance": 619346.6096481257,
+      "paid": 13066288.88536813,
+      "months": 204,
+      "schedule_sha256": "c4283bf2381425691f42419edfa87d55e4635b95e1bb62567a9f57e5d19c7be4",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 61014.42292019617,
+          "interest": 53000,
+          "principal": 8014.422920196172,
+          "prepayment": 0,
+          "balance": 5291985.577079804,
+          "insurance": 53000
+        },
+        {
+          "month": 12,
+          "payment": 61014.42292019617,
+          "interest": 52072.984951344304,
+          "principal": 8941.437968851867,
+          "prepayment": 0,
+          "balance": 5198357.057165578,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 61014.42292019617,
+          "interest": 46598.80345483306,
+          "principal": 14415.61946536311,
+          "prepayment": 0,
+          "balance": 4645464.726017943,
+          "insurance": 0
+        },
+        {
+          "month": 204,
+          "payment": 61014.422920221594,
+          "interest": 604.1031972299168,
+          "principal": 60410.31972299168,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/term/term/insured/regular",
+      "inputs": {
+        "tab": "existing",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": true,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {}
+      },
+      "payment": 61014.42292019617,
+      "interest": 3346008.72689855,
+      "insurance": 303048.7489293424,
+      "paid": 8949057.475827897,
+      "months": 107,
+      "schedule_sha256": "abedd1148aa5cf6fd2a4e81a5a3df80eb9319d844839cdf5814eacddf0c12fda",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 61014.42292019617,
+          "interest": 53000,
+          "principal": 8014.422920196172,
+          "prepayment": 20000,
+          "balance": 5271985.577079804,
+          "insurance": 53000
+        },
+        {
+          "month": 12,
+          "payment": 61014.42292019617,
+          "interest": 49759.61801803796,
+          "principal": 11254.804902158212,
+          "prepayment": 20000,
+          "balance": 4944706.996901637,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 61014.42292019617,
+          "interest": 30624.611404058967,
+          "principal": 30389.811516137204,
+          "prepayment": 20000,
+          "balance": 3012071.3288897593,
+          "insurance": 0
+        },
+        {
+          "month": 107,
+          "payment": 58479.89735775716,
+          "interest": 579.008884730269,
+          "principal": 57900.88847302689,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/term/term/insured/once",
+      "inputs": {
+        "tab": "existing",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": true,
+        "recurringPrepayment": 0,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 61014.42292019617,
+      "interest": 5404200.651997905,
+      "insurance": 474360.4393125732,
+      "paid": 11178561.091310456,
+      "months": 170,
+      "schedule_sha256": "3e3e5748be6955afb14d4604655d1025212c17347bf8f3ecfd760249bd0f8c3e",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 61014.42292019617,
+          "interest": 53000,
+          "principal": 8014.422920196172,
+          "prepayment": 150000,
+          "balance": 5141985.577079804,
+          "insurance": 53000
+        },
+        {
+          "month": 12,
+          "payment": 61014.42292019617,
+          "interest": 50416.05176322748,
+          "principal": 10598.371156968693,
+          "prepayment": 200000,
+          "balance": 4831006.805165779,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 61014.42292019617,
+          "interest": 40734.92567347365,
+          "principal": 20279.497246722523,
+          "prepayment": 0,
+          "balance": 4053213.0701006423,
+          "insurance": 0
+        },
+        {
+          "month": 170,
+          "payment": 42763.17848474943,
+          "interest": 423.3978067796973,
+          "principal": 42339.78067796973,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/term/term/insured/combined",
+      "inputs": {
+        "tab": "existing",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": true,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 61014.42292019617,
+      "interest": 2799738.608877941,
+      "insurance": 257002.072818723,
+      "paid": 8356740.681696676,
+      "months": 96,
+      "schedule_sha256": "e46bd451c66e184d78242e66ddddb9a6b155eabad5b404a35b6f296339b5c545",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 61014.42292019617,
+          "interest": 53000,
+          "principal": 8014.422920196172,
+          "prepayment": 170000,
+          "balance": 5121985.577079804,
+          "insurance": 53000
+        },
+        {
+          "month": 12,
+          "payment": 61014.42292019617,
+          "interest": 48102.684829921156,
+          "principal": 12911.738090275016,
+          "prepayment": 220000,
+          "balance": 4577356.744901841,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 61014.42292019617,
+          "interest": 24760.733622699598,
+          "principal": 36253.689297496574,
+          "prepayment": 20000,
+          "balance": 2419819.672972463,
+          "insurance": 0
+        },
+        {
+          "month": 96,
+          "payment": 53368.43145930737,
+          "interest": 528.4003114782909,
+          "principal": 52840.03114782908,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/term/payment/uninsured/none",
+      "inputs": {
+        "tab": "existing",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": false,
+        "recurringPrepayment": 0,
+        "customPrepayments": {}
+      },
+      "payment": 61014.42292019617,
+      "interest": 7146942.275720045,
+      "insurance": 0,
+      "paid": 12446942.275720006,
+      "months": 204,
+      "schedule_sha256": "c52c1d8ea323682b6761434b5de897a8ce10b35c9dcd35fbca6004f701435081",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 61014.42292019617,
+          "interest": 53000,
+          "principal": 8014.422920196172,
+          "prepayment": 0,
+          "balance": 5291985.577079804,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 61014.42292019617,
+          "interest": 52072.984951344304,
+          "principal": 8941.437968851867,
+          "prepayment": 0,
+          "balance": 5198357.057165578,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 61014.42292019617,
+          "interest": 46598.80345483306,
+          "principal": 14415.61946536311,
+          "prepayment": 0,
+          "balance": 4645464.726017943,
+          "insurance": 0
+        },
+        {
+          "month": 204,
+          "payment": 61014.422920221594,
+          "interest": 604.1031972299168,
+          "principal": 60410.31972299168,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/term/payment/uninsured/regular",
+      "inputs": {
+        "tab": "existing",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": false,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {}
+      },
+      "payment": 61014.42292019617,
+      "interest": 4650002.371880759,
+      "insurance": 0,
+      "paid": 9950002.371880755,
+      "months": 176,
+      "schedule_sha256": "656d64631c6919441602838d3e528fd1d2659677085390e52889b02ac0fc0b80",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 61014.42292019617,
+          "interest": 53000,
+          "principal": 8014.422920196172,
+          "prepayment": 20000,
+          "balance": 5271985.577079804,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 58457.694922559494,
+          "interest": 49890.935983680494,
+          "principal": 8566.758938879,
+          "prepayment": 20000,
+          "balance": 4960526.839429171,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 46611.37921598292,
+          "interest": 35598.7059270427,
+          "principal": 11012.67328894022,
+          "prepayment": 20000,
+          "balance": 3528857.9194153296,
+          "insurance": 0
+        },
+        {
+          "month": 176,
+          "payment": 747.6059699111887,
+          "interest": 187.39330733409085,
+          "principal": 560.2126625770978,
+          "prepayment": 18179.118070831988,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/term/payment/uninsured/once",
+      "inputs": {
+        "tab": "existing",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": false,
+        "recurringPrepayment": 0,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 61014.42292019617,
+      "interest": 6695155.817981857,
+      "insurance": 0,
+      "paid": 11995155.817981862,
+      "months": 204,
+      "schedule_sha256": "b6452e7105200105050ce22ba0e9c6d280640023739d45d8afc1a80fed73de2c",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 61014.42292019617,
+          "interest": 53000,
+          "principal": 8014.422920196172,
+          "prepayment": 150000,
+          "balance": 5141985.577079804,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 59284.98445050939,
+          "interest": 50596.989291694044,
+          "principal": 8687.995158815349,
+          "prepayment": 200000,
+          "balance": 4851010.934010589,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 56937.534198469046,
+          "interest": 43485.14397632792,
+          "principal": 13452.390222141126,
+          "prepayment": 0,
+          "balance": 4335062.00741065,
+          "insurance": 0
+        },
+        {
+          "month": 204,
+          "payment": 56937.53419847399,
+          "interest": 563.7379623611287,
+          "principal": 56373.79623611287,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/term/payment/uninsured/combined",
+      "inputs": {
+        "tab": "existing",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": false,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 61014.42292019617,
+      "interest": 4215536.2791672945,
+      "insurance": 0,
+      "paid": 9515536.279167289,
+      "months": 171,
+      "schedule_sha256": "f1b053e2444fe741c3b96bc979ce0dbac5093e65a22ca935f713d1af131177ef",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 61014.42292019617,
+          "interest": 53000,
+          "principal": 8014.422920196172,
+          "prepayment": 170000,
+          "balance": 5121985.577079804,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 56728.2564528727,
+          "interest": 48414.94032403022,
+          "principal": 8313.316128842482,
+          "prepayment": 220000,
+          "balance": 4613180.7162741795,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 42534.490494255726,
+          "interest": 32485.046448537545,
+          "principal": 10049.44404571818,
+          "prepayment": 20000,
+          "balance": 3218455.200808036,
+          "insurance": 0
+        },
+        {
+          "month": 171,
+          "payment": 445.060996304953,
+          "interest": 127.74437076954382,
+          "principal": 317.3166255354092,
+          "prepayment": 12457.120451418972,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/term/payment/insured/none",
+      "inputs": {
+        "tab": "existing",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": true,
+        "recurringPrepayment": 0,
+        "customPrepayments": {}
+      },
+      "payment": 61014.42292019617,
+      "interest": 7146942.275720045,
+      "insurance": 619346.6096481257,
+      "paid": 13066288.88536813,
+      "months": 204,
+      "schedule_sha256": "c4283bf2381425691f42419edfa87d55e4635b95e1bb62567a9f57e5d19c7be4",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 61014.42292019617,
+          "interest": 53000,
+          "principal": 8014.422920196172,
+          "prepayment": 0,
+          "balance": 5291985.577079804,
+          "insurance": 53000
+        },
+        {
+          "month": 12,
+          "payment": 61014.42292019617,
+          "interest": 52072.984951344304,
+          "principal": 8941.437968851867,
+          "prepayment": 0,
+          "balance": 5198357.057165578,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 61014.42292019617,
+          "interest": 46598.80345483306,
+          "principal": 14415.61946536311,
+          "prepayment": 0,
+          "balance": 4645464.726017943,
+          "insurance": 0
+        },
+        {
+          "month": 204,
+          "payment": 61014.422920221594,
+          "interest": 604.1031972299168,
+          "principal": 60410.31972299168,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/term/payment/insured/regular",
+      "inputs": {
+        "tab": "existing",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": true,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {}
+      },
+      "payment": 61014.42292019617,
+      "interest": 4650002.371880759,
+      "insurance": 412146.78525629075,
+      "paid": 10362149.157137044,
+      "months": 176,
+      "schedule_sha256": "e64983f665be7fa7d55b6f045abbe4aa3d750ff94f421dd5a0b82a7254b31ce8",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 61014.42292019617,
+          "interest": 53000,
+          "principal": 8014.422920196172,
+          "prepayment": 20000,
+          "balance": 5271985.577079804,
+          "insurance": 53000
+        },
+        {
+          "month": 12,
+          "payment": 58457.694922559494,
+          "interest": 49890.935983680494,
+          "principal": 8566.758938879,
+          "prepayment": 20000,
+          "balance": 4960526.839429171,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 46611.37921598292,
+          "interest": 35598.7059270427,
+          "principal": 11012.67328894022,
+          "prepayment": 20000,
+          "balance": 3528857.9194153296,
+          "insurance": 0
+        },
+        {
+          "month": 176,
+          "payment": 747.6059699111887,
+          "interest": 187.39330733409085,
+          "principal": 560.2126625770978,
+          "prepayment": 18179.118070831988,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/term/payment/insured/once",
+      "inputs": {
+        "tab": "existing",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": true,
+        "recurringPrepayment": 0,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 61014.42292019617,
+      "interest": 6695155.817981857,
+      "insurance": 581504.2111633793,
+      "paid": 12576660.029145235,
+      "months": 204,
+      "schedule_sha256": "05153ce905dcb26ebcafd893ff721d86e734dcbcc258d08d64ea2f04726faaa2",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 61014.42292019617,
+          "interest": 53000,
+          "principal": 8014.422920196172,
+          "prepayment": 150000,
+          "balance": 5141985.577079804,
+          "insurance": 53000
+        },
+        {
+          "month": 12,
+          "payment": 59284.98445050939,
+          "interest": 50596.989291694044,
+          "principal": 8687.995158815349,
+          "prepayment": 200000,
+          "balance": 4851010.934010589,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 56937.534198469046,
+          "interest": 43485.14397632792,
+          "principal": 13452.390222141126,
+          "prepayment": 0,
+          "balance": 4335062.00741065,
+          "insurance": 0
+        },
+        {
+          "month": 204,
+          "payment": 56937.53419847399,
+          "interest": 563.7379623611287,
+          "principal": 56373.79623611287,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/term/payment/insured/combined",
+      "inputs": {
+        "tab": "existing",
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": true,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 61014.42292019617,
+      "interest": 4215536.2791672945,
+      "insurance": 375629.31301490194,
+      "paid": 9891165.592182187,
+      "months": 171,
+      "schedule_sha256": "841aab09282f82b06b2accd5303b3c12c350148ead36e8f61a3aeb865971dddc",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 61014.42292019617,
+          "interest": 53000,
+          "principal": 8014.422920196172,
+          "prepayment": 170000,
+          "balance": 5121985.577079804,
+          "insurance": 53000
+        },
+        {
+          "month": 12,
+          "payment": 56728.2564528727,
+          "interest": 48414.94032403022,
+          "principal": 8313.316128842482,
+          "prepayment": 220000,
+          "balance": 4613180.7162741795,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 42534.490494255726,
+          "interest": 32485.046448537545,
+          "principal": 10049.44404571818,
+          "prepayment": 20000,
+          "balance": 3218455.200808036,
+          "insurance": 0
+        },
+        {
+          "month": 171,
+          "payment": 445.060996304953,
+          "interest": 127.74437076954382,
+          "principal": 317.3166255354092,
+          "prepayment": 12457.120451418972,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/payment/term/uninsured/none",
+      "inputs": {
+        "tab": "existing",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": false,
+        "recurringPrepayment": 0,
+        "customPrepayments": {}
+      },
+      "payment": 85000,
+      "interest": 3045292.8176743714,
+      "insurance": 0,
+      "paid": 8345292.817674373,
+      "months": 99,
+      "schedule_sha256": "48b7ebcd2c8ac486f3bb72b83aa0efaa39b1f01103f1e085b2e0c920bfb38a7f",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 85000,
+          "interest": 53000,
+          "principal": 32000,
+          "prepayment": 0,
+          "balance": 5268000,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 85000,
+          "interest": 49298.612906709874,
+          "principal": 35701.387093290126,
+          "prepayment": 0,
+          "balance": 4894159.903577697,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 85000,
+          "interest": 27441.292718761495,
+          "principal": 57558.7072812385,
+          "prepayment": 0,
+          "balance": 2686570.564594911,
+          "insurance": 0
+        },
+        {
+          "month": 99,
+          "payment": 15292.817674372845,
+          "interest": 151.41403637992917,
+          "principal": 15141.403637992917,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/payment/term/uninsured/regular",
+      "inputs": {
+        "tab": "existing",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": false,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {}
+      },
+      "payment": 85000,
+      "interest": 2115478.7891874444,
+      "insurance": 0,
+      "paid": 7415478.789187443,
+      "months": 71,
+      "schedule_sha256": "c1eb4d1b7078c5ca74a1fa284adcd6282a02ab293dd360a8043b5b9f34d4d772",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 85000,
+          "interest": 53000,
+          "principal": 32000,
+          "prepayment": 20000,
+          "balance": 5248000,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 85000,
+          "interest": 46985.24597340353,
+          "principal": 38014.75402659647,
+          "prepayment": 20000,
+          "balance": 4640509.843313756,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 85000,
+          "interest": 11467.100667987417,
+          "principal": 73532.89933201259,
+          "prepayment": 20000,
+          "balance": 1053177.1674667292,
+          "insurance": 0
+        },
+        {
+          "month": 71,
+          "payment": 65478.789187443086,
+          "interest": 648.3048434400306,
+          "principal": 64830.48434400305,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/payment/term/uninsured/once",
+      "inputs": {
+        "tab": "existing",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": false,
+        "recurringPrepayment": 0,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 85000,
+      "interest": 2566593.751576848,
+      "insurance": 0,
+      "paid": 7866593.751576848,
+      "months": 89,
+      "schedule_sha256": "41851b56a6f8e7281313d7724e60d1ec34b396d93da17d4b1570ec697b4057e4",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 85000,
+          "interest": 53000,
+          "principal": 32000,
+          "prepayment": 150000,
+          "balance": 5118000,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 85000,
+          "interest": 47641.67971859307,
+          "principal": 37358.32028140693,
+          "prepayment": 200000,
+          "balance": 4526809.6515779,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 85000,
+          "interest": 21577.414937402104,
+          "principal": 63422.58506259789,
+          "prepayment": 0,
+          "balance": 2094318.9086776124,
+          "insurance": 0
+        },
+        {
+          "month": 89,
+          "payment": 36593.75157684788,
+          "interest": 362.3143720479988,
+          "principal": 36231.43720479988,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/payment/term/uninsured/combined",
+      "inputs": {
+        "tab": "existing",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": false,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 85000,
+      "interest": 1823831.8189359359,
+      "insurance": 0,
+      "paid": 7123831.818935934,
+      "months": 65,
+      "schedule_sha256": "9e169117e4434268f2ffe3c2bf120b55f4180a2ab1efbe4e01d024927c24f2fa",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 85000,
+          "interest": 53000,
+          "principal": 32000,
+          "prepayment": 170000,
+          "balance": 5098000,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 85000,
+          "interest": 45328.31278528674,
+          "principal": 39671.68721471326,
+          "prepayment": 220000,
+          "balance": 4273159.59131396,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 85000,
+          "interest": 5603.222886628022,
+          "principal": 79396.77711337198,
+          "prepayment": 20000,
+          "balance": 460925.5115494302,
+          "insurance": 0
+        },
+        {
+          "month": 65,
+          "payment": 53831.818935934796,
+          "interest": 532.9883062963842,
+          "principal": 53298.83062963841,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/payment/term/insured/none",
+      "inputs": {
+        "tab": "existing",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": true,
+        "recurringPrepayment": 0,
+        "customPrepayments": {}
+      },
+      "payment": 85000,
+      "interest": 3045292.8176743714,
+      "insurance": 278300.9209535393,
+      "paid": 8623593.738627912,
+      "months": 99,
+      "schedule_sha256": "1fdcd01628c4b6e115779d6a6f4cb810ae78016e8265832d8fcf8f7ba3a04920",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 85000,
+          "interest": 53000,
+          "principal": 32000,
+          "prepayment": 0,
+          "balance": 5268000,
+          "insurance": 53000
+        },
+        {
+          "month": 12,
+          "payment": 85000,
+          "interest": 49298.612906709874,
+          "principal": 35701.387093290126,
+          "prepayment": 0,
+          "balance": 4894159.903577697,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 85000,
+          "interest": 27441.292718761495,
+          "principal": 57558.7072812385,
+          "prepayment": 0,
+          "balance": 2686570.564594911,
+          "insurance": 0
+        },
+        {
+          "month": 99,
+          "payment": 15292.817674372845,
+          "interest": 151.41403637992917,
+          "principal": 15141.403637992917,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/payment/term/insured/regular",
+      "inputs": {
+        "tab": "existing",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": true,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {}
+      },
+      "payment": 85000,
+      "interest": 2115478.7891874444,
+      "insurance": 200674.93559789495,
+      "paid": 7616153.724785339,
+      "months": 71,
+      "schedule_sha256": "b748f941219866d1737535fcfcf6975b79da735d88dac51eb963dd9b6717a0b1",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 85000,
+          "interest": 53000,
+          "principal": 32000,
+          "prepayment": 20000,
+          "balance": 5248000,
+          "insurance": 53000
+        },
+        {
+          "month": 12,
+          "payment": 85000,
+          "interest": 46985.24597340353,
+          "principal": 38014.75402659647,
+          "prepayment": 20000,
+          "balance": 4640509.843313756,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 85000,
+          "interest": 11467.100667987417,
+          "principal": 73532.89933201259,
+          "prepayment": 20000,
+          "balance": 1053177.1674667292,
+          "insurance": 0
+        },
+        {
+          "month": 71,
+          "payment": 65478.789187443086,
+          "interest": 648.3048434400306,
+          "principal": 64830.48434400305,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/payment/term/insured/once",
+      "inputs": {
+        "tab": "existing",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": true,
+        "recurringPrepayment": 0,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 85000,
+      "interest": 2566593.751576848,
+      "insurance": 238628.27035938003,
+      "paid": 8105222.0219362285,
+      "months": 89,
+      "schedule_sha256": "1fd065c2ed324b5d3ffc94e8d41c1e3dd7c4d4bbdc366e6726775396dff944b6",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 85000,
+          "interest": 53000,
+          "principal": 32000,
+          "prepayment": 150000,
+          "balance": 5118000,
+          "insurance": 53000
+        },
+        {
+          "month": 12,
+          "payment": 85000,
+          "interest": 47641.67971859307,
+          "principal": 37358.32028140693,
+          "prepayment": 200000,
+          "balance": 4526809.6515779,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 85000,
+          "interest": 21577.414937402104,
+          "principal": 63422.58506259789,
+          "prepayment": 0,
+          "balance": 2094318.9086776124,
+          "insurance": 0
+        },
+        {
+          "month": 89,
+          "payment": 36593.75157684788,
+          "interest": 362.3143720479988,
+          "principal": 36231.43720479988,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/payment/term/insured/combined",
+      "inputs": {
+        "tab": "existing",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "term",
+        "includeInsurance": true,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 85000,
+      "interest": 1823831.8189359359,
+      "insurance": 177019.2157677686,
+      "paid": 7300851.034703704,
+      "months": 65,
+      "schedule_sha256": "d8d5c326b61da315a321fe67bacb1899683a984792955cde60949cf8845f1d30",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 85000,
+          "interest": 53000,
+          "principal": 32000,
+          "prepayment": 170000,
+          "balance": 5098000,
+          "insurance": 53000
+        },
+        {
+          "month": 12,
+          "payment": 85000,
+          "interest": 45328.31278528674,
+          "principal": 39671.68721471326,
+          "prepayment": 220000,
+          "balance": 4273159.59131396,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 85000,
+          "interest": 5603.222886628022,
+          "principal": 79396.77711337198,
+          "prepayment": 20000,
+          "balance": 460925.5115494302,
+          "insurance": 0
+        },
+        {
+          "month": 65,
+          "payment": 53831.818935934796,
+          "interest": 532.9883062963842,
+          "principal": 53298.83062963841,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/payment/payment/uninsured/none",
+      "inputs": {
+        "tab": "existing",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": false,
+        "recurringPrepayment": 0,
+        "customPrepayments": {}
+      },
+      "payment": 85000,
+      "interest": 3045292.8176743714,
+      "insurance": 0,
+      "paid": 8345292.817674373,
+      "months": 99,
+      "schedule_sha256": "48b7ebcd2c8ac486f3bb72b83aa0efaa39b1f01103f1e085b2e0c920bfb38a7f",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 85000,
+          "interest": 53000,
+          "principal": 32000,
+          "prepayment": 0,
+          "balance": 5268000,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 85000,
+          "interest": 49298.612906709874,
+          "principal": 35701.387093290126,
+          "prepayment": 0,
+          "balance": 4894159.903577697,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 85000,
+          "interest": 27441.292718761495,
+          "principal": 57558.7072812385,
+          "prepayment": 0,
+          "balance": 2686570.564594911,
+          "insurance": 0
+        },
+        {
+          "month": 99,
+          "payment": 15292.817674372845,
+          "interest": 151.41403637992917,
+          "principal": 15141.403637992917,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/payment/payment/uninsured/regular",
+      "inputs": {
+        "tab": "existing",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": false,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {}
+      },
+      "payment": 85000,
+      "interest": 2526910.599479156,
+      "insurance": 0,
+      "paid": 7826910.599479159,
+      "months": 97,
+      "schedule_sha256": "b33e52457e3cd9a98ae18810b06807613187b5d9f339405c83bd4034ff7d0939",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 85000,
+          "interest": 53000,
+          "principal": 32000,
+          "prepayment": 20000,
+          "balance": 5248000,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 80930.49414835419,
+          "interest": 47214.862589779244,
+          "principal": 33715.63155857495,
+          "prepayment": 20000,
+          "balance": 4667770.62741935,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 59643.07675148299,
+          "interest": 19583.617040055415,
+          "principal": 40059.45971142758,
+          "prepayment": 20000,
+          "balance": 1898302.244294114,
+          "insurance": 0
+        },
+        {
+          "month": 97,
+          "payment": 468.62761288462946,
+          "interest": 13.782268771958115,
+          "principal": 454.84534411267134,
+          "prepayment": 923.3815330831402,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/payment/payment/uninsured/once",
+      "inputs": {
+        "tab": "existing",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": false,
+        "recurringPrepayment": 0,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 85000,
+      "interest": 2887230.5656242236,
+      "insurance": 0,
+      "paid": 8187230.565624204,
+      "months": 99,
+      "schedule_sha256": "834014daa09cc6eac360e98bca93fb54926153841dcb7494a9dd746443faf683",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 85000,
+          "interest": 53000,
+          "principal": 32000,
+          "prepayment": 150000,
+          "balance": 5118000,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 82169.66547803946,
+          "interest": 47937.79533190527,
+          "principal": 34231.87014613419,
+          "prepayment": 200000,
+          "balance": 4559547.663044393,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 78716.83040650323,
+          "interest": 25846.424182830582,
+          "principal": 52870.406223672646,
+          "prepayment": 0,
+          "balance": 2531772.012059386,
+          "insurance": 0
+        },
+        {
+          "month": 99,
+          "payment": 78716.83040651091,
+          "interest": 779.3745584803061,
+          "principal": 77937.4558480306,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/payment/payment/uninsured/combined",
+      "inputs": {
+        "tab": "existing",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": false,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 85000,
+      "interest": 2340837.0530003393,
+      "insurance": 0,
+      "paid": 7640837.053000341,
+      "months": 96,
+      "schedule_sha256": "110cde51e3a7ea07a71f7e56e5bb400677a4f47109a1e495455e60d8a59f157a",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 85000,
+          "interest": 53000,
+          "principal": 32000,
+          "prepayment": 170000,
+          "balance": 5098000,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 78522.23900538706,
+          "interest": 45809.88617325215,
+          "principal": 32712.352832134915,
+          "prepayment": 220000,
+          "balance": 4328276.26449308,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 53781.98653697966,
+          "interest": 17659.146465267444,
+          "principal": 36122.84007171221,
+          "prepayment": 20000,
+          "balance": 1709791.8064550322,
+          "insurance": 0
+        },
+        {
+          "month": 96,
+          "payment": 1407.9796280106375,
+          "interest": 54.938880060187586,
+          "principal": 1353.04074795045,
+          "prepayment": 4140.847258068308,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/payment/payment/insured/none",
+      "inputs": {
+        "tab": "existing",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": true,
+        "recurringPrepayment": 0,
+        "customPrepayments": {}
+      },
+      "payment": 85000,
+      "interest": 3045292.8176743714,
+      "insurance": 278300.9209535393,
+      "paid": 8623593.738627912,
+      "months": 99,
+      "schedule_sha256": "1fdcd01628c4b6e115779d6a6f4cb810ae78016e8265832d8fcf8f7ba3a04920",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 85000,
+          "interest": 53000,
+          "principal": 32000,
+          "prepayment": 0,
+          "balance": 5268000,
+          "insurance": 53000
+        },
+        {
+          "month": 12,
+          "payment": 85000,
+          "interest": 49298.612906709874,
+          "principal": 35701.387093290126,
+          "prepayment": 0,
+          "balance": 4894159.903577697,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 85000,
+          "interest": 27441.292718761495,
+          "principal": 57558.7072812385,
+          "prepayment": 0,
+          "balance": 2686570.564594911,
+          "insurance": 0
+        },
+        {
+          "month": 99,
+          "payment": 15292.817674372845,
+          "interest": 151.41403637992917,
+          "principal": 15141.403637992917,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/payment/payment/insured/regular",
+      "inputs": {
+        "tab": "existing",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": true,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {}
+      },
+      "payment": 85000,
+      "interest": 2526910.599479156,
+      "insurance": 235119.88162199812,
+      "paid": 8062030.481101159,
+      "months": 97,
+      "schedule_sha256": "38eb5a02fdaa0931fcbb649e518b04072860795c622d0335671a643bced58af2",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 85000,
+          "interest": 53000,
+          "principal": 32000,
+          "prepayment": 20000,
+          "balance": 5248000,
+          "insurance": 53000
+        },
+        {
+          "month": 12,
+          "payment": 80930.49414835419,
+          "interest": 47214.862589779244,
+          "principal": 33715.63155857495,
+          "prepayment": 20000,
+          "balance": 4667770.62741935,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 59643.07675148299,
+          "interest": 19583.617040055415,
+          "principal": 40059.45971142758,
+          "prepayment": 20000,
+          "balance": 1898302.244294114,
+          "insurance": 0
+        },
+        {
+          "month": 97,
+          "payment": 468.62761288462946,
+          "interest": 13.782268771958115,
+          "principal": 454.84534411267134,
+          "prepayment": 923.3815330831402,
+          "balance": 0,
+          "insurance": 13.782268771958115
+        }
+      ]
+    },
+    {
+      "name": "existing/payment/payment/insured/once",
+      "inputs": {
+        "tab": "existing",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": true,
+        "recurringPrepayment": 0,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 85000,
+      "interest": 2887230.5656242236,
+      "insurance": 265071.9445181334,
+      "paid": 8452302.510142338,
+      "months": 99,
+      "schedule_sha256": "9e959e8da56a987df74729b20f78adb6f6ec3aa8cc03d7c2437410e225de6a10",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 85000,
+          "interest": 53000,
+          "principal": 32000,
+          "prepayment": 150000,
+          "balance": 5118000,
+          "insurance": 53000
+        },
+        {
+          "month": 12,
+          "payment": 82169.66547803946,
+          "interest": 47937.79533190527,
+          "principal": 34231.87014613419,
+          "prepayment": 200000,
+          "balance": 4559547.663044393,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 78716.83040650323,
+          "interest": 25846.424182830582,
+          "principal": 52870.406223672646,
+          "prepayment": 0,
+          "balance": 2531772.012059386,
+          "insurance": 0
+        },
+        {
+          "month": 99,
+          "payment": 78716.83040651091,
+          "interest": 779.3745584803061,
+          "principal": 77937.4558480306,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "existing/payment/payment/insured/combined",
+      "inputs": {
+        "tab": "existing",
+        "mode": "payment",
+        "isExistingKnowPayment": true,
+        "cost": 8100000,
+        "downPayment": 2450000,
+        "rate": 12,
+        "termYears": 15,
+        "targetPayment": 90000,
+        "activeOriginalLoan": 8000000,
+        "activeRate": 12,
+        "activeOriginalTermYears": 20,
+        "activePaidMonths": 36,
+        "activeCurrentBalance": 5300000,
+        "activePayment": 85000,
+        "prepaymentStrategy": "payment",
+        "includeInsurance": true,
+        "recurringPrepayment": 20000,
+        "customPrepayments": {
+          "1": 150000,
+          "12": 200000
+        }
+      },
+      "payment": 85000,
+      "interest": 2340837.0530003393,
+      "insurance": 219488.04062860753,
+      "paid": 7860325.0936289495,
+      "months": 96,
+      "schedule_sha256": "e4a4352036b509f8784e88ea3d49e0ff01f5ad40dba01e918878be271ba50ce8",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 85000,
+          "interest": 53000,
+          "principal": 32000,
+          "prepayment": 170000,
+          "balance": 5098000,
+          "insurance": 53000
+        },
+        {
+          "month": 12,
+          "payment": 78522.23900538706,
+          "interest": 45809.88617325215,
+          "principal": 32712.352832134915,
+          "prepayment": 220000,
+          "balance": 4328276.26449308,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 53781.98653697966,
+          "interest": 17659.146465267444,
+          "principal": 36122.84007171221,
+          "prepayment": 20000,
+          "balance": 1709791.8064550322,
+          "insurance": 0
+        },
+        {
+          "month": 96,
+          "payment": 1407.9796280106375,
+          "interest": 54.938880060187586,
+          "principal": 1353.04074795045,
+          "prepayment": 4140.847258068308,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "zero-rate/minimum-loan",
+      "inputs": {
+        "cost": 1000000,
+        "downPayment": 999999,
+        "rate": 0,
+        "termYears": 1,
+        "mode": "term",
+        "isExistingKnowPayment": false,
+        "recurringPrepayment": 0,
+        "customPrepayments": {},
+        "includeInsurance": false
+      },
+      "payment": 0.08333333333333333,
+      "interest": 0,
+      "insurance": 0,
+      "paid": 1,
+      "months": 12,
+      "schedule_sha256": "8fa24c94ac3202be565e148bcb54e621b9137a6daff8ee45e166354c318f7c73",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 0.08333333333333333,
+          "interest": 0,
+          "principal": 0.08333333333333333,
+          "prepayment": 0,
+          "balance": 0.9166666666666666,
+          "insurance": 0
+        },
+        {
+          "month": 12,
+          "payment": 0.08333333333333325,
+          "interest": 0,
+          "principal": 0.08333333333333325,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    },
+    {
+      "name": "boundary/50-years",
+      "inputs": {
+        "cost": 1000000,
+        "downPayment": 0,
+        "rate": 0.1,
+        "termYears": 50,
+        "mode": "term",
+        "recurringPrepayment": 0,
+        "customPrepayments": {},
+        "includeInsurance": true
+      },
+      "payment": 1708.7499701017884,
+      "interest": 25249.982062324016,
+      "insurance": 257082.32644476442,
+      "paid": 1282332.3085070776,
+      "months": 600,
+      "schedule_sha256": "6174a8bb54de1ded3f59ee3ba354d4b4b5a25b121605066051b75fe5666c9317",
+      "key_months": [
+        {
+          "month": 1,
+          "payment": 1708.7499701017884,
+          "interest": 83.33333333333333,
+          "principal": 1625.4166367684552,
+          "prepayment": 0,
+          "balance": 998374.5833632315,
+          "insurance": 10000
+        },
+        {
+          "month": 12,
+          "payment": 1708.7499701017884,
+          "interest": 81.84274710887735,
+          "principal": 1626.907222992911,
+          "prepayment": 0,
+          "balance": 980486.0580835353,
+          "insurance": 0
+        },
+        {
+          "month": 60,
+          "payment": 1708.7499701017884,
+          "interest": 75.32235781091183,
+          "principal": 1633.4276122908766,
+          "prepayment": 0,
+          "balance": 902234.8661186511,
+          "insurance": 0
+        },
+        {
+          "month": 600,
+          "payment": 1708.7499713527586,
+          "interest": 0.14238396561559524,
+          "principal": 1708.607587387143,
+          "prepayment": 0,
+          "balance": 0,
+          "insurance": 0
+        }
+      ]
+    }
+  ]
+}
