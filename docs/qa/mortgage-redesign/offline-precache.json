@@ -1,0 +1,10 @@
+{
+  "precacheURLsUnchangedFromBaseline": true,
+  "failures": [
+    {
+      "url": "https://cdn.tailwindcss.com",
+      "ok": false,
+      "error": "Failed to fetch"
+    }
+  ]
+}
