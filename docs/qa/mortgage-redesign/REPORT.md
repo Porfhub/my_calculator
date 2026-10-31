@@ -1,6 +1,6 @@
 # Ипотечный редизайн — реализация и QA
 
-Дата: 31.10.2026. Ветка **codex/mortgage-hybrid-redesign**. Исходный main **fd292a727ce7cace1f785dfcdcf6aaf7bb46cf45**. PR: будет записан после создания; итоговый SHA доступен в PR.
+Дата: 31.10.2026. Ветка **codex/mortgage-hybrid-redesign**. Исходный main **fd292a727ce7cace1f785dfcdcf6aaf7bb46cf45**. [PR #92](https://github.com/Porfhub/my_calculator/pull/92) **open, ready for review, не merged**. Implementation SHA **37f52d5516c87f720ef6d0987f1cb877cd07175a**; итоговый SHA документирующего commit доступен в PR.
 
 ## Результат и границы
 
@@ -23,7 +23,7 @@
 - PR #91 merged 30.10, SHA 25c233d196d63589ebfdba63cf437c89f2ba67ca.
 - Scheduled [updater #155](https://github.com/Porfhub/my_calculator/actions/runs/41187044974) и [Yandex deploy #49](https://github.com/Porfhub/my_calculator/actions/runs/41187072248) успешны на исходной базе. У deploy через API подтверждены verify/sync/website smoke. Это выпуск старого UI, не этого редизайна.
 - Финальный npm test **134 passed, 0 failed/skipped**; npm run validate:data — все три набора проходят.
-- Branch-protection API возвращает 403 integration; обязательность checks в настройках не подтверждена. Доступные PR checks будут проверены после push, без обхода CI.
+- Branch-protection API возвращает 403 integration; обязательность checks в настройках не подтверждена. [Validation run 41217203209](https://github.com/Porfhub/my_calculator/actions/runs/41217203209) на implementation SHA 37f52d5 прошёл: npm tests и publishable datasets success; Vercel success. Последующее обновление только QA helper/документов повторяет checks; [актуальный статус](https://github.com/Porfhub/my_calculator/pull/92/checks).
 
 ## Числа до/после
 
@@ -42,7 +42,7 @@
 
 ## Браузерная матрица и доказательства
 
-[browser-results.json](browser-results.json) — реальные проверки локального HTTP-сайта в headless Chrome 156.0.8078.48. Внешние запросы Метрики блокируются, проверяются вызовы stub; денежные вводные в analytics не передаются. Это responsive emulation, не Android/iOS hardware QA.
+[browser-results.json](browser-results.json) — **55 пройденных браузерных проверок** локального HTTP-сайта в headless Chrome 156.0.8078.48. Внешние запросы Метрики блокируются, проверяются вызовы stub; денежные вводные в analytics не передаются. Это responsive emulation, не Android/iOS hardware QA.
 
 Проверены: обе темы 1440×900 / 390×844 / 360×844, initial/scrolled/focused viewport/sticky, отсутствие horizontal overflow и наличие формы на первом экране; regular-only/one-time-only/combined, обе стратегии; add/edit/clear/remove из формы/schedule; term/comfort/existing-known и восстановление share; страховка; недопустимый взнос/невозможный платёж/восстановление; CBR ok/stale/unavailable без изменения snapshot; Chart.js failure; isolated primary-render/model exceptions и восстановление; реальные PNG desktop/mobile; clipboard success/fallback, labels/focus/selected states, native radio/summary/button; smoke honest-credit/rent-vs-mortgage.
 
@@ -62,6 +62,8 @@
 ## Точные ограничения
 
 **Offline:** [offline-precache.json](offline-precache.json). Унаследованный unversioned https://cdn.tailwindcss.com загружается как script, но CORS Cache.add для него в этой среде падает Failed to fetch; существующий SW addAll из-за этого не устанавливается. Precache URL и стратегия сверены с исходным main; изменён только cache v16→v17. Полноценный offline reload не объявляется пройденным. Общий ремонт CDN/SW не включён в ипотечный редизайн и не замаскирован обходом.
+
+[Vercel preview](https://my-calculator-git-codex-mortgage-hybrid-redesign-porf.vercel.app/mortgage.html) собран, но anonymous Chrome перенаправлен на Login – Vercel; [диагностика](preview-smoke.json). Настройки доступа не менялись. Preview не выдаётся за пройденный внешний UI smoke; реальные implementation captures выше сняты с локального HTTP-сайта.
 
 Нет физических Android/iOS, экранной клавиатуры, реального safe-area/PWA standalone, аппаратного clipboard/download, проверки кабинета Метрики и фактического приёма goals. Скриншот уменьшенного viewport не является аппаратной клавиатурной проверкой. Прямой новый read домена через web tool не удался; факт прежнего deploy подтверждён Actions и его website smoke, не предположением из merge.
 

@@ -25,6 +25,21 @@ async function start(){
   async function goto(query=''){await page.goto(origin+'/mortgage.html'+query,{waitUntil:'networkidle'});await ready();}
   async function overflow(){return page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth);}
   async function goals(){return page.evaluate(()=>window.__metrikaCalls.filter(c=>c[1]==='reachGoal'&&c[2]==='calculate_success').length);}
+
+  if(process.argv.includes('--preview-smoke')){
+   const url='https://my-calculator-git-codex-mortgage-hybrid-redesign-porf.vercel.app/mortgage.html';
+   await page.goto(url,{waitUntil:'networkidle'});
+   if(new URL(page.url()).hostname==='vercel.com' && new URL(page.url()).pathname==='/login'){
+    fs.writeFileSync(path.join(out,'preview-smoke.json'),JSON.stringify({url,checkedAt:new Date().toISOString(),status:'LOGIN_REQUIRED',title:await page.title(),errors},null,2)+'\n');
+    console.log('LIMITATION PR preview requires existing Vercel login; no authentication settings changed.');return;
+   }
+   await ready();
+   check('PR preview serves payment-first READY implementation',await page.locator('#payment-heading').innerText()==='Обязательный платёж'&&await page.evaluate(()=>window.canExportCalculation()));
+   await shot('preview-desktop');await page.setViewportSize({width:390,height:844});await shot('preview-mobile');
+   check('PR preview mobile has no overflow',await overflow());
+   fs.writeFileSync(path.join(out,'preview-smoke.json'),JSON.stringify({url,checkedAt:new Date().toISOString(),ready:true,errors},null,2)+'\n');
+   return;
+  }
   await goto();
   if(baseline){await shot('baseline-desktop');await page.setViewportSize({width:390,height:844});await shot('baseline-mobile');return;}
 
@@ -122,6 +137,7 @@ async function start(){
   const existingLink=await page.evaluate(()=>buildMortgageShareURL()),existingState=await page.evaluate(()=>JSON.stringify({activeTab,state}));
   await page.goto(existingLink,{waitUntil:'networkidle'});await ready();
   check('existing known-payment share retains balance and history fields',await page.evaluate(()=>JSON.stringify({activeTab,state}))===existingState);
+
   await goto(); // ordinary historical production URL
   check('legacy plain URL still restores production example',await page.locator('#scenario-label').innerText()==='По примеру');
   // Responsive light/graphite, 390 and 360, including sticky/focus/schedule/long lists.
@@ -148,7 +164,8 @@ async function start(){
    await shot('mobile-'+width+'-focused-viewport');
    check(width+' editable focus hides sticky',!await page.locator('.mobile-sticky-results').isVisible());
    await page.locator('#cost-input').blur();await page.setViewportSize({width,height:844});
-   await goto();
+ 
+  await goto();
   }
   await page.setViewportSize({width:1440,height:900});
   // Isolated official-data states; no snapshots are modified or published.
@@ -157,13 +174,16 @@ async function start(){
    const data=structuredClone(rates);data.status=status;data.metadata.status=status;
    if(status==='unavailable'){delete data.cb_rate;delete data.key_rate;delete data.effective_from;data.metadata.last_successful_fetch_at=null;}
    await page.route('**/rates.json',r=>r.fulfill({json:data}));
-   await goto();
+ 
+  await goto();
    check('CBR '+status+' is disclosed without blocking user-rate calculation',await page.locator('#cb-rate-display').innerText().then(t=>t.includes('временно недоступны'))&&await page.evaluate(()=>window.canExportCalculation()));
    await page.unroute('**/rates.json');
   }
   await page.route('**/chart.js',r=>r.abort());
+
   await goto();check('Chart.js failure leaves finite financial result READY',await page.evaluate(()=>window.canExportCalculation())&&await page.locator('#res-monthly-payment').innerText().then(t=>/\d/.test(t)));
   await shot('chart-unavailable');await page.unroute('**/chart.js');
+
   await goto();
   const rendering=await page.evaluate(()=>{const render=renderMortgageBenefits;renderMortgageBenefits=()=>{throw new Error('isolated render test')};state.cost+=100000;updateCalculations();const failed=document.body.dataset.calculationState==='ERROR'&&!window.canExportCalculation()&&document.getElementById('res-all-paid').innerText==='—';renderMortgageBenefits=render;updateCalculations();return {failed,recovered:window.canExportCalculation()};});
   check('primary-render failure clears export and restores after correction',rendering.failed&&rendering.recovered);
@@ -183,6 +203,7 @@ async function start(){
    await page.goto(origin+'/'+other,{waitUntil:'networkidle'});
    check(other+' smoke has no uncaught application errors',errors.length===0);
   }
+
   await goto();
   // The existing unversioned Tailwind URL loads as a script but rejects CORS
   // Cache.add in this environment. Record the inherited offline limitation.

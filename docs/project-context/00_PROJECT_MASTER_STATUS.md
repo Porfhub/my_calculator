@@ -14,7 +14,7 @@
 - [PR #91](https://github.com/Porfhub/my_calculator/pull/91) **merged 30.10 в 16:32:02 UTC**, merge SHA 25c233d196d63589ebfdba63cf437c89f2ba67ca. Ремонт тестовых fixtures/зеркала уже в main, повторять его не нужно.
 - Scheduled [Update Mortgage Rates #155](https://github.com/Porfhub/my_calculator/actions/runs/41187044974) 31.10 завершился **success** и создал fd292a7. Это отдельная проверка после merge.
 - [Yandex deployment #49](https://github.com/Porfhub/my_calculator/actions/runs/41187072248) для fd292a7 завершился **success**. Через GitHub API прочитаны успешные шаги verify payload, sync и website smoke. Редизайн в этом выпуске отсутствует. Прямой повторный HTTP read домена в этой сессии не подтверждён инструментом web.
-- Ветка реализации: **codex/mortgage-hybrid-redesign**. PR редизайна: создаётся после финальной локальной проверки; актуальная ссылка и checks — в отчёте QA/PR.
+- Ветка реализации: **codex/mortgage-hybrid-redesign**. [PR редизайна #92](https://github.com/Porfhub/my_calculator/pull/92) **open, ready for review, не merged**. Implementation commit 37f52d5: [GitHub validation](https://github.com/Porfhub/my_calculator/actions/runs/41217203209) и Vercel — success. Текущий head/checks доступны в PR.
 - В этой задаче нет merge, push в main, production dispatch/deploy, изменений Direct/DNS/секретов.
 
 Пакет публикации по-прежнему содержит ровно 35 runtime-файлов. Новых runtime-ресурсов редизайн не добавляет: стили и адаптеры ограничены mortgage.html. Версия SW повышена с v16 до v17; стратегия network-first для внутренних URL и список precache сохранены.
@@ -47,7 +47,7 @@ Hero показывает срок базовых условий либо «Ср
 
 ## Проверки и ограничения
 
-[QA-отчёт, числовая матрица, реальные PNG и скриншоты](../qa/mortgage-redesign/REPORT.md). Responsive Chrome — не физический Android/iOS. Реальные устройства недоступны: владельцу остаётся короткая проверка Samsung S25+/iOS keyboard, decimal input, safe-area, clipboard/download.
+[QA-отчёт, числовая матрица, реальные PNG и скриншоты](../qa/mortgage-redesign/REPORT.md). Responsive Chrome — не физический Android/iOS. Vercel preview собран, но требует существующий вход в Vercel; защита не менялась. Скриншоты/PNG доступны в PR без входа в Vercel. Реальные устройства недоступны: владельцу остаётся короткая проверка Samsung S25+/iOS keyboard, decimal input, safe-area, clipboard/download.
 
 Остальные калькуляторы не редизайнились. Общие стили, математические правила, схемы и exporter не менялись. Existing validation workflow расширяет PR path-filter на mortgage/UI tests/SW, чтобы проверка запускалась на этом изменении. Доступ к branch protection через integration API даёт 403; список обязательных checks в настройках не объявляется проверенным.
 

@@ -44,7 +44,7 @@ Native radio/fieldset, details/summary и year-header button с aria-expanded/co
 - --baseline у browser QA получает исходный HTML из git; пути runtime остаются корневыми.
 - tests/ui-state/mortgage-engine-baseline.test.js сверяет результаты и ключевые месяцы с зафиксированным baseline с допуском 0.00001 ₽.
 
-Windows sandbox не разрешает rename в atomic-write tests; полный suite запускался с обычными правами. Продакшен-валидатор не ослаблялся. Детальные результаты, реальные файлы и ручной mobile QA — [REPORT.md](../qa/mortgage-redesign/REPORT.md).
+Windows sandbox не разрешает rename в atomic-write tests; полный suite запускался с обычными правами. Продакшен-валидатор не ослаблялся. PR #92 открыт; implementation 37f52d5 прошёл GitHub validation run 41217203209 и Vercel. Preview ограничен существующим Vercel login; защита не менялась. Детальные результаты, реальные файлы и ручной mobile QA — [REPORT.md](../qa/mortgage-redesign/REPORT.md).
 
 ## Финансовые данные и инфраструктурный долг
 
