@@ -164,7 +164,7 @@ async function start(){
    await shot('mobile-'+width+'-focused-viewport');
    check(width+' editable focus hides sticky',!await page.locator('.mobile-sticky-results').isVisible());
    await page.locator('#cost-input').blur();await page.setViewportSize({width,height:844});
- 
+
   await goto();
   }
   await page.setViewportSize({width:1440,height:900});
@@ -174,7 +174,7 @@ async function start(){
    const data=structuredClone(rates);data.status=status;data.metadata.status=status;
    if(status==='unavailable'){delete data.cb_rate;delete data.key_rate;delete data.effective_from;data.metadata.last_successful_fetch_at=null;}
    await page.route('**/rates.json',r=>r.fulfill({json:data}));
- 
+
   await goto();
    check('CBR '+status+' is disclosed without blocking user-rate calculation',await page.locator('#cb-rate-display').innerText().then(t=>t.includes('временно недоступны'))&&await page.evaluate(()=>window.canExportCalculation()));
    await page.unroute('**/rates.json');
