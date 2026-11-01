@@ -1,10 +1,10 @@
 # Ясномера — техническая передача
 
-Обновлено 31.10.2026. Исходная база реализации fd292a727ce7cace1f785dfcdcf6aaf7bb46cf45. Main/production и PR разделены в master status.
+Обновлено 01.11.2026. Исходная база реализации fd292a727ce7cace1f785dfcdcf6aaf7bb46cf45. Main/production и PR разделены в master status.
 
 ## Архитектура и scope
 
-Статический сайт без сборки. mortgage.html содержит форму, проверенный помесячный движок, состояние, адаптеры и mortgage-scoped CSS. Общие js/calculator-state.js, js/ui-utils.js, js/theme.js, js/api.js и css/product-polish.css не изменены. Другие HTML-калькуляторы не менялись.
+Статический сайт без сборки. mortgage.html содержит форму, проверенный помесячный движок, состояние, адаптеры и mortgage-scoped CSS. Общие js/calculator-state.js, js/theme.js, js/api.js и css/product-polish.css не изменены. Другие HTML-калькуляторы не менялись.
 
 Публикация по прежнему allowlist из 35 файлов. Новых runtime-зависимостей/файлов нет; dev_tools/tests/docs в payload не попадают. sw.js — только cache v17 вместо v16, без изменения precache/network-first поведения. Validate Financial Data теперь запускается и при ипотечном/UI/SW PR; steps/gates не ослаблены.
 
@@ -16,7 +16,7 @@ simulateMortgageRegularOnly вызывает тот же production simulator с
 
 renderMortgageBenefits обновляет regular-only, combined/one-time-only, базовый срок hero и полный export summary. Общая стратегия radio управляет прежним state.prepaymentStrategy. Добавление/удаление из формы и редактирование schedule используют один state.customPrepayments. Пустое значение schedule теперь действительно удаляет доплату.
 
-Раскладка live uses CSS grid + display:contents для results-panel и screenshot-area: desktop форма слева, hero/состав/действия справа, затем регулярные/разовые/динамика/schedule. На mobile hero перед формой. В export-clone те же узлы становятся вертикальным flex. Картинки интерфейса из reference в runtime не встраиваются.
+Раскладка live uses CSS grid + display:contents для results-panel и screenshot-area: desktop форма слева, hero/состав/действия справа, затем регулярные/разовые/динамика/schedule. На mobile hero перед формой. С 01.11 export-clone заменяется компактным export-only отчётом из того же READY-результата. Картинки интерфейса из reference в runtime не встраиваются.
 
 ## Состояния, экспорт и диагностика
 
@@ -24,7 +24,7 @@ renderMortgageBenefits обновляет regular-only, combined/one-time-only, 
 
 window.canExportCalculation требует READY и совпадения JSON signature текущего state/tab с успешно показанным результатом. Нельзя экспортировать ещё не отрисованную мутацию. Отказ Chart.js отдельно диагностируется и допускает финансовый результат без диаграммы, как в прежнем контракте.
 
-PNG: прежний takeScreenshot('results-panel', 'yasnomera-mortgage-calculation.png'), width 560 + поля 20, isolated clone, перенос canvas в img, очистка controls/ids/sticky и cleanup finally. Дополнительные export-only сведения заполняются из того же результата. Live details исключён из клона, чтобы html2canvas не рисовал его закрытый контент с неверной высотой; полная разбивка отдельно включена в composition-export. График имеет читаемую исходную ширину до 560px, чтобы перенос canvas не превращал подписи в микро-текст.
+PNG: прежний takeScreenshot('results-panel', 'yasnomera-mortgage-calculation.png'), width 560 + поля 20, clone-based export и cleanup finally. С 01.11 optional preparation hook заменяет содержимое изолированного клона компактным export-only отчётом. Цифры/условия формируются из текущего READY-результата; дубли и пустая экономия убраны. Длинный список сводится к количеству/плановой сумме только в PNG, share сохраняет все записи. График рендерится в отдельный 520×230 canvas из snapshot series тех же base/combined schedules (не из live pixels); events/tooltip/animation выключены, point/hover radii нулевые, Chart уничтожается в finally. Даже отказ отрисовки live Chart не подставляет старые series. Общий exporter имеет 3-строчный optional hook; у других калькуляторов он отсутствует.
 
 Share: buildMortgageShareURL/restoreMortgageShareURL сериализуют все числовые state-входы, tab/mode/strategy/booleans/custom map. Legacy plain URL открывает пример, unrelated UTM сохраняются. Отсутствующий/запрещённый clipboard открывает native dialog с выделяемой ссылкой. Восстановление ссылки не создаёт calculate_success.
 
@@ -32,7 +32,7 @@ Share: buildMortgageShareURL/restoreMortgageShareURL сериализуют вс
 
 ## Mobile и доступность
 
-Числовые поля первичны; desktop sliders непосредственно под числами. Mobile sliders скрыты как в PR #90. Один sticky с платежом/возвратом, safe-area padding. IntersectionObserver скрывает sticky у hero, focus + прежний visualViewport handler — при редактировании/клавиатуре.
+Числовые поля первичны; desktop sliders непосредственно под числами. Mobile sliders скрыты как в PR #90. Один sticky с платежом/возвратом, safe-area padding. IntersectionObserver скрывает sticky у hero, прежний visualViewport handler — при открытой клавиатуре. Сам по себе input focus sticky больше не скрывает; blur при scroll не вызывается.
 
 Native radio/fieldset, details/summary и year-header button с aria-expanded/controls поддерживают клавиатуру. Первый год раскрыт при входе в schedule; переход не фокусирует input. Денежные поля/месяцы имеют labels; видимые selected/focus states. Monthly cards на mobile, полноценные колонки на desktop; годовые агрегаты подписаны.
 

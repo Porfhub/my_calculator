@@ -41,7 +41,7 @@ test('calculation displays are not intentionally capped or mislabeled', () => {
     assert.match(credit, /Расчётная годовая ставка/);
     assert.match(credit, /while \(getNpv\(high\) < 0 && high < 1e6\)/);
     assert.match(mortgage, /Из чего складываются выплаты/);
-    assert.match(mortgage, /Итого выплатим:/);
+    assert.match(mortgage, /Всего выплат/);
     assert.match(car, /const depositRatePct = Math\.max\(0, cbRate - 2\);/);
     assert.match(car, /tugVerdict = 'Расходы равны';/);
 });

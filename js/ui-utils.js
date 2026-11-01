@@ -320,6 +320,9 @@ async function takeScreenshot(elementId = 'screenshot-area', filename = 'yasnome
     let stage;
     try {
         stage = createScreenshotStage(element);
+        if (typeof window.prepareCalculationScreenshot === 'function') {
+            await window.prepareCalculationScreenshot(stage, element);
+        }
         const canvas = await renderScreenshot(stage);
         const blob = await canvasToBlob(canvas);
         downloadScreenshot(blob, filename);

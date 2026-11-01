@@ -488,7 +488,7 @@
  .mobile-sticky-results>div>span{font-size:10px;display:block;color:var(--muted)}
  .mobile-sticky-results strong{display:block;font-size:20px}
  .mobile-sticky-results button{background:#08795d;color:#fff;border-radius:9px;padding:8px 14px;white-space:nowrap;font-size:13px}
- .mortgage-page.mortgage-hero-visible .mobile-sticky-results,.mortgage-page.mortgage-keyboard-open .mobile-sticky-results,.mortgage-page.mortgage-input-focused .mobile-sticky-results{display:none!important}
+ .mortgage-page.mortgage-hero-visible .mobile-sticky-results,.mortgage-page.mortgage-keyboard-open .mobile-sticky-results{display:none!important}
  .mortgage-page .conditions-heading{margin-bottom:10px}
  .mortgage-page #panel-new{gap:20px}
  .mortgage-page #conditions input{scroll-margin-top:20px;scroll-margin-bottom:100px}
@@ -501,9 +501,6 @@
 @media(prefers-reduced-motion:reduce){.mortgage-page *{scroll-behavior:auto!important}}
 
 .mortgage-page .mortgage-results>*,.mortgage-page .mortgage-detail-results>*{margin:0!important}
-.mortgage-page .composition-export{display:none}
-.mortgage-page [data-screenshot-stage] .composition-export{display:block;margin-top:16px;border-top:1px solid var(--line);padding-top:12px;font-size:13px;line-height:1.8;color:var(--muted)}
-.mortgage-page [data-screenshot-stage] .composition-export strong{color:var(--text)}
 .mortgage-page label:has(>input[type=checkbox]){min-height:44px;min-width:44px}
 .mortgage-page button[aria-pressed=true][onclick^="applyDownpaymentPercentPreset"]{background:#e0f3ec!important;color:#075b43!important;border-color:#188b6b!important}
 .dark .mortgage-page button[aria-pressed=true][onclick^="applyDownpaymentPercentPreset"]{background:#19584a!important;color:#ecfff8!important;border-color:#449f87!important}
@@ -528,6 +525,42 @@
  .mortgage-page .schedule-section{grid-row:6}
 }
 .mortgage-page [data-screenshot-stage] .result-overview{display:flex!important;flex-direction:column;gap:18px}
+
+/* Insurance: the 44px label is the hit area; the track owns its thumb. */
+.mortgage-page .insurance-switch{min-width:44px;min-height:44px;justify-content:center;align-items:center}
+.mortgage-page .insurance-track{position:relative;display:block;flex:none;width:40px;height:20px;border-radius:20px;background:#82909d}
+.dark .mortgage-page .insurance-track{background:#536474}
+.mortgage-page .insurance-track::after{content:"";position:absolute;top:50%;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transform:translateY(-50%);transition:left 140ms ease}
+.mortgage-page #insurance-toggle:checked+.insurance-track{background:#08795d}
+.mortgage-page #insurance-toggle:checked+.insurance-track::after{left:calc(100% - 18px)}
+/* This compact report exists only in the isolated screenshot stage. */
+.mortgage-page .mortgage-export-report{color:var(--text);font-size:12px;line-height:1.45}
+.mortgage-page .mortgage-export-report h3{font-size:14px;line-height:1.4;font-weight:700;margin:0 0 8px}
+.mortgage-page .mortgage-export-report>section{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:10px 0}
+.mortgage-page .mortgage-export-report small{display:block;font-size:10px;color:var(--muted);line-height:1.5;margin-top:6px}
+.mortgage-page .export-heading{display:flex;justify-content:space-between;align-items:center;padding:0 2px 4px}
+.mortgage-page .export-heading>strong{font-size:17px;letter-spacing:.3px}.mortgage-page .export-heading>span{color:var(--muted);font-size:11px}
+.mortgage-page .mortgage-export-report .export-payment{background:#104c3d;color:#fff;border:0;padding:16px 18px}
+.mortgage-page .export-payment>span{text-transform:uppercase;font-size:11px}
+.mortgage-page .export-payment p{font-size:18px;margin:5px 0 0;line-height:1.2}
+.mortgage-page .export-payment p>strong{font-size:38px;letter-spacing:-1px;font-variant-numeric:tabular-nums}
+.mortgage-page .export-payment small{color:#daeee5;margin-top:6px}
+.mortgage-page .export-total{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.mortgage-page .export-total>span{color:var(--muted)}.mortgage-page .export-total>strong{font-size:22px;line-height:1.2}
+.mortgage-page .export-facts{display:grid;gap:10px 16px}
+.mortgage-page .export-two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.mortgage-page .export-three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.mortgage-page .export-facts span{display:block;font-size:10px;color:var(--muted);margin-bottom:3px}
+.mortgage-page .export-facts strong{display:block;font-size:14px;font-weight:650;line-height:1.35;font-variant-numeric:tabular-nums}
+.mortgage-page .export-prepayments>p{font-size:11px;line-height:1.6;margin:0 0 4px}
+.mortgage-page .export-prepayments>.export-facts{margin-top:10px}
+.mortgage-page .mortgage-export-report .export-debt{padding:12px 18px}
+.mortgage-page .export-chart-slot{width:520px;max-width:100%;height:230px}
+.mortgage-page .export-chart-slot :is(canvas,img){width:100%;height:230px;display:block}
+.mortgage-page .export-chart-legend{display:flex;gap:20px;font-size:10px;color:var(--muted);margin-top:6px}
+.mortgage-page .export-chart-legend span::before{content:"";display:inline-block;width:18px;border-top:2px solid #0a9974;margin:0 6px 3px 0}
+.mortgage-page .export-chart-legend .export-base::before{border-top:2px dashed #8798a6}
+.mortgage-page .mortgage-export-report>footer{text-align:center;font-size:10px;color:var(--muted);padding-top:2px}
 </style>
 </head>
 <body class="calculator-page mortgage-page bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
@@ -723,9 +756,9 @@
                                 </span>
                                 <span class="text-[9px] text-slate-400">1% в год</span>
                             </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
+                            <label class="insurance-switch relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" id="insurance-toggle" onchange="toggleInsurance()" class="sr-only peer" aria-label="Учитывать ипотечную страховку">
-                                <div class="w-10 h-5 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-brand-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all"></div>
+                                <span class="insurance-track" aria-hidden="true"></span>
                             </label>
                         </div>
                     </div>
@@ -779,7 +812,7 @@
 <p>Страховка: <strong id="res-insurance">0 ₽</strong></p>
 <p><span id="label-interest">Переплата</span>: <strong id="res-total-interest">0 ₽</strong></p>
 <p><span id="label-total-paid">Сумма выплат</span> <span id="total-paid-note">без первоначального взноса</span></p>
-</div></details><div id="composition-export" class="composition-export"></div></section><div data-screenshot-exclude class="grid grid-cols-2 gap-3 result-actions">
+</div></details></section><div data-screenshot-exclude class="grid grid-cols-2 gap-3 result-actions">
 <button onclick="shareLink()">Поделиться</button>
 <button onclick="takeScreenshot('results-panel', 'yasnomera-mortgage-calculation.png')">Сохранить PNG</button>
 <p class="muted small">Расчёт — сценарий. Условия банка могут отличаться.</p></div>
@@ -956,19 +989,114 @@
                 + '<div><span>Срок меньше на</span><strong>' + mortgageDuration(Math.max(0, base.realTerm - scenario.realTerm)) + '</strong></div></div>';
         }
 
-        function mortgageConditionsMarkup(base) {
+
+        function mortgageCompactExportMarkup(base, combined) {
+            const principal = activeTab === 'new' ? state.cost - state.downPayment : state.activeCurrentBalance;
+            const interest = Math.round(combined.totalInterest), insurance = Math.round(combined.totalInsurance);
+            const total = Math.round(principal) + interest + insurance;
+            const custom = Object.entries(state.customPrepayments).filter(([,value]) => value > 0).sort((a,b) => Number(a[0])-Number(b[0]));
+            const hasExtras = state.recurringPrepayment > 0 || custom.length > 0;
             const derived = activeTab === 'new' ? state.mode === 'payment' : state.isExistingKnowPayment;
-            return '<div class="export-conditions"><h3>Параметры расчёта · Ясномера</h3>'
-                + (activeTab === 'new'
-                    ? '<p>Стоимость жилья: <strong class="text-white">' + localFormatMoney(state.cost) + '</strong></p><p>Первоначальный взнос: <strong class="text-white">' + localFormatMoney(state.downPayment) + '</strong></p>'
-                    : '<p>Остаток долга: <strong class="text-white">' + localFormatMoney(state.activeCurrentBalance) + '</strong></p>')
-                + '<p>Ставка: <strong class="text-white">' + (activeTab === 'new' ? state.rate : state.activeRate) + '%</strong></p>'
-                + '<p>' + (derived ? 'Срок без досрочных' : activeTab === 'new' ? 'Срок по условиям' : 'Осталось по условиям') + ': <strong class="text-white">' + mortgageDuration(base.realTerm) + '</strong></p>'
-                + '<p>Регулярная доплата: ' + localFormatMoney(state.recurringPrepayment) + '/мес.</p>'
-                + '<p>Разовые доплаты: ' + (Object.entries(state.customPrepayments).filter(([,v]) => v > 0).map(([m,v]) => 'месяц ' + m + ' — ' + localFormatMoney(v)).join('; ') || 'нет') + '</p>'
-                + '<p>Общая стратегия: ' + (state.prepaymentStrategy === 'payment' ? 'уменьшать платёж' : 'уменьшать срок') + '.</p>'
-                + '<p>Страховка ' + (state.includeInsurance ? 'учтена отдельно, около 1% остатка в начале каждого года' : 'не учтена') + '.</p></div>';
+            const termLabel = derived ? 'Срок без досрочных' : activeTab === 'new' ? 'Срок по условиям' : 'Осталось по условиям';
+            const fact = (label, value) => '<div><span>' + label + '</span><strong>' + value + '</strong></div>';
+            const customSummary = custom.length > 3
+                ? custom.length + ' шт. · всего ' + localFormatMoney(custom.reduce((sum,[,value]) => sum + value, 0))
+                : custom.map(([month,value]) => 'мес. ' + month + ': ' + localFormatMoney(value)).join('; ') || 'нет';
+            return '<article class="mortgage-export-report" data-screenshot-fallback>'
+                + '<header class="export-heading"><strong>ЯСНОМЕРА</strong><span>' + (activeTab === 'new' ? 'Новая ипотека' : 'Действующая ипотека') + '</span></header>'
+                + '<section class="export-payment"><span>Обязательный платёж</span><p><strong>' + localFormatMoney(combined.schedule[0].payment) + '</strong> / мес.</p>'
+                + '<small>Без страховки и досрочных' + (hasExtras && state.prepaymentStrategy === 'payment' ? ' · первый платёж, далее по графику' : '') + '</small></section>'
+                + '<section class="export-composition"><div class="export-total"><span>Всего выплат' + (hasExtras ? ' с досрочными' : '') + '</span><strong>' + localFormatMoney(total) + '</strong></div>'
+                + '<div class="export-facts export-three">' + fact(activeTab === 'new' ? 'Возврат кредита' : 'Остаток долга', localFormatMoney(principal))
+                + fact('Проценты банку', localFormatMoney(interest)) + fact('Страховка', localFormatMoney(insurance)) + '</div>'
+                + '<small>' + (activeTab === 'new' ? 'Без первоначального взноса.' : 'Только будущие выплаты.') + '</small></section>'
+                + '<section class="export-conditions"><h3>Параметры расчёта</h3><div class="export-facts export-two">'
+                + (activeTab === 'new' ? fact('Стоимость жилья', localFormatMoney(state.cost)) + fact('Первоначальный взнос', localFormatMoney(state.downPayment)) : '')
+                + fact('Ставка по ипотеке', (activeTab === 'new' ? state.rate : state.activeRate) + '%')
+                + fact(termLabel, mortgageDuration(base.realTerm)) + '</div>'
+                + '<small>Страховка ' + (state.includeInsurance ? 'учтена · модель 1% остатка в год.' : 'не учтена.') + '</small></section>'
+                + (hasExtras ? '<section class="export-prepayments"><h3>Досрочные · ' + (state.prepaymentStrategy === 'payment' ? 'уменьшать платёж' : 'уменьшать срок') + '</h3>'
+                    + '<p>Регулярно: <strong>' + localFormatMoney(state.recurringPrepayment) + '/мес.</strong></p>'
+                    + '<p>Разовые по плану: ' + customSummary + '</p>'
+                    + '<div class="export-facts ' + (state.includeInsurance ? 'export-three' : 'export-two') + '">'
+                    + fact('Экономия на процентах', localFormatMoney(Math.max(0, base.totalInterest - combined.totalInterest)))
+                    + (state.includeInsurance ? fact('Экономия на страховке', localFormatMoney(Math.max(0, base.totalInsurance - combined.totalInsurance))) : '')
+                    + fact('Закрытие через', mortgageDuration(combined.realTerm)) + '</div>'
+                    + '<small>Совокупный эффект всех доплат относительно условий без досрочных.</small></section>' : '')
+                + '<section class="export-debt"><h3>Остаток долга</h3><div class="export-chart-slot"></div>'
+                + '<div class="export-chart-legend"><span class="export-current">' + (hasExtras ? 'С доплатами' : 'По условиям') + '</span>'
+                + (hasExtras ? '<span class="export-base">Без доплат</span>' : '') + '</div></section>'
+                + '<footer>Сценарный расчёт · yasnomera.ru</footer></article>';
         }
+
+
+        function mortgageExportSeries(base, combined) {
+            const labels = [], selected = [], baseline = [];
+            const length = Math.max(combined.schedule.length, base.schedule.length), step = length > 120 ? 6 : 2;
+            for (let i = 0; i < length; i += step) {
+                labels.push((Math.floor(i / 12) + 1) + 'г');
+                selected.push(i < combined.schedule.length ? combined.schedule[i].balance : 0);
+                baseline.push(i < base.schedule.length ? base.schedule[i].balance : 0);
+            }
+            return {labels, datasets: [{data: selected, borderWidth: 3, tension: .4}, {data: baseline, borderWidth: 2, borderDash: [4,4], tension: .4}]};
+        }
+        function mortgageExportChartConfig(data, dark, hasExtras) {
+            // Copy only model series, never live element/tooltip/hover state.
+            const clean = JSON.parse(JSON.stringify(data));
+            if (!hasExtras) clean.datasets = clean.datasets.slice(0, 1);
+            clean.datasets.forEach((dataset, index) => {
+                dataset.pointRadius = 0;
+                dataset.pointHoverRadius = 0;
+                dataset.pointHitRadius = 0;
+                dataset.borderColor = index === 0 ? '#0a9974' : (dark ? '#aab9c7' : '#778997');
+                dataset.backgroundColor = 'transparent';
+                dataset.fill = false;
+            });
+            const text = dark ? '#c3ced8' : '#526270';
+            return {
+                type: 'line', data: clean,
+                options: {
+                    responsive: false, maintainAspectRatio: false, animation: false,
+                    devicePixelRatio: 2, events: [],
+                    plugins: {legend: {display: false}, tooltip: {enabled: false}},
+                    scales: {
+                        y: {min: 0, ticks: {color: text, font: {size: 11}, maxTicksLimit: 5, callback: value => (value / 1000000).toLocaleString('ru-RU', {maximumFractionDigits: 1}) + ' млн ₽'},
+                            grid: {color: dark ? '#465360' : '#e3e9ed'}},
+                        x: {ticks: {color: text, font: {size: 11}, maxTicksLimit: 5}, grid: {display: false},
+                            title: {display: true, text: 'Срок, годы', color: text, font: {size: 11}}}
+                    }
+                }
+            };
+        }
+
+        window.prepareCalculationScreenshot = (stage, source) => {
+            if (source.id !== 'results-panel') return;
+            if (!window.canExportCalculation()) throw new Error('Mortgage screenshot is not READY');
+            const report = source.querySelector('.mortgage-export-report').cloneNode(true);
+            stage.replaceChildren(report);
+            const slot = report.querySelector('.export-chart-slot');
+            if (!mortgageExportChartData || typeof Chart !== 'function') {
+                slot.textContent = 'График временно недоступен.';
+                return;
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = 520; canvas.height = 230;
+            slot.append(canvas);
+            let cleanChart;
+            try {
+                const hasExtras = state.recurringPrepayment > 0 || Object.values(state.customPrepayments).some(value => value > 0);
+                cleanChart = new Chart(canvas, mortgageExportChartConfig(mortgageExportChartData, document.documentElement.classList.contains('dark'), hasExtras));
+                cleanChart.update('none');
+                const image = document.createElement('img');
+                image.src = canvas.toDataURL('image/png');
+                image.alt = 'Остаток ипотечного долга по базовому и выбранному графику';
+                image.width = 520; image.height = 230;
+                slot.replaceChildren(image);
+            } finally {
+                try { (cleanChart || Chart.getChart?.(canvas))?.destroy(); } finally { canvas.remove(); }
+            }
+            if (!window.canExportCalculation()) throw new Error('Mortgage changed during export');
+        };
 
         function renderMortgageBenefits(base, regular, combined) {
             const hasCustom = Object.values(state.customPrepayments).some(value => value > 0);
@@ -982,13 +1110,8 @@
                 : '<h3>Доплата в нужный месяц</h3><p class="muted">Добавьте разовый платёж в форме или выберите месяц в графике.</p>';
             const savingsCard = document.getElementById('savings-card');
             savingsCard.classList.remove('hidden');
-            savingsCard.innerHTML = '<div data-screenshot-fallback>' + mortgageConditionsMarkup(base)
-                + (hasCustom || hasRegular ? mortgageBenefitMarkup(base, combined, scope)
-                    + '<p id="saving-money">Экономия на процентах: ' + localFormatMoney(Math.max(0, base.totalInterest - combined.totalInterest)) + '</p>'
-                    + '<p id="saving-months">Сокращение срока: ' + mortgageDuration(Math.max(0, base.realTerm - combined.realTerm)) + '</p>'
-                    + '<p>Итого выплатим: <strong id="res-total-paid">' + localFormatMoney(Math.round(activeTab === 'new' ? state.cost-state.downPayment : state.activeCurrentBalance) + Math.round(combined.totalInterest) + Math.round(combined.totalInsurance)) + '</strong></p>'
-                    + '<p>Досрочный капитал: <strong id="res-total-prepaid">' + localFormatMoney(combined.totalPrepaid) + '</strong></p>' : '')
-                + '</div>';
+            savingsCard.innerHTML = mortgageCompactExportMarkup(base, combined);
+            mortgageExportChartData = mortgageExportSeries(base, combined);
             document.getElementById('composition-scope').innerText = hasCustom || hasRegular ? 'С досрочными доплатами · выбранный совокупный сценарий' : 'Без досрочных доплат';
             document.getElementById('scenario-label').innerText = (mortgageCalculationRequested || mortgageRestoredScenario) ? 'Ваш сценарий' : 'По примеру';
             document.getElementById('label-term').innerText = (activeTab === 'new' && state.mode === 'payment') || (activeTab === 'existing' && state.isExistingKnowPayment)
@@ -997,12 +1120,6 @@
             document.getElementById('payment-context').innerText = state.prepaymentStrategy === 'payment' && (hasCustom || hasRegular)
                 ? 'Первый обязательный платёж. Последующие уменьшаются по графику. Без страховки и доплат.'
                 : 'Без страховки и досрочных';
-            const interest = Math.round(combined.totalInterest), insurance = Math.round(combined.totalInsurance);
-            document.getElementById('composition-export').innerHTML =
-                '<p>Проценты банку: <strong>' + localFormatMoney(interest) + '</strong></p>'
-                + '<p>Страховка: <strong>' + localFormatMoney(insurance) + '</strong></p>'
-                + '<p>Переплата: <strong>' + localFormatMoney(interest + insurance) + '</strong></p>'
-                + '<p>' + (activeTab === 'new' ? 'Без первоначального взноса.' : 'Только будущие выплаты по текущему остатку.') + ' Страховка показана отдельно.</p>';
             renderMortgagePrepaymentList();
             syncMortgageSelectedControls();
         }
@@ -1143,12 +1260,7 @@
                     document.getElementById('heading-year-1')?.setAttribute('aria-expanded', 'true');
                 }
             });
-            document.addEventListener('focusin', event => {
-                document.body.classList.toggle('mortgage-input-focused', isMortgageEditableInput(event.target));
-            });
-            document.addEventListener('focusout', () => window.setTimeout(() => {
-                document.body.classList.toggle('mortgage-input-focused', isMortgageEditableInput(document.activeElement));
-            }, 0));
+
         }
 
         let activeTab = 'new';
@@ -1174,6 +1286,7 @@
         };
 
         let chartInstance = null;
+        let mortgageExportChartData = null;
         let ratioDonutInstance = null;
         let targetPaymentWasEdited = false;
         const mortgageStateController = CalculatorState.createController({
@@ -1184,9 +1297,10 @@
                 'res-bank-interest', 'res-insurance', 'res-all-paid',
                 'mobile-overpayment', 'mobile-payment', 'ratio-body-text', 'ratio-interest-text',
                 'ratio-text', 'donut-efficiency', 'cost-display', 'downpayment-percent',
-                'rate-display', 'term-display', 'payment-display', 'recurring-display', 'composition-scope', 'scenario-label', 'composition-export'
+                'rate-display', 'term-display', 'payment-display', 'recurring-display', 'composition-scope', 'scenario-label'
             ],
             onClear: () => {
+                mortgageExportChartData = null;
                 ['regular-result', 'one-time-result', 'one-time-list'].forEach(id => {
                     const node = document.getElementById(id);
                     if (node) node.innerHTML = '';

@@ -15,7 +15,7 @@ async function start(){
  const origin='http://127.0.0.1:'+server.address().port;
  const browser=await chromium.launch({channel:process.env.QA_BROWSER||'chrome',headless:true});
  try{
-  const context=await browser.newContext({viewport:{width:1440,height:900},acceptDownloads:true,permissions:['clipboard-read','clipboard-write']});
+  const context=await browser.newContext({viewport:{width:1440,height:900},acceptDownloads:true,hasTouch:process.argv.includes('--release-fixes'),permissions:['clipboard-read','clipboard-write']});
   await context.route(/mc\.yandex\.(ru|com)/,r=>r.abort());
   await context.addInitScript(()=>{window.__metrikaCalls=[];window.ym=(...args)=>window.__metrikaCalls.push(args);});
   const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
@@ -26,6 +26,7 @@ async function start(){
   async function overflow(){return page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth);}
   async function goals(){return page.evaluate(()=>window.__metrikaCalls.filter(c=>c[1]==='reachGoal'&&c[2]==='calculate_success').length);}
 
+  if(process.argv.includes('--release-fixes')||process.argv.includes('--release-fixes-other-pages')){await require('./mortgage-release-fixes-qa.cjs')({page,origin,check,errors,root});return;}
   if(process.argv.includes('--preview-smoke')){
    const url='https://my-calculator-git-codex-mortgage-hybrid-redesign-porf.vercel.app/mortgage.html';
    await page.goto(url,{waitUntil:'networkidle'});

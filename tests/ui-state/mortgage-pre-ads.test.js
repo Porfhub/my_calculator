@@ -717,3 +717,69 @@ test('exports reject an unrendered state mutation and recover only with the matc
     p.run('state.downPayment=2000000; updateCalculations()');
     assert.equal(p.run('window.canExportCalculation()'),true);
 });
+
+
+test('compact mortgage PNG has one set of totals and no empty savings panel', () => {
+    const p=page(); p.run('updateCalculations()');
+    const text=p.element('savings-card').innerHTML;
+    assert.match(text,/ЯСНОМЕРА/);
+    assert.equal((text.match(/Всего выплат/g)||[]).length,1);
+    assert.equal((text.match(/Проценты банку/g)||[]).length,1);
+    assert.doesNotMatch(text,/export-prepayments|Досрочный капитал|Сокращение срока|Итого выплатим/);
+    assert.match(text,/export-chart-slot/);
+    p.run('state.recurringPrepayment=20000;state.customPrepayments={1:150000};state.includeInsurance=true;updateCalculations()');
+    const combined=p.element('savings-card').innerHTML;
+    assert.equal((combined.match(/Экономия на процентах/g)||[]).length,1);
+    assert.equal((combined.match(/Экономия на страховке/g)||[]).length,1);
+    assert.equal((combined.match(/Закрытие через/g)||[]).length,1);
+    assert.doesNotMatch(combined,/Досрочный капитал|Срок меньше на/);
+    const expected=p.run('(() => {const b=simulateMortgage(false),c=simulateMortgage(true);return {interest:localFormatMoney(b.totalInterest-c.totalInterest),insurance:localFormatMoney(b.totalInsurance-c.totalInsurance)};})()');
+    assert.ok(combined.includes(expected.interest)&&combined.includes(expected.insurance));
+});
+
+test('long prepayment lists collapse only in PNG; share retains every month', () => {
+    const p=page();
+    p.run("window.location={href:'https://yasnomera.ru/mortgage.html'};state.customPrepayments=Object.fromEntries(Array.from({length:120},(_,i)=>[i+1,10000]));updateCalculations()");
+    const markup=p.element('savings-card').innerHTML;
+    assert.match(markup,/120 шт\./);
+    assert.ok(markup.includes(p.run('localFormatMoney(1200000)')));
+    assert.doesNotMatch(markup,/мес\. 1:|мес\. 120:/);
+    assert.equal(p.run("Object.keys(JSON.parse(new URL(buildMortgageShareURL()).searchParams.get('customPrepayments'))).length"),120);
+});
+
+test('PNG line chart copies series without live tooltip, hover, or active point state', () => {
+    const p=page();
+    const evaluate=()=>{
+        const live={labels:['1г','2г'],datasets:[{data:[100,0],pointRadius:8,pointHoverRadius:12},{data:[100,50]}]};
+        const original=JSON.stringify(live);
+        const config=mortgageExportChartConfig(live,true,true);
+        config.data.datasets[0].data[0]=777;
+        return {originalUnchanged:JSON.stringify(live)===original,events:config.options.events.length,tooltip:config.options.plugins.tooltip.enabled,
+          noAnimation:config.options.animation===false,points:config.data.datasets.every(d=>d.pointRadius===0&&d.pointHoverRadius===0&&d.pointHitRadius===0),
+          noExtras:mortgageExportChartConfig(live,false,false).data.datasets.length};
+    };
+    const result=p.run('('+evaluate.toString()+')()');
+    assert.equal(result.originalUnchanged,true);
+    assert.equal(result.events,0); assert.equal(result.tooltip,false); assert.equal(result.noAnimation,true);
+    assert.equal(result.points,true); assert.equal(result.noExtras,1);
+});
+
+test('sticky is not hidden solely by a focused field after keyboard dismissal', () => {
+    assert.doesNotMatch(mortgage,/mortgage-input-focused/);
+    assert.doesNotMatch(mortgage,/\.blur\(/);
+    const p=page();p.focusInput();p.resizeViewport(500);
+    assert.equal(p.bodyClasses.has('mortgage-keyboard-open'),true);
+    p.resizeViewport(844);
+    assert.equal(p.hasFocusedInput(),true);
+    assert.equal(p.bodyClasses.has('mortgage-keyboard-open'),false);
+});
+
+
+test('export chart series belongs to the current READY result even if live chart rendering fails', () => {
+    const p=page();p.run('updateCalculations()');
+    const before=p.run('mortgageExportChartData.datasets[0].data[0]');
+    p.run("state.cost=13000000; updateChart=()=>{throw Error('isolated live render failure')}; updateCalculations()");
+    assert.equal(p.transitions.at(-1),'READY');
+    assert.equal(p.run('mortgageExportChartData.datasets[0].data[0]'),p.run('simulateMortgage(true).schedule[0].balance'));
+    assert.notEqual(p.run('mortgageExportChartData.datasets[0].data[0]'),before);
+});

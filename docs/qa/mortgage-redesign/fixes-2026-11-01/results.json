@@ -1,0 +1,385 @@
+{
+  "checkedAt": "2026-11-01T18:06:05.262Z",
+  "device": "Chrome responsive/touch/visualViewport emulation; no physical Samsung",
+  "passed": 51,
+  "checks": [
+    "1440 light insurance false centered, accessible and >=44px",
+    "1440 light insurance true centered, accessible and >=44px",
+    "1440 dark insurance false centered, accessible and >=44px",
+    "1440 dark insurance true centered, accessible and >=44px",
+    "390 light insurance false centered, accessible and >=44px",
+    "390 light insurance true centered, accessible and >=44px",
+    "390 dark insurance false centered, accessible and >=44px",
+    "390 dark insurance true centered, accessible and >=44px",
+    "390 keyboard hides sticky",
+    "390 Back/keyboard closed retains focus and shows sticky",
+    "390 result navigation works on first tap and hero hides sticky",
+    "360 keyboard hides sticky",
+    "360 Back/keyboard closed retains focus and shows sticky",
+    "360 result navigation works on first tap and hero hides sticky",
+    "desktop-light-base export totals/insurance/benefits match current READY exactly",
+    "desktop-light-base live canvas has visible tooltip and active point before PNG",
+    "desktop-light-base export chart raster is identical before and after live hover/touch",
+    "desktop-light-base isolated preparation preserves live pixels/hover; chart and stage cleaned",
+    "desktop-light-combined export totals/insurance/benefits match current READY exactly",
+    "desktop-light-combined live canvas has visible tooltip and active point before PNG",
+    "desktop-light-combined export chart raster is identical before and after live hover/touch",
+    "desktop-light-combined isolated preparation preserves live pixels/hover; chart and stage cleaned",
+    "desktop-dark-base export totals/insurance/benefits match current READY exactly",
+    "desktop-dark-base live canvas has visible tooltip and active point before PNG",
+    "desktop-dark-base export chart raster is identical before and after live hover/touch",
+    "desktop-dark-base isolated preparation preserves live pixels/hover; chart and stage cleaned",
+    "desktop-dark-combined export totals/insurance/benefits match current READY exactly",
+    "desktop-dark-combined live canvas has visible tooltip and active point before PNG",
+    "desktop-dark-combined export chart raster is identical before and after live hover/touch",
+    "desktop-dark-combined isolated preparation preserves live pixels/hover; chart and stage cleaned",
+    "mobile-light-base export totals/insurance/benefits match current READY exactly",
+    "mobile-light-base live canvas has visible tooltip and active point before PNG",
+    "mobile-light-base export chart raster is identical before and after live hover/touch",
+    "mobile-light-base isolated preparation preserves live pixels/hover; chart and stage cleaned",
+    "mobile-light-combined export totals/insurance/benefits match current READY exactly",
+    "mobile-light-combined live canvas has visible tooltip and active point before PNG",
+    "mobile-light-combined export chart raster is identical before and after live hover/touch",
+    "mobile-light-combined isolated preparation preserves live pixels/hover; chart and stage cleaned",
+    "mobile-dark-base export totals/insurance/benefits match current READY exactly",
+    "mobile-dark-base live canvas has visible tooltip and active point before PNG",
+    "mobile-dark-base export chart raster is identical before and after live hover/touch",
+    "mobile-dark-base isolated preparation preserves live pixels/hover; chart and stage cleaned",
+    "mobile-dark-combined export totals/insurance/benefits match current READY exactly",
+    "mobile-dark-combined live canvas has visible tooltip and active point before PNG",
+    "mobile-dark-combined export chart raster is identical before and after live hover/touch",
+    "mobile-dark-combined isolated preparation preserves live pixels/hover; chart and stage cleaned",
+    "120 planned payments stay compact in PNG and complete in share",
+    "chart failure cleans isolated scene/chart and preserves live chart",
+    "html2canvas failure cleans isolated scene/chart and preserves live chart",
+    "invalid input still prevents PNG preparation",
+    "no uncaught application errors"
+  ],
+  "captures": [
+    {
+      "name": "png-desktop-light-base",
+      "width": 1200,
+      "height": 1710,
+      "sha256": "4488373a4157fd6e3d5df314bd4ceaf61f97f6a755cbb55317efa3785d58840d"
+    },
+    {
+      "name": "png-desktop-light-base-after-touch",
+      "width": 1200,
+      "height": 1710,
+      "sha256": "4488373a4157fd6e3d5df314bd4ceaf61f97f6a755cbb55317efa3785d58840d"
+    },
+    {
+      "name": "png-desktop-light-combined",
+      "width": 1200,
+      "height": 2058,
+      "sha256": "66bc37c1233648e203948f83aebbfb28f271998196427df5a72ee48f43899c9d"
+    },
+    {
+      "name": "png-desktop-light-combined-after-touch",
+      "width": 1200,
+      "height": 2058,
+      "sha256": "66bc37c1233648e203948f83aebbfb28f271998196427df5a72ee48f43899c9d"
+    },
+    {
+      "name": "png-desktop-dark-base",
+      "width": 1200,
+      "height": 1710,
+      "sha256": "f40ef9d95df3f9665cf8ef0958f4b9fe93fd95e890a8273d5835d0524cf129f3"
+    },
+    {
+      "name": "png-desktop-dark-base-after-touch",
+      "width": 1200,
+      "height": 1710,
+      "sha256": "f40ef9d95df3f9665cf8ef0958f4b9fe93fd95e890a8273d5835d0524cf129f3"
+    },
+    {
+      "name": "png-desktop-dark-combined",
+      "width": 1200,
+      "height": 2058,
+      "sha256": "22bf2fcbd848d3ecfdd8a8b215f5ec6447a1a7f669b41c0633a8f95bf0e51f36"
+    },
+    {
+      "name": "png-desktop-dark-combined-after-touch",
+      "width": 1200,
+      "height": 2058,
+      "sha256": "727cd7a7ecab46fe94d6a3a855662d1a20e89c8473c3d88ef41281f3445fd701"
+    },
+    {
+      "name": "png-mobile-light-base",
+      "width": 1200,
+      "height": 1710,
+      "sha256": "e1c6927034867cb560c129c096f7b511624e3aa7b6d41ea8aaffbb5fa04d28c3"
+    },
+    {
+      "name": "png-mobile-light-base-after-touch",
+      "width": 1200,
+      "height": 1710,
+      "sha256": "e1c6927034867cb560c129c096f7b511624e3aa7b6d41ea8aaffbb5fa04d28c3"
+    },
+    {
+      "name": "png-mobile-light-combined",
+      "width": 1200,
+      "height": 2058,
+      "sha256": "1a27b30ec740b74ea9f7a2a8f7af2947e5c08732ce4e03131e70b999f81d8ff6"
+    },
+    {
+      "name": "png-mobile-light-combined-after-touch",
+      "width": 1200,
+      "height": 2058,
+      "sha256": "1a27b30ec740b74ea9f7a2a8f7af2947e5c08732ce4e03131e70b999f81d8ff6"
+    },
+    {
+      "name": "png-mobile-dark-base",
+      "width": 1200,
+      "height": 1710,
+      "sha256": "c301099b82a5f237eea8a548e0f2dfe8ffe7da4466ed3c1a29ec268a9db03552"
+    },
+    {
+      "name": "png-mobile-dark-base-after-touch",
+      "width": 1200,
+      "height": 1710,
+      "sha256": "c301099b82a5f237eea8a548e0f2dfe8ffe7da4466ed3c1a29ec268a9db03552"
+    },
+    {
+      "name": "png-mobile-dark-combined",
+      "width": 1200,
+      "height": 2058,
+      "sha256": "2ea323a3c2156d306f8cbb5ef99cb270eef723562df6ca35efa54cde43120564"
+    },
+    {
+      "name": "png-mobile-dark-combined-after-touch",
+      "width": 1200,
+      "height": 2058,
+      "sha256": "2ea323a3c2156d306f8cbb5ef99cb270eef723562df6ca35efa54cde43120564"
+    },
+    {
+      "name": "png-mobile-long-list",
+      "width": 1200,
+      "height": 2058,
+      "sha256": "70f152c8ee637be9ef66dc083bdfc940dc6b72a8aee34a2303536ffba4943469"
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario": "desktop-light-base",
+      "values": {
+        "text": "ЯСНОМЕРА\nНовая ипотека\nОБЯЗАТЕЛЬНЫЙ ПЛАТЁЖ\n\n67 032 ₽ / мес.\n\nБез страховки и досрочных\nВсего выплат\n12 467 930 ₽\nВозврат кредита\n5 650 000 ₽\nПроценты банку\n6 817 930 ₽\nСтраховка\n0 ₽\nБез первоначального взноса.\nПараметры расчёта\nСтоимость жилья\n8 100 000 ₽\nПервоначальный взнос\n2 450 000 ₽\nСтавка по ипотеке\n12%\nСрок по условиям\n15 лет 6 мес.\nСтраховка не учтена.\nОстаток долга\nПо условиям\nСценарный расчёт · yasnomera.ru",
+        "images": 1,
+        "canvases": 0,
+        "fields": {
+          "Возврат кредита": "5 650 000 ₽",
+          "Проценты банку": "6 817 930 ₽",
+          "Страховка": "0 ₽",
+          "Стоимость жилья": "8 100 000 ₽",
+          "Первоначальный взнос": "2 450 000 ₽",
+          "Ставка по ипотеке": "12%",
+          "Срок по условиям": "15 лет 6 мес."
+        },
+        "total": "12 467 930 ₽",
+        "payment": "67 032 ₽",
+        "hasExtras": false
+      },
+      "size": {
+        "name": "png-desktop-light-base-after-touch",
+        "width": 1200,
+        "height": 1710,
+        "sha256": "4488373a4157fd6e3d5df314bd4ceaf61f97f6a755cbb55317efa3785d58840d"
+      }
+    },
+    {
+      "scenario": "desktop-light-combined",
+      "values": {
+        "text": "ЯСНОМЕРА\nНовая ипотека\nОБЯЗАТЕЛЬНЫЙ ПЛАТЁЖ\n\n67 032 ₽ / мес.\n\nБез страховки и досрочных\nВсего выплат с досрочными\n8 898 200 ₽\nВозврат кредита\n5 650 000 ₽\nПроценты банку\n2 974 804 ₽\nСтраховка\n273 396 ₽\nБез первоначального взноса.\nПараметры расчёта\nСтоимость жилья\n8 100 000 ₽\nПервоначальный взнос\n2 450 000 ₽\nСтавка по ипотеке\n12%\nСрок по условиям\n15 лет 6 мес.\nСтраховка учтена · модель 1% остатка в год.\nДосрочные · уменьшать срок\n\nРегулярно: 20 000 ₽/мес.\n\nРазовые по плану: мес. 1: 150 000 ₽; мес. 12: 200 000 ₽\n\nЭкономия на процентах\n3 843 125 ₽\nЭкономия на страховке\n321 102 ₽\nЗакрытие через\n8 лет\nСовокупный эффект всех доплат относительно условий без досрочных.\nОстаток долга\nС доплатами\nБез доплат\nСценарный расчёт · yasnomera.ru",
+        "images": 1,
+        "canvases": 0,
+        "fields": {
+          "Возврат кредита": "5 650 000 ₽",
+          "Проценты банку": "2 974 804 ₽",
+          "Страховка": "273 396 ₽",
+          "Стоимость жилья": "8 100 000 ₽",
+          "Первоначальный взнос": "2 450 000 ₽",
+          "Ставка по ипотеке": "12%",
+          "Срок по условиям": "15 лет 6 мес.",
+          "Экономия на процентах": "3 843 125 ₽",
+          "Экономия на страховке": "321 102 ₽",
+          "Закрытие через": "8 лет"
+        },
+        "total": "8 898 200 ₽",
+        "payment": "67 032 ₽",
+        "hasExtras": true
+      },
+      "size": {
+        "name": "png-desktop-light-combined-after-touch",
+        "width": 1200,
+        "height": 2058,
+        "sha256": "66bc37c1233648e203948f83aebbfb28f271998196427df5a72ee48f43899c9d"
+      }
+    },
+    {
+      "scenario": "desktop-dark-base",
+      "values": {
+        "text": "ЯСНОМЕРА\nНовая ипотека\nОБЯЗАТЕЛЬНЫЙ ПЛАТЁЖ\n\n67 032 ₽ / мес.\n\nБез страховки и досрочных\nВсего выплат\n12 467 930 ₽\nВозврат кредита\n5 650 000 ₽\nПроценты банку\n6 817 930 ₽\nСтраховка\n0 ₽\nБез первоначального взноса.\nПараметры расчёта\nСтоимость жилья\n8 100 000 ₽\nПервоначальный взнос\n2 450 000 ₽\nСтавка по ипотеке\n12%\nСрок по условиям\n15 лет 6 мес.\nСтраховка не учтена.\nОстаток долга\nПо условиям\nСценарный расчёт · yasnomera.ru",
+        "images": 1,
+        "canvases": 0,
+        "fields": {
+          "Возврат кредита": "5 650 000 ₽",
+          "Проценты банку": "6 817 930 ₽",
+          "Страховка": "0 ₽",
+          "Стоимость жилья": "8 100 000 ₽",
+          "Первоначальный взнос": "2 450 000 ₽",
+          "Ставка по ипотеке": "12%",
+          "Срок по условиям": "15 лет 6 мес."
+        },
+        "total": "12 467 930 ₽",
+        "payment": "67 032 ₽",
+        "hasExtras": false
+      },
+      "size": {
+        "name": "png-desktop-dark-base-after-touch",
+        "width": 1200,
+        "height": 1710,
+        "sha256": "f40ef9d95df3f9665cf8ef0958f4b9fe93fd95e890a8273d5835d0524cf129f3"
+      }
+    },
+    {
+      "scenario": "desktop-dark-combined",
+      "values": {
+        "text": "ЯСНОМЕРА\nНовая ипотека\nОБЯЗАТЕЛЬНЫЙ ПЛАТЁЖ\n\n67 032 ₽ / мес.\n\nБез страховки и досрочных\nВсего выплат с досрочными\n8 898 200 ₽\nВозврат кредита\n5 650 000 ₽\nПроценты банку\n2 974 804 ₽\nСтраховка\n273 396 ₽\nБез первоначального взноса.\nПараметры расчёта\nСтоимость жилья\n8 100 000 ₽\nПервоначальный взнос\n2 450 000 ₽\nСтавка по ипотеке\n12%\nСрок по условиям\n15 лет 6 мес.\nСтраховка учтена · модель 1% остатка в год.\nДосрочные · уменьшать срок\n\nРегулярно: 20 000 ₽/мес.\n\nРазовые по плану: мес. 1: 150 000 ₽; мес. 12: 200 000 ₽\n\nЭкономия на процентах\n3 843 125 ₽\nЭкономия на страховке\n321 102 ₽\nЗакрытие через\n8 лет\nСовокупный эффект всех доплат относительно условий без досрочных.\nОстаток долга\nС доплатами\nБез доплат\nСценарный расчёт · yasnomera.ru",
+        "images": 1,
+        "canvases": 0,
+        "fields": {
+          "Возврат кредита": "5 650 000 ₽",
+          "Проценты банку": "2 974 804 ₽",
+          "Страховка": "273 396 ₽",
+          "Стоимость жилья": "8 100 000 ₽",
+          "Первоначальный взнос": "2 450 000 ₽",
+          "Ставка по ипотеке": "12%",
+          "Срок по условиям": "15 лет 6 мес.",
+          "Экономия на процентах": "3 843 125 ₽",
+          "Экономия на страховке": "321 102 ₽",
+          "Закрытие через": "8 лет"
+        },
+        "total": "8 898 200 ₽",
+        "payment": "67 032 ₽",
+        "hasExtras": true
+      },
+      "size": {
+        "name": "png-desktop-dark-combined-after-touch",
+        "width": 1200,
+        "height": 2058,
+        "sha256": "727cd7a7ecab46fe94d6a3a855662d1a20e89c8473c3d88ef41281f3445fd701"
+      }
+    },
+    {
+      "scenario": "mobile-light-base",
+      "values": {
+        "text": "ЯСНОМЕРА\nНовая ипотека\nОБЯЗАТЕЛЬНЫЙ ПЛАТЁЖ\n\n67 032 ₽ / мес.\n\nБез страховки и досрочных\nВсего выплат\n12 467 930 ₽\nВозврат кредита\n5 650 000 ₽\nПроценты банку\n6 817 930 ₽\nСтраховка\n0 ₽\nБез первоначального взноса.\nПараметры расчёта\nСтоимость жилья\n8 100 000 ₽\nПервоначальный взнос\n2 450 000 ₽\nСтавка по ипотеке\n12%\nСрок по условиям\n15 лет 6 мес.\nСтраховка не учтена.\nОстаток долга\nПо условиям\nСценарный расчёт · yasnomera.ru",
+        "images": 1,
+        "canvases": 0,
+        "fields": {
+          "Возврат кредита": "5 650 000 ₽",
+          "Проценты банку": "6 817 930 ₽",
+          "Страховка": "0 ₽",
+          "Стоимость жилья": "8 100 000 ₽",
+          "Первоначальный взнос": "2 450 000 ₽",
+          "Ставка по ипотеке": "12%",
+          "Срок по условиям": "15 лет 6 мес."
+        },
+        "total": "12 467 930 ₽",
+        "payment": "67 032 ₽",
+        "hasExtras": false
+      },
+      "size": {
+        "name": "png-mobile-light-base-after-touch",
+        "width": 1200,
+        "height": 1710,
+        "sha256": "e1c6927034867cb560c129c096f7b511624e3aa7b6d41ea8aaffbb5fa04d28c3"
+      }
+    },
+    {
+      "scenario": "mobile-light-combined",
+      "values": {
+        "text": "ЯСНОМЕРА\nНовая ипотека\nОБЯЗАТЕЛЬНЫЙ ПЛАТЁЖ\n\n67 032 ₽ / мес.\n\nБез страховки и досрочных\nВсего выплат с досрочными\n8 898 200 ₽\nВозврат кредита\n5 650 000 ₽\nПроценты банку\n2 974 804 ₽\nСтраховка\n273 396 ₽\nБез первоначального взноса.\nПараметры расчёта\nСтоимость жилья\n8 100 000 ₽\nПервоначальный взнос\n2 450 000 ₽\nСтавка по ипотеке\n12%\nСрок по условиям\n15 лет 6 мес.\nСтраховка учтена · модель 1% остатка в год.\nДосрочные · уменьшать срок\n\nРегулярно: 20 000 ₽/мес.\n\nРазовые по плану: мес. 1: 150 000 ₽; мес. 12: 200 000 ₽\n\nЭкономия на процентах\n3 843 125 ₽\nЭкономия на страховке\n321 102 ₽\nЗакрытие через\n8 лет\nСовокупный эффект всех доплат относительно условий без досрочных.\nОстаток долга\nС доплатами\nБез доплат\nСценарный расчёт · yasnomera.ru",
+        "images": 1,
+        "canvases": 0,
+        "fields": {
+          "Возврат кредита": "5 650 000 ₽",
+          "Проценты банку": "2 974 804 ₽",
+          "Страховка": "273 396 ₽",
+          "Стоимость жилья": "8 100 000 ₽",
+          "Первоначальный взнос": "2 450 000 ₽",
+          "Ставка по ипотеке": "12%",
+          "Срок по условиям": "15 лет 6 мес.",
+          "Экономия на процентах": "3 843 125 ₽",
+          "Экономия на страховке": "321 102 ₽",
+          "Закрытие через": "8 лет"
+        },
+        "total": "8 898 200 ₽",
+        "payment": "67 032 ₽",
+        "hasExtras": true
+      },
+      "size": {
+        "name": "png-mobile-light-combined-after-touch",
+        "width": 1200,
+        "height": 2058,
+        "sha256": "1a27b30ec740b74ea9f7a2a8f7af2947e5c08732ce4e03131e70b999f81d8ff6"
+      }
+    },
+    {
+      "scenario": "mobile-dark-base",
+      "values": {
+        "text": "ЯСНОМЕРА\nНовая ипотека\nОБЯЗАТЕЛЬНЫЙ ПЛАТЁЖ\n\n67 032 ₽ / мес.\n\nБез страховки и досрочных\nВсего выплат\n12 467 930 ₽\nВозврат кредита\n5 650 000 ₽\nПроценты банку\n6 817 930 ₽\nСтраховка\n0 ₽\nБез первоначального взноса.\nПараметры расчёта\nСтоимость жилья\n8 100 000 ₽\nПервоначальный взнос\n2 450 000 ₽\nСтавка по ипотеке\n12%\nСрок по условиям\n15 лет 6 мес.\nСтраховка не учтена.\nОстаток долга\nПо условиям\nСценарный расчёт · yasnomera.ru",
+        "images": 1,
+        "canvases": 0,
+        "fields": {
+          "Возврат кредита": "5 650 000 ₽",
+          "Проценты банку": "6 817 930 ₽",
+          "Страховка": "0 ₽",
+          "Стоимость жилья": "8 100 000 ₽",
+          "Первоначальный взнос": "2 450 000 ₽",
+          "Ставка по ипотеке": "12%",
+          "Срок по условиям": "15 лет 6 мес."
+        },
+        "total": "12 467 930 ₽",
+        "payment": "67 032 ₽",
+        "hasExtras": false
+      },
+      "size": {
+        "name": "png-mobile-dark-base-after-touch",
+        "width": 1200,
+        "height": 1710,
+        "sha256": "c301099b82a5f237eea8a548e0f2dfe8ffe7da4466ed3c1a29ec268a9db03552"
+      }
+    },
+    {
+      "scenario": "mobile-dark-combined",
+      "values": {
+        "text": "ЯСНОМЕРА\nНовая ипотека\nОБЯЗАТЕЛЬНЫЙ ПЛАТЁЖ\n\n67 032 ₽ / мес.\n\nБез страховки и досрочных\nВсего выплат с досрочными\n8 898 200 ₽\nВозврат кредита\n5 650 000 ₽\nПроценты банку\n2 974 804 ₽\nСтраховка\n273 396 ₽\nБез первоначального взноса.\nПараметры расчёта\nСтоимость жилья\n8 100 000 ₽\nПервоначальный взнос\n2 450 000 ₽\nСтавка по ипотеке\n12%\nСрок по условиям\n15 лет 6 мес.\nСтраховка учтена · модель 1% остатка в год.\nДосрочные · уменьшать срок\n\nРегулярно: 20 000 ₽/мес.\n\nРазовые по плану: мес. 1: 150 000 ₽; мес. 12: 200 000 ₽\n\nЭкономия на процентах\n3 843 125 ₽\nЭкономия на страховке\n321 102 ₽\nЗакрытие через\n8 лет\nСовокупный эффект всех доплат относительно условий без досрочных.\nОстаток долга\nС доплатами\nБез доплат\nСценарный расчёт · yasnomera.ru",
+        "images": 1,
+        "canvases": 0,
+        "fields": {
+          "Возврат кредита": "5 650 000 ₽",
+          "Проценты банку": "2 974 804 ₽",
+          "Страховка": "273 396 ₽",
+          "Стоимость жилья": "8 100 000 ₽",
+          "Первоначальный взнос": "2 450 000 ₽",
+          "Ставка по ипотеке": "12%",
+          "Срок по условиям": "15 лет 6 мес.",
+          "Экономия на процентах": "3 843 125 ₽",
+          "Экономия на страховке": "321 102 ₽",
+          "Закрытие через": "8 лет"
+        },
+        "total": "8 898 200 ₽",
+        "payment": "67 032 ₽",
+        "hasExtras": true
+      },
+      "size": {
+        "name": "png-mobile-dark-combined-after-touch",
+        "width": 1200,
+        "height": 2058,
+        "sha256": "2ea323a3c2156d306f8cbb5ef99cb270eef723562df6ca35efa54cde43120564"
+      }
+    }
+  ],
+  "uncaughtErrors": []
+}
