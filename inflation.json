@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": 2,
-    "status": "ok",
+    "status": "stale",
     "source_name": "Росстат / ЕМИСС",
     "source_url": "https://www.fedstat.ru/indicator/31074",
     "source_landing_url": "https://rosstat.gov.ru/statistics/price",
@@ -18,8 +18,8 @@
     "data_through": 2025,
     "source_published_at": "2026-10-09",
     "last_successful_fetch_at": "2026-10-30T15:51:53.311Z",
-    "last_attempt_at": "2026-10-30T15:51:53.311Z",
-    "status_reason": null
+    "last_attempt_at": "2026-11-01T09:52:31.538Z",
+    "status_reason": "timeout"
   },
   "annual": [
     {
