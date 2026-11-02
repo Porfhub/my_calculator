@@ -81,16 +81,57 @@ test('rent invalid input clears the result and prevents false conversions until 
     assert.deepEqual(p.goals, ['calculate_success']);
 });
 
-test('rent down payment is a percentage, rejects 100%, and stays paired with its range', () => {
+test('down payment accepts exact rubles or percentages and rejects a full-price deposit', () => {
     const p = page();
-    p.edit('deposit-input', '25');
-    assert.equal(p.run('state.dpPercent'), .25);
-    assert.equal(p.element('dp-range').value, .25);
+    p.edit('deposit-input', '1 032 000');
+    assert.equal(p.run('state.dpPercent'), .1032);
+    assert.equal(p.element('deposit-percent-input').value, '10.32');
+    p.edit('deposit-percent-input', '25,35');
+    assert.equal(p.run('state.dpPercent'), .2535);
+    assert.equal(p.element('deposit-input').value.replace(/\s/g, ''), '2535000');
     p.edit('dp-range', '.35');
     assert.equal(p.run('state.dpPercent'), .35);
-    assert.equal(p.element('deposit-input').value, '35');
-    p.edit('deposit-input', '100');
+    assert.equal(p.element('deposit-percent-input').value, '35');
+    p.edit('deposit-input', '10000000');
     assert.equal(p.window.canExportCalculation(), false);
+    assert.equal(p.element('deposit-input').getAttribute('aria-invalid'), 'true');
+    p.edit('deposit-percent-input', '100');
+    assert.equal(p.window.canExportCalculation(), false);
+    p.edit('deposit-input', '0');
+    assert.equal(p.window.canExportCalculation(), true);
+});
+
+ test('changing price retains the last entered deposit amount or percentage', () => {
+    const p = page();
+    p.edit('deposit-input', '1500000');
+    p.edit('cost-input', '12000000');
+    assert.equal(p.run('state.dpPercent'), .125);
+    assert.equal(p.run('depositAmount'), 1500000);
+    p.edit('deposit-percent-input', '20');
+    p.edit('cost-input', '8000000');
+    assert.equal(p.run('state.dpPercent'), .2);
+    assert.equal(p.run('depositAmount'), 1600000);
+    p.edit('deposit-input', '1500000');
+    p.edit('cost-input', '1000000');
+    assert.equal(p.window.canExportCalculation(), false);
+    p.edit('cost-input', '10000000');
+    assert.equal(p.run('state.dpPercent'), .15);
+    assert.equal(p.window.canExportCalculation(), true);
+});
+
+ test('empty price or deposit recovers without losing the last entered amount', () => {
+    const p = page();
+    p.edit('deposit-input', '1234567,89');
+    p.edit('cost-input', '');
+    assert.equal(p.window.canExportCalculation(), false);
+    p.edit('cost-input', '10000000');
+    assert.equal(p.run('depositAmount'), 1234567.89);
+    assert.equal(p.window.canExportCalculation(), true);
+    p.edit('deposit-input', '');
+    assert.equal(p.window.canExportCalculation(), false);
+    p.edit('deposit-percent-input', '20');
+    assert.equal(p.run('depositAmount'), 2000000);
+    assert.equal(p.window.canExportCalculation(), true);
 });
 
 test('changing the comparison horizon never changes the mortgage payment', () => {
@@ -168,4 +209,59 @@ test('negative renter balance is disclosed, not painted as zero wealth', () => {
     assert.equal(p.element('rent-deficit').hidden, false);
     assert.match(p.element('rent-deficit').innerText, /Дефицит по модели/);
     assert.ok(p.run('renderedResult.rentFinal') < 0);
+});
+
+const moneyNumber = text => Number(text.replace(/[^0-9−-]/g, '').replace('−', '-'));
+
+test('visible ledger adds up to hero totals before and after payoff, with and without income', () => {
+    const p = page();
+    for (const include of [false, true]) {
+        p.element('include-investments').checked = include;
+        p.element('include-investments').listeners.change({target:p.element('include-investments')});
+        for (const years of ['5', '20', '40']) {
+            p.edit('years-input', years);
+            const value = id => moneyNumber(p.element(id).innerText);
+            assert.equal(value('ledger-property') + value('ledger-debt'), value('ledger-buy-total'));
+            assert.equal(value('ledger-deposit') + value('ledger-cashflow') + value('ledger-return'), value('ledger-rent-total'));
+            assert.equal(value('ledger-buy-total'), p.run('renderedResult.buyFinal'));
+            assert.equal(value('ledger-rent-total'), p.run('renderedResult.rentFinal'));
+            assert.equal(p.element('ledger-return-row').hidden, !include);
+        }
+    }
+});
+
+test('negative cash flow and deficit retain signs and invalid inputs clear the ledger', () => {
+    const p = page();
+    p.edit('rent-input', '300000');
+    assert.ok(moneyNumber(p.element('ledger-cashflow').innerText) < 0);
+    assert.ok(moneyNumber(p.element('ledger-rent-total').innerText) < 0);
+    assert.equal(p.element('ledger-rent-total-label').innerText, 'Дефицит по модели');
+    p.edit('rent-input', '');
+    assert.equal(p.element('ledger-rent-total').textContent, '—');
+    assert.equal(p.window.canExportCalculation(), false);
+    p.edit('rent-input', '50000');
+    assert.equal(p.window.canExportCalculation(), true);
+    assert.ok(moneyNumber(p.element('ledger-rent-total').innerText) > 0);
+});
+
+test('legacy version-one share preserves the exact percentage with a ruble-first form', async () => {
+    const p = page();
+    p.edit('deposit-percent-input', '10,32');
+    await p.run('shareRentScenario()');
+    const restored = page(p.copies[0]);
+    assert.equal(restored.run('state.dpPercent'), .1032);
+    assert.equal(restored.run('depositAmount'), 1032000);
+    assert.equal(restored.element('deposit-percent-input').value, '10.32');
+    assert.deepEqual(restored.goals, []);
+});
+
+test('cash flow ledger reconciles independently across loss, gain and zero-interest scenarios', () => {
+    for (const includeInvestments of [false, true]) for (const rent of [1000, 300000]) for (const analysisYears of [5,20,40]) {
+        const state = { cost:10000000, dpPercent:.1032, rate:0, rent, investRate:8, includeInvestments, growthRE:-2, growthRent:4, mortgageTermYears:20, analysisYears };
+        const r = model.calculateScenario(state);
+        const tolerance = Math.max(0.0001, Math.abs(r.rentFinal) * 1e-12);
+        assert.ok(Math.abs(r.initialRenterCapital + r.totalMonthlyDifference + r.totalInvestmentReturn - r.rentFinal) <= .5 + tolerance);
+        assert.ok(Math.abs(r.finalPropertyValue - r.remainingMortgageDebt - r.buyFinal) <= .5 + tolerance);
+        if (!includeInvestments) assert.equal(r.totalInvestmentReturn, 0);
+    }
 });

@@ -195,8 +195,9 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 .rent-page summary{min-height:48px;padding:11px 0;font-size:14px;font-weight:650;color:var(--rv-green)}
 .rent-page .rv-assumptions-summary{display:block;font-size:12px;font-weight:400;color:var(--rv-muted);margin-top:4px}
 .rent-page .rv-assumptions summary{list-style:none}
-.rent-page .rv-assumptions summary::after{content:'+';float:right;margin-top:-40px;font-size:21px}
-.rent-page .rv-assumptions[open] summary::after{content:'−'}
+.rent-page .rv-assumptions summary{position:relative;padding-right:26px}
+.rent-page .rv-assumptions summary::after{content:'';position:absolute;right:3px;top:20px;width:8px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg)}
+.rent-page .rv-assumptions[open]>summary::after{transform:rotate(225deg);top:24px}
 .rent-page .rv-assumptions-summary{padding-right:22px}
 .rent-page .rv-autocalc{font-size:12px;color:var(--rv-muted);margin:18px 0 0}
 .rent-page .rv-results{min-width:0}
@@ -233,9 +234,38 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 .rent-page .rv-dot.rental{background:var(--rv-chart)}
 .rent-page .rv-chart-frame{position:relative;height:250px}
 .rent-page .rv-explain{margin-top:18px}
-.rent-page .rv-explain>summary{color:var(--rv-ink);font-size:14px}
-.rent-page .rv-explain-body{font-size:13px;color:var(--rv-muted);padding-bottom:8px;line-height:1.65}
-.rent-page .rv-explain-body p{margin:0 0 12px}
+.rent-page .rv-explain>summary{color:var(--rv-ink);font-size:15px}
+.rent-page .rv-explain-body{font-size:13px;color:var(--rv-muted);padding-bottom:4px;line-height:1.55}
+.rent-page .rv-explain-body p{margin:0 0 14px}
+.rent-page .rv-disclosure>summary{list-style:none;position:relative;padding-right:26px}
+.rent-page .rv-disclosure>summary::-webkit-details-marker{display:none}
+.rent-page .rv-disclosure>summary::after{content:'';position:absolute;right:3px;top:18px;width:8px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg)}
+.rent-page .rv-disclosure[open]>summary::after{transform:rotate(225deg);top:22px}
+.rent-page .rv-ledger{padding:19px 0;border-top:1px solid var(--rv-line)}
+.rent-page .rv-ledger h3{font-size:15px;color:var(--rv-ink);margin:0 0 14px;display:flex;align-items:center;gap:9px}
+.rent-page .rv-ledger h3::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--rv-green)}
+.rent-page .rv-ledger.rv-renter-ledger h3::before{background:var(--rv-chart)}
+.rent-page .rv-ledger dl{margin:0}
+.rent-page .rv-ledger dl>div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:7px 0;align-items:baseline}
+.rent-page .rv-ledger dt{color:var(--rv-muted)}
+.rent-page .rv-ledger dd{margin:0;color:var(--rv-ink);font-size:14px;font-weight:600;white-space:nowrap}
+.rent-page .rv-ledger .rv-ledger-total{border-top:1px solid var(--rv-line);margin-top:7px;padding-top:13px}
+.rent-page .rv-ledger .rv-ledger-total dt{font-weight:650;color:var(--rv-ink)}
+.rent-page .rv-ledger .rv-ledger-total dd{font-size:18px;font-weight:750}
+.rent-page .rv-ledger .rv-help{margin-top:12px}
+.rent-page .rv-limitations{border-top:1px solid var(--rv-line);padding-top:3px}
+.rent-page .rv-limitations h4{font-size:13px;font-weight:650;color:var(--rv-ink);margin:17px 0 5px}
+.rent-page .rv-limitations p{margin:0 0 12px}
+.rent-page .rv-payment{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:13px 14px;background:var(--rv-tint);border-radius:9px;margin-top:15px;color:var(--rv-ink);font-size:13px}
+.rent-page .rv-payment small{display:block;color:var(--rv-muted);font-size:11px;margin-top:2px}
+.rent-page .rv-payment-amount{white-space:nowrap}
+.rent-page .rv-payment strong{font-size:19px;letter-spacing:-.3px}
+.rent-page .rv-deposit-labels,.rent-page .rv-deposit-inputs{display:grid;grid-template-columns:minmax(0,1fr) 100px;gap:10px}
+.rent-page .rv-deposit-labels{align-items:end;margin-bottom:7px}
+.rent-page .rv-deposit-labels label{margin:0;font-size:12px}
+.rent-page .rv-deposit-labels label:last-child{color:var(--rv-muted);font-weight:500}
+.rent-page .rv-deposit-inputs input{min-width:0}
+.rent-page .rv-nominal{margin:18px 0 0;font-size:12px;color:var(--rv-muted);line-height:1.5}
 .rent-page .rv-breakdown{padding:13px;background:var(--rv-bg);border-radius:9px;margin-top:12px}
 .rent-page .rv-breakdown dl{margin:12px 0}
 .rent-page .rv-breakdown dt{font-size:12px;color:var(--rv-muted)}
@@ -250,9 +280,6 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 .rent-page .rv-dialog{max-width:calc(100% - 32px);width:480px;padding:24px;border:1px solid var(--rv-line);border-radius:15px;background:var(--rv-surface);color:var(--rv-ink)}
 .rent-page .rv-dialog::backdrop{background:#0008}
 .rent-page .rv-dialog input{width:100%;margin:16px 0;padding:12px;border:1px solid var(--rv-line);border-radius:8px;background:var(--rv-bg);color:var(--rv-ink)}
-.rent-page .rv-trust{max-width:1168px;margin:25px auto 0;padding:0 28px}
-.rent-page .rv-trust>details{background:var(--rv-surface);border:1px solid var(--rv-line);border-radius:12px;padding:7px 20px}
-.rent-page .rv-trust p,.rent-page .rv-trust li{font-size:13px;color:var(--rv-muted)}
 .rent-page .rv-export-head{font-size:12px;color:var(--rv-muted);margin:0 0 15px}
 .rent-page .rv-export-conditions{margin:20px 0;padding:15px;background:var(--rv-bg);border-radius:9px;font-size:12px;color:var(--rv-muted)}
 .rent-page .rv-export-conditions p{margin:5px 0}
@@ -293,6 +320,9 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 }
 
 @media(max-width:370px){.rent-page .rv-wrap,.rent-page .rv-trust{padding:0 14px}
+.rent-page .rv-deposit-labels,.rent-page .rv-deposit-inputs{grid-template-columns:minmax(0,1fr) 76px}
+.rent-page .rv-deposit-labels label:last-child{font-size:11px}
+.rent-page .rv-deposit-inputs input{padding-left:10px;padding-right:8px;font-size:16px}
 .rent-page .rv-panel{padding:17px}
 .rent-page .rv-hero{padding:0}
 .rent-page .rv-hero-top,.rent-page .rv-capitals{padding:19px}
@@ -381,14 +411,22 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 </p>
 </div>
 <div class="rv-field">
+<div class="rv-deposit-labels">
 <label for="deposit-input">Первоначальный взнос</label>
+<label for="deposit-percent-input">В процентах</label>
+</div>
+<div class="rv-deposit-inputs">
 <div class="rv-input">
-<input id="deposit-input" type="text" inputmode="decimal" data-state="dpPercent" data-money="false" value="20" autocomplete="off" aria-describedby="deposit-help">
+<input id="deposit-input" type="text" inputmode="decimal" data-money="true" value="2 000 000" autocomplete="off" aria-describedby="deposit-help">
+<span aria-hidden="true">₽</span>
+</div>
+<div class="rv-input">
+<input id="deposit-percent-input" type="text" inputmode="decimal" value="20" autocomplete="off" aria-describedby="deposit-help">
 <span aria-hidden="true">%</span>
 </div>
-<input type="range" id="dp-range" min="0" max="0.99" step="0.0001" value="0.2" class="rv-range" aria-label="Первоначальный взнос, ползунок">
-<p class="rv-help" id="deposit-help">Сумма взноса: <span id="deposit-amount">2 000 000 ₽</span>
-</p>
+</div>
+<input type="range" id="dp-range" min="0" max="0.99" step="0.01" value="0.2" class="rv-range" aria-label="Первоначальный взнос, ползунок">
+<p class="rv-help" id="deposit-help">Можно указать сумму или процент.</p>
 </div>
 <div class="rv-pair">
 <div class="rv-field">
@@ -408,11 +446,10 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 <span aria-hidden="true">лет</span>
 </div>
 <input type="range" id="mortgage-term-range" min="5" max="30" step="1" value="20" class="rv-range" aria-label="Срок ипотеки, ползунок">
-<p class="rv-help" id="mortgage-term-help">На какой срок рассчитан ежемесячный платёж.</p>
+<p class="rv-help" id="mortgage-term-help"></p>
 </div>
 </div>
-<p class="rv-help rv-payment">Платёж по ипотеке: <strong id="mortgage-payment">
-</strong> / мес.</p>
+<div class="rv-payment"><span>Платёж по ипотеке<small>Без страховки</small></span><span class="rv-payment-amount"><strong id="mortgage-payment"></strong> / мес.</span></div>
 </section>
 <section class="rv-section" aria-labelledby="rent-section-title">
 <div class="rv-section-head">
@@ -429,11 +466,11 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 <p class="rv-help" id="rent-help">
 </p>
 </div>
+<p class="rv-help" id="investment-mode-help">При аренде взнос остаётся у вас. Считаем, что ежемесячную экономию вы откладываете. Если аренда дороже покупки, накопления уменьшаются.</p>
 <label class="rv-check">
 <input type="checkbox" id="include-investments" aria-describedby="investment-mode-help">
 <span>Учитывать доход от накоплений</span>
 </label>
-<p class="rv-help" id="investment-mode-help">Взнос остаётся у арендатора. Разница ежемесячных расходов пополняет или уменьшает его капитал.</p>
 <div id="investment-rate-field" class="hidden">
 <div class="rv-field">
 <label for="invest-input">Доходность в год</label>
@@ -445,32 +482,6 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 <p class="rv-help" id="invest-help">Ваше допущение. Доходность не гарантирована.</p>
 </div>
 </div>
-<details id="investment-breakdown" hidden class="rv-breakdown">
-<summary>Что инвестируется?</summary>
-<dl>
-<div>
-<dt>Стартовый капитал</dt>
-<dd id="investment-initial-capital">
-</dd>
-<p class="rv-help">Первоначальный взнос, который не уходит в покупку.</p>
-</div>
-<div>
-<dt>Стартовая разница в первый месяц</dt>
-<dd id="investment-monthly-difference">
-</dd>
-<p class="rv-help" id="investment-monthly-difference-help">
-</p>
-</div>
-<div>
-<dt>Доходность</dt>
-<dd id="investment-return-value">
-</dd>
-<p class="rv-help" id="investment-return-help">
-</p>
-</div>
-</dl>
-<p class="rv-help">Это сценарий с инвестиционным допущением, а не прогноз доходности.</p>
-</details>
 </section>
 <section class="rv-section" aria-labelledby="horizon-title">
 <div class="rv-section-head">
@@ -478,13 +489,13 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 <h2 id="horizon-title">Период сравнения</h2>
 </div>
 <div class="rv-field">
-<label for="years-input">Через сколько лет сравниваем</label>
+<label for="years-input">Сравнить через</label>
 <div class="rv-input">
 <input id="years-input" type="text" inputmode="decimal" data-state="analysisYears" data-money="false" value="20" autocomplete="off" aria-describedby="years-help">
 <span aria-hidden="true">лет</span>
 </div>
 <input type="range" id="years-range" min="5" max="40" step="1" value="20" class="rv-range" aria-label="Через сколько лет сравниваем, ползунок">
-<p class="rv-help" id="years-help">Период, через который сравнивается итоговый капитал. От 5 до 40 лет.</p>
+<p class="rv-help" id="years-help">От 5 до 40 лет. Может отличаться от срока ипотеки.</p>
 </div>
 </section>
 <details id="market-assumptions" class="rv-assumptions">
@@ -530,8 +541,7 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 </p>
 </div>
 <div class="rv-capitals">
-<h3>Капитал через <span id="verdict-period">20 лет</span>
-</h3>
+<h3>Капитал в конце периода</h3>
 <div class="rv-capital">
 <div class="rv-capital-line">
 <span>При покупке</span>
@@ -542,7 +552,7 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 <div id="comparison-bar-buy" role="progressbar" aria-label="Капитал при покупке">
 </div>
 </div>
-<p class="rv-caption">Стоимость квартиры минус остаток ипотеки</p>
+<p class="rv-caption">Стоимость квартиры за вычетом долга</p>
 </div>
 <div class="rv-capital">
 <div class="rv-capital-line">
@@ -564,6 +574,7 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 </p>
 <a href="#market-assumptions" id="edit-assumptions">Изменить допущения →</a>
 </div>
+<p class="rv-nominal">В будущих ценах, без поправки на инфляцию.</p>
 </div>
 </div>
 </section>
@@ -571,7 +582,6 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 <button class="rv-button" id="share-result" type="button" onclick="shareRentScenario()">Поделиться</button>
 <button class="rv-button" id="save-png" type="button" onclick="takeScreenshot('results-panel', 'yasnomera-rent-vs-mortgage.png')">Сохранить PNG</button>
 </div>
-<p class="rv-help ready-only" data-screenshot-exclude>Сравниваем капитал, а не только расходы на жильё. Условия задаёте вы.</p>
 <section class="rv-panel rv-chart-panel ready-only" aria-labelledby="chart-title">
 <div class="rv-chart-head">
 <h2 id="chart-title">Как меняется капитал<br>
@@ -593,24 +603,44 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 </div>
 <p class="rv-help">Значения на конец каждого года, без поправки на инфляцию.</p>
 </section>
-<details class="rv-panel rv-explain ready-only" data-screenshot-exclude>
-<summary>Из чего складывается сравнение</summary>
+<details id="comparison-methodology" class="rv-panel rv-explain rv-disclosure ready-only" data-screenshot-exclude data-webwisor="rent-vs-mortgage" data-webwisor-rendered="true" data-testid="webwisor-help">
+<summary>Как считаем и что учитываем</summary>
 <div class="rv-explain-body">
-<p>Сравниваем чистый капитал через <span id="explain-period">20 лет</span> при одинаковом начальном взносе и сопоставимых ежемесячных затратах.</p>
-<p>
-<strong>При покупке</strong> — расчётная стоимость жилья с учётом заданного роста цен минус остаток долга. Срок ипотеки: <span id="result-mortgage-term">20 лет</span>. Итоговый капитал сравнивается через: <span id="result-analysis-years">20 лет</span>.</p>
-<p>
-<strong>При аренде</strong> — сохранённый взнос и накопленная разница расходов. Когда аренда дороже ипотеки с содержанием жилья, капитал уменьшается. После погашения ипотеки ежемесячный платёж покупателя обнуляется, а содержание жилья остаётся.</p>
-<p>Если включить доход от накоплений, заданная годовая ставка делится на 12 и применяется к капиталу ежемесячно. Отрицательный капитал означает нехватку средств в рамках модели.</p>
-<p>Содержание жилья — 0,1% первоначальной цены в год. Страховка, налоги, ремонт, расходы на сделку и продажу не включены. Недвижимость и накопления различаются ликвидностью и риском.</p>
-<p>Суммы номинальные: это сценарное сравнение по вашим допущениям, а не рекомендация купить или арендовать.</p>
+<p>Откуда берётся капитал через <span id="verdict-period">20 лет</span></p>
+<section class="rv-ledger" aria-labelledby="buy-ledger-title">
+<h3 id="buy-ledger-title">При покупке</h3>
+<dl>
+<div><dt>Стоимость квартиры к этому моменту</dt><dd id="ledger-property"></dd></div>
+<div><dt>Минус остаток ипотеки</dt><dd id="ledger-debt"></dd></div>
+<div class="rv-ledger-total"><dt>Ваш капитал</dt><dd id="ledger-buy-total"></dd></div>
+</dl>
+</section>
+<section class="rv-ledger rv-renter-ledger" aria-labelledby="rent-ledger-title">
+<h3 id="rent-ledger-title">При аренде</h3>
+<dl>
+<div><dt>Сохранённый взнос</dt><dd id="ledger-deposit"></dd></div>
+<div><dt id="ledger-cashflow-label">Разница расходов за весь период</dt><dd id="ledger-cashflow"></dd></div>
+<div id="ledger-return-row"><dt id="ledger-return-label">Доход от накоплений</dt><dd id="ledger-return"></dd></div>
+<div class="rv-ledger-total"><dt id="ledger-rent-total-label">Ваш капитал</dt><dd id="ledger-rent-total"></dd></div>
+</dl>
+<p class="rv-help" id="ledger-first-month"></p>
+</section>
+<details class="rv-limitations rv-disclosure">
+<summary>Допущения и ограничения</summary>
+<h4>Что задаёте вы</h4>
+<p>Цена, взнос, ставка, аренда и сроки — ваши условия. Рост цен и доходность — ваши предположения о будущем. Официальные данные здесь не используются.</p>
+<h4>Как сравниваем расходы</h4>
+<p>Каждый месяц сравниваем аренду с платежом по ипотеке и содержанием жилья. Разницу прибавляем к накоплениям арендатора или вычитаем из них. После погашения ипотеки её платёж обнуляется, содержание остаётся.</p>
+<h4>Что учтено</h4>
+<p>Содержание жилья — 0,1% первоначальной цены в год. При включённом доходе от накоплений годовую ставку делим на 12 и начисляем результат ежемесячно. Отрицательный баланс означает нехватку средств в рамках модели.</p>
+<h4>Что не учтено</h4>
+<p>Страховка, налоги, ремонт, расходы на сделку и продажу. Квартира и накопления различаются по риску и возможности быстро получить деньги. Все суммы округлены до рублей, без поправки на инфляцию. Это сравнение сценариев, а не рекомендация купить или арендовать.</p>
+</details>
 </div>
 </details>
 </div>
 </div>
 </main>
-<section class="rv-trust" data-webwisor="rent-vs-mortgage">
-</section>
 <footer class="rv-wrap rv-footer">
 <p>© 2026 Ясномера. Понятные расчёты для финансовых решений.</p>
 </footer>
@@ -648,7 +678,7 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
         const rentStateController = CalculatorState.createController({
             root: 'results-panel',
             messageElement: 'rent-state-message',
-            resultElements: ['final-buy', 'final-rent', 'verdict-title', 'verdict-difference', 'verdict-desc', 'mortgage-payment', 'deposit-amount'],
+            resultElements: ['final-buy', 'final-rent', 'verdict-title', 'verdict-difference', 'verdict-desc', 'mortgage-payment', 'ledger-property', 'ledger-debt', 'ledger-buy-total', 'ledger-deposit', 'ledger-cashflow', 'ledger-return', 'ledger-rent-total', 'ledger-first-month'],
             onClear: () => {
                 if (chart) {
                     chart.destroy();
@@ -719,22 +749,6 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
         function updateUI(buyFinal, rentFinal, result) {
             const investmentEnabled = state.includeInvestments;
             document.getElementById('investment-rate-field').classList.toggle('hidden', !investmentEnabled);
-            const investmentBreakdown = document.getElementById('investment-breakdown');
-            investmentBreakdown.hidden = !investmentEnabled;
-            if (investmentEnabled) {
-                const startingDifference = result.initialMonthlyDifference;
-                document.getElementById('investment-initial-capital').innerText = formatMoney(result.initialRenterCapital);
-                document.getElementById('investment-monthly-difference').innerText = `${startingDifference < 0 ? '−' : '+'}${formatMoney(Math.abs(startingDifference))} / мес`;
-                document.getElementById('investment-monthly-difference-help').innerText = startingDifference > 0
-                    ? 'Добавляется к капиталу в первый месяц.'
-                    : startingDifference < 0
-                        ? 'Снимается с капитала в первый месяц.'
-                        : 'В первый месяц не меняет капитал.';
-                document.getElementById('investment-return-value').innerText = `${state.investRate.toFixed(1)}% в год`;
-                document.getElementById('investment-return-help').innerText = state.investRate > 0
-                    ? 'Применяется к накопленному капиталу.'
-                    : 'Капитал не растёт от доходности.';
-            }
             const rentFinalElement = document.getElementById('final-rent');
             rentFinalElement.innerText = rentFinal < 0 ? 'Накопления исчерпаны' : formatMoney(rentFinal);
             rentFinalElement.className = rentFinal < 0 ? 'depleted' : '';
@@ -743,19 +757,15 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
             document.getElementById('rent-capital-caption').innerText = rentFinal < 0
                 ? 'При выбранных предположениях арендные платежи превысили первоначальный взнос и накопленную разницу ежемесячных расходов.'
                 : state.includeInvestments
-                    ? 'Стоимость инвестиционного портфеля'
-                    : 'Накопления без инвестиционного дохода';
+                    ? 'Накопления с доходностью'
+                    : 'Накопленные деньги';
             document.getElementById('mortgage-payment').innerText = formatMoney(result.mortgagePayment);
-            document.getElementById('deposit-amount').innerText = formatMoney(state.cost * state.dpPercent);
             document.getElementById('quick-start-assumptions').innerText = `Жильё ${state.growthRE > 0 ? '+' : ''}${state.growthRE}%, аренда ${state.growthRent > 0 ? '+' : ''}${state.growthRent}% в год`;
             document.getElementById('result-assumptions').innerText = `Рост жилья ${state.growthRE}% и аренды ${state.growthRent}% в год. ${state.includeInvestments ? `Доходность накоплений ${state.investRate}% в год.` : 'Доход от накоплений выключен.'} Это допущения расчёта.`;
             const periodLabel = `${state.analysisYears} ${getYearWord(state.analysisYears)}`;
-            const mortgageTermLabel = `${state.mortgageTermYears} ${getYearWord(state.mortgageTermYears)}`;
-            document.getElementById('result-mortgage-term').innerText = mortgageTermLabel;
-            document.getElementById('result-analysis-years').innerText = periodLabel;
             document.getElementById('verdict-period').innerText = periodLabel;
-            document.getElementById('explain-period').innerText = periodLabel;
             document.getElementById('chart-years').innerText = periodLabel;
+            updateLedger(result);
 
             document.getElementById('final-buy').innerText = formatMoney(buyFinal);
 
@@ -768,11 +778,11 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
             document.getElementById('verdict-difference').innerText = formatMoney(diff);
             if (winner) {
                 title.innerText = winner === 'Ипотека' ? 'Больше капитала при покупке' : 'Больше капитала при аренде';
-                desc.innerText = `Через ${periodLabel}, при заданном росте цен и аренды. Сравниваем стоимость жилья за вычетом долга с накоплениями арендатора.`;
+                desc.innerText = `Через ${periodLabel}`;
                 tag.innerText = 'ПРИ ЭТИХ УСЛОВИЯХ';
             } else {
                 title.innerText = 'Капитал одинаковый';
-                desc.innerText = `При выбранных предположениях на горизонте ${periodLabel} оба сценария дают одинаковый чистый капитал.`;
+                desc.innerText = `Через ${periodLabel}`;
                 tag.innerText = 'ПРИ ЭТИХ УСЛОВИЯХ';
             }
 
@@ -789,6 +799,32 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
                 element.setAttribute('aria-valuetext', value < 0 ? 'Накопления исчерпаны' : formatMoney(value));
             });
 
+        }
+
+        function updateLedger(result) {
+            // Reconcile display rounding to the same whole-ruble totals as the hero.
+            const debt = Math.round(result.remainingMortgageDebt);
+            const deposit = Math.round(result.initialRenterCapital);
+            const income = Math.round(result.totalInvestmentReturn);
+            const difference = Math.round(result.rentFinal) - deposit - income;
+            const signedMoney = value => `${value < 0 ? '−' : '+'} ${formatMoney(Math.abs(value))}`;
+            document.getElementById('ledger-property').innerText = formatMoney(Math.round(result.buyFinal) + debt);
+            document.getElementById('ledger-debt').innerText = debt ? `− ${formatMoney(debt)}` : formatMoney(0);
+            document.getElementById('ledger-buy-total').innerText = formatMoney(result.buyFinal);
+            document.getElementById('ledger-deposit').innerText = formatMoney(deposit);
+            document.getElementById('ledger-cashflow').innerText = signedMoney(difference);
+            document.getElementById('ledger-cashflow-label').innerText = difference < 0 ? 'Из накоплений на разницу расходов' : 'Отложенная разница расходов';
+            document.getElementById('ledger-return-row').hidden = !state.includeInvestments;
+            document.getElementById('ledger-return-label').innerText = income < 0 ? 'Изменение баланса от доходности' : 'Доход от накоплений';
+            document.getElementById('ledger-return').innerText = signedMoney(income);
+            document.getElementById('ledger-rent-total-label').innerText = result.rentFinal < 0 ? 'Дефицит по модели' : 'Ваш капитал';
+            document.getElementById('ledger-rent-total').innerText = result.rentFinal < 0 ? `− ${formatMoney(Math.abs(result.rentFinal))}` : formatMoney(result.rentFinal);
+            const first = result.initialMonthlyDifference;
+            document.getElementById('ledger-first-month').innerText = first > 0
+                ? `В первый месяц откладывается ${formatMoney(first)}. Дальше разница меняется вместе с расходами.`
+                : first < 0
+                    ? `В первый месяц из накоплений уходит ${formatMoney(Math.abs(first))} на разницу расходов.`
+                    : 'В первый месяц расходы одинаковы. Дальше разница меняется вместе с расходами.';
         }
 
         function fitResultAmounts() {
@@ -861,10 +897,12 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
         }
 
         const fieldBindings = [
-            ['cost', 'cost', 1], ['rate', 'rate', 1], ['deposit', 'dpPercent', 100],
+            ['cost', 'cost', 1], ['rate', 'rate', 1],
             ['rent', 'rent', 1], ['invest', 'investRate', 1],
             ['mortgage-term', 'mortgageTermYears', 1], ['years', 'analysisYears', 1]
         ];
+        let depositBasis = 'amount';
+        let depositAmount = state.cost * state.dpPercent;
         function parseInput(value) {
             const raw = value.trim().replace(/[\s\u00a0\u202f]/g, '').replace(',', '.');
             return /^\d+(?:\.\d*)?$/.test(raw) ? Number(raw) : NaN;
@@ -874,24 +912,61 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
                 const value = state[key] * divisor;
                 if (!Number.isFinite(value)) continue;
                 const input = document.getElementById(`${id}-input`);
-                const range = document.getElementById(id === 'deposit' ? 'dp-range' : `${id}-range`);
+                const range = document.getElementById(`${id}-range`);
                 if (document.activeElement !== input) input.value = input.dataset.money === 'true' ? value.toLocaleString('ru-RU', { maximumFractionDigits: 2 }) : String(Number(value.toFixed(6)));
-                range.value = id === 'deposit' ? state.dpPercent : value;
+                range.value = value;
                 const fill = Math.min(100, Math.max(0, (Number(range.value) - Number(range.min)) / (Number(range.max) - Number(range.min)) * 100));
                 range.style.setProperty('--fill', fill + '%');
             }
+            syncDepositInputs();
             document.getElementById('include-investments').checked = state.includeInvestments;
         }
+        function syncDepositInputs() {
+            const amountInput = document.getElementById('deposit-input');
+            const percentInput = document.getElementById('deposit-percent-input');
+            if (Number.isFinite(depositAmount) && document.activeElement !== amountInput) amountInput.value = depositAmount.toLocaleString('ru-RU', { maximumFractionDigits: 2 });
+            if (Number.isFinite(state.dpPercent) && document.activeElement !== percentInput) percentInput.value = String(Number((state.dpPercent * 100).toFixed(6)));
+            const range = document.getElementById('dp-range');
+            range.value = state.dpPercent;
+            range.style.setProperty('--fill', Math.min(100, Math.max(0, state.dpPercent / .99 * 100)) + '%');
+            const invalid = !Number.isFinite(state.dpPercent) || state.dpPercent < 0 || state.dpPercent >= 1;
+            amountInput.setAttribute('aria-invalid', String(invalid));
+            percentInput.setAttribute('aria-invalid', String(invalid));
+            document.getElementById('deposit-help').innerText = invalid ? 'Взнос должен быть от 0 ₽ до стоимости квартиры, не включая её.' : 'Можно указать сумму или процент.';
+        }
+        function updateDepositForCost() {
+            if (depositBasis === 'amount') state.dpPercent = depositAmount / state.cost;
+            else depositAmount = state.cost * state.dpPercent;
+            syncDepositInputs();
+        }
+        for (const id of ['deposit-input', 'deposit-percent-input']) {
+            const input = document.getElementById(id);
+            input.addEventListener('input', () => {
+                depositBasis = id === 'deposit-input' ? 'amount' : 'percent';
+                if (depositBasis === 'amount') { depositAmount = parseInput(input.value); state.dpPercent = depositAmount / state.cost; }
+                else { state.dpPercent = parseInput(input.value) / 100; depositAmount = state.cost * state.dpPercent; }
+                syncDepositInputs();
+                calculate(true);
+            });
+            input.addEventListener('blur', () => { if (isValidRentState()) syncInputs(); });
+        }
+        document.getElementById('dp-range').addEventListener('input', event => {
+            depositBasis = 'percent'; state.dpPercent = Number(event.target.value);
+            depositAmount = state.cost * state.dpPercent;
+            syncDepositInputs(); calculate(true);
+        });
         for (const [id, key, divisor] of fieldBindings) {
             const input = document.getElementById(`${id}-input`);
             input.addEventListener('input', () => {
                 state[key] = parseInput(input.value) / divisor;
+                if (key === 'cost') updateDepositForCost();
                 input.setAttribute('aria-invalid', String(!isValidRentState({ ...initialState, includeInvestments: true, [key]: state[key] })));
                 calculate(true);
             });
             input.addEventListener('blur', () => { if (isValidRentState()) syncInputs(); });
-            document.getElementById(id === 'deposit' ? 'dp-range' : `${id}-range`).addEventListener('input', (event) => {
-                state[key] = Number(event.target.value) / (id === 'deposit' ? 1 : divisor);
+            document.getElementById(`${id}-range`).addEventListener('input', (event) => {
+                state[key] = Number(event.target.value) / divisor;
+                if (key === 'cost') updateDepositForCost();
                 input.removeAttribute('aria-invalid');
                 calculate(true);
             });
@@ -942,6 +1017,7 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
         }
         new MutationObserver(() => { if (chart && renderedResult && isValidRentState()) updateChart(renderedResult.labels, renderedResult.dataBuy, renderedResult.dataRent); }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
         restoreRentScenario();
+        depositAmount = state.cost * state.dpPercent;
         syncInputs();
         calculate();
         window.prepareCalculationScreenshot = async function(stage) {
@@ -954,7 +1030,7 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
             clone.removeAttribute('id');
             clone.querySelectorAll('[id]').forEach(node => { node.style.fontSize = ''; node.removeAttribute('id'); });
             clone.querySelector('.rv-assumption-note')?.remove();
-            clone.querySelector('.rv-verdict-description')?.remove();
+            clone.querySelector('.rv-nominal')?.remove();
             clone.querySelectorAll('a,button').forEach(node => node.remove());
             const heading = document.createElement('p');
             heading.className = 'rv-export-head';
