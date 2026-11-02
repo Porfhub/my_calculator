@@ -30,71 +30,91 @@
     <script type="application/ld+json">
         {"@context":"https://schema.org","@type":"WebSite","name":"Ясномера","url":"https://yasnomera.ru/","description":"Понятные расчёты для финансовых решений.","inLanguage":"ru-RU"}
     </script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            200: '#bbf7d0',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Custom smooth transitions, scrollbar, and pulse rings */
-        html {
-            scroll-behavior: smooth;
-        }
-        .glow-active {
-            animation: pulse-ring 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        @keyframes pulse-ring {
-            0%, 100% {
-                box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.6);
-                transform: scale(1.02);
-            }
-            50% {
-                box-shadow: 0 0 0 10px rgba(22, 163, 74, 0);
-                transform: scale(1.03);
-            }
-        }
-        /* Custom scrollbar hiding */
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        /* Premium Soft Diffused Shadows (Stripe / Tinkoff inspired) */
-        .premium-card {
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.01);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .premium-card:hover {
-            box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.06), 0 4px 12px rgba(0, 0, 0, 0.02);
-        }
-        .dark .premium-card {
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
-        }
-        .dark .premium-card:hover {
-            box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.12), 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-    </style>
     <link rel="stylesheet" href="css/product-polish.css">
+    <style>
+
+:root { --home-bg:#f6f7f4; --home-surface:#fff; --home-ink:#1b292e; --home-muted:#52656d; --home-line:#d9e1df; --home-green:#075446; --home-tint:#eaf5ef; --home-focus:#008767; }
+html.dark { --home-bg:#192226; --home-surface:#222e33; --home-ink:#f1f5f3; --home-muted:#b8c8c9; --home-line:#435256; --home-green:#9ee4c1; --home-tint:#203e35; --home-focus:#9ee4c1; }
+.home-page, .home-page * { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:84px; }
+.home-page { margin:0; background:var(--home-bg); color:var(--home-ink); font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+.home-page a { color:inherit; text-decoration:none; }
+.home-page button { font:inherit; cursor:pointer; }
+.home-page .hidden, .home-page [hidden] { display:none!important; }
+.home-page .home-wrap { max-width:1168px; margin:0 auto; padding:0 28px; }
+.home-page :is(a,button,summary):focus-visible { outline:3px solid var(--home-focus); outline-offset:4px; }
+.home-page .skip-link { position:fixed; top:8px; left:16px; z-index:100; padding:12px 20px; background:var(--home-surface); border:2px solid var(--home-green); border-radius:8px; transform:translateY(-150%); }
+.home-page .skip-link:focus { transform:translateY(0); }
+.home-page .home-header { background:var(--home-surface); border-bottom:1px solid var(--home-line); }
+.home-page .header-row { min-height:76px; display:flex; align-items:center; gap:38px; }
+.home-page .home-brand { display:inline-flex; align-items:center; gap:11px; min-height:44px; flex-shrink:0; font-weight:850; font-size:23px; letter-spacing:-.8px; }
+.home-page .home-brand img { width:35px; height:35px; }
+.home-page .header-nav { display:flex; align-items:center; gap:28px; }
+.home-page .header-nav a { display:flex; align-items:center; min-height:44px; font-size:14px; font-weight:600; }
+.home-page .header-nav a:hover { color:var(--home-green); text-decoration:underline; text-underline-offset:5px; }
+.home-page .theme-button { margin-left:auto; display:grid; place-items:center; width:44px; height:44px; flex-shrink:0; color:var(--home-ink); background:transparent; border:1px solid var(--home-line); border-radius:12px; }
+.home-page .theme-button:hover { background:var(--home-tint); }
+.home-page .theme-button svg { width:21px; height:21px; }
+.home-page .home-intro { display:grid; grid-template-columns:minmax(0,1.65fr) minmax(0,1fr); gap:40px; align-items:center; padding:45px 0 30px; }
+.home-page h1 { margin:0; font-size:clamp(32px,3.4vw,43px); line-height:1.13; font-weight:800; letter-spacing:-1.5px; }
+.home-page h1 span { display:block; color:var(--home-green); }
+.home-page .intro-copy { margin:15px 0 0; max-width:560px; color:var(--home-muted); font-size:17px; }
+.home-page .home-reference { border-left:1px solid var(--home-line); padding-left:28px; }
+.home-page .rate-main { display:flex; gap:12px; align-items:baseline; justify-content:space-between; }
+.home-page .rate-main h2 { margin:0; font-size:14px; line-height:1.4; font-weight:650; }
+.home-page .rate-number { color:var(--home-green); font-size:26px; font-weight:800; line-height:1.2; white-space:nowrap; }
+.home-page .rate-meta, .home-page .rate-note { margin:5px 0 0; font-size:12px; color:var(--home-muted); line-height:1.5; }
+.home-page .rate-meta a { text-decoration:underline; text-underline-offset:3px; color:var(--home-green); display:inline-flex; align-items:center; min-height:30px; }
+.home-page .rate-note { margin-top:2px; }
+.home-page .rate-status:empty { display:none; }
+.home-page .rate-status { margin:7px 0 0; font-size:12px; color:var(--home-muted); }
+.home-page .home-reference[data-status="stale"] .rate-status { color:var(--home-ink); }
+.home-page .benefits { display:flex; flex-wrap:wrap; gap:5px 0; margin:0 0 22px; padding:0; list-style:none; font-size:13px; color:var(--home-muted); }
+.home-page .benefits li+li::before { content:'·'; margin:0 10px; color:var(--home-green); }
+.home-page .catalog-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; border-top:1px solid var(--home-line); padding:20px 0 14px; }
+.home-page .catalog-heading h2 { margin:0; font-size:24px; line-height:1.25; font-weight:750; letter-spacing:-.5px; }
+.home-page .category-nav { display:flex; gap:5px 18px; flex-wrap:wrap; }
+.home-page .category-nav a { display:flex; align-items:center; min-height:44px; color:var(--home-green); font-size:13px; font-weight:600; text-decoration:underline; text-underline-offset:4px; }
+.home-page .calculator-group { scroll-margin-top:24px; margin:0 0 25px; }
+.home-page .calculator-group + .calculator-group { border-top:1px solid var(--home-line); padding-top:23px; }
+.home-page .calculator-group h3 { margin:0 0 14px; font-size:21px; letter-spacing:-.4px; line-height:1.3; font-weight:750; }
+.home-page .calculator-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.home-page .everyday-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.home-page .calculator-link { position:relative; display:grid; grid-template-columns:30px minmax(0,1fr) 17px; gap:15px; align-items:center; min-height:102px; padding:18px; background:var(--home-surface); border:1px solid var(--home-line); border-radius:12px; transition:border-color .16s,background .16s; }
+.home-page .calculator-link.featured { background:var(--home-tint); border-color:color-mix(in srgb,var(--home-green) 24%,var(--home-line)); }
+.home-page .calculator-link:hover { border-color:var(--home-green); background:var(--home-tint); }
+.home-page .calculator-link > div { align-self:start; }
+.home-page .calculator-link h4 { margin:0; font-size:16px; font-weight:750; line-height:1.3; letter-spacing:-.2px; }
+.home-page .calculator-link.featured h4 { color:var(--home-green); }
+.home-page .calculator-link p { margin:7px 0 0; font-size:13px; color:var(--home-muted); line-height:1.45; }
+.home-page .calculator-icon { width:29px; height:29px; color:var(--home-green); }
+.home-page .link-arrow { width:17px; height:17px; color:var(--home-green); align-self:center; }
+.home-page .everyday-grid .calculator-link { min-height:92px; padding-top:18px; padding-bottom:18px; }
+.home-page .about { position:relative; margin:28px 0 22px; padding:18px 22px; border:1px solid var(--home-line); border-radius:12px; background:var(--home-tint); scroll-margin-top:24px; }
+.home-page .about-summary { padding-right:230px; }
+.home-page .about h2 { font-size:17px; line-height:1.4; margin:0; letter-spacing:-.3px; }
+.home-page .about-intro { margin:7px 0 0; color:var(--home-muted); font-size:14px; }
+.home-page .about details { margin-top:0; }
+.home-page .about summary { position:absolute; top:18px; right:22px; width:fit-content; padding:9px 0; min-height:44px; cursor:pointer; color:var(--home-green); font-size:13px; font-weight:650; }
+.home-page .about-body { margin-top:18px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; padding-top:15px; border-top:1px solid var(--home-line); }
+.home-page .about-body h3 { margin:0 0 6px; font-size:14px; }
+.home-page .about-body p { margin:0; font-size:13px; color:var(--home-muted); }
+.home-page .home-footer { padding:0 0 calc(25px + env(safe-area-inset-bottom)); }
+.home-page .footer-row { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; font-size:12px; color:var(--home-muted); }
+.home-page .footer-row p { margin:0; }
+.home-page .share-button { color:var(--home-green); background:transparent; padding:8px 0; border:0; min-height:44px; font-size:13px; text-decoration:underline; text-underline-offset:4px; }
+.home-page .share-dialog { width:min(480px,calc(100% - 32px)); border:1px solid var(--home-line); border-radius:15px; padding:24px; background:var(--home-surface); color:var(--home-ink); }
+.home-page .share-dialog::backdrop { background:rgba(0,0,0,.5); }
+.home-page .share-dialog h2 { font-size:20px; margin:0 0 10px; }
+.home-page .share-dialog input { display:block; width:100%; margin:14px 0; border:1px solid var(--home-line); padding:10px; font:inherit; border-radius:8px; color:var(--home-ink); background:var(--home-bg); }
+.home-page .share-dialog button { padding:9px 15px; min-height:44px; border-radius:8px; border:1px solid var(--home-line); background:var(--home-tint); color:var(--home-green); }
+.home-page .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--home-ink); color:var(--home-bg); border-radius:10px; padding:12px 18px; max-width:calc(100% - 32px); font-size:14px; z-index:80; }
+@media(max-width:1000px) { .home-page .calculator-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .home-page .home-intro { gap:26px; grid-template-columns:1.5fr 1fr; } .home-page .catalog-heading { align-items:flex-start; flex-direction:column; gap:3px; } .home-page .calculator-link { gap:11px; padding:18px 14px; } }
+@media(max-width:760px) { .home-page .home-wrap { padding:0 20px; } .home-page .header-row { min-height:65px; gap:20px; } .home-page .home-brand { font-size:20px; } .home-page .home-brand img { width:32px;height:32px; } .home-page .header-nav { gap:16px; margin-left:auto; } .home-page .header-nav a { font-size:12px; } .home-page .theme-button { margin-left:0; } .home-page .home-intro { grid-template-columns:1fr; padding:28px 0 13px; gap:20px; } .home-page h1 { font-size:34px; letter-spacing:-1px; max-width:600px; } .home-page .intro-copy { font-size:15px; margin-top:11px; } .home-page .home-reference { border-left:0; padding:12px 15px; border:1px solid var(--home-line); border-radius:10px; background:var(--home-surface); } .home-page .rate-main { justify-content:flex-start; gap:15px; } .home-page .rate-number { font-size:22px; } .home-page .rate-meta { margin-top:1px; } .home-page .rate-meta a { min-height:24px; } .home-page .benefits { font-size:12px; margin-bottom:15px; } .home-page .catalog-heading { padding:16px 0 11px; } .home-page .catalog-heading h2 { font-size:22px; } .home-page .category-nav { column-gap:17px; } .home-page .category-nav a { font-size:12px; min-height:40px; } .home-page .calculator-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .home-page .calculator-group h3 { font-size:20px; } .home-page .about-summary { padding-right:0; } .home-page .about summary { position:static; margin-top:7px; } .home-page .about-body { grid-template-columns:1fr; gap:17px; } }
+@media(max-width:520px) { .home-page .home-wrap { padding:0 18px; } .home-page .header-row { gap:12px; } .home-page .header-nav { gap:0; } .home-page .header-nav .about-nav { display:none; } .home-page .header-nav a { font-size:12px; } .home-page .theme-button { width:44px; height:44px; } .home-page .home-brand { font-size:18px; gap:8px; letter-spacing:-.5px; } .home-page h1 { font-size:31px; line-height:1.12; } .home-page .home-intro { padding-top:23px; gap:16px; } .home-page .intro-copy { font-size:14px; } .home-page .rate-main h2 { font-size:12px; } .home-page .rate-meta, .home-page .rate-note { font-size:12px; } .home-page .benefits { font-size:12px; gap:0; } .home-page .benefits li+li::before { margin:0 6px; } .home-page .category-nav { display:grid; grid-template-columns:1.2fr 1fr 1.1fr; gap:8px; width:100%; } .home-page .category-nav a { min-height:44px; font-size:12px; line-height:1.25; text-align:center; justify-content:center; } .home-page .calculator-grid, .home-page .everyday-grid { grid-template-columns:1fr; gap:10px; } .home-page .calculator-link, .home-page .everyday-grid .calculator-link { min-height:90px; padding:16px; grid-template-columns:28px minmax(0,1fr) 17px; gap:13px; align-items:center; } .home-page .calculator-link h4 { font-size:16px; } .home-page .calculator-link p { margin-top:5px; font-size:13px; } .home-page .calculator-group { margin-bottom:23px; } .home-page .calculator-group + .calculator-group { padding-top:20px; } .home-page .about { padding:18px; margin-top:28px; } }
+@media(max-width:350px) { .home-page .home-wrap { padding:0 14px; } .home-page .home-brand { font-size:16px; } .home-page .home-brand img { width:28px; height:28px; } .home-page .header-row { gap:8px; } .home-page h1 { font-size:29px; } .home-page .category-nav { column-gap:10px; } .home-page .benefits { font-size:11px; } }
+@media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } .home-page * { transition:none!important; } }
+    </style>
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){
@@ -113,515 +133,186 @@
             }
         }
     </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
     <script src="js/theme.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/ui-utils.js"></script>
+    <script src="js/api.js"></script>
 </head>
-<body class="home-page bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen font-sans antialiased flex flex-col transition-colors duration-300">
-
-    <!-- Sticky Navigation Header with Premium Glassmorphism -->
-    <header class="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/85 backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-950/85 transition-all">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-            <a href="index.html" class="flex items-center gap-2.5 group">
-                <span class="text-2xl group-hover:rotate-12 transition-transform duration-300">⚡</span>
-                <span class="font-black text-lg tracking-tight text-slate-900 dark:text-white">
-                    Ясно<span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-400">мера</span>
-                </span>
-            </a>
-
-            <div class="flex items-center gap-4">
-                <!-- Theme toggle (Integrated neatly) -->
-                <button id="theme-toggle" onclick="toggleDarkMode()" class="p-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-slate-600 dark:text-slate-300 transition-all active:scale-95" aria-label="Переключить тему">
-                    <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
-                    <svg id="moon-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
-                </button>
-            </div>
+<body class="home-page">
+    <noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute;left:-9999px" alt=""></div></noscript>
+    <a class="skip-link" href="#catalog-section">Перейти к калькуляторам</a>
+    <header class="home-header">
+        <div class="home-wrap header-row">
+            <a class="home-brand" href="index.html" aria-label="Ясномера — главная"><img src="yasnomera-mark.svg" width="35" height="35" alt=""><span aria-hidden="true">ЯСНОМЕРА</span></a>
+            <nav class="header-nav" aria-label="Основная навигация"><a href="#catalog-section">Все расчёты</a><a class="about-nav" href="#about">О сервисе</a></nav>
+            <button id="theme-toggle" class="theme-button" type="button" onclick="toggleDarkMode()" aria-label="Переключить тему">
+                <svg id="sun-icon" class="hidden" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>
+                <svg id="moon-icon" class="hidden" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14A9 9 0 0 1 10 3.5 9 9 0 1 0 20.5 14Z"/></svg>
+            </button>
         </div>
     </header>
-
-    <main class="flex-grow flex flex-col items-center p-4 sm:p-6 py-8 md:py-12">
-        <div class="max-w-6xl w-full">
-
-            <!-- Hero Section with polished copy and live rate skeleton -->
-            <div class="text-center mb-8 md:mb-10 relative">
-                <!-- Data freshness notice (No bot jargon) -->
-                <div class="mb-5 inline-flex items-center gap-2 px-3.5 py-1.5 bg-slate-100/80 dark:bg-slate-900/50 rounded-full border border-slate-200/60 dark:border-slate-800/60 text-xs font-semibold text-slate-500 dark:text-slate-400 justify-center shadow-sm">
-                    <span class="w-2 h-2 rounded-full bg-brand-500 shrink-0"></span>
-                    <span id="freshness-text" class="flex items-center gap-1.5">
-                        <span class="h-3 w-32 bg-slate-200 dark:bg-slate-700 rounded animate-pulse inline-block"></span>
-                    </span>
-                    <!-- Kept same matching ID so automated background rates-updater works seamlessly -->
-                    <span id="freshness-indicator" class="hidden"></span>
-                </div>
-
-                <h1 class="text-4xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-5 leading-tight">
-                    Понятные расчёты <br class="sm:hidden"> для <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-400">финансовых решений</span>
-                </h1>
-
-                <p class="text-base sm:text-lg md:text-xl font-medium text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-8 leading-relaxed">
-                    Оцените платежи, накопления и расходы до принятия решения. Расчёты выполняются в браузере, а источники макроданных указаны в интерфейсе.
-                </p>
-            </div>
-
-            <!-- Goal-Selection / Quick Filter Block -->
-            <div class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 p-4 sm:p-5 rounded-3xl shadow-sm mb-8 md:mb-10">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-5 text-center">
-                    Что вы хотите сделать? Выберите для быстрого фокуса
-                </h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3.5">
-                    <button id="btn-scenario-mortgage" type="button" aria-pressed="false" onclick="scrollToCategory('mortgage')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 border border-slate-100 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-900/60 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-all duration-300 group shadow-sm">
-                        <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">🏠</span>
-                        <span class="text-[11px] sm:text-sm font-bold text-center sm:text-left">Купить квартиру</span>
-                    </button>
-                    <button id="btn-scenario-credits" type="button" aria-pressed="false" onclick="scrollToCategory('credits')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-teal-50 dark:hover:bg-teal-950/20 border border-slate-100 dark:border-slate-800 hover:border-teal-300 dark:hover:border-teal-900/60 text-slate-700 dark:text-slate-300 hover:text-teal-700 dark:hover:text-teal-400 transition-all duration-300 group shadow-sm">
-                        <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">💳</span>
-                        <span class="text-[11px] sm:text-sm font-bold text-center sm:text-left">Проверить кредит</span>
-                    </button>
-                    <button id="btn-scenario-savings" type="button" aria-pressed="false" onclick="scrollToCategory('savings')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-amber-50 dark:hover:bg-amber-950/20 border border-slate-100 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-900/60 text-slate-700 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-500 transition-all duration-300 group shadow-sm">
-                        <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">💰</span>
-                        <span class="text-[11px] sm:text-sm font-bold text-center sm:text-left">Копить сбережения</span>
-                    </button>
-                    <button id="btn-scenario-life" type="button" aria-pressed="false" onclick="scrollToCategory('life')" class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-blue-50 dark:hover:bg-blue-950/20 border border-slate-100 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-900/60 text-slate-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-blue-400 transition-all duration-300 group shadow-sm">
-                        <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">🌱</span>
-                        <span class="text-[11px] sm:text-sm font-bold text-center sm:text-left">Управлять бюджетом</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Dynamic Interactive Catalog -->
-            <div id="catalog-section" class="mb-14 scroll-mt-20">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                    <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
-                        <span class="text-brand-600">⚡</span> Финансовые калькуляторы
-                    </h2>
-                </div>
-
-                <!-- Dynamically populated calculator grid with spacing and premium design -->
-                <div id="calculator-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-500">
-                    <!-- Cards are rendered dynamically by JS -->
-                </div>
-            </div>
-
-            <!-- Trust / Manifest Block (Redesigned for light/glassmorphic high consistency) -->
-            <div class="mb-14 bg-emerald-50/40 dark:bg-slate-900/40 border border-emerald-100 dark:border-slate-800/80 text-slate-900 dark:text-slate-100 rounded-3xl p-8 sm:p-10 shadow-md relative overflow-hidden">
-                <div class="absolute -right-20 -top-20 w-56 h-56 bg-brand-500/5 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute -left-20 -bottom-20 w-56 h-56 bg-teal-500/5 rounded-full blur-3xl pointer-events-none"></div>
-
-                <div class="relative z-10 max-w-4xl mx-auto">
-                    <div class="text-center mb-8">
-                        <span class="px-3.5 py-1.5 bg-emerald-100/60 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-300 text-xs uppercase font-extrabold tracking-wider rounded-full border border-emerald-200/50 dark:border-emerald-900/50">Как устроен сервис</span>
-                        <h3 class="text-2xl sm:text-3xl font-black tracking-tight mt-3 text-slate-900 dark:text-white">Понятные допущения и прозрачные источники</h3>
-                        <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 max-w-2xl mx-auto leading-relaxed">Калькуляторы помогают сравнить сценарии. Перед решением проверьте введённые параметры и условия конкретного продукта.</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                        <div class="p-5 rounded-2xl bg-white/85 dark:bg-slate-950/40 border border-emerald-100/60 dark:border-slate-800/60 shadow-sm hover:shadow-md transition-all hover:border-emerald-200 dark:hover:border-slate-700">
-                            <div class="text-2xl mb-3">🛡️</div>
-                            <h4 class="font-extrabold text-slate-900 dark:text-white mb-1.5 text-base">Расчёты в браузере</h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Введённые значения остаются на вашем устройстве и нужны только для расчёта. Доход, возраст или дата могут потребоваться для выбранного сценария; необязательные настройки можно не включать. Не вводите имя, контакты, данные карты, паспорта или договоров.</p>
-                        </div>
-                        <div class="p-5 rounded-2xl bg-white/85 dark:bg-slate-950/40 border border-emerald-100/60 dark:border-slate-800/60 shadow-sm hover:shadow-md transition-all hover:border-emerald-200 dark:hover:border-slate-700">
-                            <div class="text-2xl mb-3">🚫</div>
-                            <h4 class="font-extrabold text-slate-900 dark:text-white mb-1.5 text-base">Сценарии, а не рекомендации</h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Сервис показывает результат при выбранных условиях и не заменяет предложение банка, консультацию или проверку договора.</p>
-                        </div>
-                        <div class="p-5 rounded-2xl bg-white/85 dark:bg-slate-950/40 border border-emerald-100/60 dark:border-slate-800/60 shadow-sm hover:shadow-md transition-all hover:border-emerald-200 dark:hover:border-slate-700">
-                            <div class="text-2xl mb-3">🏛️</div>
-                            <h4 class="font-extrabold text-slate-900 dark:text-white mb-1.5 text-base">Официальные макроданные</h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Там, где это нужно, используются ключевая ставка Банка России и годовые данные об инфляции Росстата. Статус и дата проверки показываются в интерфейсе.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Share Ясномера Block -->
-            <div class="flex justify-center mt-8 mb-4">
-                <button onclick="shareYasnomera()" class="flex items-center gap-2.5 px-8 py-4 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-850 text-slate-700 dark:text-slate-300 font-extrabold rounded-2xl border border-slate-200 dark:border-slate-800 transition-all shadow-md active:scale-95 text-sm sm:text-base">
-                    <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path>
-                    </svg>
-                    Поделиться Ясномерой
-                </button>
-            </div>
+    <main class="home-wrap" id="main-content">
+        <div class="home-intro">
+            <div><h1>Понятные расчёты <span>для финансовых решений.</span></h1><p class="intro-copy">Посчитайте платёж, срок накоплений и повседневные расходы.</p></div>
+            <aside class="home-reference" id="rate-reference" aria-labelledby="rate-heading" data-status="loading">
+                <div class="rate-main"><h2 id="rate-heading">Ключевая ставка Банка России</h2><strong class="rate-number" id="rate-value">—</strong></div>
+                <p class="rate-meta"><span id="rate-checked">Загружаем данные</span> · <a href="https://www.cbr.ru/hd_base/keyrate/" target="_blank" rel="noopener noreferrer">Банк России ↗</a></p>
+                <p class="rate-note">Справочно, не ставка по кредиту.</p>
+                <p class="rate-status" id="freshness-text" role="status" aria-live="polite"></p>
+                <noscript><p class="rate-status">Для загрузки ставки включите JavaScript. Калькуляторы доступны ниже.</p></noscript>
+            </aside>
         </div>
+        <ul class="benefits" aria-label="Возможности сервиса"><li>Бесплатно</li><li>Без регистрации</li><li>Расчёт можно сохранить</li></ul>
+        <section id="catalog-section" aria-labelledby="catalog-heading">
+        <div class="catalog-heading"><h2 id="catalog-heading">Что хотите посчитать?</h2><nav class="category-nav" aria-label="Разделы калькуляторов"><a href="#housing" data-home-category="housing">Жильё и кредиты</a><a href="#savings" data-home-category="savings">Накопления</a><a href="#life" data-home-category="life">На каждый день</a></nav></div>
+        <section class="calculator-group" id="housing" aria-labelledby="housing-heading">
+            <h3 id="housing-heading">Жильё и кредиты</h3>
+            <div class="calculator-grid">
+                <a class="calculator-link featured" id="card-mortgage" href="mortgage.html" data-calculator="mortgage" aria-labelledby="title-mortgage" aria-describedby="description-mortgage">
+                    <svg class="calculator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg>
+                    <div><h4 id="title-mortgage">Ипотечный калькулятор</h4><p id="description-mortgage">Платёж и эффект досрочных погашений</p></div>
+                    <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+                </a>
+                <a class="calculator-link" id="card-rent-vs-mortgage" href="rent-vs-mortgage.html" data-calculator="rent-vs-mortgage" aria-labelledby="title-rent-vs-mortgage" aria-describedby="description-rent-vs-mortgage">
+                    <svg class="calculator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="5"/><path d="m12 12 9 9m-5-5 3-3m-6 0 3-3"/></svg>
+                    <div><h4 id="title-rent-vs-mortgage">Покупка или аренда</h4><p id="description-rent-vs-mortgage">Сравнение расходов на жильё</p></div>
+                    <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+                </a>
+                <a class="calculator-link" id="card-honest-credit" href="honest-credit.html" data-calculator="honest-credit" aria-labelledby="title-honest-credit" aria-describedby="description-honest-credit">
+                    <svg class="calculator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18m-14 5h4"/></svg>
+                    <div><h4 id="title-honest-credit">Полная стоимость кредита</h4><p id="description-honest-credit">Проценты, страховка и комиссии</p></div>
+                    <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+                </a>
+            </div>
+        </section>
+        <section class="calculator-group" id="savings" aria-labelledby="savings-heading">
+            <h3 id="savings-heading">Накопления и деньги</h3>
+            <div class="calculator-grid">
+                <a class="calculator-link" id="card-millionaire" href="millionaire.html" data-calculator="millionaire" aria-labelledby="title-millionaire" aria-describedby="description-millionaire">
+                    <svg class="calculator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="m12 12 9-9m-1 0h2v2"/></svg>
+                    <div><h4 id="title-millionaire">Финансовая цель</h4><p id="description-millionaire">Когда накопите нужную сумму</p></div>
+                    <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+                </a>
+                <a class="calculator-link" id="card-financial-freedom" href="financial-freedom.html" data-calculator="financial-freedom" aria-labelledby="title-financial-freedom" aria-describedby="description-financial-freedom">
+                    <svg class="calculator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8 9-5 9 5-9 5zM3 12l9 5 9-5M3 16l9 5 9-5"/></svg>
+                    <div><h4 id="title-financial-freedom">На сколько хватит капитала</h4><p id="description-financial-freedom">На сколько лет хватит ваших сбережений</p></div>
+                    <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+                </a>
+                <a class="calculator-link" id="card-inflation-shredder" href="inflation-shredder.html" data-calculator="inflation-shredder" aria-labelledby="title-inflation-shredder" aria-describedby="description-inflation-shredder">
+                    <svg class="calculator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V13h4v7zm6 0V8h4v12zm6 0V3h4v17z"/></svg>
+                    <div><h4 id="title-inflation-shredder">Покупательная способность</h4><p id="description-inflation-shredder">Как инфляция меняет ценность денег</p></div>
+                    <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+                </a>
+            </div>
+        </section>
+        <section class="calculator-group" id="life" aria-labelledby="life-heading">
+            <h3 id="life-heading">На каждый день</h3>
+            <div class="calculator-grid everyday-grid">
+                <a class="calculator-link" id="card-car-vs-taxi" href="car-vs-taxi.html" data-calculator="car-vs-taxi" aria-labelledby="title-car-vs-taxi" aria-describedby="description-car-vs-taxi">
+                    <svg class="calculator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 10 2-6h12l2 6v8H4zm0 0h16M7 14h1m8 0h1M6 18v3m12-3v3"/></svg>
+                    <div><h4 id="title-car-vs-taxi">Машина или такси</h4><p id="description-car-vs-taxi">Сравнение расходов на поездки</p></div>
+                    <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+                </a>
+                <a class="calculator-link" id="card-time-is-money" href="time-is-money.html" data-calculator="time-is-money" aria-labelledby="title-time-is-money" aria-describedby="description-time-is-money">
+                    <svg class="calculator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 3"/></svg>
+                    <div><h4 id="title-time-is-money">Цена времени</h4><p id="description-time-is-money">Стоимость покупки в часах вашей работы</p></div>
+                    <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+                </a>
+                <a class="calculator-link" id="card-genetic-wealth" href="genetic-wealth.html" data-calculator="genetic-wealth" aria-labelledby="title-genetic-wealth" aria-describedby="description-genetic-wealth">
+                    <svg class="calculator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h16a8 8 0 0 1-16 0Zm0 0L2 5H0m12-3a8 8 0 0 1 8 8"/><circle cx="7" cy="21" r="1"/><circle cx="17" cy="21" r="1"/></svg>
+                    <div><h4 id="title-genetic-wealth">Расходы на ребёнка</h4><p id="description-genetic-wealth">Оценка бюджета по возрастным этапам</p></div>
+                    <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+                </a>
+                <a class="calculator-link" id="card-wealth" href="wealth.html" data-calculator="wealth" aria-labelledby="title-wealth" aria-describedby="description-wealth">
+                    <svg class="calculator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V3h8v4M3 12h18m-11 0v3h4v-3"/></svg>
+                    <div><h4 id="title-wealth">Сравнение дохода</h4><p id="description-wealth">Сравнение дохода с данными по регионам</p></div>
+                    <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+                </a>
+            </div>
+        </section>
+        </section>
+        <section class="about" id="about" aria-labelledby="about-heading">
+            <div class="about-summary"><h2 id="about-heading">Понятно, откуда берутся цифры</h2>
+                <p class="about-intro">Показываем допущения и источники. Условия задаёте вы.</p>
+            </div>
+            <details id="about-details"><summary>Как устроена Ясномера</summary>
+                <div class="about-body">
+                    <div><h3>Расчёты в браузере</h3><p>Введённые значения остаются на вашем устройстве и нужны для расчёта. Доход, возраст или дата могут потребоваться для выбранного сценария. Не вводите имя, контакты, данные карты, паспорта или договоров. На сайте используется Яндекс Метрика для анализа посещений и взаимодействий.</p></div>
+                    <div><h3>Сценарии, а не рекомендации</h3><p>Ясномера не является финансовой организацией. Вы задаёте условия и сравниваете результат. Допущения и состав расходов объясняются в каждом калькуляторе. Расчёт не заменяет проверку договора или предложение банка.</p></div>
+                    <div><h3>Официальные источники</h3><p>Для макропоказателей используем данные Банка России и Росстата. Показываем дату проверки и предупреждаем, если свежие данные недоступны. Условия вашего кредита вводятся отдельно.</p></div>
+                </div>
+            </details>
+        </section>
     </main>
-
-    <!-- Professional Footer with trust and methodology statement -->
-    <footer class="py-12 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-400 dark:text-slate-500 bg-slate-100/50 dark:bg-slate-950/20">
-        <div class="max-w-4xl mx-auto px-4 leading-relaxed">
-            <p class="mb-3 font-semibold">© 2026 Ясномера. Инструменты для самостоятельной оценки финансовых сценариев.</p>
-            <p class="max-w-2xl mx-auto text-[11px] text-slate-400/80 dark:text-slate-500/80">
-                Расчёты носят информационный характер. Для макропоказателей используются данные Банка России и Росстата; условия банковских продуктов и личные обстоятельства могут отличаться. Сервис не является финансовой организацией.
-            </p>
-        </div>
-    </footer>
-
-    <!-- Standard Toast Notification -->
-    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-        <span class="text-brand-500 font-bold">✓</span>
-        <span id="toast-message" class="text-sm">Ссылка скопирована!</span>
-    </div>
-
-    <!-- Scripting for dynamic catalog rendering, search, filters, and rates -->
+    <footer class="home-footer home-wrap"><div class="footer-row"><p>© 2026 Ясномера. Расчёты носят информационный характер.</p><button class="share-button" type="button" onclick="shareYasnomera()">Поделиться Ясномерой</button></div></footer>
+    <div class="toast" id="home-toast" role="status" hidden></div>
+    <dialog class="share-dialog" id="share-dialog" aria-labelledby="share-heading"><h2 id="share-heading">Ссылка на Ясномеру</h2><p>Скопируйте адрес и отправьте его удобным способом.</p><label for="share-url">Адрес страницы</label><input id="share-url" type="url" readonly><form method="dialog"><button>Закрыть</button></form></dialog>
     <script>
-        // Array of all calculators in the schema with simplified copywriting, categories and color themes
-        const CALCULATORS = [
-            {
-                id: 'card-honest-credit',
-                href: 'honest-credit.html',
-                category: 'credits',
-                title: 'Полная стоимость кредита',
-                badge: 'Аудит ПСК',
-                badgeClass: 'text-teal-600 bg-teal-50 dark:bg-teal-950/40 dark:text-teal-400 border-teal-200 dark:border-teal-900',
-                theme: 'teal',
-                iconSvg: `<svg class="w-8 h-8 text-teal-600 dark:text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                </svg>`,
-                description: 'Сравните заявленную ставку с расчётом, который учитывает страхование, комиссии и регулярные услуги.',
-                teaser: 'Проверка полной стоимости кредита',
-                cta: 'Проверить кредит'
-            },
-            {
-                id: 'card-mortgage',
-                href: 'mortgage.html',
-                category: 'mortgage',
-                title: 'Ипотечный калькулятор',
-                badge: 'Досрочные платежи',
-                badgeClass: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900',
-                theme: 'emerald',
-                iconSvg: `<svg class="w-8 h-8 text-emerald-600 dark:text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                </svg>`,
-                description: 'Оцените платёж и влияние досрочных погашений при выбранных условиях кредита.',
-                teaser: 'Оценка досрочного погашения',
-                cta: 'Рассчитать ипотеку'
-            },
-            {
-                id: 'card-rent-vs-mortgage',
-                href: 'rent-vs-mortgage.html',
-                category: 'mortgage',
-                title: 'Покупка или аренда',
-                badge: 'Сценарии жилья',
-                badgeClass: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900',
-                theme: 'emerald',
-                iconSvg: `<svg class="w-8 h-8 text-emerald-600 dark:text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                </svg>`,
-                description: 'Сравните покупку и аренду при одинаковом горизонте, первоначальном взносе и рыночных допущениях.',
-                teaser: 'Сравнение капитала через 10-20 лет',
-                cta: 'Сравнить стратегии'
-            },
-            {
-                id: 'card-inflation-shredder',
-                href: 'inflation-shredder.html',
-                category: 'savings',
-                title: 'Покупательная способность',
-                badge: 'Инфляция',
-                badgeClass: 'text-amber-600 bg-amber-50 dark:bg-amber-950/40 dark:text-amber-400 border-amber-200 dark:border-amber-900',
-                theme: 'amber',
-                iconSvg: `<svg class="w-8 h-8 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M19 12H5m14 0l-4 4m4-4l-4-4"></path>
-                </svg>`,
-                description: 'Оцените изменение покупательной способности денег по годовому ряду инфляции Росстата.',
-                teaser: 'Сравнение покупательной способности по годам',
-                cta: 'Посмотреть расчёт'
-            },
-            {
-                id: 'card-millionaire',
-                href: 'millionaire.html',
-                category: 'savings',
-                title: 'Финансовая цель',
-                badge: 'Сложный процент',
-                badgeClass: 'text-amber-600 bg-amber-50 dark:bg-amber-950/40 dark:text-amber-400 border-amber-200 dark:border-amber-900',
-                theme: 'amber',
-                iconSvg: `<svg class="w-8 h-8 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>`,
-                description: 'Оцените примерный срок достижения цели при регулярных пополнениях и выбранной доходности.',
-                teaser: 'Ориентир по сроку финансовой цели',
-                cta: 'Начать накопления'
-            },
-            {
-                id: 'card-financial-freedom',
-                href: 'financial-freedom.html',
-                category: 'savings',
-                title: 'Таймер Свободы',
-                badge: 'Подушка безопасности',
-                badgeClass: 'text-amber-600 bg-amber-50 dark:bg-amber-950/40 dark:text-amber-400 border-amber-200 dark:border-amber-900',
-                theme: 'amber',
-                iconSvg: `<svg class="w-8 h-8 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>`,
-                description: 'Оцените, на сколько лет и месяцев может хватить капитала при регулярных снятиях, инфляции и выбранной доходности.',
-                teaser: 'Оцените жизнеспособность вашей подушки',
-                cta: 'Оценить резерв'
-            },
-            {
-                id: 'card-car-vs-taxi',
-                href: 'car-vs-taxi.html',
-                category: 'life',
-                title: 'Машина или Такси',
-                badge: 'Сравнение расходов',
-                badgeClass: 'text-blue-600 bg-blue-50 dark:bg-blue-950/40 dark:text-blue-400 border-blue-200 dark:border-blue-900',
-                theme: 'blue',
-                iconSvg: `<svg class="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                </svg>`,
-                description: 'Что выгоднее: владеть личным автомобилем со всеми скрытыми расходами (ТО, каско, износ, потеря цены) или ежедневно ездить на такси?',
-                teaser: 'Оценка реальной стоимости 1 км пути',
-                cta: 'Рассчитать баланс'
-            },
-            {
-                id: 'card-wealth',
-                href: 'wealth.html',
-                category: 'life',
-                title: 'Сравнение дохода',
-                badge: 'Региональная статистика',
-                badgeClass: 'text-blue-600 bg-blue-50 dark:bg-blue-950/40 dark:text-blue-400 border-blue-200 dark:border-blue-900',
-                theme: 'blue',
-                iconSvg: `<svg class="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>`,
-                description: 'Сопоставьте введённый доход с доступной региональной статистикой. Результат носит ориентировочный характер.',
-                teaser: 'Ориентировочное сравнение дохода',
-                cta: 'Сравнить доход'
-            },
-            {
-                id: 'card-time-is-money',
-                href: 'time-is-money.html',
-                category: 'life',
-                title: 'Цена Времени',
-                badge: 'Личная эффективность',
-                badgeClass: 'text-blue-600 bg-blue-50 dark:bg-blue-950/40 dark:text-blue-400 border-blue-200 dark:border-blue-900',
-                theme: 'blue',
-                iconSvg: `<svg class="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>`,
-                description: 'Переведите стоимость любого желания в часы и дни вашей реальной работы. Посчитайте, стоит ли новый девайс затраченных на него сил.',
-                teaser: 'Перевод крупных покупок в рабочие дни',
-                cta: 'Оценить покупку'
-            },
-            {
-                id: 'card-genetic-wealth',
-                href: 'genetic-wealth.html',
-                category: 'life',
-                title: 'Стоимость воспитания ребёнка',
-                badge: 'Семейный бюджет',
-                badgeClass: 'text-blue-600 bg-blue-50 dark:bg-blue-950/40 dark:text-blue-400 border-blue-200 dark:border-blue-900',
-                theme: 'blue',
-                iconSvg: `<svg class="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                </svg>`,
-                description: 'Оцените расходы на воспитание ребёнка по возрастным этапам с учётом годового ряда инфляции Росстата.',
-                teaser: 'Сценарии расходов по возрастам',
-                cta: 'Оценить бюджет'
-            }
-        ];
-
-        let currentFilter = 'all';
-
-        // Render function dynamically generating gorgeous cards
-        function renderCalculators() {
-            const grid = document.getElementById('calculator-grid');
-            grid.innerHTML = '';
-
-            const filteredList = currentFilter === 'all'
-                ? CALCULATORS
-                : CALCULATORS.filter(c => c.category === currentFilter);
-
-            filteredList.forEach(calc => {
-                // Color configuration for specific themes to look stunning
-                let borderHoverColor = 'hover:border-emerald-500/30';
-                let btnColor = 'bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200';
-                let iconBg = 'bg-slate-50 dark:bg-slate-900/60';
-                let teaserBg = 'bg-slate-100/50 dark:bg-slate-900/30 text-slate-500 dark:text-slate-400';
-                let arrowColor = 'text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300';
-
-                if (calc.theme === 'emerald') {
-                    borderHoverColor = 'hover:border-emerald-500/40 hover:shadow-emerald-500/5 dark:hover:shadow-emerald-950/20';
-                    btnColor = 'bg-emerald-600 hover:bg-emerald-500 text-white';
-                    iconBg = 'bg-emerald-50/55 dark:bg-emerald-950/20';
-                    teaserBg = 'bg-emerald-50/40 dark:bg-emerald-950/10 text-emerald-600 dark:text-emerald-400';
-                    arrowColor = 'text-emerald-500 group-hover:translate-x-1.5';
-                } else if (calc.theme === 'teal') {
-                    borderHoverColor = 'hover:border-teal-500/40 hover:shadow-teal-500/5 dark:hover:shadow-teal-950/20';
-                    btnColor = 'bg-teal-600 hover:bg-teal-500 text-white';
-                    iconBg = 'bg-teal-50/55 dark:bg-teal-950/20';
-                    teaserBg = 'bg-teal-50/40 dark:bg-teal-950/10 text-teal-600 dark:text-teal-400';
-                    arrowColor = 'text-teal-500 group-hover:translate-x-1.5';
-                } else if (calc.theme === 'amber') {
-                    borderHoverColor = 'hover:border-amber-500/40 hover:shadow-amber-500/5 dark:hover:shadow-amber-950/20';
-                    btnColor = 'bg-amber-600 hover:bg-amber-500 text-white';
-                    iconBg = 'bg-amber-50/55 dark:bg-amber-950/20';
-                    teaserBg = 'bg-amber-50/40 dark:bg-amber-950/10 text-amber-600 dark:text-amber-500';
-                    arrowColor = 'text-amber-500 group-hover:translate-x-1.5';
-                } else if (calc.theme === 'blue') {
-                    borderHoverColor = 'hover:border-blue-500/40 hover:shadow-blue-500/5 dark:hover:shadow-blue-950/20';
-                    btnColor = 'bg-blue-600 hover:bg-blue-500 text-white';
-                    iconBg = 'bg-blue-50/55 dark:bg-blue-950/20';
-                    teaserBg = 'bg-blue-50/40 dark:bg-blue-950/10 text-blue-600 dark:text-blue-400';
-                    arrowColor = 'text-blue-500 group-hover:translate-x-1.5';
-                }
-
-                // Complete premium card rendering with isolated BG layer, soft shadows & Fitts's Law absolute overlay
-                const cardHtml = `
-                    <div id="${calc.id}" class="group premium-card relative bg-white dark:bg-slate-900 p-6 md:p-7 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 transition-all duration-300 ${borderHoverColor} overflow-hidden flex flex-col h-full">
-
-                        <!-- Absolute isolated background layer with controlled scale/z-index -->
-                        <div class="absolute -right-6 -bottom-6 opacity-5 dark:opacity-[0.03] transition-transform group-hover:scale-110 duration-500 z-0 pointer-events-none">
-                            ${calc.iconSvg.replace('w-8 h-8', 'w-44 h-44')}
-                        </div>
-
-                        <!-- Card content -->
-                        <div class="relative z-10 flex flex-col h-full">
-                            <div class="flex items-start justify-between gap-4 mb-5">
-                                <div class="w-12 h-12 ${iconBg} rounded-2xl flex items-center justify-center shadow-sm shrink-0">
-                                    ${calc.iconSvg}
-                                </div>
-                                ${calc.badge ? `<span class="px-2.5 py-0.5 text-[10px] uppercase tracking-wider font-extrabold rounded-full border ${calc.badgeClass}">${calc.badge}</span>` : ''}
-                            </div>
-
-                            <!-- Main title with absolute overlay for flawless click capability -->
-                            <h3 class="text-xl md:text-2xl font-black text-slate-900 dark:text-white mb-2.5">
-                                <a href="${calc.href}" class="after:absolute after:inset-0 after:z-30 focus:outline-none">
-                                    ${calc.title}
-                                </a>
-                            </h3>
-
-                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-12">
-                                ${calc.description}
-                            </p>
-
-                            <!-- Minimalist visual anchor - emerald arrow pointing to next page -->
-                            <div class="absolute bottom-6 right-6 md:bottom-8 md:right-8 text-[#10b981] transition-transform duration-300 group-hover:translate-x-1.5 pointer-events-none z-20">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                grid.insertAdjacentHTML('beforeend', cardHtml);
-            });
-        }
-
-        // Fast filtering of the catalog and highlighting selected scenario cards
-        function filterCatalog(category) {
-            currentFilter = category;
-
-            // Manage scenario buttons highlighting
-            const categories = ['mortgage', 'credits', 'savings', 'life'];
-            categories.forEach(cat => {
-                const btn = document.getElementById(`btn-scenario-${cat}`);
-                if (!btn) return;
-
-                btn.setAttribute('aria-pressed', String(cat === category));
-
-                if (cat === category) {
-                    // Apply visual active state based on category theme
-                    if (cat === 'mortgage') {
-                        btn.className = "flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-emerald-50/80 dark:bg-emerald-950/30 border-emerald-500 dark:border-emerald-400 ring-2 ring-emerald-500/20 text-emerald-700 dark:text-emerald-400 transition-all duration-300 group shadow-md";
-                    } else if (cat === 'credits') {
-                        btn.className = "flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-teal-50/80 dark:bg-teal-950/30 border-teal-500 dark:border-teal-400 ring-2 ring-teal-500/20 text-teal-700 dark:text-teal-400 transition-all duration-300 group shadow-md";
-                    } else if (cat === 'savings') {
-                        btn.className = "flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border-amber-500 dark:border-amber-400 ring-2 ring-amber-500/20 text-amber-700 dark:text-amber-500 transition-all duration-300 group shadow-md";
-                    } else if (cat === 'life') {
-                        btn.className = "flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-blue-50/80 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 ring-2 ring-blue-500/20 text-blue-700 dark:text-blue-400 transition-all duration-300 group shadow-md";
-                    }
-                } else {
-                    // Inactive base state with proper hover colors
-                    if (cat === 'mortgage') {
-                        btn.className = "flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 border-slate-100 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-900/60 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-all duration-300 group shadow-sm";
-                    } else if (cat === 'credits') {
-                        btn.className = "flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-teal-50 dark:hover:bg-teal-950/20 border-slate-100 dark:border-slate-800 hover:border-teal-300 dark:hover:border-teal-900/60 text-slate-700 dark:text-slate-300 hover:text-teal-700 dark:hover:text-teal-400 transition-all duration-300 group shadow-sm";
-                    } else if (cat === 'savings') {
-                        btn.className = "flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-amber-50 dark:hover:bg-amber-950/20 border-slate-100 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-900/60 text-slate-700 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-500 transition-all duration-300 group shadow-sm";
-                    } else if (cat === 'life') {
-                        btn.className = "flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 hover:bg-blue-50 dark:hover:bg-blue-950/20 border-slate-100 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-900/60 text-slate-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-blue-400 transition-all duration-300 group shadow-sm";
-                    }
-                }
-            });
-
-            renderCalculators();
-        }
-
-        // Smooth scroll to category catalog and toggling behavior
-        function scrollToCategory(category) {
-            let targetCategory = category;
-            if (currentFilter === category) {
-                targetCategory = 'all';
-            }
-            filterCatalog(targetCategory);
-
-            // Goal registration in metrics
-            reachGoal('goal_category_' + category);
-
-            const catalog = document.getElementById('catalog-section');
-            if (catalog) {
-                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                catalog.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
-            }
-        }
-
-        // Loading and formatting of CB rates from rates.json
-        function loadCBRates() {
-            const freshnessTextEl = document.getElementById('freshness-text');
-
-            fetch('rates.json')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status !== 'ok') {
-                        freshnessTextEl.innerHTML = 'Данные ЦБ РФ временно недоступны';
-                        return;
-                    }
-
-                    const fetchedAt = data.fetched_at ? new Date(data.fetched_at) : null;
-                    const formattedDate = fetchedAt && !Number.isNaN(fetchedAt.getTime())
-                        ? fetchedAt.toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' })
-                        : 'сегодня';
-
-                    freshnessTextEl.innerHTML = `Ключевая ставка Банка России · последняя проверка: ${formattedDate} МСК`;
-                })
-                .catch(() => {
-                    freshnessTextEl.innerHTML = 'Данные ЦБ РФ временно недоступны';
-                });
-        }
-
-        // Sharing action callback
-        window.shareYasnomera = function() {
-            reachGoal("share_click");
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Ясномера',
-                    text: 'Ясномера — понятные расчёты для финансовых решений. Сравните сценарии на своих условиях.',
-                    url: window.location.href
-                }).catch(err => console.log('Error sharing', err));
-            } else {
-                navigator.clipboard.writeText(window.location.href).then(() => {
-                    showToast("Ссылка на Ясномеру скопирована!");
-                });
-            }
-        };
-
-        // Service Worker offline helper
-        if ("serviceWorker" in navigator) {
-            window.addEventListener("load", () => {
-                navigator.serviceWorker.register("sw.js").then(reg => {
-                    console.log("SW registered successfully:", reg.scope);
-                }).catch(err => {
-                    console.log("SW registration error:", err);
-                });
-            });
-        }
-
-        // Initialize sequences on DOM Load
-        window.addEventListener('DOMContentLoaded', () => {
-            initTheme();
-            loadCBRates();
-            renderCalculators();
-        });
+// HOME_RATE_MODEL_START
+function homepageRateView(data, now = Date.now()) {
+    const unavailable = {status:'unavailable', value:null, checked:null, message:'Данные временно недоступны. Источник можно проверить на сайте Банка России.'};
+    if (!data || data.metadata?.schema_version !== 2 || data.metadata.dataset_id !== 'key_rate') return unavailable;
+    const status = getDatasetStatus(data);
+    if (status === 'unavailable') return unavailable;
+    const value = getCentralBankRate(data);
+    if (typeof data.key_rate?.value_percent !== 'number' || value === null || value > 100) return unavailable;
+    if (data.cb_rate !== undefined && data.cb_rate !== value) return unavailable;
+    const fetched = Date.parse(data.metadata.last_successful_fetch_at);
+    const effective = data.key_rate.effective_from;
+    if (typeof effective !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(effective)) return unavailable;
+    const effectiveTime = Date.parse(effective+'T00:00:00Z');
+    if (!Number.isFinite(effectiveTime) || new Date(effectiveTime).toISOString().slice(0,10) !== effective || effectiveTime > now + 3600000) return unavailable;
+    if (!Number.isFinite(fetched) || fetched > now + 3600000 || now - fetched > 7 * 86400000) return unavailable;
+    try {
+        const source = new URL(data.metadata.source_url);
+        if (source.protocol !== 'https:' || !['cbr.ru','www.cbr.ru'].includes(source.hostname)) return unavailable;
+    } catch { return unavailable; }
+    const stale = status === 'stale' || now - fetched > 72 * 3600000;
+    return {status:stale?'stale':'ok', value, checked:fetched, effective, message:stale?'Последние доступные данные. Свежую ставку проверьте у источника.':''};
+}
+// HOME_RATE_MODEL_END
+function renderHomepageRate(data) {
+    const model = homepageRateView(data);
+    document.getElementById('rate-reference').dataset.status = model.status;
+    document.getElementById('rate-value').textContent = model.value === null ? '—' : new Intl.NumberFormat('ru-RU',{maximumFractionDigits:4}).format(model.value)+'%';
+    const checked = document.getElementById('rate-checked');
+    checked.textContent = model.checked === null ? 'Дата проверки недоступна' : 'Проверено '+new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow'}).format(new Date(model.checked));
+    if (model.checked !== null) checked.title = 'Действует с '+model.effective+' · Проверено '+new Date(model.checked).toLocaleString('ru-RU',{timeZone:'Europe/Moscow'})+' МСК';
+    else checked.removeAttribute('title');
+    document.getElementById('freshness-text').textContent = model.message;
+}
+async function loadCBRates() {
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),8000);
+    try { const response = await fetch('rates.json',{cache:'no-cache',signal:controller.signal}); if (!response.ok) throw new Error('Rate unavailable'); renderHomepageRate(await response.json()); }
+    catch { renderHomepageRate(null); }
+    finally { clearTimeout(timeout); }
+}
+function homeInteraction(action, target) {
+    // Categorical visit parameters, never calculation goals or monetary inputs.
+    if (typeof ym === 'function') ym(110360838,'params',{home_catalog:{action,target}});
+}
+document.querySelectorAll('[data-home-category]').forEach(link => link.addEventListener('click',()=>homeInteraction('category',link.dataset.homeCategory)));
+document.querySelectorAll('[data-calculator]').forEach(link => link.addEventListener('click',()=>homeInteraction('calculator',link.dataset.calculator)));
+let homeToastTimer;
+function homeToast(message) {
+    const toast=document.getElementById('home-toast'); toast.textContent=message; toast.hidden=false;
+    clearTimeout(homeToastTimer); homeToastTimer=setTimeout(()=>{toast.hidden=true;},3500);
+}
+async function shareYasnomera() {
+    reachGoal('share_click');
+    const url=new URL('index.html',window.location.href).toString();
+    if (navigator.share) {
+        try { await navigator.share({title:'Ясномера',text:'Понятные расчёты для финансовых решений.',url}); return; }
+        catch(error) { if (error.name === 'AbortError') return; }
+    }
+    try { await navigator.clipboard.writeText(url); homeToast('Ссылка на Ясномеру скопирована'); }
+    catch {
+        const input=document.getElementById('share-url'); input.value=url;
+        document.getElementById('share-dialog').showModal(); input.focus(); input.select();
+    }
+}
+loadCBRates();
+if ('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
     </script>
 </body>
 </html>

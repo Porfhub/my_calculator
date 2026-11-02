@@ -12,6 +12,7 @@ on:
       - 'tests/data-validation/**'
       - 'tests/ui-state/**'
       - 'mortgage.html'
+      - 'index.html'
       - 'sw.js'
       - 'package.json'
       - 'package-lock.json'
