@@ -644,21 +644,66 @@ test('payment mode seeds the current term payment until the user explicitly edit
 });
 
 
-test('B+ hero keeps baseline duration and benefits have explicit independent scopes', () => {
+test('one comparison uses the combined plan while hero keeps the baseline duration', () => {
     for (const strategy of ['term', 'payment']) {
         const p = page();
         p.run("state.recurringPrepayment = 20000; state.customPrepayments = {1:150000}; state.prepaymentStrategy = '" + strategy + "'; updateCalculations()");
         assert.equal(p.element('res-real-term').innerText, '20 лет');
-        assert.match(p.element('regular-result').innerHTML, /Только регулярная доплата/);
-        assert.match(p.element('one-time-result').innerHTML, /Регулярные \+ разовые доплаты/);
-        assert.match(p.element('one-time-result').innerHTML, /Две экономии не складываются/);
+        const comparison = p.element('comparison-content').innerHTML;
+        assert.match(comparison, /Как меняется ипотека/);
+        assert.doesNotMatch(comparison, /Только регулярная|Две экономии/);
         const base=p.run('simulateMortgage(false)'), regular=p.run('simulateMortgageRegularOnly()'), combined=p.run('simulateMortgage(true)');
         assert.ok(base.totalInterest > regular.totalInterest && regular.totalInterest > combined.totalInterest);
+        assert.ok(comparison.includes(p.run('localFormatMoney(Math.round(8000000)+Math.round(simulateMortgage(true).totalInterest))')));
+        assert.ok(comparison.includes(p.run('mortgageDuration(simulateMortgage(true).realTerm)')));
+        assert.ok(comparison.includes(p.run('mortgageDuration(simulateMortgage(false).realTerm-simulateMortgage(true).realTerm)')));
+        assert.match(comparison, strategy === 'payment' ? /Нагрузка в первый месяц/ : /Расходы в обычный месяц/);
         assert.equal(p.run('state.customPrepayments[1]'),150000);
         p.run("state.recurringPrepayment=0; updateCalculations()");
-        assert.match(p.element('one-time-result').innerHTML, /Только разовые доплаты/);
+        assert.match(p.element('comparison-content').innerHTML, /Как меняется ипотека/);
         assert.match(p.element('savings-card').innerHTML, /Параметры расчёта/);
     }
+});
+
+test('comparison handles baseline, regular-only, one-time-only and combined without double counting', () => {
+    const p=page();
+    p.run('updateCalculations()');
+    assert.match(p.element('comparison-content').innerHTML,/Ваш план погашения/);
+    assert.doesNotMatch(p.element('comparison-content').innerHTML,/comparison-saving|comparison-time-gain/);
+    for(const extras of ["state.recurringPrepayment=10000;state.customPrepayments={}","state.recurringPrepayment=0;state.customPrepayments={12:150000}","state.recurringPrepayment=10000;state.customPrepayments={12:150000}"]){
+        p.run(extras+';updateCalculations()');
+        const expected=p.run('(() => {const b=simulateMortgage(false),c=simulateMortgage(true);return {total:localFormatMoney(8000000+Math.round(c.totalInterest)),base:localFormatMoney(8000000+Math.round(b.totalInterest)),months:mortgageDuration(c.realTerm)};})()');
+        const markup=p.element('comparison-content').innerHTML;
+        assert.ok(markup.includes(expected.total)&&markup.includes(expected.base)&&markup.includes(expected.months));
+        assert.match(markup,/Досрочные уже включены/);
+    }
+    const markup=p.element('comparison-content').innerHTML;
+    assert.ok(markup.includes('121 300')||markup.includes('121 300')||markup.includes('121 300'));
+    assert.ok(markup.includes('271 300')||markup.includes('271 300')||markup.includes('271 300'));
+    assert.doesNotMatch(mortgage,/id="regular-result"|id="one-time-result"/);
+});
+
+test('comparison keeps annual insurance out of monthly outflow and existing-loan history out of totals', () => {
+    const p=page();
+    p.run("activeTab='existing';state.isExistingKnowPayment=true;state.activeCurrentBalance=5300000;state.activePayment=85000;state.includeInsurance=true;state.recurringPrepayment=20000;state.customPrepayments={1:150000};state.prepaymentStrategy='payment';updateCalculations()");
+    const markup=p.element('comparison-content').innerHTML;
+    assert.match(markup,/Только будущие выплаты по текущему остатку/);
+    assert.match(markup,/Меньше выплат на/);
+    assert.match(markup,/Экономия на процентах/);
+    assert.match(markup,/Экономия на страховке/);
+    assert.match(markup,/Последующие платежи меняются по графику/);
+    assert.ok(markup.includes(p.run('localFormatMoney(105000)')));
+    assert.ok(markup.includes(p.run('localFormatMoney(Math.round(5300000)+Math.round(simulateMortgage(true).totalInterest)+Math.round(simulateMortgage(true).totalInsurance))')));
+    assert.match(markup,/Страховка учтена в общей сумме, отдельно от ежемесячной нагрузки/);
+});
+
+test('comparison caps regular outflow by remaining principal on an immediately repaid loan', () => {
+    const p=page();
+    p.run('state.cost=1000;state.downPayment=0;state.rate=0;state.termYears=0;state.termMonths=1;state.recurringPrepayment=5000;updateCalculations()');
+    const markup=p.element('comparison-content').innerHTML;
+    assert.equal(p.transitions.at(-1),'READY');
+    assert.ok(markup.includes(p.run('localFormatMoney(1000)')));
+    assert.ok(!markup.includes(p.run('localFormatMoney(6000)')));
 });
 
 test('month precision respects 1–600 months and known-payment hero semantics', () => {

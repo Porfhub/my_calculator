@@ -1,6 +1,6 @@
 # Ясномера — техническая передача
 
-Обновлено 01.11.2026. Исходная база реализации fd292a727ce7cace1f785dfcdcf6aaf7bb46cf45. Main/production и PR разделены в master status.
+Обновлено 02.11.2026. Исходная база реализации fd292a727ce7cace1f785dfcdcf6aaf7bb46cf45. Main/production и PR разделены в master status.
 
 ## Архитектура и scope
 
@@ -14,9 +14,9 @@ simulateMortgage сохранён; единственное расширение
 
 simulateMortgageRegularOnly вызывает тот же production simulator с временно пустой customPrepayments и восстанавливает исходный объект в finally. Все эффекты сравниваются с simulateMortgage(false). Диаграмма/полная сумма/schedule/export используют simulateMortgage(true), то есть совокупный сценарий. Страховка отдельно от процентов; обязательный платёж без страховки; новая ипотека без взноса в общих кредитных выплатах.
 
-renderMortgageBenefits обновляет regular-only, combined/one-time-only, базовый срок hero и полный export summary. Общая стратегия radio управляет прежним state.prepaymentStrategy. Добавление/удаление из формы и редактирование schedule используют один state.customPrepayments. Пустое значение schedule теперь действительно удаляет доплату.
+С 02.11 renderMortgageBenefits обновляет одну live comparison card через presentation-only mortgageComparisonMarkup(base, combined), базовый срок hero и прежний компактный export summary. Regular-only helper сохранён для совместимости/проверок, отдельного live результата больше нет. Общая стратегия radio управляет прежним state.prepaymentStrategy. Добавление/удаление из формы и редактирование schedule используют один state.customPrepayments. Пустое значение schedule теперь действительно удаляет доплату.
 
-Раскладка live uses CSS grid + display:contents для results-panel и screenshot-area: desktop форма слева, hero/состав/действия справа, затем регулярные/разовые/динамика/schedule. На mobile hero перед формой. С 01.11 export-clone заменяется компактным export-only отчётом из того же READY-результата. Картинки интерфейса из reference в runtime не встраиваются.
+Раскладка live uses CSS grid + display:contents для results-panel и screenshot-area: desktop форма слева, hero/состав/действия справа, затем две самостоятельные формы доплат в одном ряду, единая карточка сравнения, динамика/schedule. На узком экране формы располагаются последовательно. На mobile hero перед формой. С 01.11 export-clone заменяется компактным export-only отчётом из того же READY-результата. Картинки интерфейса из reference в runtime не встраиваются.
 
 ## Состояния, экспорт и диагностика
 
@@ -57,3 +57,9 @@ Yandex workflow #49 успешно выполнил allowlist/hash/sync/HTTP smo
 ## Контекст и зеркало
 
 docs/project-context — канон. Runbook 03_CONTEXT_MIRROR_RUNBOOK.md не меняется. Установленная задача копирует Markdown из текущего checkout в выделенную Drive-папку; она не делает git pull/merge и не подтверждает облачную загрузку. В этом поручении нет ручной правки Drive/перерегистрации задачи.
+
+## Сравнение выплат 02.11
+
+mortgageComparisonMarkup читает проверенные base/combined schedules и state; не меняет модель. Итог — principal + округлённые interest + insurance, согласован с существующим составом выплат/PNG. Обычная месячная нагрузка — первый scheduled payment + регулярная доплата, ограниченная оставшимся телом; разовые месяцы показывают payment + фактический prepayment своей строки. Страховка отдельно. При уменьшении платежа подпись «Нагрузка в первый месяц». До пяти разовых месяцев в раскрытии, остальные доступны в полном графике/share.
+
+DOM: #mortgage-comparison после .prepayment-inputs, #comparison-content aria-live polite. Прежних #regular-result/#one-time-result нет. onClear скрывает карточку и очищает содержимое; при READY восстанавливает. Стили scoped к mortgage; новый runtime ресурс не добавлен. Export preparation, share codec и общие JS не менялись. Обновлены regression assertions в mortgage-browser-qa.cjs, но полный прежний browser runner в этой сессии не запускался: выполнена целевая CUA/Chrome проверка. [Актуальные доказательства и ограничения](../qa/mortgage-redesign/comparison-2026-11-02/README.md).

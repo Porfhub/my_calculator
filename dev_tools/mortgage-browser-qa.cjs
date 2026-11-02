@@ -75,7 +75,7 @@ async function start(){
   await page.locator('#one-time-month').fill('1');
   await page.locator('#one-time-amount').fill('150000');
   await page.locator('#one-time-form button').click();
-  check('regular-only and combined are explicitly scoped',await page.locator('#regular-result').innerText().then(t=>t.includes('Только регулярная'))&&await page.locator('#one-time-result').innerText().then(t=>t.includes('Регулярные + разовые')&&t.includes('не складываются')));
+  check('one comparison reflects all prepayments',await page.locator('#comparison-content').innerText().then(t=>t.includes('Как меняется ипотека')&&t.includes('С учётом всех'))&&await page.locator('#regular-result,#one-time-result').count()===0);
   check('hero retains baseline term under prepayments',await page.locator('#res-real-term').innerText()==='15 лет 6 мес.');
   await page.locator('#early').scrollIntoViewIfNeeded();await shot('desktop-combined');
   await page.locator('input[name=prepayment-strategy][value=payment]').check();
@@ -92,7 +92,7 @@ async function start(){
   check('clearing schedule input removes its payment',await page.evaluate(()=>!Object.hasOwn(state.customPrepayments,'1')));
   await page.locator('#one-time-amount').fill('150000');await page.locator('#one-time-form button').click();
   await page.locator('#recurring-input').fill('0');
-  check('one-time-only scope is visible',await page.locator('#one-time-result').innerText().then(t=>t.includes('Только разовые')));
+  check('one-time-only still has one complete comparison',await page.locator('#comparison-content').innerText().then(t=>t.includes('Как меняется ипотека')&&t.includes('Всего выплатите')));
   await page.locator('#one-time-list button').click();
   check('form remove clears its payment',await page.evaluate(()=>Object.keys(state.customPrepayments).length===0));
   await page.locator('#recurring-input').fill('20000');
@@ -121,7 +121,7 @@ async function start(){
   await page.locator('#theme-toggle').click();
   await page.locator('#downpayment-input').fill('8100000');
   check('invalid input clears READY and disables export',await page.evaluate(()=>document.body.dataset.calculationState==='INVALID_INPUT'&&!window.canExportCalculation()));
-  check('invalid input clears benefit results',await page.locator('#regular-result').innerText()===''&&await page.locator('#one-time-result').innerText()==='');
+  check('invalid input clears and hides the comparison',await page.locator('#comparison-content').innerText()===''&&await page.locator('#mortgage-comparison').isHidden());
   const invalidGoals=await goals();await page.evaluate(()=>shareLink());check('invalid share sends no goal',await goals()===invalidGoals);
   await shot('desktop-invalid');
   await page.locator('#downpayment-input').fill('2450000');await ready();

@@ -561,6 +561,51 @@
 .mortgage-page .export-chart-legend span::before{content:"";display:inline-block;width:18px;border-top:2px solid #0a9974;margin:0 6px 3px 0}
 .mortgage-page .export-chart-legend .export-base::before{border-top:2px dashed #8798a6}
 .mortgage-page .mortgage-export-report>footer{text-align:center;font-size:10px;color:var(--muted);padding-top:2px}
+/* Approved 02.11: one combined comparison after two independent input sections. */
+.mortgage-page .prepayment-inputs{grid-column:1/-1;grid-row:4;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+.mortgage-page .prepayment-inputs .early-section,.mortgage-page .prepayment-inputs .one-time-section{display:block;grid-column:auto;grid-row:auto}
+.mortgage-page .mortgage-comparison{grid-column:1/-1;grid-row:5;padding:0;overflow:hidden}
+.mortgage-page .mortgage-comparison[hidden]{display:none!important}
+.comparison-heading{padding:24px 24px 18px}.comparison-heading h2{font-size:23px;line-height:1.25;font-weight:700;letter-spacing:-.5px;margin:0 0 6px}
+.comparison-heading p{font-size:13px;margin:0}.comparison-body{display:grid;grid-template-columns:1.1fr 1fr 1fr}
+.comparison-total{padding:22px 24px;background:#edf8f2}.dark .comparison-total{background:#233e34}
+.comparison-total>p{font-size:13px;margin:0 0 8px}.comparison-total strong{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.comparison-amount{margin:6px 0 10px;line-height:1.15;white-space:nowrap;font-variant-numeric:tabular-nums}
+.comparison-number{font-size:37px;font-weight:750;letter-spacing:-1.4px}.comparison-unit{font-size:21px;font-weight:500;letter-spacing:-.4px}
+.comparison-total .comparison-saving{color:var(--accent);font-size:13px;font-weight:500;line-height:1.6;margin:16px 0 0}
+.comparison-saving strong{display:block;font-size:21px;letter-spacing:-.3px}
+.comparison-duration,.comparison-month{padding:22px 24px;min-width:0}.comparison-month{border-left:1px solid var(--line)}
+.comparison-body h3{font-size:14px;font-weight:650;margin:0 0 17px;line-height:1.4}
+.comparison-duration-row{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-size:12px;margin-bottom:8px;flex-wrap:wrap}
+.comparison-duration-row span{color:var(--muted)}.comparison-duration-row strong{font-size:17px;font-weight:650;white-space:nowrap;font-variant-numeric:tabular-nums;letter-spacing:-.4px}
+.comparison-duration-row.selected span{color:var(--accent);font-weight:600}
+.comparison-track{height:7px;border-radius:5px;overflow:hidden;background:var(--soft);margin-bottom:16px}
+.comparison-fill{height:100%;border-radius:5px;background:#9cafb6}.dark .comparison-fill{background:#8195a0}.comparison-fill.selected,.dark .comparison-fill.selected{background:var(--accent)}
+.comparison-time-gain{font-size:13px;color:var(--accent);line-height:1.6;margin:6px 0 0}.comparison-time-gain strong{font-weight:650;white-space:nowrap}
+.comparison-cashflow{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.comparison-cashflow span,.comparison-cashflow small{display:block;color:var(--muted);font-size:12px}.comparison-cashflow .selected span{color:var(--accent);font-weight:600}
+.comparison-cashflow strong{display:block;white-space:nowrap;font-size:22px;line-height:1.3;letter-spacing:-.4px;font-weight:650;font-variant-numeric:tabular-nums;margin:4px 0 1px}
+.comparison-month-note{font-size:12px;line-height:1.6;margin-top:14px}
+.comparison-details{padding:6px 24px 12px;font-size:13px;border-top:1px solid var(--line)}
+.comparison-details summary{min-height:44px;align-content:center;color:var(--accent);cursor:pointer}
+.comparison-details dl{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;margin:10px 0 14px}
+.comparison-details dl>div{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.comparison-details dt{color:var(--muted)}
+.comparison-details dd{font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}.comparison-details p{color:var(--muted);font-size:12px;line-height:1.6;margin:8px 0}
+.comparison-footer{padding:14px 24px 18px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;line-height:1.6}.comparison-footer p{margin:0}
+.mortgage-page .debt-chart{grid-row:6}.mortgage-page #existing-history-card{grid-row:7}.mortgage-page .schedule-section{grid-row:8}
+@media(max-width:1023px){
+ .mortgage-page .prepayment-inputs{grid-column:1;grid-row:5;grid-template-columns:minmax(0,1fr);gap:16px}
+ .mortgage-page .prepayment-inputs .early-section,.mortgage-page .prepayment-inputs .one-time-section{display:block}
+ .mortgage-page .mortgage-comparison{grid-column:1;grid-row:6;padding:0;border-radius:14px}
+ .comparison-body{grid-template-columns:minmax(0,1fr)}.comparison-heading{padding:22px 20px 18px}.comparison-heading h2{font-size:21px}
+ .comparison-total,.comparison-duration,.comparison-month{padding:20px}.comparison-duration,.comparison-month{border-left:0;border-top:1px solid var(--line)}
+ .comparison-number{font-size:39px}.comparison-saving strong{display:inline;font-size:13px;white-space:nowrap}
+ .comparison-cashflow{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}.comparison-cashflow>.selected{border-left:1px solid var(--line);padding-left:14px}
+ .comparison-cashflow strong{font-size:23px}.comparison-details{padding-inline:20px}.comparison-details dl{grid-template-columns:minmax(0,1fr)}
+ .comparison-footer{padding-inline:20px}.mortgage-page .debt-chart{grid-row:7}.mortgage-page #existing-history-card{grid-row:8}.mortgage-page .schedule-section{grid-row:9}
+}
+@media(max-width:370px){.comparison-number{font-size:35px}.comparison-cashflow strong{font-size:21px}.comparison-unit{font-size:19px}}
+
 </style>
 </head>
 <body class="calculator-page mortgage-page bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
@@ -837,7 +882,7 @@
                                 <span><strong class="text-slate-900 dark:text-white font-bold">Серая линия (пунктир):</strong> Базовый график банка без досрочного погашения.</span>
                             </div>
                         </div>
-                    </div></div></div><section id="early" class="early-section surface" aria-labelledby="early-heading">
+                    </div></div></div><div class="prepayment-inputs"><section id="early" class="early-section surface" aria-labelledby="early-heading">
 <div class="early-controls"><h2 id="early-heading">Регулярная доплата каждый месяц</h2>
 <p class="muted">Уменьшает срок или платёж. Можно использовать вместе с разовыми.</p><div class="space-y-2">
                         <div class="flex justify-between items-center">
@@ -865,15 +910,15 @@
 <label><input type="radio" name="prepayment-strategy" value="payment" onchange="setMortgageStrategy('payment')"> Уменьшать платёж</label>
 <p class="muted">Действует и на регулярную доплату, и на все разовые платежи.</p>
 <input id="strategy-toggle" type="checkbox" hidden aria-hidden="true" tabindex="-1"><span id="strategy-badge" hidden>Срок кредита</span></fieldset></div>
-<div id="regular-result" class="benefit-panel" aria-live="polite"></div></section><section id="one-time" class="one-time-section surface" aria-labelledby="one-time-heading">
+</section><section id="one-time" class="one-time-section surface" aria-labelledby="one-time-heading">
 <div class="one-time-controls"><h2 id="one-time-heading">Разовые досрочные платежи</h2>
-<p class="muted">Можно использовать отдельно или вместе с регулярной доплатой. Общая стратегия — выше.</p>
+<p class="muted">Можно использовать отдельно или вместе с регулярной доплатой. Стратегия общая для всех доплат.</p>
 <form id="one-time-form" onsubmit="event.preventDefault(); addMortgagePrepayment()">
 <div><label for="one-time-month">Месяц расчёта</label><input id="one-time-month" type="number" min="1" max="600" step="1" value="12" inputmode="numeric" required></div>
 <div><label for="one-time-amount">Сумма доплаты, ₽</label><input id="one-time-amount" type="text" inputmode="numeric" placeholder="150 000" required></div>
 <button type="submit">Добавить</button></form><p id="one-time-error" role="status"></p>
 <button class="text-action" onclick="openMortgageSchedule()">Выбрать месяц в графике →</button>
-<div id="one-time-list"></div></div><div id="one-time-result" class="benefit-panel" aria-live="polite"></div></section><details id="mortgage-schedule" class="schedule-section surface"><summary>Платежи по месяцам <span class="muted">График и разовые доплаты</span></summary>
+<div id="one-time-list"></div></div></section></div><section id="mortgage-comparison" class="mortgage-comparison surface" aria-labelledby="comparison-heading" data-screenshot-exclude><div id="comparison-content" aria-live="polite"></div></section><details id="mortgage-schedule" class="schedule-section surface"><summary>Платежи по месяцам <span class="muted">График и разовые доплаты</span></summary>
             <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h2 class="text-lg font-black text-slate-900 dark:text-white" id="table-main-title">Интерактивный график платежей</h2>
@@ -1098,16 +1143,70 @@
             if (!window.canExportCalculation()) throw new Error('Mortgage changed during export');
         };
 
+        // Presentation only: both columns use the same verified base/combined schedules.
+        function mortgageComparisonMarkup(base, combined) {
+            const principal = activeTab === 'new' ? state.cost - state.downPayment : state.activeCurrentBalance;
+            const displayedTotal = result => Math.round(principal) + Math.round(result.totalInterest) + Math.round(result.totalInsurance);
+            const baselineTotal = displayedTotal(base), selectedTotal = displayedTotal(combined);
+            const hasExtras = state.recurringPrepayment > 0 || Object.values(state.customPrepayments).some(value => value > 0);
+            const totalSaving = baselineTotal - selectedTotal;
+            const savedMonths = base.realTerm - combined.realTerm;
+            const first = combined.schedule[0];
+            const actualRegular = Math.min(state.recurringPrepayment, Math.max(0, principal - first.principal));
+            const ordinaryPayment = first.payment + actualRegular;
+            const fallingPayment = hasExtras && state.prepaymentStrategy === 'payment';
+            const shortMoney = value => value >= 1000000
+                ? '<span class="comparison-number">' + (value / 1000000).toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</span> <span class="comparison-unit">млн ₽</span>'
+                : '<span class="comparison-number">' + localFormatMoney(value) + '</span>';
+            const fact = (label, value) => '<div><dt>' + label + '</dt><dd>' + value + '</dd></div>';
+            const specialMonths = Object.entries(state.customPrepayments)
+                .filter(([month, value]) => value > 0 && combined.schedule[Number(month) - 1])
+                .sort((a, b) => Number(a[0]) - Number(b[0]));
+            const specialRows = specialMonths.slice(0, 5).map(([month]) => {
+                const row = combined.schedule[Number(month) - 1];
+                return fact('Месяц ' + Number(month) + ' · с разовой доплатой', localFormatMoney(row.payment + row.prepayment));
+            }).join('');
+            const shortened = Math.max(0, Math.min(100, combined.realTerm / base.realTerm * 100));
+            const footnote = activeTab === 'new' ? 'Без первоначального взноса.' : 'Только будущие выплаты по текущему остатку.';
+            const savingLabel = totalSaving < 0 ? 'Больше выплат на' : state.includeInsurance ? 'Меньше выплат на' : 'Экономия на процентах';
+            return '<header class="comparison-heading"><h2 id="comparison-heading">' + (hasExtras ? 'Как меняется ипотека' : 'Ваш план погашения') + '</h2>'
+                + '<p class="muted">' + (hasExtras ? 'С учётом всех ваших досрочных платежей' : 'Без досрочных платежей') + '</p></header>'
+                + '<div class="comparison-body"><div class="comparison-total"><p>' + (hasExtras ? 'Всего выплатите по вашему плану' : 'Всего выплатите по кредиту') + '</p>'
+                + '<div class="comparison-amount">' + shortMoney(selectedTotal) + '</div>'
+                + (hasExtras ? '<p class="muted">Без досрочных — <strong>' + localFormatMoney(baselineTotal) + '</strong></p>'
+                    + '<p class="comparison-saving">' + savingLabel + ' <strong>' + localFormatMoney(Math.abs(totalSaving)) + '</strong></p>'
+                    : '<p class="muted">Добавьте регулярные или разовые доплаты, чтобы сравнить планы.</p>') + '</div>'
+                + '<div class="comparison-duration"><h3>Когда закроете ипотеку</h3>'
+                + '<div class="comparison-duration-row"><span>' + (hasExtras ? 'Без досрочных' : 'По вашему плану') + '</span><strong>' + mortgageDuration(base.realTerm) + '</strong></div>'
+                + '<div class="comparison-track" aria-hidden="true"><div class="comparison-fill" style="width:100%"></div></div>'
+                + (hasExtras ? '<div class="comparison-duration-row selected"><span>По вашему плану</span><strong>' + mortgageDuration(combined.realTerm) + '</strong></div>'
+                    + '<div class="comparison-track" aria-hidden="true"><div class="comparison-fill selected" style="width:' + shortened + '%"></div></div>'
+                    + '<p class="comparison-time-gain">' + (savedMonths > 0 ? 'Закроете на <strong>' + mortgageDuration(savedMonths) + '</strong> раньше' : 'Срок не сокращается; меняется платёж по графику.') + '</p>' : '') + '</div>'
+                + '<div class="comparison-month"><h3>' + (fallingPayment ? 'Нагрузка в первый месяц' : 'Расходы в обычный месяц') + '</h3>'
+                + '<div class="comparison-cashflow"><div><span>' + (hasExtras ? 'Без досрочных' : 'Обязательный платёж') + '</span><strong>' + localFormatMoney(base.schedule[0].payment) + '</strong><small>/ мес.</small></div>'
+                + (hasExtras ? '<div class="selected"><span>По вашему плану</span><strong>' + localFormatMoney(ordinaryPayment) + '</strong><small>/ мес.</small></div>' : '') + '</div>'
+                + '<p class="muted comparison-month-note">' + (state.recurringPrepayment > 0 ? 'С регулярной доплатой ' + localFormatMoney(actualRegular) + '.' : 'Регулярная доплата не задана.')
+                + (fallingPayment ? ' Последующие платежи меняются по графику.' : '') + ' Без разовых доплат и страховки.</p></div></div>'
+                + '<details class="comparison-details"><summary>Состав выплат и особые месяцы</summary><dl>'
+                + (hasExtras ? fact('Без досрочных · все выплаты', localFormatMoney(baselineTotal)) : '')
+                + fact('Ваш план · все выплаты', localFormatMoney(selectedTotal))
+                + fact(activeTab === 'new' ? 'Возврат кредита' : 'Текущий остаток долга', localFormatMoney(principal))
+                + fact('Проценты банку', localFormatMoney(combined.totalInterest))
+                + fact('Страховка', localFormatMoney(combined.totalInsurance))
+                + (hasExtras && state.includeInsurance ? fact('Экономия на процентах', localFormatMoney(Math.max(0, base.totalInterest - combined.totalInterest)))
+                    + fact('Экономия на страховке', localFormatMoney(Math.max(0, base.totalInsurance - combined.totalInsurance))) : '')
+                + specialRows + '</dl>'
+                + (specialMonths.length > 5 ? '<p>Показаны первые 5 месяцев с разовыми доплатами. Все платежи — в помесячном графике.</p>' : '')
+                + '<p>Суммы по месяцам указаны без страховки; последний платёж может быть меньше обычного.</p></details>'
+                + '<footer class="comparison-footer"><p>' + (hasExtras ? 'Досрочные уже включены в сумму выплат. ' : '') + footnote + '</p><p>'
+                + (state.includeInsurance ? 'Страховка учтена в общей сумме, отдельно от ежемесячной нагрузки.' : 'Страховка не учтена.') + '</p></footer>';
+        }
+
         function renderMortgageBenefits(base, regular, combined) {
             const hasCustom = Object.values(state.customPrepayments).some(value => value > 0);
             const hasRegular = state.recurringPrepayment > 0;
-            const scope = hasCustom ? (hasRegular ? 'Регулярные + разовые доплаты' : 'Только разовые доплаты') : 'Только регулярная доплата';
-            document.getElementById('regular-result').innerHTML = hasRegular
-                ? mortgageBenefitMarkup(base, regular, 'Только регулярная доплата')
-                : '<h3>Узнайте, сколько сэкономите</h3><p class="muted">Введите ежемесячную доплату, чтобы увидеть, как изменятся срок и общие выплаты.</p>';
-            document.getElementById('one-time-result').innerHTML = hasCustom
-                ? mortgageBenefitMarkup(base, combined, scope) + (hasRegular ? '<p><strong>Эта экономия уже включает регулярную доплату. Две экономии не складываются.</strong></p>' : '')
-                : '<h3>Доплата в нужный месяц</h3><p class="muted">Добавьте разовый платёж в форме или выберите месяц в графике.</p>';
+            document.getElementById('mortgage-comparison').hidden = false;
+            document.getElementById('comparison-content').innerHTML = mortgageComparisonMarkup(base, combined);
             const savingsCard = document.getElementById('savings-card');
             savingsCard.classList.remove('hidden');
             savingsCard.innerHTML = mortgageCompactExportMarkup(base, combined);
@@ -1301,7 +1400,8 @@
             ],
             onClear: () => {
                 mortgageExportChartData = null;
-                ['regular-result', 'one-time-result', 'one-time-list'].forEach(id => {
+                document.getElementById('mortgage-comparison').hidden = true;
+                ['comparison-content', 'one-time-list'].forEach(id => {
                     const node = document.getElementById(id);
                     if (node) node.innerHTML = '';
                 });
