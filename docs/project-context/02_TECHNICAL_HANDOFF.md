@@ -2,6 +2,14 @@
 
 Обновлено 02.11.2026. Исходная база реализации fd292a727ce7cace1f785dfcdcf6aaf7bb46cf45. Main/production и PR разделены в master status.
 
+## Главная A: текущая PR-реализация
+
+Ипотека #93 merged, main/production 48c3579, deploy #53 success. Следующие пункты о «ещё PR #93» ниже исторические.
+
+Главная — отдельная ветка codex/homepage-navigator. index.html имеет статический semantic catalogue 3+3+4, scoped --home-* tokens и собственный CSS без Tailwind CDN. Общий product-polish и theme.js сохранены, api.js подключён без правок. Методология — details, share — native/clipboard/dialog fallback. Inline homepageRateView использует getDatasetStatus/getCentralBankRate + provenance/type/range/date/TTL guards; отображение через textContent, не HTML из payload. Timeout 8с. Home anchors никогда не создают calculate_success; counter/share_click сохранены, categorical params для нового каталога вместо семантически иных фильтров.
+
+index.html добавлен в PR path-filter validation, gates не ослаблены. 156 tests; data gate/diff checks; desktop и 390/360/320 Chrome QA. Runtime калькуляторов/JSON/shared files/SW не менялись, прежние 35 deployment files. SW network-first обновляет index по прежнему контракту, cache strategy/version не меняются. Физические устройства/native share/успешный HTTPS clipboard и offline не подтверждены. [QA](../qa/homepage-redesign/2026-11-02/README.md).
+
 ## После выпуска 02.11
 
 PR #92 merged; main/production c93675f, deploy #52 success. Описания ниже о PR до выпуска — исторические. **PR #93** содержит исправление переключателя/сброса банковского остатка и затем одобренную новую форму. Она ещё не production. Основатель подтвердил контрольные calculate_success в отчёте Метрики.
