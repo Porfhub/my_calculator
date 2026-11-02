@@ -12,6 +12,7 @@ on:
       - 'tests/data-validation/**'
       - 'tests/ui-state/**'
       - 'mortgage.html'
+      - 'rent-vs-mortgage.html'
       - 'index.html'
       - 'sw.js'
       - 'package.json'

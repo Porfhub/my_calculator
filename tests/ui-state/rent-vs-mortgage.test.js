@@ -22,7 +22,7 @@ const approximatelyEqual = (actual, expected) =>
     assert.ok(Math.abs(actual - expected) < 0.001, `expected ${actual} to equal ${expected}`);
 
 test('analysis horizon is an always-visible 5–40 year scenario input', () => {
-    assert.match(html, /<label for="years-range"[^>]*>Горизонт анализа<\/label>/);
+    assert.match(html, /<label for="years-input"[^>]*>Через сколько лет сравниваем<\/label>/);
     assert.match(html, /id="years-range" min="5" max="40" step="1" value="20"/);
     assert.match(html, /Number\.isInteger\(state\.analysisYears\) && state\.analysisYears >= 5 && state\.analysisYears <= 40/);
     assert.match(html, /Период, через который сравнивается итоговый капитал/);
@@ -31,15 +31,15 @@ test('analysis horizon is an always-visible 5–40 year scenario input', () => {
     assert.match(html, /На какой срок рассчитан ежемесячный платёж/);
     assert.match(html, /id="result-mortgage-term"/);
     assert.match(html, /id="result-analysis-years"/);
-    assert.match(html, /id="quick-start-assumptions"[^>]*>В быстром старте считаем: жильё \+5% в год, аренда \+4% в год/);
+    assert.match(html, /id="quick-start-assumptions"[^>]*>Жильё \+5%, аренда \+4% в год/);
     assert.match(html, /id="dp-range" min="0" max="0\.99"/);
 });
 
 test('purchase and rent inputs are visible together instead of being hidden behind tabs', () => {
     assert.match(html, /id="purchase-section-title"/);
     assert.match(html, /id="rent-section-title"/);
-    assert.match(html, /🏠 Покупка/);
-    assert.match(html, /🔑 Аренда/);
+    assert.match(html, /Покупка в ипотеку/);
+    assert.match(html, /id="rent-section-title"[^>]*>Аренда/);
     assert.match(html, /id="include-investments"/);
     assert.match(html, /id="investment-rate-field"/);
     assert.match(html, /id="investment-breakdown" hidden/);

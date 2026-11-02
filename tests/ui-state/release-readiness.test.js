@@ -39,11 +39,11 @@ test('release audit scenarios keep their units, transport need and source contex
 
     assert.match(rent, /id="include-investments"/);
     assert.match(rent, /includeInvestments: false/);
-    assert.match(rent, /Ожидаемая годовая доходность \(% в год\)/);
+    assert.match(rent, /Доходность в год/);
     assert.match(rent, /Что инвестируется\?/);
     assert.match(rent, /id="investment-breakdown" hidden/);
     assert.doesNotMatch(rent, /tab-btn-(buy|rent)|tab-content-(buy|rent)/);
-    assert.match(rent, /Что сильнее всего влияет на этот вывод/);
+    assert.match(rent, /Допущения расчёта/);
 
     assert.match(car, /id="trips-per-month"/);
     assert.match(car, /id="trip-price"/);
