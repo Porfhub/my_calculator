@@ -526,13 +526,14 @@
 }
 .mortgage-page [data-screenshot-stage] .result-overview{display:flex!important;flex-direction:column;gap:18px}
 
-/* Insurance: the 44px label is the hit area; the track owns its thumb. */
+/* Both mortgage switches share a 44px hit area and a track-relative thumb. */
 .mortgage-page .insurance-switch{min-width:44px;min-height:44px;justify-content:center;align-items:center}
 .mortgage-page .insurance-track{position:relative;display:block;flex:none;width:40px;height:20px;border-radius:20px;background:#82909d}
 .dark .mortgage-page .insurance-track{background:#536474}
 .mortgage-page .insurance-track::after{content:"";position:absolute;top:50%;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transform:translateY(-50%);transition:left 140ms ease}
-.mortgage-page #insurance-toggle:checked+.insurance-track{background:#08795d}
-.mortgage-page #insurance-toggle:checked+.insurance-track::after{left:calc(100% - 18px)}
+.mortgage-page #insurance-toggle:checked+.insurance-track,.mortgage-page #existing-know-payment-toggle:checked+.insurance-track{background:#08795d}
+.mortgage-page #insurance-toggle:checked+.insurance-track::after,.mortgage-page #existing-know-payment-toggle:checked+.insurance-track::after{left:calc(100% - 18px)}
+.mortgage-page .mortgage-switch:focus-within{outline:3px solid #29b698;outline-offset:3px;border-radius:8px}
 /* This compact report exists only in the isolated screenshot stage. */
 .mortgage-page .mortgage-export-report{color:var(--text);font-size:12px;line-height:1.45}
 .mortgage-page .mortgage-export-report h3{font-size:14px;line-height:1.4;font-weight:700;margin:0 0 8px}
@@ -714,9 +715,9 @@
                             <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Я знаю свой ежемесячный платеж</span>
                             <span class="text-[10px] text-slate-400 dark:text-slate-500">Авторасчет срока и будущих процентов</span>
                         </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
+                        <label class="insurance-switch mortgage-switch relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" id="existing-know-payment-toggle" onchange="toggleExistingKnowPayment()" class="sr-only peer" aria-label="Указать известный ежемесячный платёж">
-                            <div class="w-10 h-5 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-brand-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all"></div>
+                            <span class="insurance-track mortgage-switch-track" aria-hidden="true"></span>
                         </label>
                     </div>
 
@@ -801,9 +802,9 @@
                                 </span>
                                 <span class="text-[9px] text-slate-400">1% в год</span>
                             </div>
-                            <label class="insurance-switch relative inline-flex items-center cursor-pointer">
+                            <label class="insurance-switch mortgage-switch relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" id="insurance-toggle" onchange="toggleInsurance()" class="sr-only peer" aria-label="Учитывать ипотечную страховку">
-                                <span class="insurance-track" aria-hidden="true"></span>
+                                <span class="insurance-track mortgage-switch-track" aria-hidden="true"></span>
                             </label>
                         </div>
                     </div>
@@ -1662,7 +1663,7 @@
                 document.getElementById('label-amount').innerText = "Остаток долга";
                 document.getElementById('label-term').innerText = "Осталось платить";
                 document.getElementById('label-interest').innerText = "Будущие проценты";
-                if (!preserveScenario) calcTheoreticalBalance();
+                if (!preserveScenario && !state.isExistingKnowPayment) calcTheoreticalBalance();
             }
             updateCalculations();
         }
@@ -1695,7 +1696,7 @@
 
         function handleActiveRateInput(el) {
             let val = parseFloat(el.value); state.activeRate = val;
-            calcTheoreticalBalance();
+            if (!state.isExistingKnowPayment) calcTheoreticalBalance();
             updateCalculations();
         }
 

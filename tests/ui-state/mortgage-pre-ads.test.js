@@ -828,3 +828,17 @@ test('export chart series belongs to the current READY result even if live chart
     assert.equal(p.run('mortgageExportChartData.datasets[0].data[0]'),p.run('simulateMortgage(true).schedule[0].balance'));
     assert.notEqual(p.run('mortgageExportChartData.datasets[0].data[0]'),before);
 });
+
+
+test('known-payment mode preserves the bank balance when changing rate and returning to the tab', () => {
+    const p = page();
+    p.run("activeTab='existing'; state.isExistingKnowPayment=true; state.activeCurrentBalance=5300000; state.activePayment=85000; state.activePaidMonths=4; handleActiveRateInput({value:'13'})");
+    assert.equal(p.run('state.activeRate'), 13);
+    assert.equal(p.run('state.activeCurrentBalance'), 5300000);
+    assert.equal(p.value('res-loan-amount'), 5300000);
+    assert.equal(p.transitions.at(-1), 'READY');
+    p.run("switchMainTab('new'); switchMainTab('existing')");
+    assert.equal(p.run('state.activeCurrentBalance'), 5300000);
+    assert.equal(p.value('res-loan-amount'), 5300000);
+    assert.equal(p.transitions.at(-1), 'READY');
+});

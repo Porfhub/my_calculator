@@ -1,0 +1,177 @@
+{
+  "mobile": [
+    {
+      "viewport": "390px iframe",
+      "theme": "light",
+      "id": "existing-know-payment-toggle",
+      "checked": false,
+      "label": {
+        "height": 44,
+        "width": 44
+      },
+      "track": {
+        "height": 20,
+        "position": "relative",
+        "width": 40
+      },
+      "verticalCenter": {
+        "top": "10px",
+        "transform": "matrix(1, 0, 0, 1, 0, -8)",
+        "height": "16px"
+      }
+    },
+    {
+      "viewport": "390px iframe",
+      "theme": "light",
+      "id": "insurance-toggle",
+      "checked": false,
+      "label": {
+        "height": 44,
+        "width": 44
+      },
+      "track": {
+        "height": 20,
+        "position": "relative",
+        "width": 40
+      },
+      "verticalCenter": {
+        "top": "10px",
+        "transform": "matrix(1, 0, 0, 1, 0, -8)",
+        "height": "16px"
+      }
+    },
+    {
+      "viewport": "390px iframe",
+      "theme": "light",
+      "id": "existing-know-payment-toggle",
+      "checked": true,
+      "label": {
+        "height": 44,
+        "width": 44
+      },
+      "track": {
+        "height": 20,
+        "position": "relative",
+        "width": 40
+      },
+      "verticalCenter": {
+        "top": "10px",
+        "transform": "matrix(1, 0, 0, 1, 0, -8)",
+        "height": "16px"
+      }
+    },
+    {
+      "viewport": "390px iframe",
+      "theme": "light",
+      "id": "insurance-toggle",
+      "checked": true,
+      "label": {
+        "height": 44,
+        "width": 44
+      },
+      "track": {
+        "height": 20,
+        "position": "relative",
+        "width": 40
+      },
+      "verticalCenter": {
+        "top": "10px",
+        "transform": "matrix(1, 0, 0, 1, 0, -8)",
+        "height": "16px"
+      }
+    },
+    {
+      "viewport": "390px iframe",
+      "theme": "dark",
+      "id": "existing-know-payment-toggle",
+      "checked": false,
+      "label": {
+        "height": 44,
+        "width": 44
+      },
+      "track": {
+        "height": 20,
+        "position": "relative",
+        "width": 40
+      },
+      "verticalCenter": {
+        "top": "10px",
+        "transform": "matrix(1, 0, 0, 1, 0, -8)",
+        "height": "16px"
+      }
+    },
+    {
+      "viewport": "390px iframe",
+      "theme": "dark",
+      "id": "insurance-toggle",
+      "checked": false,
+      "label": {
+        "height": 44,
+        "width": 44
+      },
+      "track": {
+        "height": 20,
+        "position": "relative",
+        "width": 40
+      },
+      "verticalCenter": {
+        "top": "10px",
+        "transform": "matrix(1, 0, 0, 1, 0, -8)",
+        "height": "16px"
+      }
+    },
+    {
+      "viewport": "390px iframe",
+      "theme": "dark",
+      "id": "existing-know-payment-toggle",
+      "checked": true,
+      "label": {
+        "height": 44,
+        "width": 44
+      },
+      "track": {
+        "height": 20,
+        "position": "relative",
+        "width": 40
+      },
+      "verticalCenter": {
+        "top": "10px",
+        "transform": "matrix(1, 0, 0, 1, 0, -8)",
+        "height": "16px"
+      }
+    },
+    {
+      "viewport": "390px iframe",
+      "theme": "dark",
+      "id": "insurance-toggle",
+      "checked": true,
+      "label": {
+        "height": 44,
+        "width": 44
+      },
+      "track": {
+        "height": 20,
+        "position": "relative",
+        "width": 40
+      },
+      "verticalCenter": {
+        "top": "10px",
+        "transform": "matrix(1, 0, 0, 1, 0, -8)",
+        "height": "16px"
+      }
+    }
+  ],
+  "stableThumbPositions": {
+    "off": "2px",
+    "on": "22px"
+  },
+  "bankBalanceRegression": "5300000 retained after 12→13% and new→existing navigation",
+  "metrika": [
+    {
+      "level": "log",
+      "message": "Reach goal. Counter: 110360838. Goal id: calculate_success",
+      "timestamp": "2026-11-02T13:06:54.351Z",
+      "url": "https://mc.yandex.com/metrika/tag_debug.js?ver=2682&b="
+    }
+  ]
+}

@@ -2,6 +2,12 @@
 
 Обновлено 02.11.2026. Исходная база реализации fd292a727ce7cace1f785dfcdcf6aaf7bb46cf45. Main/production и PR разделены в master status.
 
+## После выпуска 02.11
+
+PR #92 merged; main/production c93675f, deploy #52 success. Описания ниже о PR до выпуска — исторические. Follow-up PR переиспользует track-relative switch и добавляет guards !state.isExistingKnowPayment перед calcTheoreticalBalance в handleActiveRateInput/switchMainTab. Ручной bank balance в этом режиме сохраняется; код simulateMortgage, share codec и analytics не меняются. 144 unit/66 engine scenarios проходят. UI/SDK evidence: docs/qa/mortgage-redesign/existing-switch-2026-11-02.
+
+Не считать исправленными оставшиеся проблемы старого режима: remaining/paid меняют elapsed без обновления баланса; history смешивает manual balance и теоретический прошлый аннуитет. Продуктовая схема их устранения находится в отдельном proposal. SDK Reach goal подтверждает обработку вызова в браузере, а не серверный отчёт/атрибуцию конкретного визита.
+
 ## Архитектура и scope
 
 Статический сайт без сборки. mortgage.html содержит форму, проверенный помесячный движок, состояние, адаптеры и mortgage-scoped CSS. Общие js/calculator-state.js, js/theme.js, js/api.js и css/product-polish.css не изменены. Другие HTML-калькуляторы не менялись.
