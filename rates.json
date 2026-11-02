@@ -7,12 +7,12 @@
     "source_name": "Банк России",
     "source_url": "https://www.cbr.ru/hd_base/keyrate/",
     "source_export_url": "https://www.cbr.ru/DailyInfoWebServ/DailyInfo.asmx",
-    "source_checksum_sha256": "839ef23cdb1a30240d815fc7be91ee92af11a4c8e4d6b5e6894c45175bfd33f4",
+    "source_checksum_sha256": "5d23a39ff2b4c44d66f60daa8f901a2f60ea07a7c39d3d4174355279a19f8f2a",
     "payload_checksum_sha256": "d8eecbbc377657bc6e0dfe29a7375f03bbd9a5b0bd96555839fbea4abc332ccf",
     "source_published_at": null,
     "sources": null,
-    "last_successful_fetch_at": "2026-11-01T09:52:30.021Z",
-    "last_attempt_at": "2026-11-01T09:52:30.021Z"
+    "last_successful_fetch_at": "2026-11-02T10:14:17.468Z",
+    "last_attempt_at": "2026-11-02T10:14:17.468Z"
   },
   "key_rate": {
     "value_percent": 14,
@@ -21,6 +21,6 @@
   "cb_rate": 14,
   "source_url": "https://www.cbr.ru/hd_base/keyrate/",
   "effective_from": "2026-07-27",
-  "fetched_at": "2026-11-01T09:52:30.021Z",
+  "fetched_at": "2026-11-02T10:14:17.468Z",
   "status": "ok"
 }
