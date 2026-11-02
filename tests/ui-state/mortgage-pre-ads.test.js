@@ -71,7 +71,8 @@ function page({ withCanvases = false, stubChart = true, withVisualViewport = tru
     }));
     return {
         run, value, element, goals, transitions, transitionDetails, errors, bodyClasses, scrollCalls,
-        edit: () => listeners.input.forEach((listener) => listener({ target: { closest: (selector) => selector === '#one-time-form' ? null : ({}) } })),
+        edit: () => listeners.input.forEach((listener) => listener({ target: { closest: (selector) => ['#one-time-form, #existing-estimate', '#one-time-form', '#existing-estimate'].includes(selector) ? null : ({}) } })),
+        editEstimate: () => listeners.input.forEach(listener => listener({target:{closest: selector => selector.includes('#existing-estimate') ? ({}) : null}})),
         focusInput: (index = 0) => {
             const previous = document.activeElement;
             const next = focusedInputs[index];
@@ -827,4 +828,124 @@ test('export chart series belongs to the current READY result even if live chart
     assert.equal(p.transitions.at(-1),'READY');
     assert.equal(p.run('mortgageExportChartData.datasets[0].data[0]'),p.run('simulateMortgage(true).schedule[0].balance'));
     assert.notEqual(p.run('mortgageExportChartData.datasets[0].data[0]'),before);
+});
+
+
+test('known-payment mode preserves the bank balance when changing rate and returning to the tab', () => {
+    const p = page();
+    p.run("activeTab='existing'; state.isExistingKnowPayment=true; state.activeCurrentBalance=5300000; state.activePayment=85000; state.activePaidMonths=4; handleActiveRateInput({value:'13'})");
+    assert.equal(p.run('state.activeRate'), 13);
+    assert.equal(p.run('state.activeCurrentBalance'), 5300000);
+    assert.equal(p.value('res-loan-amount'), 5300000);
+    assert.equal(p.transitions.at(-1), 'READY');
+    p.run("switchMainTab('new'); switchMainTab('existing')");
+    assert.equal(p.run('state.activeCurrentBalance'), 5300000);
+    assert.equal(p.value('res-loan-amount'), 5300000);
+    assert.equal(p.transitions.at(-1), 'READY');
+});
+
+test('existing input modes retain bank inputs and both prepayment types without hidden-field recalculation', () => {
+    const p=page();
+    p.run("activeTab='existing'; state.activeCurrentBalance=5300000; state.activeRate=12; state.activePayment=85000; state.activeRemainingMonths=123; state.includeInsurance=true; state.recurringPrepayment=20000; state.customPrepayments={12:150000}; updateCalculations()");
+    for(const mode of ['term','payment','term']) {
+        p.run(`switchExistingInputMode('${mode}')`);
+        assert.equal(p.transitions.at(-1),'READY');
+        assert.equal(p.run('state.activeCurrentBalance'),5300000);
+        assert.equal(p.run('state.activeRate'),12);
+        assert.equal(p.run('state.activePayment'),85000);
+        assert.equal(p.run('state.activeRemainingMonths'),123);
+        assert.equal(p.run('state.includeInsurance'),true);
+        assert.equal(p.run('state.recurringPrepayment'),20000);
+        assert.equal(p.run('state.customPrepayments[12]'),150000);
+    }
+    p.run("handleActiveRateInput({value:'13'}); switchMainTab('new'); switchMainTab('existing')");
+    assert.equal(p.run('state.activeCurrentBalance'),5300000);
+    assert.equal(p.run('state.activeRemainingMonths'),123);
+});
+
+test('remaining duration is an independent input with month bounds and fail-closed recovery', () => {
+    const p=page();
+    p.run("activeTab='existing'; state.activeCurrentBalance=5300000; state.activeRate=0; state.isExistingKnowPayment=false; updateInputsDOM()");
+    p.element('active-remaining-years').value='0';p.element('active-remaining-months').value='6';
+    p.run('handleRemainingTermChange()');
+    assert.equal(p.transitions.at(-1),'READY');
+    assert.equal(p.run('simulateMortgage(false).realTerm'),6);
+    assert.equal(p.run('state.activePaidMonths'),36);
+    assert.equal(p.run('state.activeOriginalTermYears'),20);
+    assert.equal(p.run('state.activeCurrentBalance'),5300000);
+    assert.equal(p.run('simulateMortgage(false).schedule[0].payment'),5300000/6);
+    for(const [years,months] of [['0','0'],['50','1'],['-1','5'],['1','12'],['1','-1'],['1.5','0']]) {
+        p.element('active-remaining-years').value=years;p.element('active-remaining-months').value=months;p.run('handleRemainingTermChange()');
+        assert.equal(p.transitions.at(-1),'INVALID_INPUT',`${years}/${months}`);
+        assert.equal(p.run('window.canExportCalculation()'),false);
+    }
+    p.element('active-remaining-years').value='50';p.element('active-remaining-months').value='0';p.run('handleRemainingTermChange()');
+    assert.equal(p.transitions.at(-1),'READY');
+    assert.equal(p.run('simulateMortgage(false).realTerm'),600);
+});
+
+test('estimate drafts including invalid ones leave the current result, export and goals untouched', () => {
+    const p=page();p.run("activeTab='existing';state.activeCurrentBalance=5300000;updateCalculations();window.before=JSON.stringify(state)");
+    for(const [id,value] of Object.entries({'active-amount-input':'8000000','estimate-rate-input':'12','active-term-input':'20','active-paid-months-input':'4'}))p.element(id).value=value;
+    p.editEstimate();
+    p.run('updateExistingEstimateDraft()');
+    assert.equal(p.run('mortgageCalculationRequested'),false);
+    assert.equal(p.run('JSON.stringify(state)'),p.run('window.before'));
+    assert.equal(p.run('window.canExportCalculation()'),true);
+    assert.deepEqual(p.goals,[]);
+    p.element('estimate-rate-input').value='-1';p.run('updateExistingEstimateDraft(); applyExistingEstimate()');
+    assert.equal(p.run('JSON.stringify(state)'),p.run('window.before'));
+    assert.equal(p.run('window.canExportCalculation()'),true);
+    assert.equal(p.element('btn-calc-theoretical').disabled,true);
+    assert.equal(p.element('existing-history-card').innerHTML,'');
+    assert.deepEqual(p.goals,[]);
+});
+
+test('explicit estimate application updates only balance and remaining duration while preserving the plan', () => {
+    const p=page();p.run("activeTab='existing';state.activeCurrentBalance=5300000;state.activeRate=13;state.activePayment=85000;state.includeInsurance=true;state.recurringPrepayment=20000;state.customPrepayments={12:150000};existingEstimateDraft={loan:8000000,rate:12,termYears:20,paidMonths:36};applyExistingEstimate()");
+    assert.equal(p.run('state.activeCurrentBalance'),7651642);
+    assert.equal(p.run('state.activeRemainingMonths'),204);
+    assert.equal(p.run('state.activeRate'),13);
+    assert.equal(p.run('state.activePayment'),85000);
+    assert.equal(p.run('state.includeInsurance'),true);
+    assert.equal(p.run('state.customPrepayments[12]'),150000);
+    assert.equal(p.run('state.recurringPrepayment'),20000);
+    assert.equal(p.run('state.existingBalanceSource'),'estimate');
+    assert.deepEqual(p.goals,['calculate_success']);
+    assert.match(p.element('savings-card').innerHTML,/Остаток оценён по исходному графику/);
+});
+
+test('estimated history uses one original schedule, never a mixture with the current bank balance', () => {
+    const p=page();
+    p.run("activeTab='existing';state.activeCurrentBalance=5300000;existingEstimateDraft={loan:8000000,rate:12,termYears:20,paidMonths:4};updateCalculations()");
+    const history=p.element('existing-history-card').innerHTML;
+    const estimate=p.run('calculateExistingEstimate(existingEstimateDraft)');
+    assert.ok(estimate.interestPaid>300000 && estimate.principalPaid<40000);
+    assert.ok(Math.abs(estimate.principalPaid+estimate.interestPaid-estimate.paid)<0.00001);
+    p.run("state.activeCurrentBalance=2000000;updateCalculations()");
+    assert.equal(p.element('existing-history-card').innerHTML,history);
+    assert.match(history,/Фактические выплаты смотрите в истории банка/);
+    assert.doesNotMatch(history,/реальный прогресс|выключив тумблер/);
+    assert.equal(p.run('calculateExistingEstimate({loan:1200,rate:0,termYears:1,paidMonths:12}).balance'),0);
+    assert.equal(p.run('calculateExistingEstimate({loan:1200,rate:0,termYears:1,paidMonths:12}).paid'),1200);
+    assert.equal(p.run('calculateExistingEstimate({loan:1200,rate:0,termYears:1,paidMonths:13})'),null);
+});
+
+test('legacy existing-loan links preserve results while new links retain explicit duration and provenance', () => {
+    const p=page();
+    p.run("window.location={href:'https://yasnomera.ru/mortgage.html',search:'?mortgage=1&tab=existing&activeOriginalLoan=8000000&activeRate=12&activeOriginalTermYears=20&activePaidMonths=36&activeCurrentBalance=5300000&isExistingKnowPayment=0'};restoreMortgageShareURL();updateCalculations()");
+    assert.equal(p.transitions.at(-1),'READY');
+    assert.equal(p.run('state.activeRemainingMonths'),null);
+    assert.equal(p.run('simulateMortgage(false).realTerm'),204);
+    p.run("state.activeRemainingMonths=82;state.isExistingKnowPayment=false;state.existingBalanceSource='estimate';existingEstimateDraft={loan:8000000,rate:12,termYears:20,paidMonths:36};state.activeCurrentBalance=7651642;state.existingEstimateSnapshot={...existingEstimateDraft};updateCalculations();window.saved=JSON.stringify({activeTab,state});window.link=buildMortgageShareURL();state.activeRemainingMonths=11;state.existingBalanceSource='bank';window.location.search=new URL(window.link).search;restoreMortgageShareURL();updateCalculations()");
+    assert.equal(p.transitions.at(-1),'READY');
+    assert.equal(p.run('JSON.stringify({activeTab,state})'),p.run('window.saved'));
+    assert.equal(p.run('simulateMortgage(false).realTerm'),82);
+    p.run('updateInputsDOM();renderExistingModeControls()');
+    assert.equal(Number(p.element('active-balance-range').value),7651642);
+    assert.equal(p.run('mortgageCalculationRequested'),false);
+    p.run("window.location.search='?mortgage=1&tab=existing&activeRemainingMonths=0&isExistingKnowPayment=0';restoreMortgageShareURL();updateCalculations()");
+    assert.equal(p.transitions.at(-1),'INVALID_INPUT');
+    p.run("window.location.search='?mortgage=1&tab=existing&activeOriginalTermYears=20.5&activePaidMonths=36&isExistingKnowPayment=0';restoreMortgageShareURL();updateCalculations()");
+    assert.equal(p.transitions.at(-1),'INVALID_INPUT');
 });

@@ -2,6 +2,16 @@
 
 Обновлено 02.11.2026. Исходная база реализации fd292a727ce7cace1f785dfcdcf6aaf7bb46cf45. Main/production и PR разделены в master status.
 
+## После выпуска 02.11
+
+PR #92 merged; main/production c93675f, deploy #52 success. Описания ниже о PR до выпуска — исторические. **PR #93** содержит исправление переключателя/сброса банковского остатка и затем одобренную новую форму. Она ещё не production. Основатель подтвердил контрольные calculate_success в отчёте Метрики.
+
+В #93 исходные поля moved в optional details; main input — банковский остаток/текущая ставка + mode payment/remaining. activeRemainingMonths по умолчанию null, legacy simulator использует прежний originalTerm−paid; новый срок расширяет только выбор входа plannedMonths, формулы/цикл/округления/страховка/стратегии не меняются. При явном remaining validation 1–600 и единицы 0–11, legacy fallback сохраняет строгие проверки originalTerm/paid. Банковский остаток не меняется от rate/mode/tab.
+
+existingEstimateDraft отделён от state: незавершённые/невалидные helper edits не портят READY/export signature и не создают conversion. applyExistingEstimate валидирует pure estimate, подставляет остаток/remaining и metadata snapshot, сохраняя текущие rate/payment/insurance/prepayments. Optional history использует только свой исходный график и остаётся независимой от ошибки основного сценария. Пустой history-card из результатов удалён; carrier находится внутри helper details.
+
+Share сохраняет optional remaining, balanceSource и применённый snapshot. Legacy URLs без new keys совпадают численно; optional malformed history не подменяет банковский остаток. PNG остаётся isolated report из текущего READY model с короткой provenance/mode подписью, без сложения прошлых/будущих денег. Новых runtime assets/зависимостей/общих JS нет. [Актуальный QA: 150 tests/66 scenarios](../qa/mortgage-redesign/existing-form-2026-11-02/README.md).
+
 ## Архитектура и scope
 
 Статический сайт без сборки. mortgage.html содержит форму, проверенный помесячный движок, состояние, адаптеры и mortgage-scoped CSS. Общие js/calculator-state.js, js/theme.js, js/api.js и css/product-polish.css не изменены. Другие HTML-калькуляторы не менялись.

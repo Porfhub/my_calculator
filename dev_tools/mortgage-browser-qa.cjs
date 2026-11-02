@@ -131,7 +131,7 @@ async function start(){
   check('impossible comfortable payment fails closed',await page.evaluate(()=>document.body.dataset.calculationState==='INVALID_INPUT'&&!window.canExportCalculation()));
   await page.locator('#payment-input').fill('90000');await ready();
   await page.locator('#tab-existing').click();
-  await page.locator('#existing-know-payment-toggle').check({force:true});
+  await page.locator('#existing-mode-payment').click();
   await page.locator('#active-payment-input').fill('85000');
   check('existing known payment remains READY',await page.evaluate(()=>activeTab==='existing'&&state.isExistingKnowPayment&&window.canExportCalculation()));
   await page.locator('#insurance-toggle').check({force:true});
