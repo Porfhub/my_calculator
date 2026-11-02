@@ -4,9 +4,13 @@
 
 ## После выпуска 02.11
 
-PR #92 merged; main/production c93675f, deploy #52 success. Описания ниже о PR до выпуска — исторические. Follow-up PR переиспользует track-relative switch и добавляет guards !state.isExistingKnowPayment перед calcTheoreticalBalance в handleActiveRateInput/switchMainTab. Ручной bank balance в этом режиме сохраняется; код simulateMortgage, share codec и analytics не меняются. 144 unit/66 engine scenarios проходят. UI/SDK evidence: docs/qa/mortgage-redesign/existing-switch-2026-11-02.
+PR #92 merged; main/production c93675f, deploy #52 success. Описания ниже о PR до выпуска — исторические. **PR #93** содержит исправление переключателя/сброса банковского остатка и затем одобренную новую форму. Она ещё не production. Основатель подтвердил контрольные calculate_success в отчёте Метрики.
 
-Не считать исправленными оставшиеся проблемы старого режима: remaining/paid меняют elapsed без обновления баланса; history смешивает manual balance и теоретический прошлый аннуитет. Продуктовая схема их устранения находится в отдельном proposal. SDK Reach goal подтверждает обработку вызова в браузере, а не серверный отчёт/атрибуцию конкретного визита.
+В #93 исходные поля moved в optional details; main input — банковский остаток/текущая ставка + mode payment/remaining. activeRemainingMonths по умолчанию null, legacy simulator использует прежний originalTerm−paid; новый срок расширяет только выбор входа plannedMonths, формулы/цикл/округления/страховка/стратегии не меняются. При явном remaining validation 1–600 и единицы 0–11, legacy fallback сохраняет строгие проверки originalTerm/paid. Банковский остаток не меняется от rate/mode/tab.
+
+existingEstimateDraft отделён от state: незавершённые/невалидные helper edits не портят READY/export signature и не создают conversion. applyExistingEstimate валидирует pure estimate, подставляет остаток/remaining и metadata snapshot, сохраняя текущие rate/payment/insurance/prepayments. Optional history использует только свой исходный график и остаётся независимой от ошибки основного сценария. Пустой history-card из результатов удалён; carrier находится внутри helper details.
+
+Share сохраняет optional remaining, balanceSource и применённый snapshot. Legacy URLs без new keys совпадают численно; optional malformed history не подменяет банковский остаток. PNG остаётся isolated report из текущего READY model с короткой provenance/mode подписью, без сложения прошлых/будущих денег. Новых runtime assets/зависимостей/общих JS нет. [Актуальный QA: 150 tests/66 scenarios](../qa/mortgage-redesign/existing-form-2026-11-02/README.md).
 
 ## Архитектура и scope
 

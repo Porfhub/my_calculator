@@ -607,6 +607,16 @@
 }
 @media(max-width:370px){.comparison-number{font-size:35px}.comparison-cashflow strong{font-size:21px}.comparison-unit{font-size:19px}}
 
+
+/* Existing loans: bank inputs first, explicit modes, optional independent estimate. */
+.mortgage-page .existing-mode .mortgage-tabs{margin:10px 0 8px}.mortgage-page .existing-mode .mortgage-tabs button{font-size:12px;line-height:1.4}
+.existing-term-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.existing-term-pair label{display:block;margin-bottom:5px}
+.existing-estimate{border-top:1px solid var(--line);padding-top:12px;font-size:13px}.existing-estimate>summary{color:var(--accent);cursor:pointer;line-height:1.5;align-content:center}
+.existing-estimate>p,.existing-estimate>div{margin:12px 0}.existing-estimate-result{background:var(--soft);padding:14px;border-radius:10px;line-height:1.7}.existing-estimate-result:empty{display:none}
+.existing-estimate-result strong{display:block;font-size:22px;font-variant-numeric:tabular-nums}.existing-estimate button{width:100%;padding:10px 12px;border:1px solid var(--accent);border-radius:9px;color:var(--accent);background:var(--surface);line-height:1.5}
+.existing-estimate button:disabled{opacity:.5;cursor:not-allowed}.mortgage-page #existing-estimate-error{color:#b52634}.dark .mortgage-page #existing-estimate-error{color:#ffb2ba}
+.existing-estimate #existing-history-details{border-top:1px solid var(--line);margin-top:16px;padding-top:8px}.existing-estimate #existing-history-details>summary{cursor:pointer;line-height:1.5;color:var(--accent);align-content:center}
+.existing-estimate #existing-history-card{font-size:12px;line-height:1.7;margin-top:12px;background:transparent}.existing-estimate dl>div{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}.existing-estimate dd{font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body class="calculator-page mortgage-page bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
@@ -709,88 +719,36 @@
                         </div>
                         <input type="range" id="payment-range" min="10000" max="500000" step="5000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('payment', this.value)">
                     </div><div class="cbr-reference"><p>Ключевая ставка ЦБ: <strong id="cb-rate-display">данные загружаются</strong> · справочно</p><p><a href="https://www.cbr.ru/hd_base/keyrate/" target="_blank" rel="noopener">Банк России</a><span id="cb-rate-date"></span>. Это не ставка вашей ипотеки.</p></div></div></div><div id="panel-existing" class="space-y-6 hidden">
-                    <!-- Toggle 'I know my monthly payment' -->
-                    <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-150 dark:border-slate-800">
-                        <div class="flex flex-col">
-                            <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Я знаю свой ежемесячный платеж</span>
-                            <span class="text-[10px] text-slate-400 dark:text-slate-500">Авторасчет срока и будущих процентов</span>
-                        </div>
-                        <label class="insurance-switch mortgage-switch relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="existing-know-payment-toggle" onchange="toggleExistingKnowPayment()" class="sr-only peer" aria-label="Указать известный ежемесячный платёж">
-                            <span class="insurance-track mortgage-switch-track" aria-hidden="true"></span>
-                        </label>
-                    </div>
-
-                    <!-- Input for Monthly Payment (only shown when toggle is true) -->
-                    <div id="active-payment-container" class="space-y-2 hidden">
-                        <label for="active-payment-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Фактический ежемесячный платеж</label>
-                        <div class="relative rounded-lg shadow-sm">
-                            <input type="text" inputmode="numeric" id="active-payment-input" oninput="handleActivePaymentInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
-                        </div>
-                    </div>
-
-                    <!-- Original Loan Input (hidden when toggle is true) -->
-                    <div id="active-amount-container" class="space-y-2">
-                        <label for="active-amount-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Сколько взяли в кредит первоначально</label>
-                        <div class="relative rounded-lg shadow-sm">
-                            <input type="text" inputmode="numeric" id="active-amount-input" oninput="handleActiveAmountInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-2">
-                        <label for="active-rate-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Процентная ставка</label>
-                        <div class="relative rounded-lg shadow-sm">
-                            <input type="number" id="active-rate-input" inputmode="decimal" step="0.1" min="0" max="50" oninput="handleActiveRateInput(this)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-semibold text-lg text-slate-800 dark:text-white">
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">%</div>
-                        </div>
-                    </div>
-
-                    <!-- Upgraded Term selector (hidden when toggle is true) -->
-                    <div id="active-term-container" class="space-y-4">
-                        <div class="space-y-2">
-                            <label for="active-term-input" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Первоначальный срок кредита (лет)</label>
-                            <input type="number" id="active-term-input" oninput="recalcAndSyncBalance()" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold text-slate-800 dark:text-white">
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="space-y-1">
-                                <label class="text-xs font-bold text-slate-400 uppercase">Осталось платить</label>
-                                <div class="grid grid-cols-2 gap-1">
-                                    <div class="relative">
-                                        <input type="number" id="active-remaining-years" oninput="handleRemainingTermChange()" placeholder="Лет" aria-label="Осталось платить: лет" class="w-full pl-2 pr-6 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold text-xs text-slate-800 dark:text-white">
-                                        <span class="absolute right-1 top-2.5 text-[8px] text-slate-400">лет</span>
-                                    </div>
-                                    <div class="relative">
-                                        <input type="number" id="active-remaining-months" oninput="handleRemainingTermChange()" placeholder="Мес" aria-label="Осталось платить: месяцев" class="w-full pl-2 pr-6 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold text-xs text-slate-800 dark:text-white">
-                                        <span class="absolute right-1 top-2.5 text-[8px] text-slate-400">мес</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="space-y-1">
-                                <label class="text-xs font-bold text-slate-400 uppercase">Уже выплачено</label>
-                                <div class="relative">
-                                    <input type="number" id="active-paid-months-input" oninput="handlePaidMonthsChange()" placeholder="Месяцев" aria-label="Уже выплачено месяцев" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-semibold text-xs text-slate-800 dark:text-white">
-                                    <span class="absolute right-3 top-2.5 text-[8px] text-slate-400">мес</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Current Balance Card -->
-                    <div class="space-y-2 bg-brand-50/50 dark:bg-brand-900/10 p-4 rounded-xl border border-brand-100 dark:border-brand-900/30">
-                        <div class="flex justify-between items-center">
-                            <label for="active-balance-input" class="text-xs font-bold text-brand-800 dark:text-brand-400 uppercase">Текущий остаток долга</label>
-                            <button id="btn-calc-theoretical" onclick="calcTheoreticalBalance()" class="text-[11px] text-brand-700 dark:text-brand-400 underline font-semibold">По графику</button>
-                        </div>
-                        <div class="relative shadow-sm">
-                            <input type="text" inputmode="numeric" id="active-balance-input" oninput="handleActiveBalanceInput(this)" class="w-full pl-4 pr-12 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none font-extrabold text-lg text-slate-900 dark:text-white shadow-inner">
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium">₽</div>
-                        </div>
-                        <input type="range" id="active-balance-range" min="100000" max="30000000" step="50000" class="w-full accent-brand-600 h-1 mt-2 cursor-pointer" oninput="syncActiveBalanceRange(this.value)">
-                    </div>
-                </div><div class="grid gap-3">
+<div class="space-y-2"><label for="active-balance-input" class="text-sm font-semibold">Текущий остаток основного долга</label>
+<div class="relative"><input type="text" inputmode="numeric" id="active-balance-input" aria-label="Текущий остаток основного долга, ₽" oninput="handleActiveBalanceInput(this)" aria-describedby="existing-balance-note" class="w-full pl-4 pr-12 py-3 rounded-xl"><span class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none muted">₽</span></div>
+<input type="range" id="active-balance-range" min="0" max="30000000" step="1" aria-label="Остаток долга по действующей ипотеке, ₽" class="w-full" oninput="syncActiveBalanceRange(this.value)">
+<p id="existing-balance-note" class="muted small">Возьмите остаток основного долга из приложения банка, без будущих процентов.</p></div>
+<div class="space-y-2"><label for="active-rate-input" class="text-sm font-semibold">Текущая ставка по ипотеке</label>
+<div class="relative"><input type="number" inputmode="decimal" step="0.1" min="0" max="50" id="active-rate-input" aria-label="Текущая ставка по ипотеке, % годовых" oninput="handleActiveRateInput(this)" class="w-full pl-4 pr-12 py-3 rounded-xl"><span class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none muted">%</span></div></div>
+<div class="existing-mode"><p class="text-sm font-semibold">Как посчитать оставшуюся ипотеку?</p>
+<div class="mortgage-tabs" role="group" aria-label="Способ расчёта действующей ипотеки">
+<button type="button" id="existing-mode-payment" aria-pressed="true" aria-controls="active-payment-container" onclick="switchExistingInputMode('payment')">Знаю платёж</button>
+<button type="button" id="existing-mode-term" aria-pressed="false" aria-controls="active-term-container" onclick="switchExistingInputMode('term')">Знаю оставшийся срок</button></div>
+<input type="checkbox" id="existing-know-payment-toggle" hidden aria-hidden="true" tabindex="-1" onchange="toggleExistingKnowPayment()">
+<p id="existing-mode-note" class="muted small"></p></div>
+<div id="active-payment-container" class="space-y-2"><label for="active-payment-input" class="text-sm font-semibold">Обязательный платёж по графику банка</label>
+<div class="relative"><input type="text" inputmode="numeric" id="active-payment-input" aria-label="Обязательный платёж по графику банка, ₽" oninput="handleActivePaymentInput(this)" aria-describedby="existing-payment-note" class="w-full pl-4 pr-12 py-3 rounded-xl"><span class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none muted">₽</span></div>
+<p id="existing-payment-note" class="muted small">Без страховки, регулярных и разовых досрочных доплат.</p></div>
+<div id="active-term-container" class="space-y-2 hidden"><p class="text-sm font-semibold">Осталось по актуальному графику банка</p><div class="existing-term-pair">
+<div><label for="active-remaining-years" class="muted small">Лет</label><input type="number" inputmode="numeric" min="0" max="50" step="1" id="active-remaining-years" aria-label="Осталось платить: лет" oninput="handleRemainingTermChange()" class="w-full px-3 py-2 rounded-xl"></div>
+<div><label for="active-remaining-months" class="muted small">Месяцев</label><input type="number" inputmode="numeric" min="0" max="11" step="1" id="active-remaining-months" aria-label="Осталось платить: месяцев" oninput="handleRemainingTermChange()" class="w-full px-3 py-2 rounded-xl"></div>
+</div><p class="muted small">Введите оставшийся срок, а не первоначальный. Платёж рассчитается автоматически.</p></div>
+<details id="existing-estimate" class="existing-estimate"><summary>Не знаю остаток — оценить по исходным условиям</summary>
+<p class="muted small">Необязательная оценка без прошлых досрочных, изменений ставки, комиссий и страховки. Для точного остатка используйте данные банка.</p>
+<div class="space-y-2" id="active-amount-container"><label for="active-amount-input" class="text-sm font-semibold">Первоначальная сумма кредита</label><input type="text" inputmode="numeric" id="active-amount-input" aria-label="Первоначальная сумма кредита, ₽" oninput="updateExistingEstimateDraft(this)" class="w-full px-3 py-2 rounded-xl"></div>
+<div class="existing-term-pair"><div><label for="estimate-rate-input" class="muted small">Первоначальная ставка, %</label><input type="number" inputmode="decimal" min="0" max="50" step="0.1" id="estimate-rate-input" oninput="updateExistingEstimateDraft()" class="w-full px-3 py-2 rounded-xl"></div>
+<div><label for="active-term-input" class="muted small">Первоначальный срок, лет</label><input type="number" inputmode="numeric" min="1" max="50" step="1" id="active-term-input" aria-label="Первоначальный срок кредита, лет" oninput="updateExistingEstimateDraft()" class="w-full px-3 py-2 rounded-xl"></div></div>
+<div class="space-y-2"><label for="active-paid-months-input" class="text-sm font-semibold">Сколько ежемесячных платежей уже внесли</label><input type="number" inputmode="numeric" min="0" max="600" step="1" id="active-paid-months-input" oninput="updateExistingEstimateDraft()" class="w-full px-3 py-2 rounded-xl"></div>
+<p id="existing-estimate-error" class="small" role="status"></p><div id="existing-estimate-result" class="existing-estimate-result" aria-live="polite"></div>
+<button type="button" id="btn-calc-theoretical" onclick="applyExistingEstimate()">Использовать оценку остатка и срока</button>
+<p class="muted small">Подставятся остаток и оставшийся срок. Текущая ставка, введённый платёж и досрочные доплаты сохранятся.</p>
+<details id="existing-history-details" hidden><summary>Оценка прошлых выплат по исходному графику</summary><div id="existing-history-card" data-screenshot-exclude hidden></div></details>
+</details></div><div class="grid gap-3">
                         <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-150 dark:border-slate-800">
                             <div class="flex flex-col">
                                 <span class="text-[10px] font-bold text-slate-500 uppercase flex items-center gap-1">
@@ -863,9 +821,7 @@
 <button onclick="takeScreenshot('results-panel', 'yasnomera-mortgage-calculation.png')">Сохранить PNG</button>
 <p class="muted small">Расчёт — сценарий. Условия банка могут отличаться.</p></div>
 </div><div id="screenshot-area" data-screenshot-flush class="space-y-6 mortgage-detail-results">
-<div id="savings-card" class="export-summary surface"></div><div id="existing-history-card" data-screenshot-exclude class="bg-slate-900 border border-slate-800 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300 hidden">
-                        <!-- Content is populated dynamically via updateCalculations() -->
-                    </div><div class="debt-chart surface">
+<div id="savings-card" class="export-summary surface"></div><div class="debt-chart surface">
                         <div class="flex justify-between items-center mb-1">
                             <h3 class="text-sm font-bold text-slate-800 dark:text-white" id="chart-title">Динамика остатка долга</h3>
                         </div>
@@ -1057,9 +1013,10 @@
                 + fact('Проценты банку', localFormatMoney(interest)) + fact('Страховка', localFormatMoney(insurance)) + '</div>'
                 + '<small>' + (activeTab === 'new' ? 'Без первоначального взноса.' : 'Только будущие выплаты.') + '</small></section>'
                 + '<section class="export-conditions"><h3>Параметры расчёта</h3><div class="export-facts export-two">'
-                + (activeTab === 'new' ? fact('Стоимость жилья', localFormatMoney(state.cost)) + fact('Первоначальный взнос', localFormatMoney(state.downPayment)) : '')
+                + (activeTab === 'new' ? fact('Стоимость жилья', localFormatMoney(state.cost)) + fact('Первоначальный взнос', localFormatMoney(state.downPayment)) : fact('Способ расчёта', state.isExistingKnowPayment ? 'По платежу' : 'По оставшемуся сроку'))
                 + fact('Ставка по ипотеке', (activeTab === 'new' ? state.rate : state.activeRate) + '%')
                 + fact(termLabel, mortgageDuration(base.realTerm)) + '</div>'
+                + (activeTab === 'existing' ? '<small>Остаток ' + (state.existingBalanceSource === 'estimate' ? 'оценён по исходному графику без прошлых досрочных и изменения ставки.' : 'указан пользователем.') + '</small>' : '')
                 + '<small>Страховка ' + (state.includeInsurance ? 'учтена · модель 1% остатка в год.' : 'не учтена.') + '</small></section>'
                 + (hasExtras ? '<section class="export-prepayments"><h3>Досрочные · ' + (state.prepaymentStrategy === 'payment' ? 'уменьшать платёж' : 'уменьшать срок') + '</h3>'
                     + '<p>Регулярно: <strong>' + localFormatMoney(state.recurringPrepayment) + '/мес.</strong></p>'
@@ -1172,7 +1129,7 @@
             const savingLabel = totalSaving < 0 ? 'Больше выплат на' : state.includeInsurance ? 'Меньше выплат на' : 'Экономия на процентах';
             return '<header class="comparison-heading"><h2 id="comparison-heading">' + (hasExtras ? 'Как меняется ипотека' : 'Ваш план погашения') + '</h2>'
                 + '<p class="muted">' + (hasExtras ? 'С учётом всех ваших досрочных платежей' : 'Без досрочных платежей') + '</p></header>'
-                + '<div class="comparison-body"><div class="comparison-total"><p>' + (hasExtras ? 'Всего выплатите по вашему плану' : 'Всего выплатите по кредиту') + '</p>'
+                + '<div class="comparison-body"><div class="comparison-total"><p>' + (activeTab === 'existing' ? (hasExtras ? 'Ещё выплатите по вашему плану' : 'Ещё выплатите по кредиту') : (hasExtras ? 'Всего выплатите по вашему плану' : 'Всего выплатите по кредиту')) + '</p>'
                 + '<div class="comparison-amount">' + shortMoney(selectedTotal) + '</div>'
                 + (hasExtras ? '<p class="muted">Без досрочных — <strong>' + localFormatMoney(baselineTotal) + '</strong></p>'
                     + '<p class="comparison-saving">' + savingLabel + ' <strong>' + localFormatMoney(Math.abs(totalSaving)) + '</strong></p>'
@@ -1220,6 +1177,7 @@
             document.getElementById('payment-context').innerText = state.prepaymentStrategy === 'payment' && (hasCustom || hasRegular)
                 ? 'Первый обязательный платёж. Последующие уменьшаются по графику. Без страховки и доплат.'
                 : 'Без страховки и досрочных';
+            if (activeTab === 'existing') renderExistingModeControls();
             renderMortgagePrepaymentList();
             syncMortgageSelectedControls();
         }
@@ -1227,6 +1185,8 @@
         function syncMortgageSelectedControls() {
             // Querying is optional in non-browser model tests.
             if (typeof document.querySelectorAll !== 'function') return;
+            const housingPresets = document.querySelector('.housing-presets');
+            if (housingPresets) housingPresets.hidden = activeTab !== 'new';
             document.getElementById('tab-new').setAttribute('aria-pressed', String(activeTab === 'new'));
             document.getElementById('tab-existing').setAttribute('aria-pressed', String(activeTab === 'existing'));
             document.getElementById('mode-term-btn').setAttribute('aria-pressed', String(state.mode === 'term'));
@@ -1279,13 +1239,16 @@
 
         const mortgageShareNumberKeys = ['cost', 'downPayment', 'rate', 'termYears', 'termMonths', 'targetPayment',
             'activeOriginalLoan', 'activeRate', 'activeOriginalTermYears', 'activePaidMonths', 'activeCurrentBalance',
-            'recurringPrepayment', 'activePayment'];
+            'recurringPrepayment', 'activePayment', 'activeRemainingMonths'];
         function buildMortgageShareURL() {
             const url = new URL(window.location.href);
             // Leave unrelated tracking parameters in place.
             url.searchParams.set('mortgage', '1');
             url.searchParams.set('tab', activeTab);
-            mortgageShareNumberKeys.forEach(key => url.searchParams.set(key, String(state[key] ?? 0)));
+            mortgageShareNumberKeys.forEach(key => state[key] === null ? url.searchParams.delete(key) : url.searchParams.set(key, String(state[key] ?? 0)));
+            url.searchParams.set('balanceSource', state.existingBalanceSource);
+            if (state.existingEstimateSnapshot) url.searchParams.set('existingEstimate', JSON.stringify(state.existingEstimateSnapshot));
+            else url.searchParams.delete('existingEstimate');
             ['mode', 'prepaymentStrategy'].forEach(key => url.searchParams.set(key, state[key]));
             ['includeInsurance', 'isExistingKnowPayment'].forEach(key => url.searchParams.set(key, state[key] ? '1' : '0'));
             url.searchParams.set('customPrepayments', JSON.stringify(state.customPrepayments));
@@ -1296,6 +1259,7 @@
             const query = new URLSearchParams(window.location.search);
             // Earlier production links contain only the page URL; they still open the example.
             if (!query.has('mortgage') && !query.has('cost') && !query.has('activeCurrentBalance')) return false;
+            state.activeRemainingMonths = null;
             mortgageShareNumberKeys.forEach(key => {
                 if (query.has(key)) state[key] = query.get(key).trim() === '' ? NaN : Number(query.get(key));
             });
@@ -1308,6 +1272,18 @@
                 if (!custom || Array.isArray(custom) || typeof custom !== 'object') throw new Error('Invalid payments');
                 state.customPrepayments = custom;
             } catch (_) { state.customPrepayments = {'invalid': NaN}; }
+            state.existingEstimateSnapshot = null;
+            state.existingBalanceSource = 'bank';
+            existingEstimateDraft = {loan: state.activeOriginalLoan, rate: state.activeRate, termYears: state.activeOriginalTermYears, paidMonths: state.activePaidMonths};
+            try {
+                const snapshot = JSON.parse(query.get('existingEstimate') || 'null');
+                const estimate = calculateExistingEstimate(snapshot);
+                if (estimate) {
+                    state.existingEstimateSnapshot = {...snapshot};
+                    existingEstimateDraft = {...snapshot};
+                    if (query.get('balanceSource') === 'estimate' && Math.round(estimate.balance) === state.activeCurrentBalance) state.existingBalanceSource = 'estimate';
+                }
+            } catch (_) { /* Optional history cannot invalidate a valid future scenario. */ }
             targetPaymentWasEdited = state.mode === 'payment';
             mortgageRestoredScenario = true;
             return true;
@@ -1381,8 +1357,11 @@
             recurringPrepayment: 0,
             customPrepayments: {},
             includeInsurance: false,
-            isExistingKnowPayment: false,
-            activePayment: 100000
+            isExistingKnowPayment: true,
+            activePayment: 100000,
+            activeRemainingMonths: null,
+            existingBalanceSource: 'bank',
+            existingEstimateSnapshot: null
         };
 
         let chartInstance = null;
@@ -1410,8 +1389,6 @@
                 if (ratioDonutInstance) { ratioDonutInstance.destroy(); ratioDonutInstance = null; }
                 const savings = document.getElementById('savings-card');
                 if (savings) savings.classList.add('hidden');
-                const history = document.getElementById('existing-history-card');
-                if (history) history.classList.add('hidden');
                 const schedule = document.getElementById('years-accordion-container');
                 if (schedule) schedule.innerHTML = '';
             }
@@ -1454,7 +1431,7 @@
         // Capture calculator edits before inline handlers recalculate; ignore unrelated page controls.
         function noteMortgageInput(event) {
             if (event.type === 'click' && !event.target.closest('button[onclick^="apply"], button[onclick^="switch"], button[onclick^="remove"], button[onclick^="clear"], button[onclick^="calcTheoreticalBalance"]')) return;
-            if (event.target.closest('#one-time-form')) return;
+            if (event.target.closest('#one-time-form, #existing-estimate')) return;
             if (event.target.closest('#conditions, #early, #one-time, #mortgage-schedule')) mortgageCalculationRequested = true;
         }
         document.addEventListener('input', noteMortgageInput, true);
@@ -1575,8 +1552,11 @@
                     if (!Number.isFinite(state.activePayment) || state.activePayment <= minimum) return 'Введённый платёж не покрывает ежемесячные проценты. Расчёт невозможен.';
                     const maximumTermPayment = minimumPaymentForMonths(state.activeCurrentBalance, state.activeRate, 600);
                     if (state.activePayment < maximumTermPayment) return 'При таком платеже срок погашения превысит 50 лет. Увеличьте ежемесячный платёж.';
-                } else if (!Number.isInteger(state.activeOriginalTermYears) || state.activeOriginalTermYears < 1 || state.activeOriginalTermYears > 50 || !Number.isInteger(state.activePaidMonths) || state.activePaidMonths < 0 || state.activePaidMonths >= state.activeOriginalTermYears * 12) {
-                    return 'Проверьте первоначальный срок и количество уже выплаченных месяцев.';
+                } else {
+                    if (state.activeRemainingMonths === null && (!Number.isInteger(state.activeOriginalTermYears) || state.activeOriginalTermYears < 1 || state.activeOriginalTermYears > 50
+                        || !Number.isInteger(state.activePaidMonths) || state.activePaidMonths < 0 || state.activePaidMonths >= state.activeOriginalTermYears * 12)) return 'Проверьте исходный срок и прошедшие месяцы в ссылке на расчёт.';
+                    const remaining = state.activeRemainingMonths ?? (state.activeOriginalTermYears * 12 - state.activePaidMonths);
+                    if (!Number.isInteger(remaining) || remaining < 1 || remaining > 600) return 'Укажите оставшийся срок от 1 месяца до 50 лет; месяцы — от 0 до 11.';
                 }
             }
             if (Object.entries(state.customPrepayments).some(([month,value]) =>
@@ -1585,25 +1565,32 @@
             return null;
         }
 
+        function renderExistingModeControls() {
+            const balanceRange = document.getElementById('active-balance-range');
+            balanceRange.max = Math.max(30000000, Number.isFinite(state.activeCurrentBalance) ? state.activeCurrentBalance : 0);
+            balanceRange.value = Number.isFinite(state.activeCurrentBalance) ? state.activeCurrentBalance : 0;
+            document.getElementById('active-payment-container').classList[state.isExistingKnowPayment ? 'remove' : 'add']('hidden');
+            document.getElementById('active-term-container').classList[state.isExistingKnowPayment ? 'add' : 'remove']('hidden');
+            document.getElementById('existing-know-payment-toggle').checked = state.isExistingKnowPayment;
+            document.getElementById('existing-mode-payment').setAttribute?.('aria-pressed', String(state.isExistingKnowPayment));
+            document.getElementById('existing-mode-term').setAttribute?.('aria-pressed', String(!state.isExistingKnowPayment));
+            document.getElementById('existing-mode-note').innerText = state.isExistingKnowPayment
+                ? 'Вы вводите платёж — оставшийся срок рассчитается автоматически.'
+                : 'Вы вводите оставшийся срок — обязательный платёж рассчитается автоматически.';
+            document.getElementById('existing-balance-note').innerText = state.existingBalanceSource === 'estimate'
+                ? 'Остаток оценён по исходному графику без прошлых досрочных и изменений ставки. Можно заменить данными банка.'
+                : 'Возьмите остаток основного долга из приложения банка, без будущих процентов.';
+        }
+
+        function switchExistingInputMode(mode) {
+            state.isExistingKnowPayment = mode === 'payment';
+            renderExistingModeControls();
+            updateCalculations();
+        }
+
         function toggleExistingKnowPayment() {
             state.isExistingKnowPayment = document.getElementById('existing-know-payment-toggle').checked;
-
-            const payContainer = document.getElementById('active-payment-container');
-            const amtContainer = document.getElementById('active-amount-container');
-            const termContainer = document.getElementById('active-term-container');
-            const theoreticalBtn = document.getElementById('btn-calc-theoretical');
-
-            if (state.isExistingKnowPayment) {
-                if (payContainer) payContainer.classList.remove('hidden');
-                if (amtContainer) amtContainer.classList.add('hidden');
-                if (termContainer) termContainer.classList.add('hidden');
-                if (theoreticalBtn) theoreticalBtn.classList.add('hidden');
-            } else {
-                if (payContainer) payContainer.classList.add('hidden');
-                if (amtContainer) amtContainer.classList.remove('hidden');
-                if (termContainer) termContainer.classList.remove('hidden');
-                if (theoreticalBtn) theoreticalBtn.classList.remove('hidden');
-            }
+            renderExistingModeControls();
             updateCalculations();
         }
 
@@ -1613,27 +1600,10 @@
         }
 
         function handleRemainingTermChange() {
-            const remYears = parseInt(document.getElementById('active-remaining-years').value) || 0;
-            const remMonths = parseInt(document.getElementById('active-remaining-months').value) || 0;
-            const remainingTotalMonths = remYears * 12 + remMonths;
-
-            state.activePaidMonths = Math.max(0, (state.activeOriginalTermYears * 12) - remainingTotalMonths);
-            if (document.getElementById('active-paid-months-input')) {
-                document.getElementById('active-paid-months-input').value = state.activePaidMonths;
-            }
-            updateCalculations();
-        }
-
-        function handlePaidMonthsChange() {
-            state.activePaidMonths = parseInt(document.getElementById('active-paid-months-input').value) || 0;
-
-            const remainingTotalMonths = Math.max(0, (state.activeOriginalTermYears * 12) - state.activePaidMonths);
-            if (document.getElementById('active-remaining-years')) {
-                document.getElementById('active-remaining-years').value = Math.floor(remainingTotalMonths / 12) || '';
-            }
-            if (document.getElementById('active-remaining-months')) {
-                document.getElementById('active-remaining-months').value = (remainingTotalMonths % 12) || '';
-            }
+            const years = Number(document.getElementById('active-remaining-years').value || 0);
+            const months = Number(document.getElementById('active-remaining-months').value || 0);
+            state.activeRemainingMonths = Number.isInteger(years) && years >= 0 && Number.isInteger(months) && months >= 0 && months <= 11
+                ? years * 12 + months : NaN;
             updateCalculations();
         }
 
@@ -1663,9 +1633,88 @@
                 document.getElementById('label-amount').innerText = "Остаток долга";
                 document.getElementById('label-term').innerText = "Осталось платить";
                 document.getElementById('label-interest').innerText = "Будущие проценты";
-                if (!preserveScenario && !state.isExistingKnowPayment) calcTheoreticalBalance();
+                renderExistingModeControls();
             }
             updateCalculations();
+        }
+
+        let existingEstimateDraft = {loan: 8000000, rate: 12, termYears: 20, paidMonths: 36};
+
+        function calculateExistingEstimate(draft) {
+            if (!draft || !Number.isFinite(draft.loan) || draft.loan <= 0 || !Number.isFinite(draft.rate) || draft.rate < 0 || draft.rate > 50
+                || !Number.isInteger(draft.termYears) || draft.termYears < 1 || draft.termYears > 50
+                || !Number.isInteger(draft.paidMonths) || draft.paidMonths < 0 || draft.paidMonths > draft.termYears * 12) return null;
+            const months = draft.termYears * 12, monthlyRate = draft.rate / 1200;
+            const payment = monthlyRate === 0 ? draft.loan / months
+                : draft.loan * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+            let balance = draft.loan, interestPaid = 0, paid = 0;
+            for (let month = 1; month <= draft.paidMonths; month++) {
+                const interest = balance * monthlyRate;
+                const scheduled = month === months ? balance + interest : Math.min(payment, balance + interest);
+                balance = Math.max(0, balance - (scheduled - interest));
+                interestPaid += interest;
+                paid += scheduled;
+            }
+            const result = {balance, payment, interestPaid, principalPaid: draft.loan - balance, paid, remaining: months - draft.paidMonths};
+            return Object.values(result).every(Number.isFinite) ? result : null;
+        }
+
+        function renderExistingEstimate() {
+            const estimate = calculateExistingEstimate(existingEstimateDraft);
+            const output = document.getElementById('existing-estimate-result');
+            const error = document.getElementById('existing-estimate-error');
+            const apply = document.getElementById('btn-calc-theoretical');
+            const history = document.getElementById('existing-history-card');
+            document.getElementById('existing-history-details').hidden = !estimate;
+            apply.disabled = !estimate || Math.round(estimate.balance) <= 0 || estimate.remaining < 1;
+            if (!estimate) {
+                output.innerHTML = ''; history.innerHTML = ''; history.hidden = true;
+                error.innerText = 'Проверьте исходные условия: сумма положительная, ставка 0–50%, срок 1–50 лет, внесённые платежи — от 0 до полного срока.';
+                return;
+            }
+            error.innerText = '';
+            output.innerHTML = '<span>Оценка остатка основного долга</span><strong>' + localFormatMoney(estimate.balance) + '</strong>'
+                + '<p>Осталось по исходному графику: <b>' + mortgageDuration(estimate.remaining) + '</b></p>'
+                + (estimate.remaining < 1 ? '<p>По этим условиям кредит уже погашен.</p>' : '');
+            const fact = (label, value) => '<div><dt>' + label + '</dt><dd>' + localFormatMoney(value) + '</dd></div>';
+            history.hidden = false; history.classList.remove('hidden');
+            history.innerHTML = '<p class="muted">Оценка за ' + existingEstimateDraft.paidMonths + ' мес. по исходным условиям. Она не использует текущий остаток, введённый в основной форме.</p><dl>'
+                + fact('Погашение основного долга', estimate.principalPaid) + fact('Проценты по модели', estimate.interestPaid)
+                + fact('Всего по модели', Math.round(estimate.principalPaid) + Math.round(estimate.interestPaid)) + '</dl>'
+                + '<p class="muted">Без прошлых досрочных, изменения ставки, комиссий и страховки. Фактические выплаты смотрите в истории банка.</p>';
+        }
+
+        function updateExistingEstimateDraft(edited) {
+            if (edited?.id === 'active-amount-input') formatInputField(edited, edited.value);
+            const read = id => { const raw = String(document.getElementById(id).value).replace(/\s/g, ''); return raw === '' ? NaN : Number(raw); };
+            existingEstimateDraft = {loan: read('active-amount-input'), rate: read('estimate-rate-input'), termYears: read('active-term-input'), paidMonths: read('active-paid-months-input')};
+            renderExistingEstimate();
+        }
+
+        function syncExistingEstimateInputs() {
+            document.getElementById('active-amount-input').value = localFormatNumber(existingEstimateDraft.loan);
+            document.getElementById('estimate-rate-input').value = existingEstimateDraft.rate;
+            document.getElementById('active-term-input').value = existingEstimateDraft.termYears;
+            document.getElementById('active-paid-months-input').value = existingEstimateDraft.paidMonths;
+            renderExistingEstimate();
+        }
+
+        function applyExistingEstimate() {
+            const estimate = calculateExistingEstimate(existingEstimateDraft);
+            if (!estimate || Math.round(estimate.balance) <= 0 || estimate.remaining < 1) { renderExistingEstimate(); return; }
+            state.activeCurrentBalance = Math.round(estimate.balance);
+            state.activeRemainingMonths = estimate.remaining;
+            state.activeOriginalLoan = existingEstimateDraft.loan;
+            state.activeOriginalTermYears = existingEstimateDraft.termYears;
+            state.activePaidMonths = existingEstimateDraft.paidMonths;
+            state.existingBalanceSource = 'estimate';
+            state.existingEstimateSnapshot = {...existingEstimateDraft};
+            mortgageCalculationRequested = true;
+            updateInputsDOM();
+            renderExistingModeControls();
+            updateCalculations();
+            if (typeof showToast === 'function') showToast(mortgageStateController.getState() === CalculatorState.STATES.READY
+                ? 'Оценка остатка и срока подставлена' : 'Остаток подставлен. Проверьте платёж в основной форме.');
         }
 
         function calcTheoreticalBalance() {
@@ -1696,7 +1745,6 @@
 
         function handleActiveRateInput(el) {
             let val = parseFloat(el.value); state.activeRate = val;
-            if (!state.isExistingKnowPayment) calcTheoreticalBalance();
             updateCalculations();
         }
 
@@ -1754,23 +1802,17 @@
         }
 
         function syncActiveBalanceRange(val) {
+            state.existingBalanceSource = 'bank';
             state.activeCurrentBalance = parseFloat(val);
             document.getElementById('active-balance-input').value = localFormatNumber(state.activeCurrentBalance);
             updateCalculations();
         }
 
-        function handleActiveAmountInput(el) {
-            state.activeOriginalLoan = formatInputField(el, el.value); calcTheoreticalBalance(); updateCalculations();
-        }
-
         function handleActiveBalanceInput(el) {
-            state.activeCurrentBalance = formatInputField(el, el.value); updateCalculations();
-        }
-
-        function recalcAndSyncBalance() {
-            state.activeOriginalTermYears = parseInt(document.getElementById('active-term-input').value) || 0;
-            state.activePaidMonths = parseInt(document.getElementById('active-paid-months-input').value) || 0;
-            calcTheoreticalBalance(); updateCalculations();
+            state.existingBalanceSource = 'bank';
+            state.activeCurrentBalance = formatInputField(el, el.value);
+            renderExistingModeControls();
+            updateCalculations();
         }
 
         function toggleInsurance() { state.includeInsurance = document.getElementById('insurance-toggle').checked; updateCalculations(); }
@@ -1850,7 +1892,10 @@
         function resetAll() {
             mortgageCalculationRequested = false;
             mortgageRestoredScenario = false;
-            state.mode = 'term'; state.isExistingKnowPayment = false; state.prepaymentStrategy = 'term';
+            state.mode = 'term'; state.isExistingKnowPayment = true; state.prepaymentStrategy = 'term';
+            state.activeRemainingMonths = 204; state.activePayment = 100000;
+            existingEstimateDraft = {loan:8000000,rate:12,termYears:20,paidMonths:36};
+            state.existingBalanceSource = 'estimate'; state.existingEstimateSnapshot = {...existingEstimateDraft};
             document.getElementById('one-time-error').innerText = '';
             state.cost = 10000000; state.downPayment = 2000000; state.rate = 16.0; state.mode = 'term'; state.termYears = 20; state.termMonths = 0; state.targetPayment = 100000;
             targetPaymentWasEdited = false;
@@ -1863,7 +1908,7 @@
         function simulateMortgage(withPrepayments = true) {
             let balance = Number(activeTab === 'new' ? (state.cost - state.downPayment) : state.activeCurrentBalance) || 0;
             let rate = Number(activeTab === 'new' ? state.rate : state.activeRate) || 0;
-            let plannedMonths = Number(activeTab === 'new' ? (state.termYears * 12 + (state.termMonths || 0)) : ((state.activeOriginalTermYears * 12) - state.activePaidMonths)) || 0;
+            let plannedMonths = Number(activeTab === 'new' ? (state.termYears * 12 + (state.termMonths || 0)) : (state.activeRemainingMonths ?? ((state.activeOriginalTermYears * 12) - state.activePaidMonths))) || 0;
 
             if (plannedMonths <= 0) plannedMonths = 12;
             if (balance <= 0) return { schedule: [], totalInterest: 0, totalPaid: 0, totalPrepaid: 0, realTerm: 0, totalInsurance: 0 };
@@ -2285,65 +2330,9 @@
             mortgageStateController.transition(CalculatorState.STATES.READY, { clearResults: false });
             let resultDetailsRendered = true;
 
-            // Existing History Card
+            // Optional estimate is independent of the future-loan result.
             try {
-                const historyCard = document.getElementById('existing-history-card');
-                if (historyCard) {
-                if (activeTab === 'existing') {
-                    historyCard.classList.remove('hidden');
-                    if (state.isExistingKnowPayment) {
-                        historyCard.innerHTML = `
-                            <div class="space-y-3">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs uppercase font-black bg-brand-600 px-3 py-1 rounded-full text-brand-50">Уже выплачено</span>
-                                    <span class="text-xs text-slate-400">история по кредиту</span>
-                                </div>
-                                <p class="text-xs text-slate-300 leading-relaxed font-semibold">
-                                    💡 Для отображения детальной разбивки уже выплаченных банку денег (тело и проценты), введите первоначальные параметры кредита (выключив тумблер платежа).
-                                </p>
-                            </div>
-                        `;
-                    } else {
-                        const originalLoan = Number(state.activeOriginalLoan) || 0;
-                        const balance = Number(state.activeCurrentBalance) || 0;
-                        const paidMonths = Number(state.activePaidMonths) || 0;
-                        const rate = Number(state.activeRate) || 0;
-                        const termMonths = Number(state.activeOriginalTermYears * 12) || 12;
-
-                        let paidBody = Math.max(0, originalLoan - balance);
-                        // Theoretical annuity payment in the past
-                        const mRate = rate / 12 / 100;
-                        const pmt = mRate === 0 ? (originalLoan / termMonths) : (originalLoan * (mRate * Math.pow(1 + mRate, termMonths)) / (Math.pow(1 + mRate, termMonths) - 1));
-
-                        let totalPaidPast = pmt * paidMonths;
-                        let paidInterest = Math.max(0, totalPaidPast - paidBody);
-
-                        historyCard.innerHTML = `
-                            <div class="space-y-4">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs uppercase font-black bg-brand-600 px-3 py-1 rounded-full text-brand-50">Уже выплачено банку за прошедшее время</span>
-                                    <span class="text-xs text-slate-400">реальный прогресс</span>
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <p class="text-xs text-slate-400 font-semibold">Погашено тела долга</p>
-                                        <p class="text-2xl font-black text-emerald-400">${localFormatMoney(paidBody)}</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs text-slate-400 font-semibold">Выплачено процентов</p>
-                                        <p class="text-2xl font-black text-rose-400">${localFormatMoney(paidInterest)}</p>
-                                    </div>
-                                </div>
-                                <div class="border-t border-slate-800 pt-3 text-[11px] text-slate-400">
-                                    Всего выплачено за ${paidMonths} мес: <strong class="text-white">${localFormatMoney(totalPaidPast)}</strong>
-                                </div>
-                            </div>
-                        `;
-                    }
-                } else {
-                    historyCard.classList.add('hidden');
-                }
-                }
+                renderExistingEstimate();
             } catch (error) {
                 resultDetailsRendered = false;
                 console.error('Mortgage history rendering skipped:', error);
@@ -2420,8 +2409,8 @@
             document.getElementById('term-months-input').value = state.termMonths || 0;
             document.getElementById('term-input').value = state.termYears; document.getElementById('term-range').value = state.termYears;
             syncTargetPaymentControls();
-            document.getElementById('active-amount-input').value = localFormatNumber(state.activeOriginalLoan); document.getElementById('active-rate-input').value = state.activeRate;
-            document.getElementById('active-term-input').value = state.activeOriginalTermYears; document.getElementById('active-paid-months-input').value = state.activePaidMonths;
+            document.getElementById('active-rate-input').value = state.activeRate;
+            syncExistingEstimateInputs();
             document.getElementById('active-balance-input').value = localFormatNumber(state.activeCurrentBalance);
             document.getElementById('recurring-input').value = localFormatNumber(state.recurringPrepayment);
 
@@ -2432,12 +2421,12 @@
                 document.getElementById('existing-know-payment-toggle').checked = state.isExistingKnowPayment;
             }
 
-            const remainingTotalMonths = Math.max(0, (state.activeOriginalTermYears * 12) - state.activePaidMonths);
+            const remainingTotalMonths = state.activeRemainingMonths ?? Math.max(0, (state.activeOriginalTermYears * 12) - state.activePaidMonths);
             if (document.getElementById('active-remaining-years')) {
-                document.getElementById('active-remaining-years').value = Math.floor(remainingTotalMonths / 12) || '';
+                document.getElementById('active-remaining-years').value = Math.floor(remainingTotalMonths / 12);
             }
             if (document.getElementById('active-remaining-months')) {
-                document.getElementById('active-remaining-months').value = (remainingTotalMonths % 12) || '';
+                document.getElementById('active-remaining-months').value = remainingTotalMonths % 12;
             }
         }
 
@@ -2486,7 +2475,12 @@
         window.onload = function() {
             if (typeof initTheme === 'function') initTheme();
             const restored = restoreMortgageShareURL();
-            if (!restored) calcTheoreticalBalance();
+            if (!restored) {
+                calcTheoreticalBalance();
+                state.activeRemainingMonths = 204;
+                state.existingBalanceSource = 'estimate';
+                state.existingEstimateSnapshot = {...existingEstimateDraft};
+            }
             updateInputsDOM();
             document.getElementById('insurance-toggle').checked = state.includeInsurance;
             document.getElementById('strategy-toggle').checked = state.prepaymentStrategy === 'payment';
