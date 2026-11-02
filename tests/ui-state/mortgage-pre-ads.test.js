@@ -49,10 +49,10 @@ function page({ withCanvases = false, stubChart = true, withVisualViewport = tru
     };
     if (withVisualViewport) window.visualViewport = visualViewport;
     const context = vm.createContext({
-        document, window, Intl, console: { error: (...args) => errors.push(args.map(String).join(' ')) },
+        document, window, Intl, URL, URLSearchParams, console: { error: (...args) => errors.push(args.map(String).join(' ')) },
         reachGoal: (goal) => goals.push(goal),
         CalculatorState: {
-            STATES: { READY: 'READY', INVALID_INPUT: 'INVALID_INPUT', CALCULATION_IMPOSSIBLE: 'CALCULATION_IMPOSSIBLE' },
+            STATES: { READY: 'READY', INVALID_INPUT: 'INVALID_INPUT', CALCULATION_IMPOSSIBLE: 'CALCULATION_IMPOSSIBLE', ERROR: 'ERROR' },
             createController: () => ({ transition: (status, details = {}) => {
                 transitions.push(status);
                 transitionDetails.push({ status, ...details });
@@ -71,7 +71,7 @@ function page({ withCanvases = false, stubChart = true, withVisualViewport = tru
     }));
     return {
         run, value, element, goals, transitions, transitionDetails, errors, bodyClasses, scrollCalls,
-        edit: () => listeners.input.forEach((listener) => listener({ target: { closest: () => ({}) } })),
+        edit: () => listeners.input.forEach((listener) => listener({ target: { closest: (selector) => selector === '#one-time-form' ? null : ({}) } })),
         focusInput: (index = 0) => {
             const previous = document.activeElement;
             const next = focusedInputs[index];
@@ -153,7 +153,7 @@ test('future payment copy includes the down-payment exclusion and keeps the calc
 
 test('portrait PNG composes three result cards before the chart and omits controls', () => {
     const panel = mortgage.slice(mortgage.indexOf('id="results-panel"'), mortgage.indexOf('</main>'));
-    const hero = panel.indexOf('id="res-total-interest"');
+    const hero = panel.indexOf('id="res-monthly-payment"');
     const ratio = panel.indexOf('id="ratioDonutChart"');
     const savings = panel.indexOf('id="savings-card"');
     const chart = panel.indexOf('id="balanceChart"');
@@ -174,7 +174,7 @@ test('portrait PNG composes three result cards before the chart and omits contro
     assert.match(utilities, /'button'/);
     assert.match(utilities, /'\.mobile-sticky-results'/);
     assert.match(mortgage, /id="existing-history-card" data-screenshot-exclude/);
-    assert.match(mortgage, /<div data-screenshot-exclude class="grid grid-cols-2 gap-3">\s*<button onclick="shareLink\(\)"/);
+    assert.match(mortgage, /<div data-screenshot-exclude class="grid grid-cols-2 gap-3 result-actions">\s*<button onclick="shareLink\(\)"/);
 });
 
 test('isolated portrait export clone copies chart pixels and reveals only export summary', () => {
@@ -251,7 +251,7 @@ test('isolated portrait export clone copies chart pixels and reveals only export
 
 test('calculate_success follows a valid result update, never invalid input or render alone, and fires once', () => {
     const p = page();
-    p.run('state.rate = NaN');
+    p.run('updateCalculations(); state.rate = NaN');
     p.edit();
     p.run('updateCalculations()');
     assert.equal(p.transitions.at(-1), 'INVALID_INPUT');
@@ -359,7 +359,7 @@ test('available Chart.js receives finite donut and balance-series data', () => {
     assert.equal(p.run('window.__chartConfigs[1].data.datasets.every(dataset => dataset.data.every(Number.isFinite))'), true);
 });
 
-test('a primary DOM failure is diagnostic-only and does not become a financial error', () => {
+test('a primary DOM failure clears the stale result and export without becoming a financial error', () => {
     const p = page();
     p.run('updateCalculations()');
     assert.equal(p.transitions.at(-1), 'READY');
@@ -376,8 +376,9 @@ test('a primary DOM failure is diagnostic-only and does not become a financial e
         state.cost = 13000000;
         updateCalculations();
     `);
-    assert.equal(p.transitions.at(-1), 'READY');
-    assert.equal(p.value('res-loan-amount'), 8000000);
+    assert.equal(p.transitions.at(-1), 'ERROR');
+    assert.equal(p.run('window.canExportCalculation()'), false);
+    assert.equal(p.element('res-total-interest').innerText, '—');
     assert.equal(p.run('window.__diagnosticCalls[0][2].mortgage_diagnostic.stage'), 'primary_render');
     assert.equal(p.run('window.__diagnosticCalls[0][2].mortgage_diagnostic.kind'), 'render_exception');
     assert.ok(p.errors.some((message) => message.includes('Mortgage primary result rendering failed')));
@@ -640,4 +641,190 @@ test('payment mode seeds the current term payment until the user explicitly edit
     fiftyYears.run('state.cost = 1000000; state.downPayment = 0; state.rate = 0.1; state.termYears = 50; updateInputsDOM(); switchCalculationMode("payment")');
     assert.equal(fiftyYears.transitions.at(-1), 'READY');
     assert.ok(fiftyYears.run('simulateMortgage(true).schedule.length') <= 600);
+});
+
+
+test('one comparison uses the combined plan while hero keeps the baseline duration', () => {
+    for (const strategy of ['term', 'payment']) {
+        const p = page();
+        p.run("state.recurringPrepayment = 20000; state.customPrepayments = {1:150000}; state.prepaymentStrategy = '" + strategy + "'; updateCalculations()");
+        assert.equal(p.element('res-real-term').innerText, '20 лет');
+        const comparison = p.element('comparison-content').innerHTML;
+        assert.match(comparison, /Как меняется ипотека/);
+        assert.doesNotMatch(comparison, /Только регулярная|Две экономии/);
+        const base=p.run('simulateMortgage(false)'), regular=p.run('simulateMortgageRegularOnly()'), combined=p.run('simulateMortgage(true)');
+        assert.ok(base.totalInterest > regular.totalInterest && regular.totalInterest > combined.totalInterest);
+        assert.ok(comparison.includes(p.run('localFormatMoney(Math.round(8000000)+Math.round(simulateMortgage(true).totalInterest))')));
+        assert.ok(comparison.includes(p.run('mortgageDuration(simulateMortgage(true).realTerm)')));
+        assert.ok(comparison.includes(p.run('mortgageDuration(simulateMortgage(false).realTerm-simulateMortgage(true).realTerm)')));
+        assert.match(comparison, strategy === 'payment' ? /Нагрузка в первый месяц/ : /Расходы в обычный месяц/);
+        assert.equal(p.run('state.customPrepayments[1]'),150000);
+        p.run("state.recurringPrepayment=0; updateCalculations()");
+        assert.match(p.element('comparison-content').innerHTML, /Как меняется ипотека/);
+        assert.match(p.element('savings-card').innerHTML, /Параметры расчёта/);
+    }
+});
+
+test('comparison handles baseline, regular-only, one-time-only and combined without double counting', () => {
+    const p=page();
+    p.run('updateCalculations()');
+    assert.match(p.element('comparison-content').innerHTML,/Ваш план погашения/);
+    assert.doesNotMatch(p.element('comparison-content').innerHTML,/comparison-saving|comparison-time-gain/);
+    for(const extras of ["state.recurringPrepayment=10000;state.customPrepayments={}","state.recurringPrepayment=0;state.customPrepayments={12:150000}","state.recurringPrepayment=10000;state.customPrepayments={12:150000}"]){
+        p.run(extras+';updateCalculations()');
+        const expected=p.run('(() => {const b=simulateMortgage(false),c=simulateMortgage(true);return {total:localFormatMoney(8000000+Math.round(c.totalInterest)),base:localFormatMoney(8000000+Math.round(b.totalInterest)),months:mortgageDuration(c.realTerm)};})()');
+        const markup=p.element('comparison-content').innerHTML;
+        assert.ok(markup.includes(expected.total)&&markup.includes(expected.base)&&markup.includes(expected.months));
+        assert.match(markup,/Досрочные уже включены/);
+    }
+    const markup=p.element('comparison-content').innerHTML;
+    assert.ok(markup.includes('121 300')||markup.includes('121 300')||markup.includes('121 300'));
+    assert.ok(markup.includes('271 300')||markup.includes('271 300')||markup.includes('271 300'));
+    assert.doesNotMatch(mortgage,/id="regular-result"|id="one-time-result"/);
+});
+
+test('comparison keeps annual insurance out of monthly outflow and existing-loan history out of totals', () => {
+    const p=page();
+    p.run("activeTab='existing';state.isExistingKnowPayment=true;state.activeCurrentBalance=5300000;state.activePayment=85000;state.includeInsurance=true;state.recurringPrepayment=20000;state.customPrepayments={1:150000};state.prepaymentStrategy='payment';updateCalculations()");
+    const markup=p.element('comparison-content').innerHTML;
+    assert.match(markup,/Только будущие выплаты по текущему остатку/);
+    assert.match(markup,/Меньше выплат на/);
+    assert.match(markup,/Экономия на процентах/);
+    assert.match(markup,/Экономия на страховке/);
+    assert.match(markup,/Последующие платежи меняются по графику/);
+    assert.ok(markup.includes(p.run('localFormatMoney(105000)')));
+    assert.ok(markup.includes(p.run('localFormatMoney(Math.round(5300000)+Math.round(simulateMortgage(true).totalInterest)+Math.round(simulateMortgage(true).totalInsurance))')));
+    assert.match(markup,/Страховка учтена в общей сумме, отдельно от ежемесячной нагрузки/);
+});
+
+test('comparison caps regular outflow by remaining principal on an immediately repaid loan', () => {
+    const p=page();
+    p.run('state.cost=1000;state.downPayment=0;state.rate=0;state.termYears=0;state.termMonths=1;state.recurringPrepayment=5000;updateCalculations()');
+    const markup=p.element('comparison-content').innerHTML;
+    assert.equal(p.transitions.at(-1),'READY');
+    assert.ok(markup.includes(p.run('localFormatMoney(1000)')));
+    assert.ok(!markup.includes(p.run('localFormatMoney(6000)')));
+});
+
+test('month precision respects 1–600 months and known-payment hero semantics', () => {
+    const p=page();
+    p.run('state.cost=8100000; state.downPayment=2450000; state.rate=12; state.termYears=15; state.termMonths=6; updateCalculations()');
+    assert.equal(p.transitions.at(-1),'READY');
+    assert.equal(p.value('res-monthly-payment'),67032);
+    assert.equal(p.element('res-real-term').innerText,'15 лет 6 мес.');
+    p.run('state.termYears=50; state.termMonths=1; updateCalculations()');
+    assert.equal(p.transitions.at(-1),'INVALID_INPUT');
+    p.run('state.rate=0; state.termYears=0; state.termMonths=1; updateCalculations()');
+    assert.equal(p.transitions.at(-1),'READY');
+    assert.equal(p.value('res-monthly-payment'),5650000);
+    p.run("state.mode='payment'; state.targetPayment=100000; updateCalculations()");
+    assert.equal(p.element('label-term').innerText,'Срок без досрочных');
+});
+
+test('form and schedule additions, deletion and clearing use the same payment map', () => {
+    const p=page();
+    p.element('one-time-month').value='12'; p.element('one-time-amount').value='150 000';
+    p.run('addMortgagePrepayment()');
+    assert.equal(p.run('state.customPrepayments[12]'),150000);
+    p.run('formatTableInputVisual({value:"",closest:()=>({dataset:{month:"12"}})})');
+    assert.equal(p.run('Object.keys(state.customPrepayments).length'),0);
+    p.run('state.customPrepayments={3:50000}; removeMortgagePrepayment(3)');
+    assert.equal(p.run('Object.keys(state.customPrepayments).length'),0);
+    p.element('one-time-month').value='601';
+    p.run('addMortgagePrepayment()');
+    assert.equal(p.run('Object.keys(state.customPrepayments).length'),0);
+    assert.match(p.element('one-time-error').innerText,/в пределах базового срока/);
+});
+
+test('mortgage share round-trip includes existing balance, months, strategy, insurance and both extras', () => {
+    const p=page();
+    p.run("window.location={href:'https://yasnomera.ru/mortgage.html?utm_source=test',search:'?utm_source=test'}");
+    assert.equal(p.run('restoreMortgageShareURL()'),false);
+    p.run("activeTab='existing'; state.isExistingKnowPayment=true; state.activeCurrentBalance=5300000; state.activePayment=85000; state.includeInsurance=true; state.recurringPrepayment=20000; state.customPrepayments={1:150000,12:200000}; state.prepaymentStrategy='payment'; state.termMonths=6; window.saved=JSON.stringify({activeTab,state}); window.link=buildMortgageShareURL()");
+    assert.match(p.run('window.link'),/utm_source=test/);
+    p.run("window.location.search=new URL(window.link).search; activeTab='new'; state.cost=1; state.customPrepayments={}; restoreMortgageShareURL()");
+    assert.equal(p.run('JSON.stringify({activeTab,state})'),p.run('window.saved'));
+    assert.equal(p.run('mortgageCalculationRequested'),false); // Opening a share URL is not a conversion.
+    p.run("window.location.search='?mortgage=1&customPrepayments=%7B%22bad%22%3A5%7D'; restoreMortgageShareURL(); updateCalculations()");
+    assert.equal(p.transitions.at(-1),'INVALID_INPUT');
+    assert.equal(p.run('window.canExportCalculation()'),false);
+});
+
+test('exports reject an unrendered state mutation and recover only with the matching READY result', () => {
+    const p=page(); p.run('updateCalculations()');
+    assert.equal(p.run('window.canExportCalculation()'),true);
+    p.run('state.cost=11000000');
+    assert.equal(p.run('window.canExportCalculation()'),false);
+    p.run('updateCalculations()');
+    assert.equal(p.run('window.canExportCalculation()'),true);
+    p.run('state.downPayment=state.cost; updateCalculations()');
+    assert.equal(p.run('window.canExportCalculation()'),false);
+    p.run('state.downPayment=2000000; updateCalculations()');
+    assert.equal(p.run('window.canExportCalculation()'),true);
+});
+
+
+test('compact mortgage PNG has one set of totals and no empty savings panel', () => {
+    const p=page(); p.run('updateCalculations()');
+    const text=p.element('savings-card').innerHTML;
+    assert.match(text,/ЯСНОМЕРА/);
+    assert.equal((text.match(/Всего выплат/g)||[]).length,1);
+    assert.equal((text.match(/Проценты банку/g)||[]).length,1);
+    assert.doesNotMatch(text,/export-prepayments|Досрочный капитал|Сокращение срока|Итого выплатим/);
+    assert.match(text,/export-chart-slot/);
+    p.run('state.recurringPrepayment=20000;state.customPrepayments={1:150000};state.includeInsurance=true;updateCalculations()');
+    const combined=p.element('savings-card').innerHTML;
+    assert.equal((combined.match(/Экономия на процентах/g)||[]).length,1);
+    assert.equal((combined.match(/Экономия на страховке/g)||[]).length,1);
+    assert.equal((combined.match(/Закрытие через/g)||[]).length,1);
+    assert.doesNotMatch(combined,/Досрочный капитал|Срок меньше на/);
+    const expected=p.run('(() => {const b=simulateMortgage(false),c=simulateMortgage(true);return {interest:localFormatMoney(b.totalInterest-c.totalInterest),insurance:localFormatMoney(b.totalInsurance-c.totalInsurance)};})()');
+    assert.ok(combined.includes(expected.interest)&&combined.includes(expected.insurance));
+});
+
+test('long prepayment lists collapse only in PNG; share retains every month', () => {
+    const p=page();
+    p.run("window.location={href:'https://yasnomera.ru/mortgage.html'};state.customPrepayments=Object.fromEntries(Array.from({length:120},(_,i)=>[i+1,10000]));updateCalculations()");
+    const markup=p.element('savings-card').innerHTML;
+    assert.match(markup,/120 шт\./);
+    assert.ok(markup.includes(p.run('localFormatMoney(1200000)')));
+    assert.doesNotMatch(markup,/мес\. 1:|мес\. 120:/);
+    assert.equal(p.run("Object.keys(JSON.parse(new URL(buildMortgageShareURL()).searchParams.get('customPrepayments'))).length"),120);
+});
+
+test('PNG line chart copies series without live tooltip, hover, or active point state', () => {
+    const p=page();
+    const evaluate=()=>{
+        const live={labels:['1г','2г'],datasets:[{data:[100,0],pointRadius:8,pointHoverRadius:12},{data:[100,50]}]};
+        const original=JSON.stringify(live);
+        const config=mortgageExportChartConfig(live,true,true);
+        config.data.datasets[0].data[0]=777;
+        return {originalUnchanged:JSON.stringify(live)===original,events:config.options.events.length,tooltip:config.options.plugins.tooltip.enabled,
+          noAnimation:config.options.animation===false,points:config.data.datasets.every(d=>d.pointRadius===0&&d.pointHoverRadius===0&&d.pointHitRadius===0),
+          noExtras:mortgageExportChartConfig(live,false,false).data.datasets.length};
+    };
+    const result=p.run('('+evaluate.toString()+')()');
+    assert.equal(result.originalUnchanged,true);
+    assert.equal(result.events,0); assert.equal(result.tooltip,false); assert.equal(result.noAnimation,true);
+    assert.equal(result.points,true); assert.equal(result.noExtras,1);
+});
+
+test('sticky is not hidden solely by a focused field after keyboard dismissal', () => {
+    assert.doesNotMatch(mortgage,/mortgage-input-focused/);
+    assert.doesNotMatch(mortgage,/\.blur\(/);
+    const p=page();p.focusInput();p.resizeViewport(500);
+    assert.equal(p.bodyClasses.has('mortgage-keyboard-open'),true);
+    p.resizeViewport(844);
+    assert.equal(p.hasFocusedInput(),true);
+    assert.equal(p.bodyClasses.has('mortgage-keyboard-open'),false);
+});
+
+
+test('export chart series belongs to the current READY result even if live chart rendering fails', () => {
+    const p=page();p.run('updateCalculations()');
+    const before=p.run('mortgageExportChartData.datasets[0].data[0]');
+    p.run("state.cost=13000000; updateChart=()=>{throw Error('isolated live render failure')}; updateCalculations()");
+    assert.equal(p.transitions.at(-1),'READY');
+    assert.equal(p.run('mortgageExportChartData.datasets[0].data[0]'),p.run('simulateMortgage(true).schedule[0].balance'));
+    assert.notEqual(p.run('mortgageExportChartData.datasets[0].data[0]'),before);
 });

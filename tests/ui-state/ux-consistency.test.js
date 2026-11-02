@@ -70,7 +70,7 @@ test('financial freedom tooltip styles stay inside the mobile viewport', () => {
 });
 
 test('service worker cache is advanced with the shared export behaviour', () => {
-    assert.match(read('sw.js'), /yasnomera-cache-v16/);
+    assert.match(read('sw.js'), /yasnomera-cache-v17/);
     assert.match(read('sw.js'), /'\/js\/trust-layer\.js'/);
     assert.match(read('sw.js'), /'\/js\/ui-utils\.js'/);
 });

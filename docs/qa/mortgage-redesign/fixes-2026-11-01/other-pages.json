@@ -1,0 +1,7 @@
+{
+  "checks": [
+    "honest-credit keeps original PNG exporter without mortgage hook",
+    "rent-vs-mortgage keeps original PNG exporter without mortgage hook"
+  ],
+  "uncaughtErrors": []
+}
