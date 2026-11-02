@@ -80,22 +80,23 @@ html { scroll-behavior:smooth; scroll-padding-top:84px; }
 .home-page .calculator-group h3 { margin:0 0 14px; font-size:21px; letter-spacing:-.4px; line-height:1.3; font-weight:750; }
 .home-page .calculator-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
 .home-page .everyday-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
-.home-page .calculator-link { position:relative; display:grid; grid-template-columns:30px minmax(0,1fr) 17px; gap:15px; align-items:start; min-height:122px; padding:21px 18px; background:var(--home-surface); border:1px solid var(--home-line); border-radius:12px; transition:border-color .16s,background .16s; }
+.home-page .calculator-link { position:relative; display:grid; grid-template-columns:30px minmax(0,1fr) 17px; gap:15px; align-items:center; min-height:102px; padding:18px; background:var(--home-surface); border:1px solid var(--home-line); border-radius:12px; transition:border-color .16s,background .16s; }
 .home-page .calculator-link.featured { background:var(--home-tint); border-color:color-mix(in srgb,var(--home-green) 24%,var(--home-line)); }
 .home-page .calculator-link:hover { border-color:var(--home-green); background:var(--home-tint); }
+.home-page .calculator-link > div { align-self:start; }
 .home-page .calculator-link h4 { margin:0; font-size:16px; font-weight:750; line-height:1.3; letter-spacing:-.2px; }
 .home-page .calculator-link.featured h4 { color:var(--home-green); }
 .home-page .calculator-link p { margin:7px 0 0; font-size:13px; color:var(--home-muted); line-height:1.45; }
 .home-page .calculator-icon { width:29px; height:29px; color:var(--home-green); }
 .home-page .link-arrow { width:17px; height:17px; color:var(--home-green); align-self:center; }
 .home-page .everyday-grid .calculator-link { min-height:92px; padding-top:18px; padding-bottom:18px; }
-.home-page .about { margin:33px 0 22px; padding:21px 23px; border:1px solid var(--home-line); border-radius:12px; background:var(--home-tint); scroll-margin-top:24px; }
-.home-page .about-summary { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px 20px; }
+.home-page .about { position:relative; margin:28px 0 22px; padding:18px 22px; border:1px solid var(--home-line); border-radius:12px; background:var(--home-tint); scroll-margin-top:24px; }
+.home-page .about-summary { padding-right:230px; }
 .home-page .about h2 { font-size:17px; line-height:1.4; margin:0; letter-spacing:-.3px; }
 .home-page .about-intro { margin:7px 0 0; color:var(--home-muted); font-size:14px; }
-.home-page .about details { margin-top:10px; }
-.home-page .about summary { width:fit-content; padding:9px 0; min-height:44px; cursor:pointer; color:var(--home-green); font-size:13px; font-weight:650; }
-.home-page .about-body { margin-top:10px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; padding-top:15px; border-top:1px solid var(--home-line); }
+.home-page .about details { margin-top:0; }
+.home-page .about summary { position:absolute; top:18px; right:22px; width:fit-content; padding:9px 0; min-height:44px; cursor:pointer; color:var(--home-green); font-size:13px; font-weight:650; }
+.home-page .about-body { margin-top:18px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; padding-top:15px; border-top:1px solid var(--home-line); }
 .home-page .about-body h3 { margin:0 0 6px; font-size:14px; }
 .home-page .about-body p { margin:0; font-size:13px; color:var(--home-muted); }
 .home-page .home-footer { padding:0 0 calc(25px + env(safe-area-inset-bottom)); }
@@ -108,8 +109,8 @@ html { scroll-behavior:smooth; scroll-padding-top:84px; }
 .home-page .share-dialog input { display:block; width:100%; margin:14px 0; border:1px solid var(--home-line); padding:10px; font:inherit; border-radius:8px; color:var(--home-ink); background:var(--home-bg); }
 .home-page .share-dialog button { padding:9px 15px; min-height:44px; border-radius:8px; border:1px solid var(--home-line); background:var(--home-tint); color:var(--home-green); }
 .home-page .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--home-ink); color:var(--home-bg); border-radius:10px; padding:12px 18px; max-width:calc(100% - 32px); font-size:14px; z-index:80; }
-@media(max-width:1000px) { .home-page .home-intro { gap:26px; grid-template-columns:1.5fr 1fr; } .home-page .catalog-heading { align-items:flex-start; flex-direction:column; gap:3px; } .home-page .calculator-link { gap:11px; padding:18px 14px; } }
-@media(max-width:760px) { .home-page .home-wrap { padding:0 20px; } .home-page .header-row { min-height:65px; gap:20px; } .home-page .home-brand { font-size:20px; } .home-page .home-brand img { width:32px;height:32px; } .home-page .header-nav { gap:16px; margin-left:auto; } .home-page .header-nav a { font-size:12px; } .home-page .theme-button { margin-left:0; } .home-page .home-intro { grid-template-columns:1fr; padding:28px 0 13px; gap:20px; } .home-page h1 { font-size:34px; letter-spacing:-1px; max-width:600px; } .home-page .intro-copy { font-size:15px; margin-top:11px; } .home-page .home-reference { border-left:0; padding:12px 15px; border:1px solid var(--home-line); border-radius:10px; background:var(--home-surface); } .home-page .rate-main { justify-content:flex-start; gap:15px; } .home-page .rate-number { font-size:22px; } .home-page .rate-meta { margin-top:1px; } .home-page .rate-meta a { min-height:24px; } .home-page .benefits { font-size:12px; margin-bottom:15px; } .home-page .catalog-heading { padding:16px 0 11px; } .home-page .catalog-heading h2 { font-size:22px; } .home-page .category-nav { column-gap:17px; } .home-page .category-nav a { font-size:12px; min-height:40px; } .home-page .calculator-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .home-page .calculator-group h3 { font-size:20px; } .home-page .about-body { grid-template-columns:1fr; gap:17px; } }
+@media(max-width:1000px) { .home-page .calculator-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .home-page .home-intro { gap:26px; grid-template-columns:1.5fr 1fr; } .home-page .catalog-heading { align-items:flex-start; flex-direction:column; gap:3px; } .home-page .calculator-link { gap:11px; padding:18px 14px; } }
+@media(max-width:760px) { .home-page .home-wrap { padding:0 20px; } .home-page .header-row { min-height:65px; gap:20px; } .home-page .home-brand { font-size:20px; } .home-page .home-brand img { width:32px;height:32px; } .home-page .header-nav { gap:16px; margin-left:auto; } .home-page .header-nav a { font-size:12px; } .home-page .theme-button { margin-left:0; } .home-page .home-intro { grid-template-columns:1fr; padding:28px 0 13px; gap:20px; } .home-page h1 { font-size:34px; letter-spacing:-1px; max-width:600px; } .home-page .intro-copy { font-size:15px; margin-top:11px; } .home-page .home-reference { border-left:0; padding:12px 15px; border:1px solid var(--home-line); border-radius:10px; background:var(--home-surface); } .home-page .rate-main { justify-content:flex-start; gap:15px; } .home-page .rate-number { font-size:22px; } .home-page .rate-meta { margin-top:1px; } .home-page .rate-meta a { min-height:24px; } .home-page .benefits { font-size:12px; margin-bottom:15px; } .home-page .catalog-heading { padding:16px 0 11px; } .home-page .catalog-heading h2 { font-size:22px; } .home-page .category-nav { column-gap:17px; } .home-page .category-nav a { font-size:12px; min-height:40px; } .home-page .calculator-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .home-page .calculator-group h3 { font-size:20px; } .home-page .about-summary { padding-right:0; } .home-page .about summary { position:static; margin-top:7px; } .home-page .about-body { grid-template-columns:1fr; gap:17px; } }
 @media(max-width:520px) { .home-page .home-wrap { padding:0 18px; } .home-page .header-row { gap:12px; } .home-page .header-nav { gap:0; } .home-page .header-nav .about-nav { display:none; } .home-page .header-nav a { font-size:12px; } .home-page .theme-button { width:44px; height:44px; } .home-page .home-brand { font-size:18px; gap:8px; letter-spacing:-.5px; } .home-page h1 { font-size:31px; line-height:1.12; } .home-page .home-intro { padding-top:23px; gap:16px; } .home-page .intro-copy { font-size:14px; } .home-page .rate-main h2 { font-size:12px; } .home-page .rate-meta, .home-page .rate-note { font-size:12px; } .home-page .benefits { font-size:12px; gap:0; } .home-page .benefits li+li::before { margin:0 6px; } .home-page .category-nav { display:grid; grid-template-columns:1.2fr 1fr 1.1fr; gap:8px; width:100%; } .home-page .category-nav a { min-height:44px; font-size:12px; line-height:1.25; text-align:center; justify-content:center; } .home-page .calculator-grid, .home-page .everyday-grid { grid-template-columns:1fr; gap:10px; } .home-page .calculator-link, .home-page .everyday-grid .calculator-link { min-height:90px; padding:16px; grid-template-columns:28px minmax(0,1fr) 17px; gap:13px; align-items:center; } .home-page .calculator-link h4 { font-size:16px; } .home-page .calculator-link p { margin-top:5px; font-size:13px; } .home-page .calculator-group { margin-bottom:23px; } .home-page .calculator-group + .calculator-group { padding-top:20px; } .home-page .about { padding:18px; margin-top:28px; } }
 @media(max-width:350px) { .home-page .home-wrap { padding:0 14px; } .home-page .home-brand { font-size:16px; } .home-page .home-brand img { width:28px; height:28px; } .home-page .header-row { gap:8px; } .home-page h1 { font-size:29px; } .home-page .category-nav { column-gap:10px; } .home-page .benefits { font-size:11px; } }
 @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } .home-page * { transition:none!important; } }
@@ -151,7 +152,7 @@ html { scroll-behavior:smooth; scroll-padding-top:84px; }
     </header>
     <main class="home-wrap" id="main-content">
         <div class="home-intro">
-            <div><h1>Понятные расчёты <span>для финансовых решений.</span></h1><p class="intro-copy">Выберите задачу — посчитайте и сравните варианты.</p></div>
+            <div><h1>Понятные расчёты <span>для финансовых решений.</span></h1><p class="intro-copy">Посчитайте платёж, срок накоплений и повседневные расходы.</p></div>
             <aside class="home-reference" id="rate-reference" aria-labelledby="rate-heading" data-status="loading">
                 <div class="rate-main"><h2 id="rate-heading">Ключевая ставка Банка России</h2><strong class="rate-number" id="rate-value">—</strong></div>
                 <p class="rate-meta"><span id="rate-checked">Загружаем данные</span> · <a href="https://www.cbr.ru/hd_base/keyrate/" target="_blank" rel="noopener noreferrer">Банк России ↗</a></p>
@@ -160,7 +161,7 @@ html { scroll-behavior:smooth; scroll-padding-top:84px; }
                 <noscript><p class="rate-status">Для загрузки ставки включите JavaScript. Калькуляторы доступны ниже.</p></noscript>
             </aside>
         </div>
-        <ul class="benefits" aria-label="Возможности сервиса"><li>Бесплатно</li><li>Без регистрации</li><li>Результат в PNG</li></ul>
+        <ul class="benefits" aria-label="Возможности сервиса"><li>Бесплатно</li><li>Без регистрации</li><li>Расчёт можно сохранить</li></ul>
         <section id="catalog-section" aria-labelledby="catalog-heading">
         <div class="catalog-heading"><h2 id="catalog-heading">Что хотите посчитать?</h2><nav class="category-nav" aria-label="Разделы калькуляторов"><a href="#housing" data-home-category="housing">Жильё и кредиты</a><a href="#savings" data-home-category="savings">Накопления</a><a href="#life" data-home-category="life">На каждый день</a></nav></div>
         <section class="calculator-group" id="housing" aria-labelledby="housing-heading">
@@ -193,7 +194,7 @@ html { scroll-behavior:smooth; scroll-padding-top:84px; }
                 </a>
                 <a class="calculator-link" id="card-financial-freedom" href="financial-freedom.html" data-calculator="financial-freedom" aria-labelledby="title-financial-freedom" aria-describedby="description-financial-freedom">
                     <svg class="calculator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8 9-5 9 5-9 5zM3 12l9 5 9-5M3 16l9 5 9-5"/></svg>
-                    <div><h4 id="title-financial-freedom">На сколько хватит капитала</h4><p id="description-financial-freedom">Срок при регулярных расходах</p></div>
+                    <div><h4 id="title-financial-freedom">На сколько хватит капитала</h4><p id="description-financial-freedom">На сколько лет хватит ваших сбережений</p></div>
                     <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
                 </a>
                 <a class="calculator-link" id="card-inflation-shredder" href="inflation-shredder.html" data-calculator="inflation-shredder" aria-labelledby="title-inflation-shredder" aria-describedby="description-inflation-shredder">
@@ -223,15 +224,16 @@ html { scroll-behavior:smooth; scroll-padding-top:84px; }
                 </a>
                 <a class="calculator-link" id="card-wealth" href="wealth.html" data-calculator="wealth" aria-labelledby="title-wealth" aria-describedby="description-wealth">
                     <svg class="calculator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V3h8v4M3 12h18m-11 0v3h4v-3"/></svg>
-                    <div><h4 id="title-wealth">Сравнение дохода</h4><p id="description-wealth">Ориентир по региональной статистике</p></div>
+                    <div><h4 id="title-wealth">Сравнение дохода</h4><p id="description-wealth">Сравнение дохода с данными по регионам</p></div>
                     <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
                 </a>
             </div>
         </section>
         </section>
         <section class="about" id="about" aria-labelledby="about-heading">
-            <div class="about-summary"><h2 id="about-heading">Понятно, откуда берутся цифры</h2></div>
-            <p class="about-intro">Показываем допущения и источники. Условия задаёте вы.</p>
+            <div class="about-summary"><h2 id="about-heading">Понятно, откуда берутся цифры</h2>
+                <p class="about-intro">Показываем допущения и источники. Условия задаёте вы.</p>
+            </div>
             <details id="about-details"><summary>Как устроена Ясномера</summary>
                 <div class="about-body">
                     <div><h3>Расчёты в браузере</h3><p>Введённые значения остаются на вашем устройстве и нужны для расчёта. Доход, возраст или дата могут потребоваться для выбранного сценария. Не вводите имя, контакты, данные карты, паспорта или договоров. На сайте используется Яндекс Метрика для анализа посещений и взаимодействий.</p></div>
