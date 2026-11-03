@@ -72,7 +72,7 @@ async function contextFor(browser, viewport, colorScheme = 'light') {
 const hasText = async (page, selector, value) => assert.match(norm(await page.locator(selector).innerText()), value, selector);
 const state = async (page, expected) => assert.equal(await page.locator('body').getAttribute('data-calculation-state'), expected);
 const fill = (page, id, value) => page.locator('#' + id).fill(value);
-const open = (page, id) => page.locator('#' + id + ' summary').click();
+const open = (page, id) => page.locator('#' + id + ' > summary').click();
 const check = (page, name, value) => page.locator('input[name="' + name + '"][value="' + value + '"]').check();
 const screenshot = (page, name, fullPage = false) => saveArtifacts && page.screenshot({
     path: path.join(out, name + '.png'), fullPage, animations: 'disabled'
@@ -171,7 +171,8 @@ async function download(page, name) {
     for (const fragment of [
         'Ясномера · Финансовая цель', '1 год', 'ноябрь 2027 года', 'ноябрь 2026', '1 000 000 ₽',
         '100 000 ₽', '80 000 ₽', '14% годовых', 'Росстат / ЕМИСС', '2011–2025', '1 070 480,63 ₽',
-        '1 060 000 ₽', 'Расчётный доход', 'С учётом роста цен', 'Доходность не гарантирована'
+        '960 000 ₽', '1 060 000 ₽', 'Расчётный доход', '78 993,83 ₽', '1 138 993,83 ₽',
+        'Капитал в сегодняшних рублях', 'Порог в сегодняшних рублях', 'С учётом роста цен', 'Доходность не гарантирована'
     ]) assert.ok(text.toLocaleLowerCase('ru').includes(fragment.toLocaleLowerCase('ru')), fragment + '\n' + text);
     assert.ok(!text.includes('Сохранить PNG'));
     assert.equal(await page.locator('[data-screenshot-stage]').count(), 0);
@@ -212,6 +213,13 @@ async function matrixCase(browser, url, width, height, theme) {
     assert.equal(await page.locator('#example-badge').isVisible(), true);
     assert.equal(await overflow(page), false);
     assert.equal(await page.evaluate(() => document.documentElement.classList.contains('dark')), theme === 'dark');
+    assert.equal(await page.locator(theme === 'dark' ? '#sun-icon' : '#moon-icon').isVisible(), true);
+    assert.equal(await page.locator(theme === 'dark' ? '#moon-icon' : '#sun-icon').isVisible(), false);
+    await hasText(page, '.goal-brand', /^ЯСНОМЕРА$/);
+    for (const id of ['goal-settings', 'goal-budget', 'goal-method']) {
+        assert.equal(await page.locator('#' + id).getAttribute('open'), null);
+    }
+    await hasText(page, '#settings-summary', /^Без доходности · Фиксированная сумма$/);
     await allowedGoals(page, []);
     const firstViewport = await page.evaluate(() => ['goal-sum', 'current-savings', 'monthly-contribution', 'result-answer']
         .map(id => Math.round(document.getElementById(id).getBoundingClientRect().bottom)));
@@ -219,8 +227,11 @@ async function matrixCase(browser, url, width, height, theme) {
     if (label) await screenshot(page, label + '-after-' + name);
 
     await open(page, 'goal-settings');
+    assert.equal(await page.locator('#goal-sources').getAttribute('open'), null);
+    await open(page, 'goal-sources');
     await hasText(page, '#rate-reference', /Ключевая ставка Банка России — 14% с 27 июля 2026 г./);
     await hasText(page, '#inflation-reference', /7,048063% годовых · 2011–2025/);
+    await open(page, 'goal-sources');
     await allowedGoals(page, []);
     await check(page, 'return-mode', 'manual');
     await state(page, 'INVALID_INPUT');
@@ -229,12 +240,27 @@ async function matrixCase(browser, url, width, height, theme) {
     assert.equal(await page.locator('#screenshot-area').isVisible(), false);
     await allowedGoals(page, []);
 
+    await fill(page, 'annual-return', '12');
+    await state(page, 'READY');
+    await hasText(page, '#return-explanation', /уже накопленные деньги.*со следующего/);
+    await open(page, 'return-example');
+    await hasText(page, '#return-example', /1 000 ₽.*20 000 ₽.*121 000 ₽/);
+    await open(page, 'goal-settings');
+    await hasText(page, '#settings-summary', /^Доходность 12% годовых · Фиксированная сумма$/);
+    await open(page, 'goal-settings');
+    if (width === 390 && theme === 'dark' && saveArtifacts) {
+        await page.locator('#goal-settings').screenshot({ path: path.join(out, 'mobile-return-example-graphite.png') });
+    }
+    await open(page, 'return-example');
     await fill(page, 'annual-return', '14');
     await state(page, 'READY');
     await hasText(page, '#result-answer', /^11 месяцев$/);
     await hasText(page, '#capital-values', /1 046 781,38 ₽/);
-    await hasText(page, '#power-values', /Капитал в сегодняшних рублях\s+983 426,88 ₽/);
-    await hasText(page, '#power-values', /Порог в сегодняшних рублях\s+939 476,86 ₽/);
+    await hasText(page, '#power-context', /983 426,88 ₽ в сегодняшних ценах/);
+    assert.equal(await page.locator('#power-target').isVisible(), false);
+    await open(page, 'power-details');
+    await hasText(page, '#power-target', /Порог цели эквивалентен 939 476,86 ₽/);
+    await open(page, 'power-details');
     await assertChart(page, 11);
     await allowedGoals(page, ['calculate_success']);
     if (width === 1366 && theme === 'light') await screenshot(page, 'desktop-fixed-result', true);
@@ -242,6 +268,12 @@ async function matrixCase(browser, url, width, height, theme) {
     await state(page, 'READY');
     await hasText(page, '#result-answer', /^1 год$/);
     await hasText(page, '#capital-values', /1 070 480,63 ₽/);
+    await hasText(page, '#capital-values', /Порог с учётом роста цен\s+1 070 480,63 ₽\s+Итого накоплено\s+1 138 993,83 ₽/);
+    await hasText(page, '#chart-caption', /Порог меняется вместе с ценами/);
+    await hasText(page, '#chart-description', /Месяц 12 — капитал 1 138 993,83 ₽, порог 1 070 480,63 ₽/);
+    await open(page, 'goal-settings');
+    await hasText(page, '#settings-summary', /^Доходность 14% годовых · С учётом роста цен$/);
+    await open(page, 'goal-settings');
     await assertChart(page, 12);
     if (width === 390 && theme === 'dark') {
         await page.locator('#goal-settings').scrollIntoViewIfNeeded();
@@ -250,6 +282,8 @@ async function matrixCase(browser, url, width, height, theme) {
     if (width === 1366 && theme === 'dark') await screenshot(page, 'desktop-inflation-graphite', true);
     if (width === 390 && theme === 'light' && saveArtifacts) {
         await page.locator('#chart-section').screenshot({ path: path.join(out, 'mobile-chart-light.png') });
+        await page.locator('#screenshot-area').evaluate(node => node.scrollIntoView());
+        await screenshot(page, 'mobile-lower-light');
     }
     const png = await download(page, label && 'download-' + label + '-' + name);
     await allowedGoals(page, ['calculate_success']);
@@ -257,6 +291,19 @@ async function matrixCase(browser, url, width, height, theme) {
     await open(page, 'goal-budget');
     await fill(page, 'budget-income', '140000,25');
     await fill(page, 'budget-expenses', '60000,25');
+    await open(page, 'return-example');
+    await open(page, 'goal-sources');
+    await open(page, 'goal-method');
+    await hasText(page, '#goal-method', /R\/1200/);
+    await hasText(page, '#goal-method', /1 200 месяцев/);
+    assert.equal(await overflow(page), false);
+    if (width === 1366 && theme === 'light') {
+        await page.locator('#goal-settings').evaluate(node => node.scrollIntoView());
+        await screenshot(page, 'desktop-expanded-light');
+    }
+    await open(page, 'goal-method');
+    await open(page, 'goal-sources');
+    await open(page, 'return-example');
     await hasText(page, '#budget-result', /остаётся 80 000 ₽ в месяц/);
     assert.equal(norm(await page.locator('#monthly-contribution').inputValue()), '80 000');
     await fill(page, 'budget-expenses', '80000,25');
@@ -337,6 +384,8 @@ async function exerciseInput(browser, url) {
     assert.equal(await page.evaluate(() => document.activeElement.id), 'theme-toggle');
     await page.keyboard.press('Enter');
     assert.equal(await page.locator('#theme-toggle').getAttribute('aria-pressed'), 'true');
+    assert.equal(await page.locator('#sun-icon').isVisible(), true);
+    assert.equal(await page.locator('#moon-icon').isVisible(), false);
     await allowedGoals(page, []);
     await page.keyboard.press('Tab');
     assert.equal(await page.evaluate(() => document.activeElement.id), 'goal-sum');
@@ -388,6 +437,9 @@ async function exerciseInput(browser, url) {
     await fill(page, 'monthly-contribution', '50,50');
     await hasText(page, '#result-answer', /^2 месяца$/);
     await hasText(page, '#capital-values', /201,25 ₽/);
+    assert.equal(await page.locator('#capital-values > div').count(), 4);
+    assert.equal(norm(await page.locator('#capital-values dd').allTextContents().then(values => values.join(' '))), '100,25 ₽ 101 ₽ 0 ₽ 201,25 ₽');
+    assert.equal(await page.locator('#power-details').isVisible(), false);
 
     await page.setViewportSize({ width: 390, height: 420 });
     const contribution = page.locator('#monthly-contribution');
@@ -403,7 +455,7 @@ async function exerciseInput(browser, url) {
     assert.equal(await overflow(page), false);
     await page.evaluate(() => { document.body.style.zoom = ''; });
 
-    await page.locator('#goal-settings summary').focus();
+    await page.locator('#goal-settings > summary').focus();
     await page.keyboard.press('Space');
     assert.equal(await page.locator('#goal-settings').getAttribute('open'), '');
     await page.keyboard.press('Tab');
@@ -460,16 +512,20 @@ async function exerciseSources(browser, url) {
     assert.equal(await page.locator('#inflation-reference').getAttribute('data-status'), 'loading');
     await open(page, 'goal-settings');
     await check(page, 'goal-mode', 'today');
+    await open(page, 'goal-settings');
     await state(page, 'DATA_UNAVAILABLE');
     await hasText(page, '#result-answer', /Загружаем данные/);
     release();
     await page.waitForFunction(() => document.getElementById('inflation-reference').dataset.status === 'unavailable');
     await hasText(page, '#result-answer', /Данные об инфляции сейчас недоступны/);
+    assert.equal(await page.locator('#result-answer').isVisible(), true);
     assert.equal(await page.locator('#save-png').isDisabled(), true);
     await allowedGoals(page, []);
     await page.locator('#use-fixed').click();
     await state(page, 'READY');
     await hasText(page, '#result-answer', /^1 год$/);
+    await open(page, 'goal-settings');
+    await open(page, 'goal-sources');
     await check(page, 'return-mode', 'manual');
     await fill(page, 'annual-return', '14');
     await hasText(page, '#result-answer', /^11 месяцев$/);

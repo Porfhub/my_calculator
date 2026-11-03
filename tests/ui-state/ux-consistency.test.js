@@ -99,9 +99,7 @@ test('every product page loads the shared interaction and responsive polish laye
     for (const page of pages) {
         const html = read(page);
         assert.match(html, /<link rel="stylesheet" href="css\/product-polish\.css">/, page);
-        assert.match(html, page === 'millionaire.html'
-            ? /<button[^>]*id="theme-toggle"[^>]*aria-label="Тема — переключить цветовую схему"/
-            : /<button[^>]*id="theme-toggle"[^>]*aria-label="Переключить тему"/, page);
+        assert.match(html, /<button[^>]*id="theme-toggle"[^>]*aria-label="Переключить тему"/, page);
     }
 
     assert.match(read('sw.js'), /'\/css\/product-polish\.css'/);

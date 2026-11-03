@@ -57,7 +57,8 @@ test('release audit scenarios keep their units, transport need and source contex
     assert.match(goal, /name="goal-mode" value="fixed" checked/);
     assert.match(goal, /Цель сохраняет покупательную способность указанной суммы в сегодняшних ценах/);
     assert.match(goal, /Целевая сумма в рублях остаётся постоянной/);
-    assert.match(goal, /Доходность в сценарии/);
+    assert.match(goal, /<legend>Доходность накоплений<\/legend>/);
+    assert.match(goal, /Каждый новый взнос добавляется в конце месяца и начинает приносить доход со следующего/);
     assert.match(goal, /name="return-mode" value="zero" checked/);
     assert.match(goal, /Капитал в сегодняшних рублях/);
     assert.match(goal, /Порог в сегодняшних рублях/);

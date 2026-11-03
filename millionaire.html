@@ -94,8 +94,14 @@
         .goal-shell { width: min(100% - 32px, 1080px); margin-inline: auto; }
         .goal-top { background: var(--panel); border-bottom: 1px solid var(--line); }
         .goal-nav { min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-        .goal-brand { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 750; text-decoration: none; }
+        .goal-page .goal-brand {
+            display: inline-flex; align-items: center; gap: 9px; min-height: 44px; color: var(--text);
+            font-size: 1.22rem; font-weight: 850; letter-spacing: -.035em; text-decoration: none;
+        }
         .goal-brand img { width: 28px; height: 28px; }
+        .goal-button.goal-theme { display: grid; place-items: center; width: 44px; padding: 0; }
+        .goal-theme svg { width: 21px; height: 21px; }
+        .goal-theme .hidden { display: none; }
         .goal-intro { padding-block: clamp(19px, 4vw, 46px) 18px; }
         .goal-kicker { margin: 0 0 5px; color: var(--accent); font-size: .82rem; font-weight: 750; letter-spacing: .045em; text-transform: uppercase; }
         .goal-intro h1 { margin: 0; font-size: clamp(1.75rem, 5vw, 3rem); line-height: 1.12; letter-spacing: -.035em; text-wrap: balance; }
@@ -109,6 +115,7 @@
         .goal-card p { margin: 6px 0 0; }
         .goal-field { min-width: 0; }
         .goal-field + .goal-field { margin-top: 9px; }
+        .goal-options > .goal-field + .goal-field { margin-top: 0; }
         .goal-field label { display: block; font-weight: 680; margin-bottom: 4px; font-size: .93rem; }
         .goal-control { position: relative; }
         .goal-control span { position: absolute; inset-inline-end: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
@@ -129,11 +136,16 @@
         .goal-disclosure { padding: 0; }
         .goal-disclosure > summary { cursor: pointer; padding: 12px clamp(14px, 2.35vw, 24px); min-height: 48px; font-weight: 700; }
         .goal-disclosure > div { padding: 0 clamp(14px, 2.35vw, 24px) clamp(14px, 2.35vw, 24px); }
+        .goal-disclosure[open] .goal-settings-summary { display: none; }
+        .goal-settings-summary { display: block; margin: 2px 0 0 1.15em; font-size: .88rem; font-weight: 500; }
         .goal-options fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
         .goal-options legend { padding: 0; font-weight: 700; }
         .goal-choice { display: flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; }
         .goal-choice input { accent-color: var(--accent); width: 1.05rem; height: 1.05rem; margin: 0; flex: none; }
-        .goal-source { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 6px; }
+        .goal-secondary { margin-top: 8px; font-size: .9rem; color: var(--muted); }
+        .goal-secondary > summary { display: list-item; min-height: 44px; padding-block: 11px; cursor: pointer; font-weight: 650; }
+        .goal-source { border-top: 1px solid var(--line); margin-top: 12px; }
+        .goal-explanation { font-size: .92rem; }
         .goal-button {
             min-height: 44px; max-width: 100%; padding: 8px 12px; border: 1px solid var(--control-line); border-radius: 9px; background: var(--panel);
             color: var(--text); font: inherit; font-weight: 660; cursor: pointer;
@@ -145,6 +157,15 @@
         .goal-table { margin: 10px 0 0; font-variant-numeric: tabular-nums; }
         .goal-table > div { display: flex; align-items: baseline; justify-content: space-between; gap: 6px 14px; flex-wrap: wrap; padding-block: 6px; border-top: 1px solid var(--line); }
         .goal-table dd { margin: 0 0 0 auto; text-align: right; font-weight: 680; overflow-wrap: anywhere; }
+        #capital-values > :last-child { font-weight: 700; }
+        .goal-card .goal-power { margin-top: 10px; font-size: .92rem; }
+        #chart-caption { margin-top: 6px; font-size: .92rem; }
+        #action-status:empty { margin: 0; }
+        .goal-method-list { margin: 0; padding-inline-start: 1.4em; }
+        .goal-method-list li { padding-inline-start: .2em; }
+        .goal-method-list li + li { margin-top: 10px; }
+        .goal-card .goal-method-list p { margin-top: 2px; }
+        .goal-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
         .goal-chart-frame { position: relative; height: clamp(215px, 34vw, 320px); margin-top: 10px; }
         .goal-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 9px; font-size: .88rem; }
         .goal-legend span::before { content: ""; display: inline-block; width: 21px; margin: 0 6px 3px 0; border-bottom: 3px solid var(--accent); }
@@ -169,8 +190,11 @@
 <body class="goal-page">
     <header class="goal-top">
         <nav class="goal-shell goal-nav" aria-label="Навигация">
-            <a class="goal-brand" href="index.html"><img src="yasnomera-mark.svg" alt="">Ясномера</a>
-            <button id="theme-toggle" class="goal-button" type="button" aria-label="Тема — переключить цветовую схему" aria-pressed="false">Тема <span id="theme-icon" aria-hidden="true">◐</span></button>
+            <a class="goal-brand" href="index.html"><img src="yasnomera-mark.svg" alt="">ЯСНОМЕРА</a>
+            <button id="theme-toggle" class="goal-button goal-theme" type="button" aria-label="Переключить тему" aria-pressed="false">
+                <svg id="sun-icon" class="hidden" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>
+                <svg id="moon-icon" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14A9 9 0 0 1 10 3.5 9 9 0 1 0 20.5 14Z"/></svg>
+            </button>
         </nav>
     </header>
     <main class="goal-shell">
@@ -226,24 +250,28 @@
             </div>
 
             <details class="goal-card goal-disclosure" id="goal-settings">
-                <summary>Доходность и рост цен</summary>
+                <summary>Доходность и рост цен <span id="settings-summary" class="goal-muted goal-settings-summary">Без доходности · Фиксированная сумма</span></summary>
                 <div>
                     <div class="goal-options">
                         <fieldset>
-                            <legend>Доходность в сценарии</legend>
-                            <label class="goal-choice"><input type="radio" name="return-mode" value="zero" checked>Без доходности · 0%</label>
-                            <label class="goal-choice"><input type="radio" name="return-mode" value="manual">Указать свою доходность</label>
+                            <legend>Доходность накоплений</legend>
+                            <label class="goal-choice"><input type="radio" name="return-mode" value="zero" checked>Без доходности — 0%</label>
+                            <label class="goal-choice"><input type="radio" name="return-mode" value="manual">Указать предполагаемую доходность</label>
                             <div id="manual-return" hidden>
-                    <div class="goal-field">
-                        <label for="annual-return">Номинальная ставка, % годовых</label>
-                        <div class="goal-control">
-                            <input class="goal-input ym-disable-keys" id="annual-return" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="annual-return-error" value="">
-                            <span aria-hidden="true">%</span>
-                        </div>
-                        <p class="goal-error" id="annual-return-error" hidden></p>
-                    </div>
+                                <div class="goal-field">
+                                    <label for="annual-return">Доходность накоплений, % годовых</label>
+                                    <div class="goal-control">
+                                        <input class="goal-input ym-disable-keys" id="annual-return" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="annual-return-error return-explanation" value="">
+                                        <span aria-hidden="true">%</span>
+                                    </div>
+                                    <p class="goal-error" id="annual-return-error" hidden></p>
+                                </div>
+                                <p class="goal-muted goal-explanation" id="return-explanation">Процент начисляется на уже накопленные деньги. Каждый новый взнос добавляется в конце месяца и начинает приносить доход со следующего.</p>
+                                <details id="return-example" class="goal-secondary">
+                                    <summary>Пример за один месяц</summary>
+                                    <p>При 12% годовых месячная ставка в модели — 1%. На 100 000 ₽ начислится 1 000 ₽. После взноса 20 000 ₽ капитал составит 121 000 ₽. В следующем месяце процент начисляется на всю эту сумму.</p>
+                                </details>
                             </div>
-                            <p class="goal-muted">Ставка постоянна. Годовую ставку делим на 12, начисляем доход на текущие накопления каждый месяц, затем добавляем взнос.</p>
                         </fieldset>
                         <fieldset aria-describedby="mode-description">
                             <legend>Режим цели</legend>
@@ -252,13 +280,14 @@
                             <p class="goal-muted" id="mode-description">Целевая сумма в рублях остаётся постоянной.</p>
                         </fieldset>
                     </div>
-                    <div class="goal-source goal-muted">
+                    <details class="goal-source goal-secondary" id="goal-sources">
+                        <summary>Об источниках данных</summary>
                         <p id="rate-reference" data-status="loading">Загружаем справочную ставку Банка России…</p>
                         <p id="inflation-reference" data-status="loading">Загружаем годовой ряд инфляции…</p>
                         <div class="goal-actions" id="source-recovery" hidden>
                             <button type="button" class="goal-button" id="retry-sources">Обновить справочные данные</button>
                         </div>
-                    </div>
+                    </details>
                 </div>
             </details>
 
@@ -283,7 +312,7 @@
                         <p class="goal-error" id="budget-expenses-error" hidden></p>
                     </div>
                     </div>
-                    <p id="budget-result" class="goal-muted">Укажите доход и расходы, чтобы оценить доступный взнос.</p>
+                    <p id="budget-result" class="goal-muted" hidden></p>
                     <div class="goal-actions">
                         <button id="apply-budget" class="goal-button" type="button" disabled>Использовать как взнос</button>
                     </div>
@@ -291,12 +320,14 @@
             </details>
 
             <section class="goal-card" id="screenshot-area" aria-labelledby="capital-heading" hidden>
-                <h2 id="capital-heading">Как складывается сумма</h2>
-                <p class="goal-muted" id="capital-context"></p>
+                <h2 id="capital-heading">Из чего складывается сумма</h2>
                 <dl class="goal-table" id="capital-values"></dl>
                 <div id="purchasing-power" hidden>
-                    <p class="goal-muted" id="power-context"></p>
-                    <dl class="goal-table" id="power-values"></dl>
+                    <p class="goal-muted goal-power" id="power-context"></p>
+                    <details class="goal-secondary" id="power-details" hidden>
+                        <summary>Порог в сегодняшних ценах</summary>
+                        <p id="power-target"></p>
+                    </details>
                 </div>
             </section>
 
@@ -307,13 +338,14 @@
                         <canvas id="growth-chart" role="img" aria-label="График капитала и порога цели" aria-describedby="chart-description"></canvas>
                     </div>
                     <div class="goal-legend" id="chart-legend" aria-hidden="true" hidden><span>Капитал</span><span>Порог цели</span></div>
-                    <figcaption class="goal-muted" id="chart-description"></figcaption>
+                    <span class="goal-visually-hidden" id="chart-description"></span>
+                    <figcaption class="goal-muted" id="chart-caption"></figcaption>
                 </figure>
             </section>
 
             <section class="goal-card" aria-labelledby="save-heading">
                 <h2 id="save-heading">Сохранить или поделиться</h2>
-                <p class="goal-muted">PNG содержит условия и результат. Ссылка открывает калькулятор.</p>
+                <p class="goal-muted goal-explanation">PNG сохраняет условия и результат.</p>
                 <div class="goal-actions">
                     <button id="save-png" class="goal-button goal-primary" type="button" disabled>Сохранить PNG</button>
                     <button id="copy-link" class="goal-button" type="button">Скопировать ссылку на калькулятор</button>
@@ -324,12 +356,19 @@
             <details class="goal-card goal-disclosure" id="goal-method">
                 <summary>Как посчитано</summary>
                 <div>
-                    <p>Отсчёт начинается с текущего месяца. В каждый полный месяц начисляем доход по номинальной годовой ставке, делённой на 12, и в конце месяца добавляем взнос. Затем сравниваем капитал с порогом цели. Горизонт — 1 200 месяцев (100 лет).</p>
-                    <p>У фиксированной цели порог постоянный. В сценарии роста цен порог равен исходной цели, умноженной на (1 + годовая инфляция) в степени «число месяцев / 12». Для оценки покупательной способности делим капитал и порог на тот же коэффициент.</p>
-                    <p>Сценарная инфляция — геометрическое среднее 15 годовых индексов Росстата / ЕМИСС за декабрь к декабрю. Историческое среднее не является прогнозом. Ключевая ставка Банка России приведена для справки.</p>
-                    <p>Расчёт основан на постоянных взносах и сценарных допущениях. Доходность не гарантирована. Налоги, комиссии и изменения взносов не учитываются.</p>
-                    <p>Денежные поля принимают суммы до 100 млн ₽ с точностью до копейки. Цель начинается с 0,01 ₽. Сценарная ставка от 0% до 30%, до четырёх знаков после запятой. Расчётный капитал и порог показываем с точностью до копейки в пределах 10 млрд ₽.</p>
-                    <p>Расчёт выполняется в браузере. При сохранении PNG финансовые значения попадут в скачанный файл.</p>
+                    <ol class="goal-method-list">
+                        <li><strong>Как растут накопления</strong>
+                            <p>Отсчёт начинается с текущего месяца. Начисляем доход на накопленную сумму, затем добавляем взнос и сравниваем капитал с порогом. Горизонт — 1 200 месяцев (100 лет).</p></li>
+                        <li><strong>Как учитывается доходность</strong>
+                            <p>Номинальную годовую ставку в процентах переводим в месячную долю по формуле <code>R/1200</code>. Ставка постоянна. Ключевая ставка Банка России приведена для справки.</p></li>
+                        <li><strong>Как учитывается инфляция</strong>
+                            <p>Фиксированный порог постоянен. При росте цен порог равен <code>G × (1 + I)^(n/12)</code>, где G — цель, I — годовая инфляция в долях, n — число месяцев. Для перевода в сегодняшние рубли делим суммы на тот же коэффициент.</p>
+                            <p>Сценарий использует геометрическое среднее 15 годовых индексов Росстата / ЕМИСС за декабрь к декабрю. Историческое среднее не является прогнозом.</p></li>
+                        <li><strong>Что не учитывается</strong>
+                            <p>Налоги, комиссии и изменения взносов не учитываются. Доходность не гарантирована.</p>
+                            <p>Ввод — до 100 млн ₽ с точностью до копейки, цель — от 0,01 ₽. Ставка — 0–30%, до четырёх знаков после запятой. Капитал и порог показываем с точностью до копейки в пределах 10 млрд ₽.</p></li>
+                    </ol>
+                    <p class="goal-muted goal-explanation">Расчёт выполняется в браузере. PNG содержит введённые суммы.</p>
                 </div>
             </details>
         </div>
@@ -541,7 +580,7 @@
                 for (const id of ['result-date', 'result-conditions', 'screenshot-area', 'chart-section', 'purchasing-power']) {
                     byId(id).hidden = true;
                 }
-                for (const id of ['result-date', 'result-conditions', 'capital-values', 'power-values', 'chart-description']) write(id, '');
+                for (const id of ['result-date', 'result-conditions', 'capital-values', 'power-context', 'power-target', 'chart-caption', 'chart-description']) write(id, '');
                 clearChart();
             },
             onStateChange(state) {
@@ -587,7 +626,7 @@
         function updateBudget() {
             const [income, expenses] = budgetFields.map(spec => readField(spec, true));
             budgetProposal = null;
-            let message = 'Укажите доход и расходы, чтобы оценить доступный взнос.';
+            let message = '';
             if (income !== undefined && expenses !== undefined) {
                 const remainder = (Math.round(income * 100) - Math.round(expenses * 100)) / 100;
                 if (remainder < 0) {
@@ -598,6 +637,7 @@
                 }
             }
             write('budget-result', message);
+            byId('budget-result').hidden = !message;
             write('apply-budget', budgetProposal === null ? 'Использовать как взнос' : 'Использовать ' + money(budgetProposal) + ' как взнос');
             byId('apply-budget').disabled = budgetProposal === null;
         }
@@ -744,6 +784,39 @@
             ];
         }
 
+        function renderBreakdown(input, result) {
+            const total = money(result.finalBalance);
+            const threshold = money(result.target);
+            const thresholdLabel = input.mode === 'today' ? 'Порог с учётом роста цен' : 'Сумма цели';
+            const months = result.months;
+            const rows = months ? [
+                ['Уже накоплено', money(input.savings)],
+                ['Добавите за ' + months + ' ' + getMonthWord(months), money(result.contributions)],
+                ['Расчётный доход', money(result.totalInterest)]
+            ] : [];
+            if (total !== threshold) rows.push([thresholdLabel, threshold]);
+            const totalLabel = months ? 'Итого накоплено' : 'Итого на старте';
+            rows.push([total === threshold ? totalLabel + ' · ' + thresholdLabel.toLowerCase() : totalLabel, total]);
+            tableRows(byId('capital-values'), rows);
+            byId('screenshot-area').hidden = false;
+
+            const hasPower = months > 0 && result.realBalance !== null;
+            byId('purchasing-power').hidden = !hasPower;
+            if (!hasPower) {
+                write('power-context', '');
+                write('power-target', '');
+                byId('power-details').hidden = true;
+                return;
+            }
+            const realBalance = money(result.realBalance);
+            const realTarget = money(result.realTarget);
+            write('power-context', 'При сценарной инфляции покупательная способность накоплений — около ' +
+                realBalance + ' в сегодняшних ценах.');
+            const showRealTarget = realBalance !== realTarget;
+            byId('power-details').hidden = !showRealTarget;
+            write('power-target', showRealTarget ? 'Порог цели эквивалентен ' + realTarget + ' в сегодняшних ценах.' : '');
+        }
+
         function renderReady(input, result, reference, now) {
             const date = result.months ? dateFormat.format(new Date(now.getFullYear(), now.getMonth() + result.months, 1)).replace(/\s*г\.$/, ' года') : '';
             current = { input, result, reference, date, now, signature: inputSnapshot(), example };
@@ -753,17 +826,7 @@
             write('result-conditions', result.months ? assumptions(input, reference) :
                 'У вас ' + money(input.savings) + ' при цели ' + money(input.goal) + '.');
             byId('result-conditions').hidden = false;
-            write('capital-context', result.months ? 'Номинальные суммы к месяцу достижения.' : 'Суммы на старте расчёта.');
-            tableRows(byId('capital-values'), capitalRows(input, result));
-            byId('screenshot-area').hidden = false;
-            byId('purchasing-power').hidden = result.realBalance === null || !result.months;
-            if (!byId('purchasing-power').hidden) {
-                write('power-context', 'Покупательная способность при сценарной инфляции. ' + inflationLabel(reference) + '.');
-                tableRows(byId('power-values'), powerRows(result));
-            } else {
-                write('power-values', '');
-                write('power-context', '');
-            }
+            renderBreakdown(input, result);
             renderChart();
         }
 
@@ -783,6 +846,9 @@
             for (const spec of fields) {
                 if (!spec.rate || manual) input[spec.key] = readField(spec);
             }
+            const returnSummary = input.rate === undefined ? 'Уточните доходность' : input.rate ?
+                'Доходность ' + percent(input.rate) + ' годовых' : 'Без доходности';
+            write('settings-summary', returnSummary + ' · ' + modeLabel(input.mode));
             write('mode-description', input.mode === 'today' ?
                 'Цель сохраняет покупательную способность указанной суммы в сегодняшних ценах.' :
                 'Целевая сумма в рублях остаётся постоянной.');
@@ -857,6 +923,16 @@
                     ', порог ' + money(result.target) + '. График в номинальных рублях.' : '');
         }
 
+        function chartCaption(input, result) {
+            if (!result.months) return 'Цель достигнута на старте.';
+            const period = result.months + ' ' + getMonthWord(result.months);
+            const start = money(input.savings);
+            const end = money(result.finalBalance);
+            const capital = start === end ? 'Капитал остаётся на уровне ' + start + '.' :
+                'По расчёту капитал вырастет с ' + start + ' до ' + end + ' за ' + period + '.';
+            return capital + (input.mode === 'today' ? ' Порог меняется вместе с ценами.' : '');
+        }
+
         function chartConfig(result, exportImage = false) {
             const styles = getComputedStyle(document.documentElement);
             const step = Math.ceil(result.months / 120);
@@ -924,9 +1000,10 @@
         function renderChart() {
             clearChart();
             if (!current) return;
-            const { result } = current;
+            const { input, result } = current;
             byId('chart-section').hidden = false;
             write('chart-description', chartDescription(result));
+            write('chart-caption', chartCaption(input, result));
             if (!result.months || typeof Chart !== 'function') return;
             try {
                 byId('chart-frame').hidden = false;
@@ -993,7 +1070,7 @@
                 ['Сумма цели', money(input.goal)],
                 ['Режим цели', modeLabel(input.mode)],
                 ['Ежемесячный взнос', money(input.contribution)],
-                ['Номинальная доходность', percent(input.rate) + ' годовых']
+                ['Доходность накоплений (номинальная)', percent(input.rate) + ' годовых']
             ];
             const usesPower = result.months > 0 && result.realBalance !== null;
             if (input.mode === 'today' || usesPower) inputs.push([
@@ -1004,7 +1081,7 @@
                 ...inputs, ...capitalRows(input, result), ...(usesPower ? powerRows(result) : [])
             ]);
             appendExportChart(report, result);
-            appendText(report, 'p', caveat + ' Начисление ежемесячно по ставке R/12, взнос в конце месяца. Налоги и комиссии не учитываются.', 'goal-muted');
+            appendText(report, 'p', caveat + ' Доход начисляем на накопления по ставке R/12, затем добавляем взнос. Налоги и комиссии не учитываются.', 'goal-muted');
             if (input.mode === 'today' || usesPower) {
                 appendText(report, 'p', 'Инфляция основана на годовом ряде Росстата / ЕМИСС за указанный период. Историческое среднее не является прогнозом.', 'goal-muted');
             }
@@ -1075,7 +1152,6 @@
         function syncThemeButton() {
             const dark = document.documentElement.classList.contains('dark');
             byId('theme-toggle').setAttribute('aria-pressed', String(dark));
-            write('theme-icon', dark ? '☀' : '◐');
         }
         byId('theme-toggle').addEventListener('click', () => {
             toggleDarkMode();

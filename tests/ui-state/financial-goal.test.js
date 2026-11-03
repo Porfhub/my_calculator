@@ -73,6 +73,12 @@ test('F: nominal monthly accrual and interest-only growth', () => {
     verify({ contribution: 0, rate: 10 }, 194);
 });
 
+test('return illustration accrues on existing capital before each new contribution', () => {
+    const result = verify({ savings: 100_000, contribution: 20_000, goal: 142_210, rate: 12 }, 2);
+    assert.equal(result.history[1].balance, 121_000);
+    assert.equal(result.history[2].balance, 142_210);
+});
+
 test('G: inclusive horizon, a one-kopeck shortfall, small and fractional goals, large target', () => {
     const horizon = { savings: 0, contribution: 100 };
     verify({ ...horizon, goal: 119_900 }, 1199);
@@ -177,7 +183,7 @@ test('private values, local field errors and analytics boundaries are explicit',
         const control = html.match(new RegExp('<input[^>]+id="' + id + '"[^>]*>'))[0];
         assert.match(control, /ym-disable-keys/);
         assert.match(control, /inputmode="decimal"/);
-        assert.match(control, new RegExp('aria-describedby="' + id + '-error"'));
+        assert.match(control, new RegExp('aria-describedby="' + id + '-error(?: |")'));
         assert.ok(html.includes('<label for="' + id + '">'));
     }
     assert.match(html, /goal-stack ym-hide-content/);

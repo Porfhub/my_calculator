@@ -17,7 +17,7 @@
       "png": {
         "width": 1180,
         "height": 1960,
-        "bytes": 311054,
+        "bytes": 315838,
         "saved": null
       },
       "accessibility": null
@@ -35,7 +35,7 @@
       "png": {
         "width": 1180,
         "height": 1960,
-        "bytes": 309753,
+        "bytes": 314532,
         "saved": null
       },
       "accessibility": null
@@ -53,7 +53,7 @@
       "png": {
         "width": 1180,
         "height": 1960,
-        "bytes": 311054,
+        "bytes": 315838,
         "saved": null
       },
       "accessibility": null
@@ -71,7 +71,7 @@
       "png": {
         "width": 1180,
         "height": 1960,
-        "bytes": 309753,
+        "bytes": 314532,
         "saved": null
       },
       "accessibility": null
@@ -89,11 +89,11 @@
       "png": {
         "width": 1180,
         "height": 1960,
-        "bytes": 311054,
+        "bytes": 315838,
         "saved": "download-mobile-light.png"
       },
       "accessibility": {
-        "passes": 29,
+        "passes": 27,
         "violations": []
       }
     },
@@ -110,11 +110,11 @@
       "png": {
         "width": 1180,
         "height": 1960,
-        "bytes": 309753,
+        "bytes": 314532,
         "saved": "download-mobile-graphite.png"
       },
       "accessibility": {
-        "passes": 29,
+        "passes": 27,
         "violations": []
       }
     },
@@ -131,7 +131,7 @@
       "png": {
         "width": 1180,
         "height": 1970,
-        "bytes": 308260,
+        "bytes": 313360,
         "saved": null
       },
       "accessibility": null
@@ -149,7 +149,7 @@
       "png": {
         "width": 1180,
         "height": 1970,
-        "bytes": 307118,
+        "bytes": 312450,
         "saved": null
       },
       "accessibility": null
@@ -167,11 +167,11 @@
       "png": {
         "width": 1180,
         "height": 1984,
-        "bytes": 300515,
+        "bytes": 305076,
         "saved": "download-desktop-light.png"
       },
       "accessibility": {
-        "passes": 29,
+        "passes": 27,
         "violations": []
       }
     },
@@ -188,11 +188,11 @@
       "png": {
         "width": 1180,
         "height": 1984,
-        "bytes": 298598,
+        "bytes": 303438,
         "saved": "download-desktop-graphite.png"
       },
       "accessibility": {
-        "passes": 29,
+        "passes": 27,
         "violations": []
       }
     }
