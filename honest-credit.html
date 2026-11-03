@@ -1,10 +1,124 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <script id="credit-model">
+        const CREDIT_DEFAULTS = Object.freeze({ amount: 500000, term: 36, rate: 12.9, insurance: 0, financed: false, fee: 0, services: 0 });
+        const CREDIT_FIELDS = {
+            amount: { min: 0.01, max: 10000000, money: true, error: 'Введите сумму от 0,01 до 10 000 000 ₽, до двух знаков после запятой.' },
+            term: { min: 1, max: 120, integer: true, error: 'Введите целое число от 1 до 120 месяцев.' },
+            rate: { min: 0, max: 50, error: 'Введите ставку из договора от 0 до 50% годовых.' },
+            insurance: { min: 0, max: 1000000, money: true, error: 'Введите сумму от 0 до 1 000 000 ₽, до двух знаков после запятой.' },
+            fee: { min: 0, max: 500000, money: true, error: 'Введите сумму от 0 до 500 000 ₽, до двух знаков после запятой.' },
+            services: { min: 0, max: 20000, money: true, error: 'Введите сумму от 0 до 20 000 ₽, до двух знаков после запятой.' }
+        };
+        const CREDIT_SPACE = /[ \u00a0\u202f]/g;
+        const CREDIT_MONEY_EDIT = /^\d+(?:[.,]\d{0,2})?$/;
+
+        function parseCreditField(raw, field) {
+            const text = raw.trim();
+            const compact = field.money ? text.replace(CREDIT_SPACE, '') : text;
+            const syntax = field.money ? CREDIT_MONEY_EDIT : field.integer ? /^\d+$/ : /^\d+(?:[.,]\d*)?$/;
+            return syntax.test(compact) ? Number(compact.replace(',', '.')) : NaN;
+        }
+
+        function validCreditField(value, field) {
+            return Number.isFinite(value) && value >= field.min && value <= field.max &&
+                (!field.integer || Number.isInteger(value)) &&
+                (!field.money || value === Math.round(value * 100) / 100);
+        }
+
+        function validCreditScenario(input) {
+            return typeof input?.financed === 'boolean' &&
+                Object.entries(CREDIT_FIELDS).every(([key, field]) => validCreditField(input[key], field));
+        }
+
+        function creditAnnuityFactor(rate, term) {
+            return rate === 0 ? term : -Math.expm1(-term * Math.log1p(rate)) / rate;
+        }
+
+        function creditScenarioRate(initialInflow, monthly, term) {
+            let low = 0;
+            // At this bound the perpetuity is worth the inflow, and the finite stream is worth less.
+            let high = monthly / initialInflow;
+            if (!Number.isFinite(high) || !(high > 0)) return NaN;
+            for (let step = 0; step < 120; step++) {
+                const midpoint = (low + high) / 2;
+                const presentValue = monthly * creditAnnuityFactor(midpoint, term);
+                if (presentValue > initialInflow) low = midpoint;
+                else high = midpoint;
+            }
+            return (low + high) / 2 * 1200;
+        }
+
+        function calculateCreditScenario(input) {
+            if (!validCreditScenario(input)) return { state: 'INVALID_INPUT' };
+            const { amount, term, rate, insurance, financed, fee, services } = input;
+            const upfront = (Math.round(fee * 100) + (financed ? 0 : Math.round(insurance * 100))) / 100;
+            const initialInflow = (Math.round(amount * 100) - Math.round(upfront * 100)) / 100;
+            if (initialInflow <= 0) return { state: 'CALCULATION_IMPOSSIBLE', reason: 'inflow' };
+
+            const debt = amount + (financed ? insurance : 0);
+            const payment = debt / creditAnnuityFactor(rate / 1200, term);
+            const monthly = payment + services;
+            const total = monthly * term + upfront;
+            const extra = total - amount;
+            const interest = Math.max(0, payment * term - debt);
+            const insuranceInterest = financed ? interest * (insurance / debt) : 0;
+            const serviceTotal = services * term;
+            const annualRate = insurance || fee || services ? creditScenarioRate(initialInflow, monthly, term) : rate;
+            const result = { debt, payment, monthly, upfront, total, extra: Math.max(0, extra),
+                interest, insuranceInterest, serviceTotal, annualRate };
+            return Object.values(result).every(Number.isFinite) && monthly > 0
+                ? { state: 'READY', result }
+                : { state: 'CALCULATION_IMPOSSIBLE', reason: 'rate' };
+        }
+
+        const CREDIT_SHARE_PREFIX = '#credit=';
+        const CREDIT_HISTORY_KEY = 'yasnomeraCreditShare';
+
+        function creditSharePayload(input) {
+            return [1, input.amount, input.term, input.rate, input.insurance, input.financed, input.fee, input.services];
+        }
+
+        function readCreditShare(payload) {
+            if (!Array.isArray(payload) || payload.length !== 8 || payload[0] !== 1) return null;
+            const [, amount, term, rate, insurance, financed, fee, services] = payload;
+            const input = { amount, term, rate, insurance, financed, fee, services };
+            return validCreditScenario(input) ? input : null;
+        }
+    </script>
+    <script>
+        // Strip the share fragment before starting analytics or loading third-party resources.
+        function readCreditEntry() {
+            const { hash } = location;
+            const previous = history.state?.[CREDIT_HISTORY_KEY];
+            if (!hash.startsWith(CREDIT_SHARE_PREFIX)) return { scenario: readCreditShare(previous) };
+            let payload;
+            let scenario = null;
+            try {
+                if (hash.length <= 1024) {
+                    payload = JSON.parse(decodeURIComponent(hash.slice(CREDIT_SHARE_PREFIX.length)));
+                    scenario = readCreditShare(payload);
+                }
+            } catch (_) {
+                // The form will open on the example with a recovery message.
+            }
+            const url = new URL(location.href);
+            url.hash = '';
+            history.replaceState({ ...history.state, [CREDIT_HISTORY_KEY]: scenario ? payload : null }, '', url);
+            return { scenario, invalid: !scenario };
+        }
+        const creditEntry = readCreditEntry();
+        window.addEventListener('hashchange', () => {
+            if (location.hash.startsWith(CREDIT_SHARE_PREFIX)) {
+                window.dispatchEvent(new CustomEvent('credit-share-entry', { detail: readCreditEntry() }));
+            }
+        });
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Полная стоимость кредита — Ясномера</title>
-    <meta name="description" content="Сравните заявленную ставку и расчётную стоимость кредита с учётом страховки, комиссий и дополнительных платежей.">
+    <title>Стоимость кредита — Ясномера</title>
+    <meta name="description" content="Посчитайте, сколько выплатите за потребительский кредит с учётом страховки, комиссии и ежемесячных услуг.">
     <meta name="application-name" content="Ясномера">
     <meta name="theme-color" content="#166534">
     <meta name="mobile-web-app-capable" content="yes">
@@ -16,8 +130,8 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="ru_RU">
     <meta property="og:site_name" content="Ясномера">
-    <meta property="og:title" content="Полная стоимость кредита — Ясномера">
-    <meta property="og:description" content="Ставка, комиссии, страхование и дополнительные платежи в одном расчёте.">
+    <meta property="og:title" content="Стоимость кредита — Ясномера">
+    <meta property="og:description" content="Общая сумма выплат, ежемесячная нагрузка и расходы при оформлении.">
     <meta property="og:url" content="https://yasnomera.ru/honest-credit.html">
     <meta property="og:image" content="https://yasnomera.ru/assets/yasnomera-og.png">
     <meta property="og:image:width" content="1200">
@@ -25,830 +139,602 @@
     <meta property="og:image:type" content="image/png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://yasnomera.ru/assets/yasnomera-og.png">
-    <meta name="twitter:title" content="Полная стоимость кредита — Ясномера">
-    <meta name="twitter:description" content="Ставка, комиссии, страхование и дополнительные платежи в одном расчёте.">
+    <meta name="twitter:title" content="Стоимость кредита — Ясномера">
+    <meta name="twitter:description" content="Общая сумма выплат, ежемесячная нагрузка и расходы при оформлении.">
     <script type="application/ld+json">
-        {"@context":"https://schema.org","@type":"WebApplication","name":"Полная стоимость кредита","url":"https://yasnomera.ru/honest-credit.html","description":"Сравнение заявленной ставки и расчётной стоимости кредита с учётом дополнительных расходов.","applicationCategory":"FinanceApplication","operatingSystem":"Any","isAccessibleForFree":true,"inLanguage":"ru-RU","provider":{"@type":"Organization","name":"Ясномера","url":"https://yasnomera.ru/"}}
+        {"@context":"https://schema.org","@type":"WebApplication","name":"Стоимость кредита","url":"https://yasnomera.ru/honest-credit.html","description":"Оценка выплат по потребительскому кредиту с учётом дополнительных расходов.","applicationCategory":"FinanceApplication","operatingSystem":"Any","isAccessibleForFree":true,"inLanguage":"ru-RU","provider":{"@type":"Organization","name":"Ясномера","url":"https://yasnomera.ru/"}}
     </script>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- html2canvas CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/calculator-state.js" defer></script>
+    <script src="js/ui-utils.js" defer></script>
+    <script src="js/trust-layer.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" async></script>
+    <link rel="stylesheet" href="css/product-polish.css">
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            200: '#bbf7d0',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
-
-        @media (max-width: 1023px) {
-            .mobile-sticky-results {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                z-index: 50;
-                background: white;
-                box-shadow: 0 -10px 15px -3px rgba(0, 0, 0, 0.1);
-                border-top: 1px solid #e2e8f0;
-                padding: 1rem;
-                border-radius: 1.5rem 1.5rem 0 0;
-            }
-            .dark .mobile-sticky-results {
-                background: #0f172a;
-                border-top-color: #1e293b;
-            }
-            body {
-                padding-bottom: 120px;
-            }
-        }
-
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            cursor: help;
-        }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 240px;
-            background-color: #1e293b;
-            color: #fff;
-            text-align: center;
-            border-radius: 8px;
-            padding: 10px;
-            position: absolute;
-            z-index: 50;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -120px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 11px !important;
-            font-weight: 500 !important;
-            line-height: 1.4;
-            pointer-events: none;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            text-transform: none !important;
-            color: #fff !important;
-            letter-spacing: normal !important;
-        }
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-    </style>
-    <!-- Yandex.Metrika counter -->
-    <script type="text/javascript">
         (function(m,e,t,r,i,k,a){
             m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
             m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=110360838', 'ym');
-
-        ym(110360838, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-
-        function reachGoal(goalId) {
-            console.log("Goal reached:", goalId);
-            if (typeof ym !== "undefined") {
-                ym(110360838, 'reachGoal', goalId);
-            }
-        }
+            k=e.createElement(t);a=e.getElementsByTagName(t)[0];k.async=1;k.src=r;a.parentNode.insertBefore(k,a);
+        })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=110360838', 'ym');
+        ym(110360838, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer.split('#')[0], url: location.href, accurateTrackBounce:true, trackLinks:true});
     </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
-    <script src="js/theme.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/calculator-state.js"></script>
-    <script src="js/ui-utils.js"></script>
-    <script src="js/trust-layer.js"></script>
-    <link rel="stylesheet" href="css/product-polish.css">
+    <style>
+        :root {
+            color-scheme: light;
+            --credit-bg: #f6f7f4; --credit-surface: #fff; --credit-field: #f9faf8;
+            --credit-ink: #1b292e; --credit-muted: #52656d; --credit-line: #d9e1df; --credit-field-line: #7b908b;
+            --credit-accent: #075446; --credit-tint: #eaf5ef; --credit-button: #075446; --credit-focus: #087360;
+            --credit-error: #963239; --credit-error-bg: #fceff0; --credit-insurance: #507fb1;
+            --credit-interest: #70ae93; --credit-fee: #b38236; --credit-services: #836aa1;
+        }
+        :root.dark {
+            color-scheme: dark;
+            --credit-bg: #192226; --credit-surface: #222e33; --credit-field: #192428;
+            --credit-ink: #f1f5f3; --credit-muted: #b8c8c9; --credit-line: #435256; --credit-field-line: #829796;
+            --credit-accent: #a7e7c7; --credit-tint: #203e35; --credit-button: #09634e; --credit-focus: #a7e7c7;
+            --credit-error: #ffb6b4; --credit-error-bg: #402c30; --credit-insurance: #83addb;
+            --credit-interest: #5b9b7e; --credit-fee: #ddad64; --credit-services: #b8a1d8;
+        }
+        .credit-page { margin: 0; color: var(--credit-ink); background: var(--credit-bg); font: 16px/1.5 system-ui, sans-serif; }
+        .credit-page *, .credit-page *::before, .credit-page *::after { box-sizing: border-box; }
+        .credit-page [hidden] { display: none !important; }
+        .credit-page :is(h1, h2, h3, p, dl, dd, fieldset) { margin: 0; }
+        .credit-page a { color: var(--credit-accent); }
+        .credit-page :is(a, button, input, select, summary):focus-visible { outline: 3px solid var(--credit-focus); outline-offset: 2px; }
+        .credit-shell { width: min(100% - 32px, 1104px); margin-inline: auto; }
+        .credit-header { border-bottom: 1px solid var(--credit-line); background: var(--credit-surface); }
+        .credit-nav { display: flex; align-items: center; gap: 16px; min-height: 60px; }
+        .credit-brand { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; text-decoration: none; font-weight: 800; }
+        .credit-brand img { width: 28px; height: 28px; }
+        .credit-home { display: inline-flex; align-items: center; min-height: 44px; font-size: .875rem; }
+        .credit-nav #theme-toggle { position: static; margin-left: auto; }
+        .credit-page button, .credit-page select { font: inherit; }
+        .credit-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; min-width: 44px;
+            border: 1px solid var(--credit-field-line); border-radius: 10px; padding: 7px 13px; background: var(--credit-surface);
+            color: var(--credit-ink); font-weight: 650; cursor: pointer; }
+        .credit-button.primary { background: var(--credit-button); color: white; border-color: transparent; }
+        .credit-button:disabled { cursor: default; opacity: .6; }
+        .credit-theme-icon { width: 20px; height: 20px; }
+        .credit-sun, .dark .credit-moon { display: none; }
+        .dark .credit-sun { display: block; }
+        .credit-intro { padding-block: clamp(20px, 4vw, 44px) clamp(14px, 2.5vw, 24px); }
+        .credit-eyebrow { color: var(--credit-accent); font-size: .78rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
+        .credit-intro h1 { font-size: clamp(1.9rem, 5.4vw, 3.1rem); line-height: 1.08; letter-spacing: -.035em; margin-block: 5px 9px; }
+        .credit-intro p:last-child { color: var(--credit-muted); max-width: 62ch; }
+        .credit-grid { display: grid; gap: 14px; align-items: start; }
+        .credit-card { background: var(--credit-surface); border: 1px solid var(--credit-line); border-radius: 17px; padding: clamp(14px, 2.5vw, 24px); min-width: 0; }
+        .credit-card h2, .credit-card h3 { font-size: 1.12rem; line-height: 1.3; }
+        .credit-form { display: grid; gap: 12px; min-width: 0; }
+        .credit-fields { display: grid; gap: 10px 12px; margin-top: 12px; }
+        .credit-primary-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .credit-amount { grid-column: 1 / -1; }
+        .credit-field { min-width: 0; }
+        .credit-field label { display: block; margin-bottom: 4px; font-size: .875rem; font-weight: 650; }
+        .credit-entry { display: flex; align-items: center; border: 1px solid var(--credit-field-line); border-radius: 10px; background: var(--credit-field); }
+        .credit-entry:focus-within { outline: 2px solid var(--credit-focus); outline-offset: 1px; }
+        .credit-entry:has([aria-invalid=true]) { border-color: var(--credit-error); }
+        .credit-entry input, .credit-share-value { font: inherit; font-weight: 680; font-variant-numeric: tabular-nums; }
+        .credit-entry input { min-width: 0; width: 100%; min-height: 44px; border: 0; border-radius: inherit; padding: 7px 10px; background: transparent; color: inherit; }
+        .credit-page .credit-entry input:focus-visible { outline: none; }
+        .credit-unit { color: var(--credit-muted); font-size: .875rem; padding-right: 9px; white-space: nowrap; }
+        .credit-error { font-size: .85rem; color: var(--credit-error); display: block; margin-top: 4px; }
+        .credit-range { display: none; width: 100%; margin: 2px 0 0; height: 32px; accent-color: var(--credit-accent); }
+        .credit-disclosure { padding: 0; }
+        .credit-page summary { display: flex; align-items: center; gap: 9px; padding: 11px 14px; min-height: 44px; border-radius: inherit;
+            cursor: pointer; font-weight: 720; list-style: none; }
+        .credit-page summary::-webkit-details-marker { display: none; }
+        .credit-page summary::after { content: ''; width: 8px; height: 8px; margin: 0 3px 4px auto; border: solid currentColor;
+            border-width: 0 2px 2px 0; transform: rotate(45deg); flex: 0 0 auto; }
+        .credit-page details[open] > summary::after { transform: rotate(225deg); margin-bottom: 0; }
+        .credit-summary { font-size: .85rem; color: var(--credit-muted); font-weight: 500; display: block; }
+        .credit-disclosure-body { border-top: 1px solid var(--credit-line); padding: 13px 14px 16px; }
+        .credit-expense { padding: 0; border: 0; min-width: 0; display: grid; gap: 9px; }
+        .credit-expense + .credit-expense { margin-top: 16px; border-top: 1px solid var(--credit-line); }
+        .credit-expense legend { padding: 0 6px 0 0; font-weight: 750; margin-bottom: 6px; }
+        .credit-page select, .credit-share-value { width: 100%; min-height: 44px; border: 1px solid var(--credit-field-line); border-radius: 10px;
+            background: var(--credit-field); color: var(--credit-ink); padding: 7px 9px; }
+        .credit-result { display: grid; gap: 12px; min-width: 0; }
+        .credit-hero { background: var(--credit-tint); padding-block: clamp(15px, 3vw, 25px); }
+        .credit-hero-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 12px; justify-content: space-between; }
+        .credit-badge { font-size: .78rem; color: var(--credit-accent); font-weight: 700; }
+        .credit-total { display: block; margin-block: 2px 10px; color: var(--credit-accent);
+            font-size: clamp(2rem, 8vw, 3.65rem); font-weight: 800; letter-spacing: -.045em; line-height: 1.12; }
+        .credit-value, .credit-total { font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+        .credit-rows > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, auto); gap: 6px 10px; align-items: baseline;
+            padding-block: 7px; border-bottom: 1px solid var(--credit-line); }
+        .credit-rows > div:last-child { border-bottom: 0; }
+        .credit-rows dt { min-width: 0; font-size: .875rem; }
+        .credit-rows dd { max-width: 100%; text-align: right; font-weight: 740; }
+        .credit-note { color: var(--credit-muted); font-size: .85rem; }
+        .credit-page .credit-note { margin-top: 6px; }
+        .credit-rows .credit-note { grid-column: 1 / -1; margin-top: 0; text-align: left; font-weight: 500; }
+        .credit-rate { display: block; color: var(--credit-accent); font-size: clamp(1.35rem, 5vw, 1.8rem); font-weight: 760; margin-top: 5px; }
+        .credit-bar { display: flex; height: 8px; margin-block: 13px 6px; border-radius: 8px; overflow: hidden; }
+        .credit-segment { min-width: 0; }
+        .credit-principal { --credit-segment: var(--credit-accent); }
+        .credit-interest { --credit-segment: var(--credit-interest); }
+        .credit-insurance { --credit-segment: var(--credit-insurance); }
+        .credit-fee { --credit-segment: var(--credit-fee); }
+        .credit-services { --credit-segment: var(--credit-services); }
+        .credit-segment, .credit-swatch { background: var(--credit-segment); }
+        .credit-swatch { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+        .credit-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+        .credit-actions .credit-button { flex: 1 1 auto; }
+        .credit-message { background: var(--credit-error-bg); color: var(--credit-error); }
+        .credit-method { margin-block: 14px 22px; }
+        .credit-method p + p { margin-top: 9px; }
+        .credit-footer { color: var(--credit-muted); border-top: 1px solid var(--credit-line); padding-block: 14px 28px; font-size: .875rem; }
+        .credit-dialog { width: min(460px, calc(100% - 32px)); color: var(--credit-ink); }
+        .credit-dialog::backdrop { background: #101a20a0; }
+        .credit-dialog .credit-actions, .credit-dialog label, .credit-dialog p { margin-top: 10px; }
+        .credit-dialog label { display: block; font-size: .875rem; }
+        .credit-page #toast { position: fixed; inset: auto 12px 12px; margin-inline: auto; max-width: max-content; padding: 10px 14px;
+            border-radius: 10px; background: var(--credit-surface); color: var(--credit-ink); border: 1px solid var(--credit-field-line); z-index: 5; }
+        .credit-page #toast.opacity-0 { opacity: 0; pointer-events: none; }
+        .credit-export { display: grid; gap: 10px; }
+        .credit-export .credit-total { font-size: 2.6rem; }
+        .credit-export .credit-hero { padding: 15px; border-radius: 12px; }
+        .credit-page[data-calculation-state], .credit-page #screenshot-area { animation: none; }
+        @media (prefers-reduced-motion: reduce) {
+            .credit-page *, .credit-page *::before, .credit-page *::after { transition: none !important; }
+        }
+        @media (min-width: 700px) {
+            .credit-grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px; }
+            .credit-disclosure-body, .credit-page summary { padding-inline: clamp(14px, 2.5vw, 24px); }
+        }
+        @media (min-width: 700px) and (pointer: fine) {
+            .credit-range { display: block; }
+        }
+        @media (max-width: 359px) {
+            .credit-shell { width: calc(100% - 24px); }
+            .credit-nav { gap: 10px; }
+        }
+    </style>
 </head>
-<body class="calculator-page bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
-
-    <!-- Theme Toggle -->
-    <div class="product-theme-control fixed top-24 right-4 z-50 md:top-6 md:right-8">
-        <button id="theme-toggle" onclick="toggleDarkMode()" aria-label="Переключить тему" class="p-3 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:scale-110 transition-all active:scale-95">
-            <svg id="sun-icon" class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
-            <svg id="moon-icon" class="w-6 h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
-        </button>
-    </div>
-
-    <header class="bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div class="flex items-center space-x-4">
-                <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
-                    <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">Ясномера</span>
-                </a>
-                <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
-                <div class="flex items-center space-x-3">
-                    <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h1 class="text-2xl font-black tracking-tight">Полная стоимость кредита</h1>
-                        <p class="text-xs text-slate-300">Ставка, комиссии и страхование в одном расчёте</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+<body class="credit-page">
+    <header class="credit-header">
+        <nav class="credit-shell credit-nav" aria-label="Навигация">
+            <a class="credit-brand" href="./"><img src="yasnomera-mark.svg" alt="" width="28" height="28">Ясномера</a>
+            <a class="credit-home" href="./#catalog-section">Калькуляторы</a>
+            <button type="button" id="theme-toggle" class="credit-button" aria-label="Переключить тему">
+                <svg class="credit-theme-icon credit-moon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20.8 14A9 9 0 0 1 10 3.2 9 9 0 1 0 20.8 14Z"/></svg>
+                <svg class="credit-theme-icon credit-sun" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/></svg>
+            </button>
+        </nav>
     </header>
-
-    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <!-- Мобильная залипающая панель результатов -->
-        <div id="mobile-results" class="lg:hidden mobile-sticky-results hidden">
-            <div class="flex items-center justify-between mb-3">
-                <div class="flex flex-col">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase">Полная стоимость</span>
-                    <span id="mobile-rate" class="font-black text-rose-600">0%</span>
+    <main class="credit-shell">
+        <div class="credit-intro">
+            <p class="credit-eyebrow">Стоимость кредита</p>
+            <h1>Сколько вы заплатите за кредит?</h1>
+            <p>Посчитайте выплаты за весь срок, расходы в месяц и дополнительные платежи при оформлении.</p>
+        </div>
+        <p id="credit-share-error" class="credit-card credit-message" role="status" hidden>Не удалось восстановить сценарий. Ссылка повреждена или создана в другой версии калькулятора. Показан пример.</p>
+        <div class="credit-grid">
+            <form class="credit-form" id="credit-form" aria-labelledby="credit-conditions" novalidate>
+                <section class="credit-card ym-hide-content">
+                    <h2 id="credit-conditions">Условия кредита</h2>
+                    <div class="credit-fields credit-primary-fields">
+                        <div class="credit-field credit-amount">
+                            <label for="amount-input">Сумма без допрасходов</label>
+                            <div class="credit-entry">
+                                <input id="amount-input" data-credit-field="amount" class="ym-disable-keys" type="text" inputmode="decimal" value="500 000" autocomplete="off" spellcheck="false" aria-describedby="amount-error">
+                                <span class="credit-unit" aria-hidden="true">₽</span>
+                            </div>
+                            <span class="credit-error" id="amount-error" hidden></span>
+                            <input id="amount-range" class="credit-range ym-disable-keys" type="range" min="0.01" max="10000000" step="0.01" value="500000" aria-label="Сумма без допрасходов, в рублях">
+                        </div>
+                        <div class="credit-field">
+                            <label for="term-input">Срок, месяцев</label>
+                            <div class="credit-entry">
+                                <input id="term-input" data-credit-field="term" class="ym-disable-keys" type="text" inputmode="numeric" value="36" autocomplete="off" spellcheck="false" aria-describedby="term-error">
+                                <span class="credit-unit" aria-hidden="true">мес.</span>
+                            </div>
+                            <span class="credit-error" id="term-error" hidden></span>
+                            <input id="term-range" class="credit-range ym-disable-keys" type="range" min="1" max="120" step="1" value="36" aria-label="Срок, месяцев, в месяцах">
+                        </div>
+                        <div class="credit-field">
+                            <label for="rate-input">Ставка из договора</label>
+                            <div class="credit-entry">
+                                <input id="rate-input" data-credit-field="rate" class="ym-disable-keys" type="text" inputmode="decimal" value="12,9" autocomplete="off" spellcheck="false" aria-describedby="rate-error">
+                                <span class="credit-unit" aria-hidden="true">%</span>
+                            </div>
+                            <span class="credit-error" id="rate-error" hidden></span>
+                            <input id="rate-range" class="credit-range ym-disable-keys" type="range" min="0" max="50" step="any" value="12.9" aria-label="Ставка из договора, в процентах годовых">
+                        </div>
+                    </div>
+                </section>
+                <details id="credit-expenses" class="credit-card credit-disclosure">
+                    <summary><span>Дополнительные расходы<span id="expense-summary" class="credit-summary ym-hide-content">Не указаны</span></span></summary>
+                    <div class="credit-disclosure-body ym-hide-content">
+                        <fieldset class="credit-expense">
+                            <legend>Страховка</legend>
+                            <div class="credit-field">
+                                <label for="insurance-input">Разовая страховая премия</label>
+                                <div class="credit-entry">
+                                    <input id="insurance-input" data-credit-field="insurance" class="ym-disable-keys" type="text" inputmode="decimal" value="0" autocomplete="off" spellcheck="false" aria-describedby="insurance-error">
+                                    <span class="credit-unit" aria-hidden="true">₽</span>
+                                </div>
+                                <span class="credit-error" id="insurance-error" hidden></span>
+                                <input id="insurance-range" class="credit-range ym-disable-keys" type="range" min="0" max="1000000" step="0.01" value="0" aria-label="Разовая страховая премия, в рублях">
+                            </div>
+                            <div class="credit-field">
+                                <label for="insurance-mode">Как оплатите страховку</label>
+                                <select class="ym-disable-keys" id="insurance-mode">
+                                    <option value="separate">Отдельно при оформлении</option>
+                                    <option value="financed">В составе кредита</option>
+                                </select>
+                            </div>
+                        </fieldset>
+                        <fieldset class="credit-expense">
+                            <legend>Разовые расходы</legend>
+                            <div class="credit-field">
+                                <label for="fee-input">Комиссия при оформлении</label>
+                                <div class="credit-entry">
+                                    <input id="fee-input" data-credit-field="fee" class="ym-disable-keys" type="text" inputmode="decimal" value="0" autocomplete="off" spellcheck="false" aria-describedby="fee-error">
+                                    <span class="credit-unit" aria-hidden="true">₽</span>
+                                </div>
+                                <span class="credit-error" id="fee-error" hidden></span>
+                                <input id="fee-range" class="credit-range ym-disable-keys" type="range" min="0" max="500000" step="0.01" value="0" aria-label="Комиссия при оформлении, в рублях">
+                            </div>
+                        </fieldset>
+                        <fieldset class="credit-expense">
+                            <legend>Ежемесячные расходы</legend>
+                            <div class="credit-field">
+                                <label for="services-input">Дополнительные услуги в месяц</label>
+                                <div class="credit-entry">
+                                    <input id="services-input" data-credit-field="services" class="ym-disable-keys" type="text" inputmode="decimal" value="0" autocomplete="off" spellcheck="false" aria-describedby="services-error">
+                                    <span class="credit-unit" aria-hidden="true">₽</span>
+                                </div>
+                                <span class="credit-error" id="services-error" hidden></span>
+                                <input id="services-range" class="credit-range ym-disable-keys" type="range" min="0" max="20000" step="0.01" value="0" aria-label="Дополнительные услуги в месяц, в рублях">
+                            </div>
+                        </fieldset>
+                    </div>
+                </details>
+            </form>
+            <div class="credit-result">
+                <p id="honest-credit-state-message" class="credit-card credit-message" role="status" hidden></p>
+                <div id="screenshot-area" class="credit-result ym-hide-content" data-screenshot-width="560" hidden>
+                    <section class="credit-card credit-hero" aria-labelledby="credit-total-title">
+                        <div class="credit-hero-heading">
+                            <h2 id="credit-total-title">Всего выплатите</h2>
+                            <span class="credit-badge" id="scenario-badge">По примеру</span>
+                        </div>
+                        <strong id="credit-total" class="credit-total" aria-live="polite" aria-atomic="true"></strong>
+                        <dl id="credit-highlights" class="credit-rows"></dl>
+                    </section>
+                    <section class="credit-card" aria-labelledby="credit-breakdown-title">
+                        <h2 id="credit-breakdown-title">Из чего складываются выплаты</h2>
+                        <div id="credit-breakdown"></div>
+                        <p class="credit-note">Суммы показаны с округлением до копеек. Из-за округления итог и сумма строк могут отличаться.</p>
+                    </section>
+                    <section class="credit-card" aria-labelledby="credit-rate-title">
+                        <h2 id="credit-rate-title">Расчётная годовая ставка по сценарию</h2>
+                        <strong class="credit-rate credit-value" id="credit-annual-rate"></strong>
+                        <p class="credit-note">Учитывает указанные расходы и время их оплаты. Она не заменяет полную стоимость кредита, указанную в договоре.</p>
+                    </section>
                 </div>
-                <div class="text-right">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase">Платеж</p>
-                    <p id="mobile-payment" class="text-lg font-black text-slate-900 dark:text-white">0 ₽</p>
+                <div class="credit-actions">
+                    <button id="credit-png" type="button" class="credit-button primary" onclick="takeScreenshot('screenshot-area', 'yasnomera-honest-credit-cost.png')" disabled>Сохранить PNG</button>
+                    <button id="credit-share" type="button" class="credit-button" disabled>Поделиться расчётом</button>
                 </div>
             </div>
-            <button onclick="shareLinkCustom('Полная стоимость кредита — Ясномера', 'Я сравнил заявленную ставку и полную стоимость кредита в Ясномере. Расчётная ставка: ' + document.getElementById('mobile-rate').innerText + '.')" class="w-full py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg">📢 Поделиться расчётом</button>
         </div>
-
-        <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-            <span class="text-brand-500 font-bold">✓</span>
-            <span id="toast-message" class="text-sm">Готово</span>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
-            <!-- Left Column: Inputs -->
-            <div class="lg:col-span-5 space-y-6">
-                <!-- Trust Anchor Badge -->
-                <div class="flex items-center gap-3.5 p-4 bg-brand-50/50 dark:bg-slate-900/60 border border-brand-100 dark:border-brand-900/30 rounded-3xl shadow-sm">
-                    <div class="p-2.5 bg-brand-100 dark:bg-brand-950 text-brand-600 dark:text-brand-400 rounded-2xl flex-shrink-0">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                        </svg>
-                    </div>
-                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-normal">
-                        <strong>Абсолютная приватность.</strong> Мы не собираем и не передаем ваши персональные данные. Все расчеты происходят полностью локально на вашем устройстве.
-                    </p>
-                </div>
-
-                <!-- Block A: Base Conditions -->
-                <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-3">Базовые условия кредита</h2>
-
-                    <div class="space-y-4">
-                        <div class="space-y-2">
-                            <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Быстрый выбор суммы</span>
-                            <div class="grid grid-cols-3 gap-2">
-                                <button onclick="addSumToInput(100000)" class="py-2 bg-slate-50 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all uppercase">+100к ₽</button>
-                                <button onclick="addSumToInput(500000)" class="py-2 bg-slate-50 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all uppercase">+500к ₽</button>
-                                <button onclick="addSumToInput(1000000)" class="py-2 bg-slate-50 dark:bg-slate-800 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 transition-all uppercase">+1м ₽</button>
-                            </div>
-                        </div>
-
-                        <div class="space-y-2">
-                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Сумма на руки</label>
-                            <div class="relative">
-                                <input type="text" id="amount-input" oninput="handleFormattedInputSync(this, 'amount-range')" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg text-slate-800 dark:text-white" value="500 000">
-                                <span class="absolute right-4 top-3.5 text-slate-400 font-bold">₽</span>
-                            </div>
-                            <input type="range" id="amount-range" min="50000" max="10000000" step="50000" value="500000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('amount', this.value)">
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="space-y-2">
-                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Срок кредита</label>
-                                <div class="relative">
-                                    <input type="number" id="term-input" oninput="handleRawInputSync('term', this.value)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg text-slate-800 dark:text-white" value="36">
-                                    <select id="term-unit" onchange="calculateHonestRate()" class="absolute right-2 top-2 bg-white dark:bg-slate-700 border-none text-xs font-bold rounded-lg p-1.5 outline-none">
-                                        <option value="months">мес.</option>
-                                        <option value="years">лет</option>
-                                    </select>
-                                </div>
-                                <input type="range" id="term-range" min="1" max="120" step="1" value="36" class="w-full accent-brand-600 h-1 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('term', this.value)">
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Ставка банка</label>
-                                <div class="relative">
-                                    <input type="number" id="rate-input" step="0.1" oninput="handleRawInputSync('rate', this.value)" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-lg text-slate-800 dark:text-white" value="12.9">
-                                    <span class="absolute right-4 top-3.5 text-slate-400 font-bold">%</span>
-                                </div>
-                                <input type="range" id="rate-range" min="1" max="50" step="0.1" value="12.9" class="w-full accent-brand-600 h-1 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('rate', this.value)">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Block B: Hidden Costs -->
-                <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b dark:border-slate-800 pb-3">Дополнительные услуги</h2>
-
-                    <div class="space-y-6">
-                        <!-- Insurance -->
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                                    Стоимость страховки
-                                    <span class="tooltip">
-                                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                        <span class="tooltiptext">Банки часто включают стоимость страховки прямо в сумму кредита. Вы получаете на руки базовую сумму, но проценты начисляются на общую стоимость вместе со страховкой. Это главный источник скрытой переплаты.</span>
-                                    </span>
-                                </label>
-                            </div>
-                            <div class="relative">
-                                <input type="text" id="insurance-input" oninput="handleFormattedInputSync(this, 'insurance-range')" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="50 000">
-                                <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
-                            </div>
-                            <input type="range" id="insurance-range" min="0" max="1000000" step="5000" value="50000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('insurance', this.value)">
-
-                            <!-- Smart Insurance Presets -->
-                            <div class="grid grid-cols-2 gap-3 pt-1">
-                                <button type="button" onclick="applyInsurancePreset('yearly')" class="py-2 px-3 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-750 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 transition-all flex flex-col items-center justify-center">
-                                    <span class="text-brand-600 dark:text-brand-400">1.5% в год</span>
-                                    <span id="preset-yearly-label" class="text-[9px] text-slate-400 dark:text-slate-500 mt-0.5">Расчет...</span>
-                                </button>
-                                <button type="button" onclick="applyInsurancePreset('onetime')" class="py-2 px-3 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-750 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 transition-all flex flex-col items-center justify-center">
-                                    <span class="text-brand-600 dark:text-brand-400">4% единоразово</span>
-                                    <span id="preset-onetime-label" class="text-[9px] text-slate-400 dark:text-slate-500 mt-0.5">Расчет...</span>
-                                </button>
-                            </div>
-
-                            <label class="flex items-center gap-3 cursor-pointer group pt-1">
-                                <input type="checkbox" id="insurance-in-body" onchange="calculateHonestRate()" class="w-5 h-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500" checked>
-                                <span class="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-brand-600 transition-colors">Включена в тело кредита</span>
-                            </label>
-                        </div>
-
-                        <!-- One-time commissions -->
-                        <div class="space-y-2">
-                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                                Единоразовые комиссии
-                                <span class="tooltip">
-                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <span class="tooltiptext">Любые платежи, которые вы отдаете банку или автосалону в первый день: плата за оформление, комиссии за выдачу наличных или покупка модных услуг вроде "снижение процентной ставки".</span>
-                                </span>
-                            </label>
-                            <div class="relative">
-                                <input type="text" id="commissions-input" oninput="handleFormattedInputSync(this, 'commissions-range')" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="0">
-                                <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
-                            </div>
-                            <input type="range" id="commissions-range" min="0" max="500000" step="2000" value="0" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('commissions', this.value)">
-                        </div>
-
-                        <!-- Monthly payments -->
-                        <div class="space-y-2">
-                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                                Ежемесячные SMS и услуги
-                                <span class="tooltip">
-                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <span class="tooltiptext">Регулярные мелкие платежи (например, за SMS-информирование, комиссии за ведение счета или скрытые сервисные пакеты). За несколько лет они набегают в приличную сумму.</span>
-                                </span>
-                            </label>
-                            <div class="relative">
-                                <input type="text" id="monthly-hidden-input" oninput="handleFormattedInputSync(this, 'monthly-hidden-range')" class="w-full pl-4 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="599">
-                                <span class="absolute right-4 top-3.5 text-slate-400">₽/мес.</span>
-                            </div>
-                            <input type="range" id="monthly-hidden-range" min="0" max="20000" step="1" value="599" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="syncRangeToInput('monthly-hidden', this.value)">
-                        </div>
-                    </div>
-                </div>
-
+        <details id="credit-method" class="credit-card credit-disclosure credit-method">
+            <summary>Как посчитано</summary>
+            <div class="credit-disclosure-body">
+                <p>Платёж по кредиту одинаков каждый месяц. При месячной ставке <var>r</var> (годовая ставка из договора ÷ 12 в долях единицы) и сроке <var>N</var> месяцев умножаем долг на <var>r</var> и делим на 1 − (1 + <var>r</var>)<sup>−<var>N</var></sup>. При нулевой ставке делим долг на число месяцев.</p>
+                <p>В долг входит сумма без допрасходов и страховая премия, если её включили в кредит. Отдельную страховку и комиссию прибавляем один раз при оформлении, услуги — к каждому месячному платежу. Итог включает все эти выплаты.</p>
+                <p>Расчётная ставка — месячная внутренняя ставка денежных потоков, умноженная на 12. В день выдачи берём исходную сумму за вычетом разовых расходов, затем учитываем платежи через равные месячные интервалы.</p>
+                <p>Это приблизительная модель для кредита с равными платежами и разовой страховкой. Официальная ПСК учитывает состав платежей и периоды по статье 6 закона № 353-ФЗ. <a href="https://www.cbr.ru/explan/359-fz/">Разъяснения Банка России по расчёту ПСК</a>.</p>
             </div>
-
-            <!-- Right Column: Results -->
-            <div id="results-container" class="lg:col-span-7 space-y-6">
-                <div id="screenshot-area" class="space-y-6">
-                    <p id="honest-credit-state-message" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
-                    <!-- Rate Comparison Card (Promised vs. Reality) -->
-                    <div id="rate-comparison-card" class="bg-white dark:bg-slate-900 rounded-3xl shadow-lg border border-slate-100 dark:border-slate-800 p-8 text-center space-y-6 overflow-hidden relative">
-                        <div class="relative z-10 space-y-6">
-                            <div class="flex items-center justify-between border-b dark:border-slate-800 pb-4">
-                                <h2 class="text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                                    <span class="flex h-3 w-3 relative">
-                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                                        <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
-                                    </span>
-                                    Реальная стоимость кредита
-                                </h2>
-                                <span class="text-[10px] bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-400 px-3 py-1 rounded-full font-bold uppercase tracking-wider">Расчёт с учётом услуг</span>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-                                <!-- Advertised Rate Panel -->
-                                <div class="flex flex-col justify-center items-center p-6 bg-slate-50 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-750 rounded-2xl relative overflow-hidden">
-                                    <div class="absolute -right-6 -top-6 w-16 h-16 bg-slate-200 dark:bg-slate-700 opacity-20 rounded-full"></div>
-                                    <p class="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Обещали в рекламе</p>
-                                    <p id="advertised-rate-display" class="text-4xl font-black text-slate-350 dark:text-slate-500 line-through decoration-rose-500/80 decoration-4">12.9%</p>
-                                    <span class="text-[10px] text-slate-450 dark:text-slate-500 mt-2">Базовая ставка договора</span>
-                                </div>
-
-                                <!-- Real Rate Panel -->
-                                <div class="flex flex-col justify-center items-center p-6 bg-rose-50/50 dark:bg-rose-950/20 border-2 border-rose-500 dark:border-rose-800/60 rounded-2xl relative overflow-hidden group">
-                                    <div class="absolute -right-6 -top-6 w-16 h-16 bg-rose-500 opacity-10 rounded-full"></div>
-                                    <span class="absolute top-3 right-3 flex h-2 w-2">
-                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
-                                    </span>
-                                    <p class="text-xs font-extrabold text-rose-600 dark:text-rose-400 uppercase tracking-widest mb-1.5">Расчётная годовая ставка</p>
-                                    <p id="real-rate-display" class="text-6xl font-black text-rose-600 dark:text-rose-500 drop-shadow-sm">24.5%</p>
-                                    <span class="text-[10px] text-rose-600 dark:text-rose-400 font-semibold mt-2">С учётом страховок и комиссий</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Visualizing "Air Overpayment" -->
-                    <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Air card -->
-                            <div class="flex flex-col items-center justify-center text-center p-5 bg-amber-50/50 dark:bg-amber-950/10 border border-amber-100 dark:border-amber-900/30 rounded-2xl space-y-2">
-                                <div class="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 rounded-2xl flex items-center justify-center mb-1">
-                                    <svg class="w-6 h-6 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.99 7.99 0 0121 13a7.98 7.98 0 01-3.343 5.657z"></path>
-                                    </svg>
-                                </div>
-                                <p class="text-xs font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Переплата за "воздух"</p>
-                                <p id="air-overpayment-display" class="text-3xl font-black text-amber-600 dark:text-amber-400">86 400 ₽</p>
-                                <p class="text-[10px] text-slate-450 dark:text-slate-500 leading-tight">Страховка, комиссии и доп. услуги</p>
-                            </div>
-
-                            <!-- Real payment card -->
-                            <div class="flex flex-col items-center justify-center text-center p-5 bg-brand-50/50 dark:bg-brand-950/10 border border-brand-100 dark:border-brand-900/30 rounded-2xl space-y-2">
-                                <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900/30 rounded-2xl flex items-center justify-center mb-1">
-                                    <svg class="w-6 h-6 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                </div>
-                                <p class="text-xs font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Ежемесячный платеж</p>
-                                <p id="real-payment-display" class="text-3xl font-black text-slate-900 dark:text-white">18 450 ₽</p>
-                                <p class="text-[10px] text-slate-450 dark:text-slate-500 leading-tight">С учётом всех периодических платежей</p>
-                            </div>
-                        </div>
-
-                        <!-- Progress Bar for Air vs Debt Ratio -->
-                        <div class="space-y-3.5 border-t dark:border-slate-800 pt-4">
-                            <div class="flex justify-between text-xs font-extrabold text-slate-600 dark:text-slate-400">
-                                <span>Основной долг и проценты</span>
-                                <span>"Воздух" (страховки и комиссии)</span>
-                            </div>
-                            <div class="w-full bg-slate-100 dark:bg-slate-800 h-4 rounded-full overflow-hidden flex">
-                                <div id="debt-bar" class="bg-brand-500 h-full transition-all duration-500" style="width: 75%"></div>
-                                <div id="air-bar" class="bg-amber-500 h-full transition-all duration-500" style="width: 25%"></div>
-                            </div>
-                            <div class="flex justify-between text-[10px] text-slate-400 dark:text-slate-550 font-medium">
-                                <span id="debt-pct-label">75% от всех выплат</span>
-                                <span id="air-pct-label">25% от всех выплат</span>
-                            </div>
-                        </div>
-
-                        <!-- Emotionally Triggering Subtext -->
-                        <div id="air-trigger-box" class="p-4 bg-rose-50/50 dark:bg-rose-950/10 border border-rose-100 dark:border-rose-900/30 rounded-2xl flex items-start gap-3.5">
-                            <div class="p-2 bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 rounded-xl mt-0.5 flex-shrink-0">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <p id="air-trigger-text" class="text-xs font-semibold text-slate-700 dark:text-slate-300 leading-relaxed">
-                                    Каждый 4.2-й ваш платеж уходит на воздух (страховку и комиссии), а не на погашение долга!
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Chart and Verdict -->
-                    <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6">
-                        <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
-                            <div class="md:col-span-5 flex flex-col justify-center">
-                                <canvas id="structureChart" class="w-full max-h-[250px]"></canvas>
-                            </div>
-                            <div class="md:col-span-7 flex flex-col justify-center space-y-4">
-                                <div id="verdict-container" class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
-                                    <p id="verdict-text" class="text-sm leading-relaxed italic text-slate-600 dark:text-slate-300">
-                                        Загрузка вердикта...
-                                    </p>
-                                </div>
-                                <div class="flex gap-3">
-                                    <button onclick="shareLink()" class="flex-1 py-3 bg-white dark:bg-slate-800 hover:bg-slate-50 text-slate-700 dark:text-slate-300 font-bold rounded-xl border border-slate-200 dark:border-slate-700 transition shadow-sm text-sm">
-                                        Поделиться
-                                    </button>
-                                    <button onclick="takeScreenshot('screenshot-area', 'yasnomera-honest-credit-cost.png')" class="flex-1 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl transition shadow-sm text-sm">
-                                        Скриншот
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
+        </details>
     </main>
-
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8" data-webwisor="honest-credit"></section>
-
-    <footer class="py-8 text-center text-xs text-slate-400 border-t dark:border-slate-800 mt-12">
-        <p>© 2026 Ясномера. Расчёты для сравнения условий кредита.</p>
+    <footer class="credit-shell credit-footer">
+        <p>Расчёт выполняется в браузере. На сайте используется аналитика посещений.</p>
     </footer>
-
+    <div id="toast" class="opacity-0" role="status"><span id="toast-message"></span></div>
+    <dialog id="credit-share-dialog" class="credit-card credit-dialog ym-hide-content" aria-labelledby="credit-share-title" aria-describedby="credit-share-warning">
+        <h2 id="credit-share-title">Поделиться расчётом</h2>
+        <p id="credit-share-warning">В ссылке будут сумма кредита, ставка и дополнительные расходы. Их увидит любой, кому вы её отправите.</p>
+        <label for="credit-share-value">Ссылка на сценарий</label>
+        <input id="credit-share-value" class="credit-share-value ym-disable-keys" type="text" autocomplete="off" readonly>
+        <p id="credit-share-status" class="credit-note" role="status"></p>
+        <div class="credit-actions">
+            <button id="credit-copy" class="credit-button primary" type="button">Скопировать</button>
+            <form method="dialog"><button class="credit-button" type="submit">Закрыть</button></form>
+        </div>
+    </dialog>
     <script>
-        let structureChart = null;
+    document.addEventListener('DOMContentLoaded', () => {
+        const byId = id => document.getElementById(id);
+        const form = byId('credit-form');
+        const results = byId('screenshot-area');
+        const expenses = byId('credit-expenses');
+        const mode = byId('insurance-mode');
+        const dialog = byId('credit-share-dialog');
+        const shareValue = byId('credit-share-value');
+        const shareStatus = byId('credit-share-status');
+        const themeButton = byId('theme-toggle');
+        const actions = [byId('credit-png'), byId('credit-share')];
+        const fields = Object.entries(CREDIT_FIELDS).map(([key, spec]) => ({
+            key, spec, input: byId(key + '-input'), range: byId(key + '-range'), error: byId(key + '-error')
+        }));
+        const composing = new Set();
+        const moneyFormat = new Intl.NumberFormat('ru-RU', {
+            minimumFractionDigits: 2, maximumFractionDigits: 2, trailingZeroDisplay: 'stripIfInteger'
+        });
+        const annualFormat = new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+        const rateInputFormat = new Intl.NumberFormat('ru-RU', { useGrouping: false, maximumSignificantDigits: 17 });
+        const assumptions = 'Оценка для равных ежемесячных платежей и разовой страховки. Расчётная ставка не заменяет ПСК по договору.';
+        const money = value => moneyFormat.format(value) + '\u00a0₽';
+        const annual = value => annualFormat.format(value) + '\u00a0%';
+        let current = null;
+        let lastValidSignature;
+        let example = true;
+        let goalSent = false;
+
         const honestCreditStateController = CalculatorState.createController({
-            root: 'screenshot-area',
+            root: results,
             messageElement: 'honest-credit-state-message',
-            resultElements: [
-                'advertised-rate-display', 'real-rate-display', 'real-payment-display',
-                'air-overpayment-display', 'debt-pct-label', 'air-pct-label',
-                'verdict-text', 'mobile-rate', 'mobile-payment'
-            ],
             onClear: () => {
-                if (structureChart) {
-                    structureChart.destroy();
-                    structureChart = null;
+                current = null;
+                results.hidden = true;
+                for (const id of ['credit-total', 'credit-highlights', 'credit-breakdown', 'credit-annual-rate']) {
+                    byId(id).replaceChildren();
                 }
-                const trigger = document.getElementById('air-trigger-box');
-                if (trigger) trigger.classList.add('hidden');
-            }
+            },
+            onStateChange: state => actions.forEach(button => { button.disabled = state !== CalculatorState.STATES.READY; })
         });
 
-        window.canExportCalculation = () =>
-            honestCreditStateController.getState() === CalculatorState.STATES.READY;
+        window.canExportCalculation = () => honestCreditStateController.getState() === CalculatorState.STATES.READY &&
+            current !== null && composing.size === 0 &&
+            fields.every(({ key, spec, input }) => parseCreditField(input.value, spec) === current.input[key]) &&
+            current.input.financed === (mode.value === 'financed');
 
-        function readMoneyInput(id) {
-            const raw = String(document.getElementById(id).value || '').trim();
-            const compact = raw.replace(/[\s\u00a0]/g, '').replace(',', '.');
-            return /^\d+(?:\.\d+)?$/.test(compact) ? Number(compact) : null;
+        function groupMoney(raw) {
+            const [integer, fraction] = raw.split(/[.,]/);
+            return integer.replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0') + (fraction === undefined ? '' : ',' + fraction);
         }
 
-        function readPositiveInteger(id) {
-            const raw = String(document.getElementById(id).value || '').trim();
-            return /^\d+$/.test(raw) ? Number(raw) : null;
-        }
-
-        function handleFormattedInput(el) {
-            formatInputField(el, el.value);
-        }
-
-        function handleFormattedInputSync(el, rangeId) {
-            if (String(el.value).trim().startsWith('-')) {
-                calculateHonestRate();
-                return;
-            }
-            const val = formatInputField(el, el.value);
-            const range = document.getElementById(rangeId);
-            if (range) {
-                range.value = val;
-            }
-            calculateHonestRate();
-        }
-
-        function handleRawInputSync(field, val) {
-            const range = document.getElementById(`${field}-range`);
-            if (range) {
-                range.value = val;
-            }
-            calculateHonestRate();
-        }
-
-        function syncRangeToInput(field, val) {
-            const input = document.getElementById(`${field}-input`);
-            if (input) {
-                if (field === 'amount' || field === 'insurance' || field === 'commissions' || field === 'monthly-hidden') {
-                    input.value = formatNumber(parseInt(val) || 0);
-                } else {
-                    input.value = val;
+        function formatMoneyEdit(input) {
+            const raw = input.value;
+            const compact = raw.replace(CREDIT_SPACE, '');
+            if (!CREDIT_MONEY_EDIT.test(compact)) return;
+            const formatted = groupMoney(compact);
+            if (formatted === raw) return;
+            const mapCaret = position => {
+                let significant = raw.slice(0, position).replace(CREDIT_SPACE, '').length;
+                let index = 0;
+                while (significant > 0 && index < formatted.length) {
+                    if (formatted[index++] !== '\u00a0') significant--;
                 }
-            }
-            calculateHonestRate();
-        }
-
-        function addSumToInput(amountToAdd) {
-            const amountInput = document.getElementById('amount-input');
-            const currentVal = parseCleanNumber(amountInput.value);
-            const newVal = currentVal + amountToAdd;
-            amountInput.value = formatNumber(newVal);
-            const range = document.getElementById('amount-range');
-            if (range) {
-                range.value = newVal;
-            }
-            calculateHonestRate();
-            if (typeof showToast === 'function') {
-                showToast(`Добавлено: +${formatNumber(amountToAdd)} ₽`);
-            }
-        }
-
-        function updatePresetLabels() {
-            const amountHand = readMoneyInput('amount-input');
-            let term = readPositiveInteger('term-input');
-            const termUnit = document.getElementById('term-unit').value;
-            if (!Number.isFinite(amountHand) || amountHand < 0 || !Number.isFinite(term) || term <= 0) {
-                CalculatorState.writeSafeText('preset-yearly-label', null);
-                CalculatorState.writeSafeText('preset-onetime-label', null);
-                return;
-            }
-            const termInYears = termUnit === 'years' ? term : term / 12;
-
-            const yearlyVal = Math.round(amountHand * 0.015 * termInYears);
-            const onetimeVal = Math.round(amountHand * 0.04);
-
-            const yearlyLabel = document.getElementById('preset-yearly-label');
-            const onetimeLabel = document.getElementById('preset-onetime-label');
-
-            if (yearlyLabel) yearlyLabel.innerText = `≈ ${formatNumber(yearlyVal)} ₽`;
-            if (onetimeLabel) onetimeLabel.innerText = `≈ ${formatNumber(onetimeVal)} ₽`;
-        }
-
-        function applyInsurancePreset(type) {
-            const amountHand = readMoneyInput('amount-input');
-            let term = readPositiveInteger('term-input');
-            const termUnit = document.getElementById('term-unit').value;
-            if (!Number.isFinite(amountHand) || amountHand < 0 || !Number.isFinite(term) || term <= 0) {
-                honestCreditStateController.transition(CalculatorState.STATES.INVALID_INPUT, {
-                    message: 'Сначала укажите корректные сумму и срок кредита.'
-                });
-                return;
-            }
-            const termInYears = termUnit === 'years' ? term : term / 12;
-
-            let val = 0;
-            if (type === 'yearly') {
-                val = Math.round(amountHand * 0.015 * termInYears);
-            } else if (type === 'onetime') {
-                val = Math.round(amountHand * 0.04);
-            }
-
-            const input = document.getElementById('insurance-input');
-            const range = document.getElementById('insurance-range');
-
-            if (input) {
-                input.value = formatNumber(val);
-            }
-            if (range) {
-                if (val > parseInt(range.max)) {
-                    range.max = val * 1.2;
-                }
-                range.value = val;
-            }
-
-            calculateHonestRate();
-            showToast(`Применен пресет страховки: ${formatNumber(val)} ₽`);
-        }
-
-        function calculateHonestRate() {
-            // Update preset labels in real time
-            updatePresetLabels();
-
-            // 1. Get Inputs
-            const amountHand = readMoneyInput('amount-input');
-            let term = readPositiveInteger('term-input');
-            const termUnit = document.getElementById('term-unit').value;
-            const bankRate = Number(document.getElementById('rate-input').value);
-
-            const insurance = readMoneyInput('insurance-input');
-            const insuranceInBody = document.getElementById('insurance-in-body').checked;
-            const commissions = readMoneyInput('commissions-input');
-            const monthlyHidden = readMoneyInput('monthly-hidden-input');
-
-            if (termUnit === 'years') term *= 12;
-            if (!Number.isFinite(amountHand) || amountHand <= 0 || !Number.isInteger(term) || term <= 0
-                || !Number.isFinite(bankRate) || bankRate < 0 || bankRate > 50
-                || ![insurance, commissions, monthlyHidden].every((value) => Number.isFinite(value) && value >= 0)) {
-                honestCreditStateController.transition(CalculatorState.STATES.INVALID_INPUT, {
-                    message: 'Проверьте сумму, срок, ставку, страховку и комиссии: отрицательные значения недопустимы.'
-                });
-                return;
-            }
-
-            // 2. Mathematical Logic
-            const fullDebt = insuranceInBody ? (amountHand + insurance) : amountHand;
-            const iMonthlyBank = bankRate / 100 / 12;
-
-            let pmtBase = 0;
-            if (iMonthlyBank > 0) {
-                pmtBase = fullDebt * (iMonthlyBank * Math.pow(1 + iMonthlyBank, term)) / (Math.pow(1 + iMonthlyBank, term) - 1);
-            } else {
-                pmtBase = fullDebt / term;
-            }
-
-            const pmtReal = pmtBase + monthlyHidden;
-            const totalBankInterest = pmtBase * term - fullDebt;
-
-            // "Air" overpayment definition:
-            // Sum of all insurances + all hidden commissions for the whole term + interests bank charged on top of the insurance body
-            const interestOnInsurance = insuranceInBody ? (totalBankInterest * (insurance / fullDebt)) : 0;
-            const totalAir = insurance + commissions + (monthlyHidden * term) + interestOnInsurance;
-
-            // 3. EIR Calculation (Internal Rate of Return)
-            // Month 0: +amountHand - commissions - (insuranceInBody ? 0 : insurance)
-            // Months 1..N: -pmtReal
-            const initialInflow = amountHand - commissions - (insuranceInBody ? 0 : insurance);
-            if (initialInflow <= 0) {
-                honestCreditStateController.transition(CalculatorState.STATES.CALCULATION_IMPOSSIBLE, {
-                    message: 'После разовых списаний вы не получаете положительную сумму на руки. Расчёт кредита невозможен.'
-                });
-                return;
-            }
-
-            const findEir = (target, pmt, n) => {
-                let low = 0;
-                let high = 1;
-
-                const getNpv = (rate) => {
-                    if (Math.abs(rate) < 0.00001) return target - pmt * n;
-                    return target - pmt * (1 - Math.pow(1 + rate, -n)) / rate;
-                };
-
-                // Keep expanding the bracket instead of silently reporting a
-                // capped rate when exceptionally large fees are entered.
-                while (getNpv(high) < 0 && high < 1e6) {
-                    high *= 2;
-                }
-                if (getNpv(high) < 0) return NaN;
-
-                // Bisection method
-                for (let i = 0; i < 60; i++) {
-                    let mid = (low + high) / 2;
-                    if (getNpv(mid) > 0) high = mid;
-                    else low = mid;
-                }
-                return (low + high) / 2;
+                if (formatted[index] === '\u00a0' && /[ \u00a0\u202f]/.test(raw[position - 1] || '')) index++;
+                return index;
             };
+            const start = mapCaret(input.selectionStart);
+            const end = mapCaret(input.selectionEnd);
+            const direction = input.selectionDirection;
+            input.value = formatted;
+            input.setSelectionRange(start, end, direction);
+        }
 
-            const monthlyEir = findEir(initialInflow, pmtReal, term);
-            // Convert to nominal annual rate (PSK logic)
-            const annualEir = monthlyEir * 12 * 100;
-            if (![fullDebt, pmtBase, pmtReal, totalBankInterest, totalAir, annualEir].every(Number.isFinite)
-                || pmtReal <= 0 || totalAir < 0) {
+        function deleteThroughSeparator(event) {
+            const input = event.currentTarget;
+            const caret = input.selectionStart;
+            if (event.isComposing || composing.has(input) || caret !== input.selectionEnd) return;
+            if (event.inputType === 'deleteContentBackward' && input.value[caret - 1] === '\u00a0') {
+                input.setSelectionRange(caret - 1, caret - 1);
+            } else if (event.inputType === 'deleteContentForward' && input.value[caret] === '\u00a0') {
+                input.setSelectionRange(caret + 1, caret + 1);
+            }
+        }
+
+        function writeField({ spec, input, range }, value) {
+            input.value = spec.money ? groupMoney(String(value)) : rateInputFormat.format(value);
+            range.value = value;
+        }
+
+        function readField({ key, spec, input, range, error }) {
+            const value = parseCreditField(input.value, spec);
+            const isComposing = composing.has(input);
+            const invalid = !validCreditField(value, spec);
+            const message = key === 'rate' && input.value.trim() === ''
+                ? 'Введите ставку из договора. Если кредит беспроцентный, укажите 0.'
+                : spec.error;
+            error.textContent = invalid && !isComposing ? message : '';
+            error.hidden = !(invalid && !isComposing);
+            if (error.hidden) input.removeAttribute('aria-invalid');
+            else input.setAttribute('aria-invalid', 'true');
+            if (invalid || isComposing) return NaN;
+            range.value = value;
+            return value;
+        }
+
+        function expenseSummary(input) {
+            if (![input.insurance, input.fee, input.services].every(Number.isFinite)) return 'Проверьте введённые расходы';
+            const parts = [];
+            if (input.insurance) parts.push('Страховка ' + money(input.insurance) + (input.financed ? ' в составе кредита' : ' отдельно'));
+            if (input.fee) parts.push(money(input.fee) + ' комиссии при оформлении');
+            if (input.services) parts.push(money(input.services) + '/мес. за услуги');
+            return parts.join(' · ') || 'Не указаны';
+        }
+
+        function row(label, value, note = '') {
+            return '<div><dt>' + label + '</dt><dd class="credit-value">' + value + '</dd>' +
+                (note ? '<dd class="credit-note">' + note + '</dd>' : '') + '</div>';
+        }
+
+        function highlightRows(input, result, includeUpfront = false) {
+            const monthlyNote = input.services
+                ? money(result.payment) + ' — платёж по кредиту, ' + money(input.services) + ' — дополнительные услуги.'
+                : '';
+            return row(input.services ? 'В месяц с услугами' : 'В месяц', money(result.monthly), monthlyNote) +
+                (includeUpfront || result.upfront ? row('Отдельно в день оформления', money(result.upfront)) : '') +
+                row('Сверх суммы без допрасходов', money(result.extra));
+        }
+
+        function breakdownMarkup(input, result) {
+            const items = [
+                ['principal', 'Возврат суммы без допрасходов', input.amount],
+                ['interest', 'Банковские проценты', result.interest,
+                    result.insuranceInterest > 0 ? 'В том числе проценты на страховку: ' + money(result.insuranceInterest) : ''],
+                ['insurance', 'Страховая премия', input.insurance],
+                ['fee', 'Разовая комиссия', input.fee],
+                ['services', 'Ежемесячные услуги за весь срок', result.serviceTotal]
+            ];
+            const bar = items.filter(([, , value]) => value > 0).map(([key, , value]) =>
+                '<span class="credit-segment credit-' + key + '" style="width:' + (value / result.total * 100) + '%"></span>').join('');
+            const rows = items.map(([key, label, value, note]) => row(
+                '<span class="credit-swatch credit-' + key + '" aria-hidden="true"></span>' + label, money(value), note)).join('');
+            return '<div class="credit-bar" aria-hidden="true">' + bar + '</div><dl class="credit-rows">' + rows + '</dl>';
+        }
+
+        function render(input, result) {
+            byId('credit-total').textContent = money(result.total);
+            byId('credit-highlights').innerHTML = highlightRows(input, result);
+            byId('credit-breakdown').innerHTML = breakdownMarkup(input, result);
+            byId('credit-annual-rate').textContent = annual(result.annualRate);
+            byId('scenario-badge').hidden = !example;
+            results.hidden = false;
+        }
+
+        function recalculate(userEdit = false) {
+            const input = Object.fromEntries(fields.map(field => [field.key, readField(field)]));
+            input.financed = mode.value === 'financed';
+            byId('expense-summary').textContent = expenseSummary(input);
+            const outcome = calculateCreditScenario(input);
+            if (outcome.state === CalculatorState.STATES.INVALID_INPUT) {
+                honestCreditStateController.transition(CalculatorState.STATES.INVALID_INPUT, {
+                    message: composing.size ? 'Завершите ввод для расчёта.' : 'Проверьте выделенные поля, чтобы увидеть расчёт.'
+                });
+                return;
+            }
+            if (outcome.state === CalculatorState.STATES.CALCULATION_IMPOSSIBLE) {
                 honestCreditStateController.transition(CalculatorState.STATES.CALCULATION_IMPOSSIBLE, {
-                    message: 'Расчёт не дал корректного финансового результата.'
+                    message: outcome.reason === 'inflow'
+                        ? 'Разовые расходы при оформлении равны сумме без допрасходов или превышают её. Для расчёта ставки после этих расходов должна остаться положительная сумма.'
+                        : 'Не удалось получить конечную расчётную ставку для этих условий.'
                 });
                 return;
             }
 
-            // 4. Update UI
-            document.getElementById('advertised-rate-display').innerText = bankRate.toFixed(1) + '%';
-            document.getElementById('real-rate-display').innerText = annualEir.toFixed(1) + '%';
-            document.getElementById('real-payment-display').innerText = formatMoney(pmtReal);
-            document.getElementById('air-overpayment-display').innerText = formatMoney(totalAir);
-
-            const realRateDisplay = document.getElementById('real-rate-display');
-            const mobileRateDisplay = document.getElementById('mobile-rate');
-            const rateCard = document.getElementById('rate-comparison-card');
-            const diffRub = Math.round(totalAir);
-
-            // Ratio of Air vs Debt + Interests inside the total payment
-            const totalOutflow = (pmtReal * term) + commissions + (insuranceInBody ? 0 : insurance);
-            const honestPart = totalOutflow - totalAir;
-
-            let debtPct = 100;
-            let airPct = 0;
-            if (totalOutflow > 0) {
-                debtPct = Math.round((honestPart / totalOutflow) * 100);
-                airPct = 100 - debtPct;
+            const signature = JSON.stringify(creditSharePayload(input));
+            const changed = signature !== lastValidSignature;
+            if (userEdit && changed) example = false;
+            const completed = honestCreditStateController.runCalculation({
+                calculate: () => outcome.result,
+                render: result => render(input, result)
+            });
+            if (!completed.ok) return;
+            current = { input, result: completed.result };
+            lastValidSignature = signature;
+            if (userEdit && changed && !goalSent) {
+                goalSent = true;
+                reachGoal('calculate_success');
             }
-
-            const debtBar = document.getElementById('debt-bar');
-            const airBar = document.getElementById('air-bar');
-            const debtPctLabel = document.getElementById('debt-pct-label');
-            const airPctLabel = document.getElementById('air-pct-label');
-            const airTriggerBox = document.getElementById('air-trigger-box');
-            const airTriggerText = document.getElementById('air-trigger-text');
-
-            if (debtBar) debtBar.style.width = `${debtPct}%`;
-            if (airBar) airBar.style.width = `${airPct}%`;
-            if (debtPctLabel) debtPctLabel.innerText = `${debtPct}% от всех выплат`;
-            if (airPctLabel) airPctLabel.innerText = `${airPct}% от всех выплат`;
-
-            // Emotionally triggering subtext
-            if (totalAir > 100 && totalOutflow > 0) {
-                const xFactor = totalOutflow / totalAir;
-                if (airTriggerText) {
-                    airTriggerText.innerHTML = `Каждый <span class="font-bold text-rose-600 dark:text-rose-400 text-sm">${xFactor.toFixed(1)}-й</span> ваш платеж уходит на воздух (страховку и комиссии), а не на погашение реального долга!`;
-                }
-                if (airTriggerBox) airTriggerBox.classList.remove('hidden');
-            } else {
-                if (airTriggerBox) airTriggerBox.classList.add('hidden');
-            }
-
-            if (diffRub > 10) { // Tiny margin for float errors
-                const pctOverpayment = (totalAir / amountHand) * 100;
-                if (pctOverpayment > 20 || annualEir > bankRate * 1.5) {
-                    rateCard.className = "bg-white dark:bg-slate-900 rounded-3xl shadow-lg border-2 border-orange-500 dark:border-orange-500/80 p-8 text-center space-y-6 overflow-hidden relative";
-                    realRateDisplay.className = "text-6xl font-black text-rose-600 dark:text-rose-500 drop-shadow-sm";
-                    
-                    const verdictText = `Дополнительные услуги увеличивают выплаты на ${formatMoney(diffRub)} (${Math.round(pctOverpayment)}% от запрошенной суммы). Расчётная ставка составляет ${annualEir.toFixed(1)}% при заявленной ставке ${bankRate.toFixed(1)}%. Сверьте эти условия с договором и уточните, какие услуги можно отключить.`;
-                    document.getElementById('verdict-text').innerText = verdictText;
-                } else {
-                    rateCard.className = "bg-white dark:bg-slate-900 rounded-3xl shadow-lg border-2 border-rose-500 dark:border-rose-800/80 p-8 text-center space-y-6 overflow-hidden relative";
-                    realRateDisplay.className = "text-6xl font-black text-rose-600 dark:text-rose-500";
-
-                    const verdictText = `Внимание! Из-за скрытой нагрузки вы переплачиваете лишние ${formatMoney(diffRub)}. Реальная стоимость этого кредита ${annualEir > bankRate * 1.8 ? 'более чем в два раза' : 'значительно'} выше, чем обещает реклама. Вы имеете право отказаться от навязанных услуг в течение установленного законом периода охлаждения.`;
-                    document.getElementById('verdict-text').innerText = verdictText;
-                }
-            } else {
-                // Honest deal
-                realRateDisplay.className = "text-6xl font-black text-emerald-600 dark:text-emerald-500";
-                mobileRateDisplay.className = "font-black text-emerald-600 dark:text-emerald-500";
-                rateCard.className = "bg-white dark:bg-slate-900 rounded-3xl shadow-lg border-2 border-emerald-500 dark:border-emerald-800/80 p-8 text-center space-y-6 overflow-hidden relative";
-
-                document.getElementById('verdict-text').innerText = "В выбранных параметрах не указаны дополнительные комиссии или страхование. Проверьте договор и полный перечень услуг перед оформлением кредита.";
-            }
-
-            // Chart
-            updateChart(amountHand, totalBankInterest - interestOnInsurance, totalAir);
-
-            // Show results
-            const container = document.getElementById('results-container');
-            container.classList.remove('opacity-0', 'pointer-events-none');
-
-            // Update mobile results
-            document.getElementById('mobile-rate').innerText = annualEir.toFixed(1) + '%';
-            document.getElementById('mobile-payment').innerText = formatMoney(pmtReal);
-            document.getElementById('mobile-results').classList.remove('hidden');
-
-            honestCreditStateController.transition(CalculatorState.STATES.READY, { clearResults: false });
-            reachGoal("calculate_success");
         }
 
-        function updateChart(received, interest, air) {
-            const ctx = document.getElementById('structureChart').getContext('2d');
+        function restore(entry) {
+            if (dialog.open) dialog.close();
+            composing.clear();
+            const initial = entry.scenario || CREDIT_DEFAULTS;
+            example = !entry.scenario;
+            for (const field of fields) writeField(field, initial[field.key]);
+            mode.value = initial.financed ? 'financed' : 'separate';
+            expenses.open = entry.scenario && (initial.insurance > 0 || initial.fee > 0 || initial.services > 0) &&
+                calculateCreditScenario(initial).state !== CalculatorState.STATES.READY;
+            byId('credit-share-error').hidden = !entry.invalid;
+            recalculate();
+        }
 
-            if (structureChart) structureChart.destroy();
-
-            const isDark = document.documentElement.classList.contains('dark');
-            const textColor = isDark ? '#cbd5e1' : '#475569';
-
-            structureChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Сумма на руки', 'Проценты', 'Дополнительные услуги'],
-                    datasets: [{
-                        data: [received, interest, air],
-                        backgroundColor: ['#22c55e', '#64748b', '#f43f5e'],
-                        borderWidth: 0,
-                        hoverOffset: 10
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: textColor,
-                                font: { size: 11, weight: 'bold' },
-                                padding: 20,
-                                usePointStyle: true
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const val = context.raw;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const pct = ((val / total) * 100).toFixed(1);
-                                    return ` ${context.label}: ${formatMoney(val)} (${pct}%)`;
-                                }
-                            }
-                        }
-                    },
-                    cutout: '70%'
-                }
+        for (const field of fields) {
+            const { spec, input, range } = field;
+            if (spec.money) input.addEventListener('beforeinput', deleteThroughSeparator);
+            input.addEventListener('compositionstart', () => {
+                composing.add(input);
+                recalculate();
+            });
+            input.addEventListener('compositionend', event => {
+                composing.delete(input);
+                if (spec.money) formatMoneyEdit(input);
+                recalculate(event.isTrusted);
+            });
+            input.addEventListener('input', event => {
+                if (event.isComposing || composing.has(input)) return;
+                if (spec.money) formatMoneyEdit(input);
+                recalculate(event.isTrusted);
+            });
+            range.addEventListener('input', event => {
+                const value = range.valueAsNumber;
+                writeField(field, spec.money ? Math.round(value * 100) / 100 : value);
+                recalculate(event.isTrusted);
             });
         }
 
-        window.onload = () => {
-            initTheme();
-            calculateHonestRate();
+        mode.addEventListener('change', event => recalculate(event.isTrusted));
+        form.addEventListener('submit', event => event.preventDefault());
+        themeButton.setAttribute('aria-pressed', document.documentElement.classList.contains('dark'));
+        themeButton.addEventListener('click', () => {
+            toggleDarkMode();
+            themeButton.setAttribute('aria-pressed', document.documentElement.classList.contains('dark'));
+        });
+        byId('credit-share').addEventListener('click', () => {
+            if (!window.canExportCalculation()) return;
+            const url = new URL(location.pathname, location.origin);
+            url.hash = CREDIT_SHARE_PREFIX + encodeURIComponent(JSON.stringify(creditSharePayload(current.input)));
+            shareValue.value = url.href;
+            shareStatus.textContent = '';
+            dialog.showModal();
+            reachGoal('share_click');
+        });
+        byId('credit-copy').addEventListener('click', async () => {
+            const url = shareValue.value;
+            try {
+                await navigator.clipboard.writeText(url);
+                if (dialog.open && shareValue.value === url) shareStatus.textContent = 'Ссылка скопирована.';
+            } catch (_) {
+                if (!dialog.open || shareValue.value !== url) return;
+                shareStatus.textContent = 'Скопируйте выделенную ссылку вручную.';
+                shareValue.focus();
+                shareValue.select();
+            }
+        });
+        dialog.addEventListener('close', () => {
+            if (dialog.open) return;
+            shareValue.value = '';
+            shareStatus.textContent = '';
+        });
+
+        window.prepareCalculationScreenshot = stage => {
+            if (!window.canExportCalculation()) throw new Error('Credit result unavailable');
+            const { input, result } = current;
+            const terms = row('Сумма без допрасходов', money(input.amount)) +
+                row('Срок, месяцев', String(input.term)) +
+                row('Ставка из договора', rateInputFormat.format(input.rate) + ' %') +
+                row('Разовая страховая премия', money(input.insurance)) +
+                row('Оплата страховки', input.financed ? 'В составе кредита' : 'Отдельно при оформлении') +
+                row('Комиссия при оформлении', money(input.fee)) +
+                row('Ежемесячные услуги', money(input.services)) +
+                row('Долг по кредиту', money(result.debt));
+            stage.classList.add('ym-hide-content');
+            stage.dataset.screenshotBackground = getComputedStyle(document.body).getPropertyValue('--credit-bg').trim();
+            stage.style.backgroundColor = stage.dataset.screenshotBackground;
+            const report = document.createElement('article');
+            report.className = 'credit-card credit-export ym-hide-content';
+            report.innerHTML = '<h2>Ясномера · Стоимость кредита</h2>' +
+                '<div class="credit-hero"><h3>Всего выплатите</h3><strong class="credit-total">' + money(result.total) +
+                '</strong><dl class="credit-rows">' + highlightRows(input, result, true) + '</dl></div>' +
+                '<h3>Условия кредита</h3><dl class="credit-rows">' + terms + '</dl>' +
+                '<div><h3>Из чего складываются выплаты</h3>' + breakdownMarkup(input, result) + '</div>' +
+                '<div><h3>Расчётная годовая ставка по сценарию</h3><strong class="credit-rate">' + annual(result.annualRate) + '</strong></div>' +
+                '<p class="credit-note">' + assumptions + ' Суммы округлены до копеек.</p>';
+            stage.replaceChildren(report);
         };
+
+        restore(creditEntry);
+        window.addEventListener('credit-share-entry', event => restore(event.detail));
+    });
     </script>
 </body>
 </html>

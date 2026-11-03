@@ -1,0 +1,187 @@
+{
+  "browser": "156.0.4314.58",
+  "channel": "msedge",
+  "baseline": "d15233195d900ecb641a415901c7807697d13211",
+  "matrix": [
+    {
+      "width": 320,
+      "theme": "light",
+      "totalBottom": 675.1875,
+      "minControl": 44,
+      "scenarios": "A–E, zero, invalid, impossible, maximum",
+      "shares": "B–D plus reload"
+    },
+    {
+      "width": 320,
+      "theme": "graphite",
+      "totalBottom": 675.1875,
+      "minControl": 44,
+      "scenarios": "A–E, zero, invalid, impossible, maximum",
+      "shares": "B–D plus reload"
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "totalBottom": 654.1875,
+      "minControl": 44,
+      "scenarios": "A–E, zero, invalid, impossible, maximum",
+      "shares": "B–D plus reload"
+    },
+    {
+      "width": 375,
+      "theme": "graphite",
+      "totalBottom": 654.1875,
+      "minControl": 44,
+      "scenarios": "A–E, zero, invalid, impossible, maximum",
+      "shares": "B–D plus reload"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "totalBottom": 654.1875,
+      "minControl": 44,
+      "scenarios": "A–E, zero, invalid, impossible, maximum",
+      "shares": "B–D plus reload"
+    },
+    {
+      "width": 390,
+      "theme": "graphite",
+      "totalBottom": 654.1875,
+      "minControl": 44,
+      "scenarios": "A–E, zero, invalid, impossible, maximum",
+      "shares": "B–D plus reload"
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "totalBottom": 351.140625,
+      "minControl": 44,
+      "scenarios": "A–E, zero, invalid, impossible, maximum",
+      "shares": "B–D plus reload"
+    },
+    {
+      "width": 768,
+      "theme": "graphite",
+      "totalBottom": 351.140625,
+      "minControl": 44,
+      "scenarios": "A–E, zero, invalid, impossible, maximum",
+      "shares": "B–D plus reload"
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "totalBottom": 379.96875,
+      "minControl": 44,
+      "scenarios": "A–E, zero, invalid, impossible, maximum",
+      "shares": "B–D plus reload"
+    },
+    {
+      "width": 1366,
+      "theme": "graphite",
+      "totalBottom": 379.96875,
+      "minControl": 44,
+      "scenarios": "A–E, zero, invalid, impossible, maximum",
+      "shares": "B–D plus reload"
+    }
+  ],
+  "pngs": [
+    {
+      "scenario": "D",
+      "screenshot": null,
+      "width": 1200,
+      "height": 2188,
+      "background": "#f6f7f4"
+    },
+    {
+      "scenario": "D",
+      "screenshot": null,
+      "width": 1200,
+      "height": 2188,
+      "background": "#192226"
+    },
+    {
+      "scenario": "D",
+      "screenshot": null,
+      "width": 1200,
+      "height": 2188,
+      "background": "#f6f7f4"
+    },
+    {
+      "scenario": "D",
+      "screenshot": null,
+      "width": 1200,
+      "height": 2188,
+      "background": "#192226"
+    },
+    {
+      "scenario": "D",
+      "screenshot": null,
+      "width": 1200,
+      "height": 2188,
+      "background": "#f6f7f4"
+    },
+    {
+      "scenario": "D",
+      "screenshot": null,
+      "width": 1200,
+      "height": 2188,
+      "background": "#192226"
+    },
+    {
+      "scenario": "D",
+      "screenshot": null,
+      "width": 1200,
+      "height": 2230,
+      "background": "#f6f7f4"
+    },
+    {
+      "scenario": "D",
+      "screenshot": null,
+      "width": 1200,
+      "height": 2230,
+      "background": "#192226"
+    },
+    {
+      "scenario": "D",
+      "screenshot": null,
+      "width": 1200,
+      "height": 2250,
+      "background": "#f6f7f4"
+    },
+    {
+      "scenario": "D",
+      "screenshot": null,
+      "width": 1200,
+      "height": 2250,
+      "background": "#192226"
+    }
+  ],
+  "interactions": [
+    "Native Backspace/Delete at separators, mid-string caret, selection replacement, clipboard paste, CDP IME commit and Enter",
+    "Manual copy fallback, same-document hash navigation, fractional share and reload",
+    "Malformed share restores only example, Webvisor annotations, export rejection feedback and cleanup"
+  ],
+  "axeResults": [
+    {
+      "width": 390,
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "width": 390,
+      "theme": "graphite",
+      "violations": []
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "width": 1366,
+      "theme": "graphite",
+      "violations": []
+    }
+  ],
+  "errors": []
+}

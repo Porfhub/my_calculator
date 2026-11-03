@@ -33,7 +33,8 @@ test('honest credit and price of time reject invalid values before rendering con
     const credit = read('honest-credit.html');
     const time = read('time-is-money.html');
     assert.match(credit, /initialInflow <= 0/);
-    assert.match(credit, /totalAir < 0/);
+    assert.match(credit, /calculateCreditScenario\(input\)/);
+    assert.match(credit, /current = null/);
     assert.match(time, /Number\.isFinite\(input\.income\)&&input\.income>0/);
     assert.match(time, /Number\.isFinite\(input\.hours\)&&input\.hours>0/);
     assert.match(time, /timeStateController\.runCalculation\(/);

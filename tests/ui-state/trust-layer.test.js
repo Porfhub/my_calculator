@@ -25,7 +25,7 @@ test('official-data consumers show a human-readable source without technical jar
     assert.match(read('inflation-shredder.html'), /Источник: Росстат \/ ЕМИСС, годовой ряд/);
 });
 
-test('every production calculator has one shared methodology block', () => {
+test('every production calculator has one methodology block', () => {
     const calculators = [
         'car-vs-taxi.html',
         'financial-freedom.html',
@@ -42,6 +42,12 @@ test('every production calculator has one shared methodology block', () => {
 
     for (const file of calculators) {
         const html = read(file);
+        if (file === 'honest-credit.html') {
+            assert.equal((html.match(/<summary>Как посчитано<\/summary>/g) || []).length, 1);
+            assert.match(html, /https:\/\/www\.cbr\.ru\/explan\/359-fz\//);
+            assert.doesNotMatch(html, /data-webwisor=/);
+            continue;
+        }
         assert.match(html, /js\/trust-layer\.js/, `${file}: shared layer`);
         assert.equal((html.match(/data-webwisor=/g) || []).length, 1, `${file}: one block`);
         assert.match(trustLayer, new RegExp(`'${file.replace('.', '\\.')}':\\s*\\{`), `${file}: methodology`);

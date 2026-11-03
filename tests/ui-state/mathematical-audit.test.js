@@ -39,7 +39,7 @@ test('calculation displays are not intentionally capped or mislabeled', () => {
     assert.match(time, /Доход за час по рабочему графику/);
     assert.match(time, /const scheduledWorkDays=purchaseHours\/input\.hours;/);
     assert.match(credit, /Расчётная годовая ставка/);
-    assert.match(credit, /while \(getNpv\(high\) < 0 && high < 1e6\)/);
+    assert.match(credit, /high = monthly \/ initialInflow/);
     assert.match(mortgage, /Из чего складываются выплаты/);
     assert.match(mortgage, /Всего выплат/);
     assert.match(car, /const depositRatePct = Math\.max\(0, cbRate - 2\);/);
