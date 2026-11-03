@@ -204,11 +204,20 @@ test('clipboard refusal exposes a selectable URL and invalid state blocks sharin
     assert.deepEqual(p.goals, ['share_click']);
 });
 
-test('negative renter balance is disclosed, not painted as zero wealth', () => {
-    const p = page(); p.edit('rent-input', '300000');
+test('the signed renter balance explains why initially cheaper rent ends in a shortfall', () => {
+    const p = page(); p.edit('rent-input', '83165');
     assert.equal(p.element('rent-deficit').hidden, false);
-    assert.match(p.element('rent-deficit').innerText, /Дефицит по модели/);
-    assert.ok(p.run('renderedResult.rentFinal') < 0);
+    assert.equal(p.element('rent-balance-bar').hidden, true);
+    assert.equal(moneyNumber(p.element('final-rent').innerText), -1346783);
+    assert.equal(moneyNumber(p.element('verdict-difference').innerText), 27879760);
+    assert.match(p.element('verdict-desc').innerText, /− \(−/);
+    assert.match(p.element('rent-shortfall-story').innerText, /На 8-м году[\s\S]*На 19-м году/);
+    p.element('explain-rent-balance').listeners.click();
+    assert.equal(p.element('comparison-methodology').open, true);
+    p.edit('rent-input', '50000');
+    assert.equal(p.element('rent-deficit').hidden, true);
+    assert.equal(p.element('rent-balance-bar').hidden, false);
+    assert.equal(p.element('verdict-desc').innerText, 'Через 20 лет');
 });
 
 const moneyNumber = text => Number(text.replace(/[^0-9−-]/g, '').replace('−', '-'));

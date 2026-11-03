@@ -214,7 +214,10 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 .rent-page .rv-capital+.rv-capital{margin-top:20px}
 .rent-page .rv-capital-line{display:flex;align-items:baseline;justify-content:space-between;gap:14px;font-size:13px}
 .rent-page .rv-capital-line strong{font-size:24px;line-height:1.3;letter-spacing:-.5px;white-space:nowrap;font-weight:750}
-.rent-page .rv-capital-line .depleted{font-size:17px;white-space:normal;text-align:right}
+.rent-page .rv-verdict-description{white-space:pre-line}
+.rent-page .rv-shortfall{margin-top:10px;padding:12px 14px;border-radius:9px;background:var(--rv-bg);color:var(--rv-muted);font-size:13px;line-height:1.55}
+.rent-page .rv-shortfall p{margin:0;white-space:pre-line}
+.rent-page .rv-shortfall a{display:inline-flex;align-items:center;min-height:44px;font-weight:650}
 .rent-page .rv-bar{height:7px;background:var(--rv-bg);border-radius:9px;overflow:hidden;margin:10px 0 7px}
 .rent-page .rv-bar>div{height:100%;background:var(--rv-green);border-radius:9px}
 .rent-page .rv-bar.rent-bar>div{background:var(--rv-chart)}
@@ -330,7 +333,6 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 .rent-page #verdict-difference{font-size:28px}
 .rent-page .rv-brand{font-size:17px}
 .rent-page h1{font-size:29px}
-.rent-page .rv-capital-line .depleted{font-size:15px}
 }
 
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}
@@ -556,18 +558,20 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 </div>
 <div class="rv-capital">
 <div class="rv-capital-line">
-<span>При аренде</span>
+<span id="rent-balance-label">При аренде</span>
 <strong id="final-rent">
 </strong>
 </div>
-<div class="rv-bar rent-bar">
+<div id="rent-balance-bar" class="rv-bar rent-bar">
 <div id="comparison-bar-rent" role="progressbar" aria-label="Капитал при аренде">
 </div>
 </div>
 <p id="rent-capital-caption" class="rv-caption">
 </p>
-<p id="rent-deficit" class="rv-help" hidden>
-</p>
+<div id="rent-deficit" class="rv-shortfall" hidden>
+<p id="rent-shortfall-story"></p>
+<a id="explain-rent-balance" href="#comparison-methodology">Из чего сложилась сумма →</a>
+</div>
 </div>
 <div class="rv-assumption-note">
 <p id="result-assumptions">
@@ -749,13 +753,15 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
         function updateUI(buyFinal, rentFinal, result) {
             const investmentEnabled = state.includeInvestments;
             document.getElementById('investment-rate-field').classList.toggle('hidden', !investmentEnabled);
-            const rentFinalElement = document.getElementById('final-rent');
-            rentFinalElement.innerText = rentFinal < 0 ? 'Накопления исчерпаны' : formatMoney(rentFinal);
-            rentFinalElement.className = rentFinal < 0 ? 'depleted' : '';
-            document.getElementById('rent-deficit').hidden = rentFinal >= 0;
-            document.getElementById('rent-deficit').innerText = rentFinal < 0 ? `Дефицит по модели: ${formatMoney(Math.abs(rentFinal))}` : '';
-            document.getElementById('rent-capital-caption').innerText = rentFinal < 0
-                ? 'При выбранных предположениях арендные платежи превысили первоначальный взнос и накопленную разницу ежемесячных расходов.'
+            const hasShortfall = rentFinal < 0;
+            const rentAmount = hasShortfall ? `−${formatMoney(Math.abs(rentFinal))}` : formatMoney(rentFinal);
+            document.getElementById('final-rent').innerText = rentAmount;
+            document.getElementById('rent-balance-label').innerText = hasShortfall ? 'Баланс при аренде' : 'При аренде';
+            document.getElementById('rent-balance-bar').hidden = hasShortfall;
+            document.getElementById('rent-deficit').hidden = !hasShortfall;
+            document.getElementById('rent-shortfall-story').innerText = hasShortfall ? explainRentShortfall(result) : '';
+            document.getElementById('rent-capital-caption').innerText = hasShortfall
+                ? 'Столько не хватает к концу периода при том же бюджете на жильё, что и при покупке.'
                 : state.includeInvestments
                     ? 'Накопления с доходностью'
                     : 'Накопленные деньги';
@@ -771,20 +777,12 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 
             const title = document.getElementById('verdict-title');
             const desc = document.getElementById('verdict-desc');
-            const tag = document.getElementById('verdict-tag');
-
             const diff = Math.abs(buyFinal - rentFinal);
-            const winner = buyFinal === rentFinal ? null : (buyFinal > rentFinal ? 'Ипотека' : 'Аренда');
             document.getElementById('verdict-difference').innerText = formatMoney(diff);
-            if (winner) {
-                title.innerText = winner === 'Ипотека' ? 'Больше капитала при покупке' : 'Больше капитала при аренде';
-                desc.innerText = `Через ${periodLabel}`;
-                tag.innerText = 'ПРИ ЭТИХ УСЛОВИЯХ';
-            } else {
-                title.innerText = 'Капитал одинаковый';
-                desc.innerText = `Через ${periodLabel}`;
-                tag.innerText = 'ПРИ ЭТИХ УСЛОВИЯХ';
-            }
+            title.innerText = buyFinal === rentFinal ? 'Капитал одинаковый'
+                : buyFinal > rentFinal ? 'Больше капитала при покупке' : 'Больше капитала при аренде';
+            desc.innerText = `Через ${periodLabel}`;
+            if (hasShortfall) desc.innerText += `\n${formatMoney(buyFinal)} − (${rentAmount})`;
 
             const comparisonMax = Math.max(0, buyFinal, rentFinal);
             const comparisonBars = [
@@ -796,9 +794,31 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
                 element.setAttribute('aria-valuemin', '0');
                 element.setAttribute('aria-valuemax', String(comparisonMax));
                 element.setAttribute('aria-valuenow', String(Math.max(0, value)));
-                element.setAttribute('aria-valuetext', value < 0 ? 'Накопления исчерпаны' : formatMoney(value));
+                element.setAttribute('aria-valuetext', formatMoney(value));
             });
 
+        }
+
+        function explainRentShortfall(result) {
+            const moreExpensive = result.firstMonthRentCostsMore;
+            const shortfall = result.firstMonthWithShortfall;
+            if (!moreExpensive || !shortfall) {
+                return 'Когда аренда обходится дороже покупки по месячным расходам, разница уменьшает накопления. Если их не хватает, баланс уходит в минус.';
+            }
+            const when = month => month === 1 ? 'В первый месяц'
+                : month <= 12 ? `В ${month}-м месяце` : `На ${Math.ceil(month / 12)}-м году`;
+            const firstDifference = Math.round(result.initialMonthlyDifference);
+            const sentences = [];
+            if (firstDifference > 0) {
+                sentences.push(`В первый месяц аренда дешевле на ${formatMoney(firstDifference)}.`);
+            }
+            if (moreExpensive === shortfall) {
+                sentences.push(`${when(shortfall)} аренда обходится дороже покупки по месячным расходам, и накоплений уже не хватает.`);
+            } else {
+                sentences.push(`${when(moreExpensive)} аренда впервые обходится дороже покупки по месячным расходам.`);
+                sentences.push(`${when(shortfall)} накоплений впервые не хватает.`);
+            }
+            return sentences.join('\n');
         }
 
         function updateLedger(result) {
@@ -976,6 +996,7 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
             document.getElementById(id).addEventListener('input', (event) => { state[key] = event.target.value === '' ? NaN : Number(event.target.value); event.target.setAttribute('aria-invalid', String(!isValidRentState({ ...initialState, [key]: state[key] }))); calculate(true); });
         }
         document.getElementById('edit-assumptions').addEventListener('click', () => { document.getElementById('market-assumptions').open = true; });
+        document.getElementById('explain-rent-balance').addEventListener('click', () => { document.getElementById('comparison-methodology').open = true; });
         document.getElementById('market-assumptions').addEventListener('toggle', (event) => { state.expertMode = event.target.open; if (isValidRentState()) renderedSignature = JSON.stringify(state); });
         const shareKeys = Object.keys(initialState).filter(key => key !== 'expertMode');
         function restoreRentScenario() {

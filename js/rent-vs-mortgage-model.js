@@ -22,6 +22,8 @@
         let investPot = initialRenterCapital;
         let totalMonthlyDifference = 0;
         let totalInvestmentReturn = 0;
+        let firstMonthRentCostsMore = null;
+        let firstMonthWithShortfall = null;
 
         // The annual return is treated as a nominal annual rate with monthly
         // compounding: r_month = r_annual / 12. When investment income is
@@ -50,6 +52,8 @@
             totalMonthlyDifference += monthlyDifference;
             totalInvestmentReturn += investPot * monthlyInvestmentRate;
             investPot = investPot * (1 + monthlyInvestmentRate) + monthlyDifference;
+            if (firstMonthRentCostsMore === null && monthlyDifference < 0) firstMonthRentCostsMore = month;
+            if (firstMonthWithShortfall === null && investPot < 0) firstMonthWithShortfall = month;
             currentRent *= (1 + monthlyGrowthRent);
 
             if (month % 12 === 0) {
@@ -73,7 +77,9 @@
             remainingMortgageDebt: currentLoanBalance,
             finalPropertyValue: currentPropertyValue,
             totalMonthlyDifference,
-            totalInvestmentReturn
+            totalInvestmentReturn,
+            firstMonthRentCostsMore,
+            firstMonthWithShortfall
         };
     }
 
