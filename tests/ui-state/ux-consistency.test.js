@@ -32,7 +32,7 @@ test('shared share and screenshot actions fail closed when a page marks its calc
     assert.match(utilities, /function shareLinkCustom\(title, text\)\s*\{\s*if \(!canExportCurrentCalculation\(\)\) return;/);
 });
 
-test('every production calculator exposes the shared screenshot export without replacing it', () => {
+test('every production calculator uses the shared screenshot renderer without replacing it', () => {
     const screenshotPages = {
         'mortgage.html': ['results-panel', 'yasnomera-mortgage-calculation.png'],
         'wealth.html': ['screenshot-area', 'yasnomera-income-comparison.png'],
@@ -48,7 +48,13 @@ test('every production calculator exposes the shared screenshot export without r
 
     for (const [file, [elementId, filename]] of Object.entries(screenshotPages)) {
         const html = read(file);
-        assert.match(html, new RegExp(`onclick="takeScreenshot\\('${elementId}', '${filename}'\\)"`), file);
+        if (file === 'millionaire.html') {
+            assert.match(html, /if \(exporting \|\| !window.canExportCalculation\(\)\) return;/);
+            assert.match(html, /const canvas = await renderScreenshot\(stage\)/);
+            assert.ok(html.includes("downloadScreenshot(blob, '" + filename + "')"));
+        } else {
+            assert.match(html, new RegExp(`onclick="takeScreenshot\\('${elementId}', '${filename}'\\)"`), file);
+        }
         assert.match(html, /html2canvas\.min\.js/, file);
         assert.doesNotMatch(html, /window\.takeScreenshot\s*=/, file);
     }

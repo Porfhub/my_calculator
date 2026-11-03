@@ -22,11 +22,12 @@ test('methodology and privacy copy match actual local calculator inputs', () => 
     assert.match(homepage, /Доход, возраст или дата могут потребоваться/);
 });
 
-test('key date and mortgage controls have programmatic names', () => {
+test('financial-goal and mortgage controls have programmatic names', () => {
     const millionaire = read('millionaire.html');
     const mortgage = read('mortgage.html');
-    assert.match(millionaire, /label for="birth-date"/);
-    assert.match(millionaire, /label for="current-age"/);
+    for (const id of ['goal-sum', 'current-savings', 'monthly-contribution']) {
+        assert.ok(millionaire.includes('<label for="' + id + '">'));
+    }
     assert.match(mortgage, /aria-label="Учитывать ипотечную страховку"/);
     assert.match(mortgage, /aria-label="Осталось платить: лет"/);
 });
@@ -53,12 +54,14 @@ test('release audit scenarios keep their units, transport need and source contex
     assert.match(car, /const totalCarAnnual = fuelCostAnnual \+ insurance \+ maintenance \+ depreciationAnnual \+ includedOpportunityCost;/);
 
     assert.match(goal, /name="goal-mode" value="today"/);
-    assert.match(goal, /name="goal-mode" value="future" checked/);
-    assert.match(goal, /Цель указана в сегодняшних ценах/);
-    assert.match(goal, /Цель уже указана в ценах будущего периода/);
-    assert.match(goal, /Ожидаемая годовая доходность/);
-    assert.match(goal, /'rate-range': 'interest-rate'/);
-    assert.match(goal, /const comparableBalance =/);
+    assert.match(goal, /name="goal-mode" value="fixed" checked/);
+    assert.match(goal, /Цель сохраняет покупательную способность указанной суммы в сегодняшних ценах/);
+    assert.match(goal, /Целевая сумма в рублях остаётся постоянной/);
+    assert.match(goal, /<legend>Доходность накоплений<\/legend>/);
+    assert.match(goal, /Каждый новый взнос добавляется в конце месяца и начинает приносить доход со следующего/);
+    assert.match(goal, /name="return-mode" value="zero" checked/);
+    assert.match(goal, /Капитал в сегодняшних рублях/);
+    assert.match(goal, /Порог в сегодняшних рублях/);
 
     assert.match(income, /id="conversion-summary"/);
     assert.match(income, /Сравнивается как/);

@@ -1,0 +1,228 @@
+{
+  "channel": "chrome",
+  "version": "156.0.8078.48",
+  "fixtureClock": "2026-11-03T12:00:00.000Z",
+  "baselineRef": "2cc3460a5abac52534bcbcad3d5ae25bc02379b7",
+  "matrix": [
+    {
+      "width": 320,
+      "height": 640,
+      "theme": "light",
+      "firstViewport": [
+        382,
+        463,
+        545,
+        683
+      ],
+      "png": {
+        "width": 1180,
+        "height": 1960,
+        "bytes": 315838,
+        "saved": null
+      },
+      "accessibility": null
+    },
+    {
+      "width": 320,
+      "height": 640,
+      "theme": "dark",
+      "firstViewport": [
+        382,
+        463,
+        545,
+        683
+      ],
+      "png": {
+        "width": 1180,
+        "height": 1960,
+        "bytes": 314532,
+        "saved": null
+      },
+      "accessibility": null
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "theme": "light",
+      "firstViewport": [
+        327,
+        408,
+        489,
+        597
+      ],
+      "png": {
+        "width": 1180,
+        "height": 1960,
+        "bytes": 315838,
+        "saved": null
+      },
+      "accessibility": null
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "theme": "dark",
+      "firstViewport": [
+        327,
+        408,
+        489,
+        597
+      ],
+      "png": {
+        "width": 1180,
+        "height": 1960,
+        "bytes": 314532,
+        "saved": null
+      },
+      "accessibility": null
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "firstViewport": [
+        327,
+        408,
+        489,
+        597
+      ],
+      "png": {
+        "width": 1180,
+        "height": 1960,
+        "bytes": 315838,
+        "saved": "download-mobile-light.png"
+      },
+      "accessibility": {
+        "passes": 27,
+        "violations": []
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "firstViewport": [
+        327,
+        408,
+        489,
+        597
+      ],
+      "png": {
+        "width": 1180,
+        "height": 1960,
+        "bytes": 314532,
+        "saved": "download-mobile-graphite.png"
+      },
+      "accessibility": {
+        "passes": 27,
+        "violations": []
+      }
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "light",
+      "firstViewport": [
+        342,
+        423,
+        504,
+        387
+      ],
+      "png": {
+        "width": 1180,
+        "height": 1970,
+        "bytes": 313360,
+        "saved": null
+      },
+      "accessibility": null
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "dark",
+      "firstViewport": [
+        342,
+        423,
+        504,
+        387
+      ],
+      "png": {
+        "width": 1180,
+        "height": 1970,
+        "bytes": 312450,
+        "saved": null
+      },
+      "accessibility": null
+    },
+    {
+      "width": 1366,
+      "height": 900,
+      "theme": "light",
+      "firstViewport": [
+        331,
+        412,
+        493,
+        395
+      ],
+      "png": {
+        "width": 1180,
+        "height": 1984,
+        "bytes": 305076,
+        "saved": "download-desktop-light.png"
+      },
+      "accessibility": {
+        "passes": 27,
+        "violations": []
+      }
+    },
+    {
+      "width": 1366,
+      "height": 900,
+      "theme": "dark",
+      "firstViewport": [
+        331,
+        412,
+        493,
+        395
+      ],
+      "png": {
+        "width": 1180,
+        "height": 1984,
+        "bytes": 303438,
+        "saved": "download-desktop-graphite.png"
+      },
+      "accessibility": {
+        "passes": 27,
+        "violations": []
+      }
+    }
+  ],
+  "inputs": [
+    "tab order",
+    "visible focus",
+    "theme keyboard",
+    "decimal typing",
+    "mid-string caret",
+    "selection replace",
+    "separator Backspace and Delete",
+    "real clipboard paste",
+    "CDP IME composition",
+    "short viewport",
+    "200% CSS zoom",
+    "keyboard disclosure and radio",
+    "linear 1/13/1200 month points",
+    "kopeck chart labels"
+  ],
+  "sources": [
+    "fixed result during delayed requests",
+    "network failure",
+    "HTTP 503",
+    "null",
+    "malformed rate",
+    "expired snapshots",
+    "explicit fixed-mode recovery",
+    "manual rate with broken reference",
+    "stale recovery",
+    "PNG failure cleanup"
+  ]
+}

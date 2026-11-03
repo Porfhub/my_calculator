@@ -18,9 +18,9 @@ test('homepage avoids unsupported trust claims and explains the product boundary
 
 test('official-data consumers show a human-readable source without technical jargon', () => {
     assert.match(read('financial-freedom.html'), /Источники сценария: ключевая ставка Банка России и годовой ряд инфляции Росстата/);
-    assert.match(read('millionaire.html'), /Источники сценария: \$\{rateLink\}/);
-    assert.match(read('millionaire.html'), /ставка действует с/);
-    assert.match(read('millionaire.html'), /годовой ряд по/);
+    assert.match(read('millionaire.html'), /link\('Банка России', rate.source\)/);
+    assert.match(read('millionaire.html'), /rateDate.format\(rate.effective\)/);
+    assert.match(read('millionaire.html'), /link\('Источник Росстат \/ ЕМИСС', inflation.source\)/);
     assert.match(read('genetic-wealth.html'), /Источник инфляции: годовой ряд Росстата/);
     assert.match(read('inflation-shredder.html'), /Источник: Росстат \/ ЕМИСС, годовой ряд/);
 });
@@ -46,6 +46,12 @@ test('every production calculator has one methodology block', () => {
             assert.equal((html.match(/<summary>Как посчитано<\/summary>/g) || []).length, 1);
             assert.match(html, /https:\/\/www\.cbr\.ru\/explan\/359-fz\//);
             assert.doesNotMatch(html, /data-webwisor=/);
+            continue;
+        }
+        if (file === 'millionaire.html') {
+            assert.equal((html.match(/<summary>Как посчитано<\/summary>/g) || []).length, 1);
+            assert.match(html, /Историческое среднее не является прогнозом/);
+            assert.match(html, /Ключевая ставка Банка России приведена для справки/);
             continue;
         }
         assert.match(html, /js\/trust-layer\.js/, `${file}: shared layer`);

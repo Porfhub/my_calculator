@@ -14,12 +14,20 @@ function read(file) {
     return fs.readFileSync(path.join(root, file), 'utf8');
 }
 
-test('all affected calculators use fail-closed state and combined data lifecycle', () => {
+test('affected calculators fail closed when the selected calculation needs unavailable data', () => {
     for (const file of affectedPages) {
         const html = read(file);
 
         assert.match(html, /js\/calculator-state\.js/, file);
         assert.match(html, /StateController\.runCalculation/, file);
+        if (file === 'millionaire.html') {
+            assert.match(html, /input.mode === 'fixed' \|\| reference !== null/);
+            assert.match(html, /validateData\(\)/);
+            assert.match(html, /onClear\(\)/);
+            assert.match(html, /getState\(\) === CalculatorState\.STATES\.READY/);
+            assert.doesNotMatch(html, /getCombinedDatasetStatus/);
+            continue;
+        }
         assert.match(html, /getCombinedDatasetStatus/, file);
         assert.match(html, /dataUnavailableMessage:\s*['"][^'"]*Расчёт не выполнен/, file);
         assert.match(html, /dataStatus\s*=\s*lifecycleState/, file);
@@ -32,7 +40,9 @@ test('inflation consumers never parse schema v2 as a flat object or define an in
     for (const file of affectedPages) {
         const html = read(file);
 
-        assert.match(html, /getAverageInflationRate\(inflationData\)/, file);
+        assert.match(html, file === 'millionaire.html'
+            ? /getAverageInflationRate\(dataset, 15\)/
+            : /getAverageInflationRate\(inflationData\)/, file);
         assert.doesNotMatch(html, /Object\.values\(inflationData\)/, file);
         assert.doesNotMatch(html, /avgInflation:\s*0?\.\d+/, file);
     }
