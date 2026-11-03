@@ -110,8 +110,35 @@ async function run() {
                     if (!dark) await shot(before.page, 'desktop-before-light');
                     await shot(after.page, 'desktop-after-' + mode);
                 }
+                check(width + ' ' + mode + ' closed settings take no space', await after.page.locator('#advanced-panel').boundingBox() === null);
                 await after.page.locator('#advanced-toggle').click();
                 check(width + ' ' + mode + ' expanded controls fit', !await hasOverflow(after.page));
+                check(width + ' ' + mode + ' quick office choice hides the duplicate field', await after.page.locator('#office-days-input').isHidden());
+                const layout = await after.page.evaluate(() => {
+                    const box = selector => document.querySelector(selector).getBoundingClientRect();
+                    const advanced = box('#advanced-panel');
+                    const actions = box('.time-actions');
+                    const method = box('.time-method');
+                    const settings = box('.time-settings');
+                    const money = box('.time-money');
+                    const result = box('#results-card');
+                    const [work, trips] = Array.from(document.querySelectorAll('.time-advanced-group'), el => el.getBoundingClientRect());
+                    return {
+                        desktop: result.left > money.right && actions.left === result.left
+                            && advanced.left === money.left && advanced.right === actions.right
+                            && advanced.top - actions.bottom <= 15 && advanced.top > actions.bottom
+                            && work.top === trips.top && work.right < trips.left && method.top > advanced.bottom,
+                        mobile: result.top > money.bottom && settings.top > result.bottom
+                            && advanced.top > settings.bottom && actions.top > advanced.bottom
+                            && trips.top > work.bottom && method.top > actions.bottom
+                    };
+                });
+                check(width + ' ' + mode + ' keeps the approved settings order and layout', width === 1366 ? layout.desktop : layout.mobile);
+                check(width + ' ' + mode + ' opening settings keeps the current 299 hours', await hours(after.page) === '299');
+                if (width === 1366) {
+                    await after.page.mouse.move(0, 0);
+                    await shot(after.page, 'desktop-settings-' + mode, true);
+                }
                 const targets = await after.page.locator('[data-office-days]').evaluateAll(buttons => buttons.map(button => {
                     const { width, height } = button.getBoundingClientRect();
                     return [width, height];
@@ -126,6 +153,86 @@ async function run() {
                 await after.context.close();
             }
         }
+
+        const moneyQA = await openContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+        await moneyQA.context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin });
+        const moneyPage = moneyQA.page;
+        const moneyUrl = url + '?utm_source=synthetic&yclid=qa';
+        await ready(moneyPage, '?utm_source=synthetic&yclid=qa');
+        const purchase = moneyPage.locator('#purchase-input');
+        const income = moneyPage.locator('#income-input');
+        const selection = input => input.evaluate(el => [el.selectionStart, el.selectionEnd]);
+        const moveCaret = (input, index, end = index) => input.evaluate((el, [a, b]) => el.setSelectionRange(a, b), [index, end]);
+        const nbsp = '\u00a0';
+        const initial = '2' + nbsp + '000' + nbsp + '000';
+
+        await purchase.tap();
+        await purchase.press('Control+a');
+        await purchase.press('Backspace');
+        check('empty money stays empty and does not convert', await purchase.inputValue() === '' && (await goals(moneyPage)).length === 0);
+        for (const [keys, expected] of [['1000', '1' + nbsp + '000'], ['0', '10' + nbsp + '000'], ['0', '100' + nbsp + '000']]) {
+            await purchase.pressSequentially(keys);
+            check('live grouping shows ' + expected, await purchase.inputValue() === expected && (await selection(purchase))[0] === expected.length);
+        }
+        await purchase.press('Control+a');
+        await purchase.pressSequentially('2000000');
+        check('2 000 000 groups while typing and keeps end caret', await purchase.inputValue() === initial && (await selection(purchase))[0] === 9);
+        await purchase.press('Home');
+        await purchase.press('ArrowRight');
+        await purchase.press('ArrowRight');
+        await purchase.press('ArrowRight');
+        await purchase.press('9');
+        check('insertion in the middle keeps the caret by significant digits across a regroup',
+            await purchase.inputValue() === '20' + nbsp + '900' + nbsp + '000' && (await selection(purchase))[0] === 4);
+        await moneyPage.screenshot({ path: path.join(out, 'mobile-money-live.png'), caret: 'initial' });
+        await purchase.press('Backspace');
+        check('Backspace removes the inserted digit and maps the middle caret', await purchase.inputValue() === initial && (await selection(purchase))[0] === 3);
+        await moveCaret(purchase, 6);
+        await purchase.press('Backspace');
+        check('Backspace beside a grouping space removes the previous digit', await purchase.inputValue() === '200' + nbsp + '000' && (await selection(purchase))[0] === 3);
+        await purchase.press('Delete');
+        check('Delete beside a grouping space removes the following digit', await purchase.inputValue() === '20' + nbsp + '000' && (await selection(purchase))[0] === 4);
+        await moveCaret(purchase, 1, 4);
+        await purchase.pressSequentially('55');
+        check('keyboard replaces a selection across a grouping separator', await purchase.inputValue() === '25' + nbsp + '500' && (await selection(purchase))[0] === 4);
+        await purchase.click({ position: { x: 14, y: 23 } });
+        await purchase.press('1');
+        check('mouse positions the caret for editing at the beginning', await purchase.inputValue() === '125' + nbsp + '500' && (await selection(purchase))[0] === 1);
+
+        for (const raw of ['2000000', '2 000 000', initial, '2\u202f000\u202f000', '15000000']) {
+            await moneyPage.evaluate(text => navigator.clipboard.writeText(text), raw);
+            await purchase.press('Control+a');
+            await purchase.press('Control+v');
+            const expected = raw === '15000000' ? '15' + nbsp + '000' + nbsp + '000' : initial;
+            check('native paste groups ' + raw, await purchase.inputValue() === expected && (await selection(purchase))[0] === expected.length);
+        }
+        for (const invalid of ['-2000000', '2x000000']) {
+            await moneyPage.evaluate(text => navigator.clipboard.writeText(text), invalid);
+            await purchase.press('Control+a');
+            await purchase.press('Control+v');
+            check('invalid paste is preserved and blocks exports ' + invalid, await purchase.inputValue() === invalid
+                && await moneyPage.locator('#share-time').isDisabled() && await moneyPage.locator('#time-answer').isHidden());
+        }
+        await purchase.press('Control+a');
+        await purchase.pressSequentially('150000');
+        await income.tap();
+        await income.press('Control+a');
+        const cdp = await moneyQA.context.newCDPSession(moneyPage);
+        await cdp.send('Input.imeSetComposition', { text: '2000000', selectionStart: 7, selectionEnd: 7 });
+        check('Chromium composition keeps raw text and temporarily blocks export', await income.inputValue() === '2000000'
+            && await moneyPage.locator('#save-time-png').isDisabled());
+        await cdp.send('Input.insertText', { text: '2000000' });
+        check('Chromium composition commits and groups the income', await income.inputValue() === initial && await moneyPage.locator('#save-time-png').isEnabled());
+        await moneyPage.setViewportSize({ width: 390, height: 550 });
+        check('touch-focused income remains visible in a reduced mobile viewport', await income.evaluate(el => document.activeElement === el
+            && el.getBoundingClientRect().bottom <= innerHeight));
+        await moneyPage.locator('#share-time').click();
+        await moneyPage.waitForFunction(() => document.querySelector('#toast-message').textContent === 'Ссылка скопирована');
+        const editedShare = new URL(await moneyPage.evaluate(() => navigator.clipboard.readText()));
+        check('share serialises live-edited amounts as plain numbers', editedShare.searchParams.get('price') === '150000'
+            && editedShare.searchParams.get('income') === '2000000');
+        check('live edits preserve URL attribution and one calculate_success', moneyPage.url() === moneyUrl && (await goals(moneyPage)).length === 1);
+        await moneyQA.context.close();
 
         const { page, context } = await openContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
         const requests = [];
@@ -214,6 +321,15 @@ async function run() {
         check('Enter keeps focus, sets aria-pressed and yields office 325 / 40.6', await office.evaluate(node => document.activeElement === node)
             && await office.getAttribute('aria-pressed') === 'true' && await hours(page) === '325'
             && /40,6 рабочего дня/.test(await page.locator('#scheduled-days-result').innerText()));
+        await page.locator('#office-precision-toggle').focus();
+        await page.keyboard.press('Enter');
+        check('exact office input opens from the keyboard and receives focus', await page.locator('#office-days-input').evaluate(el => document.activeElement === el));
+        await page.locator('#office-days-input').fill('2,5');
+        check('fractional office days have no pressed quick button', await page.locator('[data-office-days][aria-pressed="true"]').count() === 0);
+        await office.focus();
+        await page.keyboard.press('Space');
+        check('quick choice restores integer and hides the field without moving focus', await page.locator('#office-days-input').isHidden()
+            && await page.locator('#office-days-input').inputValue() === '5' && await office.evaluate(el => document.activeElement === el));
 
         const input = page.locator('#hours-input');
         await input.fill('');
@@ -221,6 +337,7 @@ async function run() {
         check('real Chromium keyboard keeps 7,5 and input focus', await input.inputValue() === '7,5' && await input.evaluate(node => document.activeElement === node));
         await page.locator('#work-days-input').fill('3,5');
         check('shortening the workweek leaves the office input intact with a local error', await page.locator('#office-days-input').inputValue() === '5'
+            && await page.locator('#office-days-input').isVisible() && await office.isDisabled()
             && /до 3,5/.test(await page.locator('#officeDays-error').innerText()));
         await page.locator('#office-days-input').fill('2,5');
         await page.locator('#overtime-input').fill('1,5');
@@ -288,6 +405,9 @@ async function run() {
         check('no subresource Referer exposes financial keys, including CDN and Метрика tag', resourceRequests.some(request => request.url().includes('mc.yandex.ru'))
             && resourceRequests.some(request => request.url().includes('cdnjs.cloudflare.com'))
             && referers.every(ref => !ref || financialKeys.every(key => !new URL(ref).searchParams.has(key))));
+        await page.locator('#advanced-toggle').click();
+        check('incoming fractional office value automatically opens exact input', await page.locator('#office-days-input').isVisible()
+            && await page.locator('#office-days-input').inputValue() === '2,5' && await page.locator('[data-office-days][aria-pressed="true"]').count() === 0);
         await page.goto(standardShare.href);
         check('standard shared scenario reopens at 299 hours without a conversion', await hours(page) === '299' && (await goals(page)).length === 0);
         await page.goto(copied);

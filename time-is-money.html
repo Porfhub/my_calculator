@@ -107,7 +107,7 @@ html.dark {
 .time-layout > * { min-width: 0; }
 .time-panel { border: 1px solid var(--time-line); border-radius: 16px; padding: 15px; background: var(--time-surface); }
 .time-fields { display: grid; gap: 11px; }
-.time-field label, .time-fields legend { display: block; margin-bottom: 5px; font-size: 14px; font-weight: 680; }
+.time-field label, .time-field .time-field-caption { display: block; margin-bottom: 5px; font-size: 14px; font-weight: 680; }
 .time-input-wrap { position: relative; }
 .time-input-wrap input, .time-share-dialog input {
     width: 100%; min-width: 0; min-height: 46px; padding: 8px 64px 8px 12px;
@@ -151,8 +151,9 @@ html.dark {
     .time-layout .time-button:not(:disabled):hover, .time-share-dialog button:hover { box-shadow: inset 0 0 0 1px currentColor; }
 }
 .time-advanced h2 { margin-bottom: 4px; font-size: 18px; }
-.time-advanced .time-fields { margin-top: 14px; }
+.time-advanced-groups { display: grid; gap: 18px; margin-top: 14px; }
 .time-advanced fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.time-advanced-group > legend { padding: 0; margin-bottom: 9px; color: var(--time-accent); font-weight: 750; }
 .time-office-options { display: grid; grid-template-columns: repeat(6, minmax(44px, 1fr)); gap: 6px; margin-bottom: 9px; }
 .time-office-options .time-button { padding-inline: 0; }
 .time-return { margin-top: 10px; }
@@ -191,8 +192,9 @@ html.dark {
     .time-money { grid-area: 1 / 1; }
     .time-result { grid-area: 1 / 2 / span 2; }
     .time-settings { grid-area: 2 / 1; }
-    .time-advanced { grid-area: 3 / 1; }
     .time-actions { grid-area: 3 / 2; }
+    .time-advanced { grid-area: 4 / 1 / auto / -1; }
+    .time-advanced-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
     .time-method { grid-column: 1 / -1; }
 }
 </style>
@@ -279,59 +281,71 @@ html.dark {
         <section id="advanced-panel" class="time-panel time-advanced ym-hide-content" aria-labelledby="advanced-heading" hidden>
             <h2 id="advanced-heading">График и дорога</h2>
             <p class="time-help">Можно указать средний график, например 3,5 дня в неделю для смен 2/2.</p>
-            <div class="time-fields">
-                <div class="time-field">
-                    <label for="hours-input">Рабочих часов в день</label>
-                    <div class="time-input-wrap">
-                        <input id="hours-input" data-time-field="hours" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="hours-error" class="ym-disable-keys">
-                        <span aria-hidden="true">ч</span>
+            <div class="time-advanced-groups">
+                <fieldset class="time-advanced-group">
+                    <legend>Рабочий график</legend>
+                    <div class="time-fields">
+                        <div class="time-field">
+                            <label for="hours-input">Рабочих часов в день</label>
+                            <div class="time-input-wrap">
+                                <input id="hours-input" data-time-field="hours" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="hours-error" class="ym-disable-keys">
+                                <span aria-hidden="true">ч</span>
+                            </div>
+                            <p id="hours-error" class="time-error" hidden></p>
+                        </div>
+                        <div class="time-field">
+                            <label for="work-days-input">Рабочих дней в неделю</label>
+                            <div class="time-input-wrap">
+                                <input id="work-days-input" data-time-field="workDays" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="workDays-error" class="ym-disable-keys">
+                                <span aria-hidden="true">дн.</span>
+                            </div>
+                            <p id="workDays-error" class="time-error" hidden></p>
+                        </div>
+                        <div class="time-field">
+                            <label for="overtime-input">Неоплачиваемое время, часов в неделю</label>
+                            <div class="time-input-wrap">
+                                <input id="overtime-input" data-time-field="overtime" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="overtime-error overtime-help" class="ym-disable-keys">
+                                <span aria-hidden="true">ч/нед.</span>
+                            </div>
+                            <p id="overtime-error" class="time-error" hidden></p>
+                            <p id="overtime-help" class="time-help">Например, обязательные переработки или неоплачиваемые перерывы сверх графика.</p>
+                        </div>
                     </div>
-                    <p id="hours-error" class="time-error" hidden></p>
-                </div>
-                <div class="time-field">
-                    <label for="work-days-input">Рабочих дней в неделю</label>
-                    <div class="time-input-wrap">
-                        <input id="work-days-input" data-time-field="workDays" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="workDays-error" class="ym-disable-keys">
-                        <span aria-hidden="true">дн.</span>
-                    </div>
-                    <p id="workDays-error" class="time-error" hidden></p>
-                </div>
-                <fieldset class="time-field">
-                    <legend>Дни с поездками на работу</legend>
-                    <div id="office-days-options" class="time-office-options" role="group" aria-label="Быстрый выбор офисных дней">
-                        <button type="button" class="time-button" data-office-days="0" aria-label="0 дней, полностью удалённо" aria-pressed="false">0</button>
-                        <button type="button" class="time-button" data-office-days="1" aria-label="1 день в офисе" aria-pressed="false">1</button>
-                        <button type="button" class="time-button" data-office-days="2" aria-label="2 дня в офисе" aria-pressed="false">2</button>
-                        <button type="button" class="time-button" data-office-days="3" aria-label="3 дня в офисе" aria-pressed="false">3</button>
-                        <button type="button" class="time-button" data-office-days="4" aria-label="4 дня в офисе" aria-pressed="false">4</button>
-                        <button type="button" class="time-button" data-office-days="5" aria-label="5 дней в офисе" aria-pressed="false">5</button>
-                    </div>
-                    <label for="office-days-input">Офисных дней в неделю</label>
-                    <div class="time-input-wrap">
-                        <input id="office-days-input" data-time-field="officeDays" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="officeDays-error office-days-help" class="ym-disable-keys">
-                        <span aria-hidden="true">дн.</span>
-                    </div>
-                    <p id="officeDays-error" class="time-error" hidden></p>
-                    <p id="office-days-help" class="time-help">Для удалённой работы укажите 0.</p>
                 </fieldset>
-                <div id="commute-field" class="time-field">
-                    <label for="commute-input">Дорога в одну сторону, минут</label>
-                    <div class="time-input-wrap">
-                        <input id="commute-input" data-time-field="commuteMinutes" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="commuteMinutes-error commute-help" class="ym-disable-keys">
-                        <span aria-hidden="true">мин.</span>
+                <fieldset class="time-advanced-group">
+                    <legend>Поездки на работу</legend>
+                    <div class="time-fields">
+                        <div class="time-field">
+                            <p id="office-quick-label" class="time-field-caption">Дней с поездками в неделю</p>
+                            <div id="office-days-options" class="time-office-options" role="group" aria-labelledby="office-quick-label">
+                                <button type="button" class="time-button" data-office-days="0" aria-label="0 дней, полностью удалённо" aria-pressed="false">0</button>
+                                <button type="button" class="time-button" data-office-days="1" aria-label="1 день в офисе" aria-pressed="false">1</button>
+                                <button type="button" class="time-button" data-office-days="2" aria-label="2 дня в офисе" aria-pressed="false">2</button>
+                                <button type="button" class="time-button" data-office-days="3" aria-label="3 дня в офисе" aria-pressed="false">3</button>
+                                <button type="button" class="time-button" data-office-days="4" aria-label="4 дня в офисе" aria-pressed="false">4</button>
+                                <button type="button" class="time-button" data-office-days="5" aria-label="5 дней в офисе" aria-pressed="false">5</button>
+                            </div>
+                            <button id="office-precision-toggle" type="button" class="time-button time-link" aria-controls="office-precision" aria-expanded="false">Указать точное число дней</button>
+                            <div id="office-precision" hidden>
+                                <label for="office-days-input">Офисных дней в неделю</label>
+                                <div class="time-input-wrap">
+                                    <input id="office-days-input" data-time-field="officeDays" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="officeDays-error" class="ym-disable-keys">
+                                    <span aria-hidden="true">дн.</span>
+                                </div>
+                                <p id="officeDays-error" class="time-error" hidden></p>
+                            </div>
+                        </div>
+                        <div id="commute-field" class="time-field">
+                            <label for="commute-input">Дорога в одну сторону, минут</label>
+                            <div class="time-input-wrap">
+                                <input id="commute-input" data-time-field="commuteMinutes" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="commuteMinutes-error commute-help" class="ym-disable-keys">
+                                <span aria-hidden="true">мин.</span>
+                            </div>
+                            <p id="commuteMinutes-error" class="time-error" hidden></p>
+                            <p id="commute-help" class="time-help">Учтём дорогу туда и обратно в дни поездок.</p>
+                        </div>
                     </div>
-                    <p id="commuteMinutes-error" class="time-error" hidden></p>
-                    <p id="commute-help" class="time-help">Учтём дорогу туда и обратно в дни поездок.</p>
-                </div>
-                <div class="time-field">
-                    <label for="overtime-input">Неоплачиваемое время, часов в неделю</label>
-                    <div class="time-input-wrap">
-                        <input id="overtime-input" data-time-field="overtime" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="overtime-error overtime-help" class="ym-disable-keys">
-                        <span aria-hidden="true">ч/нед.</span>
-                    </div>
-                    <p id="overtime-error" class="time-error" hidden></p>
-                    <p id="overtime-help" class="time-help">Например, обязательные переработки или неоплачиваемые перерывы сверх графика.</p>
-                </div>
+                </fieldset>
             </div>
             <button id="back-to-result" type="button" class="time-button time-link time-return">Вернуться к результату ↑</button>
         </section>
@@ -394,6 +408,7 @@ const byId = id => document.getElementById(id);
 const write = (id, value) => { byId(id).textContent = value; };
 const inputs = Object.fromEntries(Array.from(document.querySelectorAll('[data-time-field]'), input => [input.dataset.timeField, input]));
 const officeButtons = Array.from(document.querySelectorAll('[data-office-days]'));
+const composingMoneyFields = new Set();
 const actionButtons = [byId('save-time-png'), byId('share-time')];
 
 const timeStateController = CalculatorState.createController({
@@ -414,6 +429,47 @@ const monthlyFormat = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 
 function parseInputNumber(value, grouped = false) {
     const text = grouped ? value.trim().replace(/[ \u00a0\u202f]/g, '') : value.trim();
     return /^-?(?:\d+(?:[.,]\d+)?|[.,]\d+)$/.test(text) ? Number(text.replace(',', '.')) : NaN;
+}
+
+function formatMoneyWhileEditing(input, value) {
+    if (!(value > 0 && value <= Number.MAX_SAFE_INTEGER)) return;
+    const raw = input.value;
+    const parts = raw.match(/^([\d \u00a0\u202f]*)([.,]\d+)?$/);
+    if (!parts) return;
+    const whole = parts[1].replace(/\D/g, '');
+    const firstGroup = whole.length % 3 || 3;
+    const formatted = whole.slice(0, firstGroup) + whole.slice(firstGroup).replace(/\d{3}/g, '\u00a0$&') + (parts[2] || '');
+    if (formatted === raw) return;
+
+    function mapCaret(position) {
+        let significant = raw.slice(0, position).replace(/[ \u00a0\u202f]/g, '').length;
+        let index = 0;
+        while (significant > 0 && index < formatted.length) {
+            if (formatted[index++] !== '\u00a0') significant--;
+        }
+        // Keep the caret on its original side of a separator when that boundary survives.
+        if (formatted[index] === '\u00a0' && /[ \u00a0\u202f]/.test(raw[position - 1] || '')) index++;
+        return index;
+    }
+
+    const start = mapCaret(input.selectionStart);
+    const end = mapCaret(input.selectionEnd);
+    const direction = input.selectionDirection;
+    input.value = formatted;
+    input.setSelectionRange(start, end, direction);
+}
+
+function skipMoneySeparator(event) {
+    if (event.isComposing) return;
+    const input = event.currentTarget;
+    const caret = input.selectionStart;
+    if (caret !== input.selectionEnd) return;
+    // Move past a grouping separator before the native deletion removes a digit.
+    if (event.inputType === 'deleteContentBackward' && input.value[caret - 1] === '\u00a0') {
+        input.setSelectionRange(caret - 1, caret - 1);
+    } else if (event.inputType === 'deleteContentForward' && input.value[caret] === '\u00a0') {
+        input.setSelectionRange(caret + 1, caret + 1);
+    }
 }
 
 function parseSharedNumber(value) {
@@ -484,9 +540,19 @@ function renderTimeFields(errors) {
         button.disabled = Boolean(errors.workDays) || value > state.workDays;
         button.setAttribute('aria-pressed', String(value === state.officeDays));
     }
+    if (errors.officeDays || !Number.isInteger(state.officeDays) || state.officeDays > 5) {
+        setOfficePrecision(true);
+    }
     const remote = state.officeDays === 0;
     byId('commute-field').hidden = remote;
     inputs.commuteMinutes.disabled = remote;
+}
+
+function setOfficePrecision(open) {
+    byId('office-precision').hidden = !open;
+    const toggle = byId('office-precision-toggle');
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.hidden = open;
 }
 
 function renderResult(result) {
@@ -542,14 +608,16 @@ function renderResult(result) {
 function updateTimeCalculation(userInitiated = false) {
     const errors = validateTimeFields();
     renderTimeFields(errors);
-    const isValidTimeState = () => Object.keys(errors).length === 0 && isValidTimeModelInput(state);
+    const isValidTimeState = () => !composingMoneyFields.size && Object.keys(errors).length === 0 && isValidTimeModelInput(state);
     const outcome = timeStateController.runCalculation({
         input: state,
         validateInput: isValidTimeState,
         calculate: () => calculateTimeCost(state),
         validateResult: result => result !== null && result.totalWorkRelatedHours > 0 && result.effectiveHourlyRate > 0,
         render: renderResult,
-        invalidInputMessage: 'Результат появится после исправления отмеченных полей.'
+        invalidInputMessage: composingMoneyFields.size
+            ? 'Завершите ввод суммы, чтобы увидеть результат.'
+            : 'Результат появится после исправления отмеченных полей.'
     });
     byId('time-answer').hidden = !outcome.ok;
     byId('time-impact').hidden = !outcome.ok;
@@ -570,10 +638,11 @@ function updateTimeCalculation(userInitiated = false) {
 }
 
 function setTimeField(field, value) {
-    if (Object.is(state[field], value)) return;
+    if (Object.is(state[field], value)) return false;
     state[field] = value;
     scenarioRevision += 1;
     updateTimeCalculation(true);
+    return true;
 }
 
 function buildTimeShareUrl() {
@@ -616,17 +685,40 @@ restoreTimeScenario();
 for (const [field, input] of Object.entries(inputs)) {
     const isMoney = field === 'income' || field === 'purchase';
     input.value = Number.isFinite(state[field]) ? decimalInput(state[field], isMoney) : incomingTimeScenario[field] ?? '';
-    input.addEventListener('input', () => setTimeField(field, parseInputNumber(input.value, isMoney)));
-    if (isMoney) input.addEventListener('blur', () => {
-        if (state[field] > 0 && state[field] <= Number.MAX_SAFE_INTEGER) input.value = decimalInput(state[field], true);
+    if (!isMoney) {
+        input.addEventListener('input', () => setTimeField(field, parseInputNumber(input.value)));
+        continue;
+    }
+    function commitMoneyInput() {
+        const value = parseInputNumber(input.value, true);
+        formatMoneyWhileEditing(input, value);
+        return setTimeField(field, value);
+    }
+    input.addEventListener('beforeinput', skipMoneySeparator);
+    input.addEventListener('input', event => {
+        if (!event.isComposing && !composingMoneyFields.has(field)) commitMoneyInput();
+    });
+    input.addEventListener('compositionstart', () => {
+        composingMoneyFields.add(field);
+        scenarioRevision += 1;
+        updateTimeCalculation();
+    });
+    input.addEventListener('compositionend', () => {
+        composingMoneyFields.delete(field);
+        if (!commitMoneyInput()) updateTimeCalculation();
     });
 }
 for (const button of officeButtons) {
     button.addEventListener('click', () => {
         inputs.officeDays.value = button.dataset.officeDays;
         setTimeField('officeDays', Number(button.dataset.officeDays));
+        setOfficePrecision(false);
     });
 }
+byId('office-precision-toggle').addEventListener('click', () => {
+    setOfficePrecision(true);
+    inputs.officeDays.focus();
+});
 byId('advanced-toggle').addEventListener('click', event => {
     const panel = byId('advanced-panel');
     panel.hidden = !panel.hidden;

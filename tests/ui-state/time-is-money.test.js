@@ -85,7 +85,10 @@ function loadPage(query = '', { referrer = '', clipboard, denyHistory = false } 
             classList: { add() {}, toggle() {} },
             setAttribute(name, value) { this.attrs[name] = value; },
             addEventListener(name, fn) { events[name] = fn; },
-            fire(name) { return events[name]({ currentTarget: this }); },
+            fire(name, event = {}) { return events[name]({ currentTarget: this, ...event }); },
+            setSelectionRange(start, end, direction) {
+                Object.assign(this, { selectionStart: start, selectionEnd: end, selectionDirection: direction });
+            },
             showModal() { this.open = true; },
             focus() {}, select() { this.selected = true; }
         };
@@ -121,9 +124,11 @@ function loadPage(query = '', { referrer = '', clipboard, denyHistory = false } 
         '\nthis.page = {state, cleanTimeUrl, timeUrlIsClean, timeAnalyticsReferrer, shareTimeScenario, parseInputNumber, decimalInput};', env);
     return {
         ...env.page, nodes, goals, location, historyCalls, env,
-        edit(id, value) {
-            nodes.get(id).value = value;
-            nodes.get(id).fire('input');
+        edit(id, value, start = value.length, end = start) {
+            const input = nodes.get(id);
+            input.value = value;
+            input.setSelectionRange(start, end, 'none');
+            input.fire('input');
         }
     };
 }
@@ -172,13 +177,77 @@ test('UTM-only visits and valid edits never write a scenario to the current URL'
     page.edit('income-input', '100 000');
     assert.deepEqual(page.goals, []);
     page.edit('income-input', '90\u202f000');
-    page.nodes.get('income-input').fire('blur');
     assert.equal(page.nodes.get('income-input').value, '90\u00a0000');
     page.edit('purchase-input', '170000');
     assert.equal(page.nodes.get('scenario-badge').hidden, true);
     assert.equal(page.location.search, '?utm_source=qa&yclid=synthetic');
     assert.deepEqual(page.historyCalls, []);
     assert.deepEqual(page.goals, ['calculate_success']);
+});
+
+test('money input preserves digits, decimal text and caret across grouping', () => {
+    const page = loadPage();
+    const input = page.nodes.get('purchase-input');
+    for (const [raw, start, end, grouped, mappedStart, mappedEnd] of [
+        ['1000', 4, 4, '1\u00a0000', 5, 5],
+        ['20900000', 3, 3, '20\u00a0900\u00a0000', 4, 4],
+        ['2\u202f000\u202f000', 2, 5, '2\u00a0000\u00a0000', 2, 5],
+        ['01500000,25', 11, 11, '01\u00a0500\u00a0000,25', 13, 13],
+        ['-2000000', 8, 8, '-2000000', 8, 8],
+        ['20x00000', 3, 3, '20x00000', 3, 3],
+        ['', 0, 0, '', 0, 0]
+    ]) {
+        page.edit('purchase-input', raw, start, end);
+        assert.equal(input.value, grouped);
+        assert.deepEqual([input.selectionStart, input.selectionEnd], [mappedStart, mappedEnd]);
+    }
+    assert.equal(page.nodes.get('share-time').disabled, true);
+    assert.deepEqual(page.historyCalls, []);
+});
+
+test('IME keeps the draft untouched, blocks export and only counts committed changes', () => {
+    const page = loadPage();
+    const input = page.nodes.get('income-input');
+    input.fire('compositionstart');
+    page.edit('income-input', '2000000');
+    assert.equal(input.value, '2000000');
+    assert.equal(page.state.income, 100000);
+    assert.equal(page.nodes.get('share-time').disabled, true);
+    assert.deepEqual(page.goals, []);
+    page.edit('income-input', '100000');
+    input.fire('compositionend');
+    assert.equal(input.value, '100\u00a0000');
+    assert.equal(page.nodes.get('share-time').disabled, false);
+    assert.deepEqual(page.goals, []);
+    input.fire('compositionstart');
+    page.edit('income-input', '2000000');
+    input.fire('compositionend');
+    assert.equal(input.value, '2\u00a0000\u00a0000');
+    assert.deepEqual(page.goals, ['calculate_success']);
+});
+
+test('office precision is revealed for fractions, legacy values and local errors', () => {
+    const page = loadPage();
+    const precision = page.nodes.get('office-precision');
+    assert.equal(precision.hidden, true);
+    page.nodes.get('office-precision-toggle').fire('click');
+    assert.equal(precision.hidden, false);
+    page.edit('office-days-input', '2,5');
+    assert.equal(page.state.officeDays, 2.5);
+    assert.equal([...page.nodes.values()].filter(node => node.dataset.officeDays && node.attrs['aria-pressed'] === 'true').length, 0);
+    page.nodes.get('office-3').fire('click');
+    assert.equal(precision.hidden, true);
+    assert.equal(page.nodes.get('office-days-input').value, '3');
+    page.edit('work-days-input', '2,5');
+    assert.equal(precision.hidden, false);
+    assert.equal(page.nodes.get('office-3').disabled, true);
+    assert.match(page.nodes.get('officeDays-error').textContent, /до 2,5/);
+    for (const [query, value] of [['?office=2.5', '2,5'], ['?days=7&office=6', '6']]) {
+        const restored = loadPage(query);
+        assert.equal(restored.nodes.get('office-precision').hidden, false);
+        assert.equal(restored.nodes.get('office-days-input').value, value);
+        assert.deepEqual(restored.goals, []);
+    }
 });
 
 test('invalid input clears the previous calculation and shows field-specific errors', async () => {
