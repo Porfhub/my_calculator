@@ -12,7 +12,7 @@ test('critical financial calculators fail closed through the shared state contro
         assert.match(html, /js\/calculator-state\.js/, file);
         if (file === 'time-is-money.html') {
             assert.match(html, /timeStateController\.runCalculation\(/, file);
-            assert.match(html, /validateInput:isValidTimeState/, file);
+            assert.match(html, /validateInput:\s*isValidTimeState/, file);
         } else {
             assert.match(html, /CalculatorState\.STATES\.(INVALID_INPUT|CALCULATION_IMPOSSIBLE)/, file);
         }
@@ -34,10 +34,10 @@ test('honest credit and price of time reject invalid values before rendering con
     const time = read('time-is-money.html');
     assert.match(credit, /initialInflow <= 0/);
     assert.match(credit, /totalAir < 0/);
-    assert.match(time, /Number\.isFinite\(state\.income\)&&state\.income>0/);
-    assert.match(time, /Number\.isFinite\(state\.hours\)&&state\.hours>0/);
+    assert.match(time, /Number\.isFinite\(input\.income\)&&input\.income>0/);
+    assert.match(time, /Number\.isFinite\(input\.hours\)&&input\.hours>0/);
     assert.match(time, /timeStateController\.runCalculation\(/);
-    assert.match(time, /validateInput:isValidTimeState/);
+    assert.match(time, /validateInput:\s*isValidTimeState/);
 });
 
 test('rent versus mortgage rejects impossible input and non-finite results', () => {

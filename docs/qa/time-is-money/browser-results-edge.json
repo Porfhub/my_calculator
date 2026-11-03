@@ -1,0 +1,367 @@
+{
+  "browser": "156.0.4314.58",
+  "baseline": "f8cf23302391ffa025e11e68057ec6cc795c8802",
+  "checks": [
+    "320 light opens without overflow or automatic scroll",
+    "320 light closed settings take no space",
+    "320 light expanded controls fit",
+    "320 light quick office choice hides the duplicate field",
+    "320 light keeps the approved settings order and layout",
+    "320 light opening settings keeps the current 299 hours",
+    "320 light office controls are at least 44×44",
+    "320 light 12-digit price stays complete in the result without overflow",
+    "320 graphite opens without overflow or automatic scroll",
+    "320 graphite closed settings take no space",
+    "320 graphite expanded controls fit",
+    "320 graphite quick office choice hides the duplicate field",
+    "320 graphite keeps the approved settings order and layout",
+    "320 graphite opening settings keeps the current 299 hours",
+    "320 graphite office controls are at least 44×44",
+    "320 graphite 12-digit price stays complete in the result without overflow",
+    "375 light opens without overflow or automatic scroll",
+    "375 light closed settings take no space",
+    "375 light expanded controls fit",
+    "375 light quick office choice hides the duplicate field",
+    "375 light keeps the approved settings order and layout",
+    "375 light opening settings keeps the current 299 hours",
+    "375 light office controls are at least 44×44",
+    "375 light 12-digit price stays complete in the result without overflow",
+    "375 graphite opens without overflow or automatic scroll",
+    "375 graphite closed settings take no space",
+    "375 graphite expanded controls fit",
+    "375 graphite quick office choice hides the duplicate field",
+    "375 graphite keeps the approved settings order and layout",
+    "375 graphite opening settings keeps the current 299 hours",
+    "375 graphite office controls are at least 44×44",
+    "375 graphite 12-digit price stays complete in the result without overflow",
+    "390 light opens without overflow or automatic scroll",
+    "light 390×844 keeps both inputs and answer in the first viewport",
+    "390 light closed settings take no space",
+    "390 light expanded controls fit",
+    "390 light quick office choice hides the duplicate field",
+    "390 light keeps the approved settings order and layout",
+    "390 light opening settings keeps the current 299 hours",
+    "390 light office controls are at least 44×44",
+    "390 light 12-digit price stays complete in the result without overflow",
+    "390 graphite opens without overflow or automatic scroll",
+    "graphite 390×844 keeps both inputs and answer in the first viewport",
+    "390 graphite closed settings take no space",
+    "390 graphite expanded controls fit",
+    "390 graphite quick office choice hides the duplicate field",
+    "390 graphite keeps the approved settings order and layout",
+    "390 graphite opening settings keeps the current 299 hours",
+    "390 graphite office controls are at least 44×44",
+    "390 graphite 12-digit price stays complete in the result without overflow",
+    "768 light opens without overflow or automatic scroll",
+    "768 light closed settings take no space",
+    "768 light expanded controls fit",
+    "768 light quick office choice hides the duplicate field",
+    "768 light keeps the approved settings order and layout",
+    "768 light opening settings keeps the current 299 hours",
+    "768 light office controls are at least 44×44",
+    "768 light 12-digit price stays complete in the result without overflow",
+    "768 graphite opens without overflow or automatic scroll",
+    "768 graphite closed settings take no space",
+    "768 graphite expanded controls fit",
+    "768 graphite quick office choice hides the duplicate field",
+    "768 graphite keeps the approved settings order and layout",
+    "768 graphite opening settings keeps the current 299 hours",
+    "768 graphite office controls are at least 44×44",
+    "768 graphite 12-digit price stays complete in the result without overflow",
+    "1366 light opens without overflow or automatic scroll",
+    "1366 light closed settings take no space",
+    "1366 light expanded controls fit",
+    "1366 light quick office choice hides the duplicate field",
+    "1366 light keeps the approved settings order and layout",
+    "1366 light opening settings keeps the current 299 hours",
+    "1366 light office controls are at least 44×44",
+    "1366 light 12-digit price stays complete in the result without overflow",
+    "1366 graphite opens without overflow or automatic scroll",
+    "1366 graphite closed settings take no space",
+    "1366 graphite expanded controls fit",
+    "1366 graphite quick office choice hides the duplicate field",
+    "1366 graphite keeps the approved settings order and layout",
+    "1366 graphite opening settings keeps the current 299 hours",
+    "1366 graphite office controls are at least 44×44",
+    "1366 graphite 12-digit price stays complete in the result without overflow",
+    "empty money stays empty and does not convert",
+    "live grouping shows 1 000",
+    "live grouping shows 10 000",
+    "live grouping shows 100 000",
+    "2 000 000 groups while typing and keeps end caret",
+    "insertion in the middle keeps the caret by significant digits across a regroup",
+    "Backspace removes the inserted digit and maps the middle caret",
+    "Backspace beside a grouping space removes the previous digit",
+    "Delete beside a grouping space removes the following digit",
+    "keyboard replaces a selection across a grouping separator",
+    "mouse positions the caret for editing at the beginning",
+    "native paste groups 2000000",
+    "native paste groups 2 000 000",
+    "native paste groups 2 000 000",
+    "native paste groups 2 000 000",
+    "native paste groups 15000000",
+    "invalid paste is preserved and blocks exports -2000000",
+    "invalid paste is preserved and blocks exports 2x000000",
+    "Chromium composition keeps raw text and temporarily blocks export",
+    "Chromium composition commits and groups the income",
+    "touch-focused income remains visible in a reduced mobile viewport",
+    "share serialises live-edited amounts as plain numbers",
+    "live edits preserve URL attribution and one calculate_success",
+    "hybrid starts at 299 hours, 37.4 days and 502 ₽/h",
+    "UTM-only visit remains an example and does not convert",
+    "reference rate is 577 ₽/h and details do not convert",
+    "standard share offers manual copy with the full scenario when Clipboard is absent",
+    "light text and disabled state meet 4.5:1 and focus ring meets 3:1",
+    "light invalid input removes result and disables both exports",
+    "light invalid input did not fire calculate_success",
+    "light correction restores the current result",
+    "graphite text and disabled state meet 4.5:1 and focus ring meets 3:1",
+    "graphite invalid input removes result and disables both exports",
+    "graphite invalid input did not fire calculate_success",
+    "graphite correction restores the current result",
+    "Space keeps focus, sets aria-pressed and yields remote 260 / 32.5",
+    "remote share uses legacy parameter shape without commute or attribution tags",
+    "Enter keeps focus, sets aria-pressed and yields office 325 / 40.6",
+    "exact office input opens from the keyboard and receives focus",
+    "fractional office days have no pressed quick button",
+    "quick choice restores integer and hides the field without moving focus",
+    "real Chromium keyboard keeps 7,5 and input focus",
+    "shortening the workweek leaves the office input intact with a local error",
+    "fractional values yield 213 hours, 28.4 days and 6.5 unpaid monthly hours",
+    "dot yields the identical calculation",
+    "explicit return puts focus on the result",
+    "downloaded file has a PNG signature and a 2× portrait canvas",
+    "PNG stage has the full READY scenario, zero controls and no UI badge",
+    "export does not mutate the live result",
+    "Clipboard rejection opens a selected manual link without false success",
+    "copy leaves URL and attribution unchanged and deduplicates goals",
+    "old share link restores fractionals and uses replaceState before Metrika init",
+    "explicit analytics referrer drops scenario parameters but retains referral attribution",
+    "no subresource Referer exposes financial keys, including CDN and Метрика tag",
+    "incoming fractional office value automatically opens exact input",
+    "standard shared scenario reopens at 299 hours without a conversion",
+    "remote shared scenario reopens at 260 hours without a conversion or commute",
+    "no uncaught browser errors"
+  ],
+  "comparison": [
+    {
+      "width": 320,
+      "mode": "light",
+      "before": {
+        "pageWidth": 320,
+        "viewport": 320,
+        "purchaseBottom": 540,
+        "incomeBottom": 646,
+        "hoursBottom": 1213,
+        "scroll": 0
+      },
+      "after": {
+        "pageWidth": 320,
+        "viewport": 320,
+        "purchaseBottom": 361.390625,
+        "incomeBottom": 444.390625,
+        "hoursBottom": 649.390625,
+        "scroll": 0
+      }
+    },
+    {
+      "width": 320,
+      "mode": "graphite",
+      "before": {
+        "pageWidth": 320,
+        "viewport": 320,
+        "purchaseBottom": 540,
+        "incomeBottom": 646,
+        "hoursBottom": 1213,
+        "scroll": 0
+      },
+      "after": {
+        "pageWidth": 320,
+        "viewport": 320,
+        "purchaseBottom": 361.390625,
+        "incomeBottom": 444.390625,
+        "hoursBottom": 649.390625,
+        "scroll": 0
+      }
+    },
+    {
+      "width": 375,
+      "mode": "light",
+      "before": {
+        "pageWidth": 375,
+        "viewport": 375,
+        "purchaseBottom": 540,
+        "incomeBottom": 646,
+        "hoursBottom": 1193,
+        "scroll": 0
+      },
+      "after": {
+        "pageWidth": 375,
+        "viewport": 375,
+        "purchaseBottom": 330.59375,
+        "incomeBottom": 413.59375,
+        "hoursBottom": 593.59375,
+        "scroll": 0
+      }
+    },
+    {
+      "width": 375,
+      "mode": "graphite",
+      "before": {
+        "pageWidth": 375,
+        "viewport": 375,
+        "purchaseBottom": 540,
+        "incomeBottom": 646,
+        "hoursBottom": 1193,
+        "scroll": 0
+      },
+      "after": {
+        "pageWidth": 375,
+        "viewport": 375,
+        "purchaseBottom": 330.59375,
+        "incomeBottom": 413.59375,
+        "hoursBottom": 593.59375,
+        "scroll": 0
+      }
+    },
+    {
+      "width": 390,
+      "mode": "light",
+      "before": {
+        "pageWidth": 390,
+        "viewport": 390,
+        "purchaseBottom": 504,
+        "incomeBottom": 610,
+        "hoursBottom": 1137,
+        "scroll": 0
+      },
+      "after": {
+        "pageWidth": 390,
+        "viewport": 390,
+        "purchaseBottom": 330.59375,
+        "incomeBottom": 413.59375,
+        "hoursBottom": 593.59375,
+        "scroll": 0
+      }
+    },
+    {
+      "width": 390,
+      "mode": "graphite",
+      "before": {
+        "pageWidth": 390,
+        "viewport": 390,
+        "purchaseBottom": 504,
+        "incomeBottom": 610,
+        "hoursBottom": 1137,
+        "scroll": 0
+      },
+      "after": {
+        "pageWidth": 390,
+        "viewport": 390,
+        "purchaseBottom": 330.59375,
+        "incomeBottom": 413.59375,
+        "hoursBottom": 593.59375,
+        "scroll": 0
+      }
+    },
+    {
+      "width": 768,
+      "mode": "light",
+      "before": {
+        "pageWidth": 768,
+        "viewport": 768,
+        "purchaseBottom": 524,
+        "incomeBottom": 630,
+        "hoursBottom": 1157,
+        "scroll": 0
+      },
+      "after": {
+        "pageWidth": 768,
+        "viewport": 768,
+        "purchaseBottom": 342.46875,
+        "incomeBottom": 425.46875,
+        "hoursBottom": 636.46875,
+        "scroll": 0
+      }
+    },
+    {
+      "width": 768,
+      "mode": "graphite",
+      "before": {
+        "pageWidth": 768,
+        "viewport": 768,
+        "purchaseBottom": 524,
+        "incomeBottom": 630,
+        "hoursBottom": 1157,
+        "scroll": 0
+      },
+      "after": {
+        "pageWidth": 768,
+        "viewport": 768,
+        "purchaseBottom": 342.46875,
+        "incomeBottom": 425.46875,
+        "hoursBottom": 636.46875,
+        "scroll": 0
+      }
+    },
+    {
+      "width": 1366,
+      "mode": "light",
+      "before": {
+        "pageWidth": 1366,
+        "viewport": 1366,
+        "purchaseBottom": 524,
+        "incomeBottom": 630,
+        "hoursBottom": 541,
+        "scroll": 0
+      },
+      "after": {
+        "pageWidth": 1366,
+        "viewport": 1366,
+        "purchaseBottom": 354.78125,
+        "incomeBottom": 437.78125,
+        "hoursBottom": 428.78125,
+        "scroll": 0
+      }
+    },
+    {
+      "width": 1366,
+      "mode": "graphite",
+      "before": {
+        "pageWidth": 1366,
+        "viewport": 1366,
+        "purchaseBottom": 524,
+        "incomeBottom": 630,
+        "hoursBottom": 541,
+        "scroll": 0
+      },
+      "after": {
+        "pageWidth": 1366,
+        "viewport": 1366,
+        "purchaseBottom": 354.78125,
+        "incomeBottom": 437.78125,
+        "hoursBottom": 428.78125,
+        "scroll": 0
+      }
+    }
+  ],
+  "contrast": {
+    "light": {
+      "eyebrow": 8.25548607485211,
+      "currency": 5.828908025874153,
+      "selected": 8.877229242234428,
+      "disabled": 5.582716499718387,
+      "error": 7.198779037303142,
+      "focus": 5.7826963129747435
+    },
+    "graphite": {
+      "eyebrow": 11.032170253994503,
+      "currency": 9.169339665550128,
+      "selected": 7.188155134525401,
+      "disabled": 9.17884301144766,
+      "error": 8.013534739872934,
+      "focus": 9.505552495922872
+    }
+  },
+  "errors": []
+}

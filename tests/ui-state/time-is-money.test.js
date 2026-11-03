@@ -70,31 +70,251 @@ test('fractional schedules, large prices and invalid states are handled explicit
     }
 });
 
-test('page contract keeps conditional commute, clamping, URL state, neutral copy and PNG export', () => {
-    assert.match(html, /wrapper\.hidden=remote;input\.disabled=remote/);
-    assert.match(html, /state\.officeDays=Math\.min\(state\.officeDays,state\.workDays\)/);
-    assert.match(html, /if\(state\.workDays===5&&Number\.isInteger\(state\.officeDays\)\)/);
-    assert.match(html, /input\.id='office-days-input'.*input\.max=String\(state\.workDays\).*input\.step='0\.5'/);
-    assert.match(html, /history\.replaceState/);
-    assert.match(html, /takeScreenshot\('results-card', 'yasnomera-time-is-money\.png'\)/);
-    assert.match(html, /data-screenshot-fallback/);
-    assert.match(html, /Это приблизительный перевод цены в рабочее время, а не оценка покупки/);
-    assert.doesNotMatch(html, /Критический уровень|Отрезвляющий итог|Как купить это быстрее|mobile-sticky-results/);
+const bootstrap = html.match(/<script id="time-url-bootstrap">([\s\S]+?)<\/script>/)[1];
+const application = html.match(/<script>\s*(\/\/ TIME_MODEL_START[\s\S]+?)<\/script>/)[1];
+
+function loadPage(query = '', { referrer = '', clipboard, denyHistory = false } = {}) {
+    const location = new URL('https://yasnomera.ru/time-is-money.html' + query);
+    const historyCalls = [];
+    const goals = [];
+    const nodes = new Map();
+    const element = (id, dataset = {}) => {
+        const events = {};
+        const node = {
+            dataset, value: '', textContent: '', hidden: false, attrs: {},
+            classList: { add() {}, toggle() {} },
+            setAttribute(name, value) { this.attrs[name] = value; },
+            addEventListener(name, fn) { events[name] = fn; },
+            fire(name, event = {}) { return events[name]({ currentTarget: this, ...event }); },
+            setSelectionRange(start, end, direction) {
+                Object.assign(this, { selectionStart: start, selectionEnd: end, selectionDirection: direction });
+            },
+            showModal() { this.open = true; },
+            focus() {}, select() { this.selected = true; }
+        };
+        nodes.set(id, node);
+        return node;
+    };
+    for (const match of html.matchAll(/<[^>]+\bid="([^"]+)"([^>]*)>/g)) {
+        const [, id, attributes] = match;
+        const field = attributes.match(/data-time-field="([^"]+)"/);
+        const node = element(id, field ? { timeField: field[1] } : {});
+        node.hidden = /\bhidden\b/.test(attributes);
+    }
+    const buttons = Array.from({ length: 6 }, (_, i) => element('office-' + i, { officeDays: String(i) }));
+    const inputs = [...nodes.values()].filter(node => node.dataset.timeField);
+    const env = {
+        URL, location, window: {}, navigator: { clipboard },
+        history: { state: { retained: true }, replaceState(state, title, href) {
+            if (denyHistory) throw new Error('history unavailable');
+            historyCalls.push({ state, href });
+            location.href = href;
+        } },
+        document: {
+            referrer, body: element('body'),
+            getElementById: id => nodes.get(id),
+            querySelectorAll: selector => selector === '[data-time-field]' ? inputs : buttons
+        },
+        reachGoal: name => goals.push(name),
+        showToast: message => { env.toast = message; }
+    };
+    vm.createContext(env);
+    const stateScript = fs.readFileSync(path.join(root, 'js/calculator-state.js'), 'utf8');
+    vm.runInContext(bootstrap + stateScript + ';const CalculatorState = window.CalculatorState;\n' + application +
+        '\nthis.page = {state, cleanTimeUrl, timeUrlIsClean, timeAnalyticsReferrer, shareTimeScenario, parseInputNumber, decimalInput};', env);
+    return {
+        ...env.page, nodes, goals, location, historyCalls, env,
+        edit(id, value, start = value.length, end = start) {
+            const input = nodes.get(id);
+            input.value = value;
+            input.setSelectionRange(start, end, 'none');
+            input.fire('input');
+        }
+    };
+}
+
+test('exact fractional result and both decimal separators preserve the model', () => {
+    const fractional = { ...base, hours: 7.5, workDays: 3.5, officeDays: 2.5, overtime: 1.5 };
+    close(calculateTimeCost(fractional).purchaseHours, 212.875, 1e-10);
+    for (const separator of [',', '.']) {
+        const page = loadPage();
+        page.edit('hours-input', '7' + separator + '5');
+        page.edit('work-days-input', '3' + separator + '5');
+        page.edit('office-days-input', '2' + separator + '5');
+        page.edit('overtime-input', '1' + separator + '5');
+        assert.equal(page.nodes.get('hours-input').value, '7' + separator + '5');
+        assert.equal(page.nodes.get('purchase-hours').textContent, '213');
+        assert.match(page.nodes.get('scheduled-days-result').textContent, /28,4 рабочего дня по 7,5 часа/);
+        assert.equal(page.nodes.get('export-overtime').textContent, '1,5 ч/нед.');
+        assert.match(page.nodes.get('overtime-impact').textContent, /6,5 ч в месяц/);
+    }
 });
 
-test('calculate_success is tied to a valid user-initiated outcome and fires once', () => {
-    assert.match(html, /outcome\.ok&&options\.userInitiated&&hasUserEdited&&!calculateSuccessTracked/);
-    assert.match(html, /update\(\{userInitiated:false\}\)/);
-    assert.match(html, /calculateSuccessTracked=true/);
+test('initial URL is captured before resources, scrubbed once and retains attribution', () => {
+    const page = loadPage('?price=150000&income=100000&hours=7.5&days=3.5&office=2.5&commute=60&unpaid=1.5&utm_source=qa&extra=a&extra=b#fragment',
+        { referrer: 'https://yasnomera.ru/time-is-money.html?price=42&income=87&utm_source=previous' });
+    assert.equal(page.nodes.get('purchase-hours').textContent, '213');
+    assert.equal(page.nodes.get('scenario-badge').textContent, 'По ссылке');
+    assert.equal(page.nodes.get('scenario-badge').hidden, false);
+    assert.equal(page.location.search, '?utm_source=qa&extra=a&extra=b');
+    assert.equal(page.location.hash, '#fragment');
+    assert.deepEqual(page.historyCalls, [{ state: { retained: true }, href: page.location.href }]);
+    assert.equal(page.timeAnalyticsReferrer(), 'https://yasnomera.ru/time-is-money.html?utm_source=previous');
+    assert.deepEqual(page.goals, []);
+    page.edit('purchase-input', '170000');
+    assert.equal(page.historyCalls.length, 1);
+    assert.deepEqual(page.goals, ['calculate_success']);
+    assert.ok(html.indexOf('id="time-url-bootstrap"') < html.indexOf('<link'));
+    assert.match(html, /if \(timeUrlIsClean\) \{[\s\S]*?referrer:timeAnalyticsReferrer\(\),url:cleanTimeUrl\.href/);
+    const denied = loadPage('?price=150000', { denyHistory: true });
+    assert.equal(denied.timeUrlIsClean, false);
+    assert.equal(denied.nodes.get('purchase-hours').textContent, '299');
 });
 
-test('money inputs group Russian thousands without changing numeric state', () => {
-    assert.match(html, /id="purchase-input" type="text" inputmode="numeric"/);
-    assert.match(html, /id="income-input" type="text" inputmode="numeric"/);
-    assert.match(html, /new Intl\.NumberFormat\('ru-RU',\{maximumFractionDigits:0,useGrouping:true\}\)/);
-    assert.match(html, /replace\(\/\[\\s\\u00a0\\u202f\]\/g,''\)/);
-    assert.doesNotMatch(html, /onfocus="unformatMoneyInput/);
-    assert.match(html, /onblur="formatMoneyInput\('income',this\)"/);
-    assert.match(html, /purchase-input'\)\.value=groupedInteger\(state\.purchase\)/);
-    assert.match(html, /income-input'\)\.value=groupedInteger\(state\.income\)/);
+test('UTM-only visits and valid edits never write a scenario to the current URL', () => {
+    const page = loadPage('?utm_source=qa&yclid=synthetic');
+    assert.equal(page.nodes.get('scenario-badge').textContent, 'По примеру');
+    page.edit('income-input', '100 000');
+    assert.deepEqual(page.goals, []);
+    page.edit('income-input', '90\u202f000');
+    assert.equal(page.nodes.get('income-input').value, '90\u00a0000');
+    page.edit('purchase-input', '170000');
+    assert.equal(page.nodes.get('scenario-badge').hidden, true);
+    assert.equal(page.location.search, '?utm_source=qa&yclid=synthetic');
+    assert.deepEqual(page.historyCalls, []);
+    assert.deepEqual(page.goals, ['calculate_success']);
+});
+
+test('money input preserves digits, decimal text and caret across grouping', () => {
+    const page = loadPage();
+    const input = page.nodes.get('purchase-input');
+    for (const [raw, start, end, grouped, mappedStart, mappedEnd] of [
+        ['1000', 4, 4, '1\u00a0000', 5, 5],
+        ['20900000', 3, 3, '20\u00a0900\u00a0000', 4, 4],
+        ['2\u202f000\u202f000', 2, 5, '2\u00a0000\u00a0000', 2, 5],
+        ['01500000,25', 11, 11, '01\u00a0500\u00a0000,25', 13, 13],
+        ['-2000000', 8, 8, '-2000000', 8, 8],
+        ['20x00000', 3, 3, '20x00000', 3, 3],
+        ['', 0, 0, '', 0, 0]
+    ]) {
+        page.edit('purchase-input', raw, start, end);
+        assert.equal(input.value, grouped);
+        assert.deepEqual([input.selectionStart, input.selectionEnd], [mappedStart, mappedEnd]);
+    }
+    assert.equal(page.nodes.get('share-time').disabled, true);
+    assert.deepEqual(page.historyCalls, []);
+});
+
+test('IME keeps the draft untouched, blocks export and only counts committed changes', () => {
+    const page = loadPage();
+    const input = page.nodes.get('income-input');
+    input.fire('compositionstart');
+    page.edit('income-input', '2000000');
+    assert.equal(input.value, '2000000');
+    assert.equal(page.state.income, 100000);
+    assert.equal(page.nodes.get('share-time').disabled, true);
+    assert.deepEqual(page.goals, []);
+    page.edit('income-input', '100000');
+    input.fire('compositionend');
+    assert.equal(input.value, '100\u00a0000');
+    assert.equal(page.nodes.get('share-time').disabled, false);
+    assert.deepEqual(page.goals, []);
+    input.fire('compositionstart');
+    page.edit('income-input', '2000000');
+    input.fire('compositionend');
+    assert.equal(input.value, '2\u00a0000\u00a0000');
+    assert.deepEqual(page.goals, ['calculate_success']);
+});
+
+test('office precision is revealed for fractions, legacy values and local errors', () => {
+    const page = loadPage();
+    const precision = page.nodes.get('office-precision');
+    assert.equal(precision.hidden, true);
+    page.nodes.get('office-precision-toggle').fire('click');
+    assert.equal(precision.hidden, false);
+    page.edit('office-days-input', '2,5');
+    assert.equal(page.state.officeDays, 2.5);
+    assert.equal([...page.nodes.values()].filter(node => node.dataset.officeDays && node.attrs['aria-pressed'] === 'true').length, 0);
+    page.nodes.get('office-3').fire('click');
+    assert.equal(precision.hidden, true);
+    assert.equal(page.nodes.get('office-days-input').value, '3');
+    page.edit('work-days-input', '2,5');
+    assert.equal(precision.hidden, false);
+    assert.equal(page.nodes.get('office-3').disabled, true);
+    assert.match(page.nodes.get('officeDays-error').textContent, /до 2,5/);
+    for (const [query, value] of [['?office=2.5', '2,5'], ['?days=7&office=6', '6']]) {
+        const restored = loadPage(query);
+        assert.equal(restored.nodes.get('office-precision').hidden, false);
+        assert.equal(restored.nodes.get('office-days-input').value, value);
+        assert.deepEqual(restored.goals, []);
+    }
+});
+
+test('invalid input clears the previous calculation and shows field-specific errors', async () => {
+    const page = loadPage();
+    for (const [id, input, error, expected] of [
+        ['income-input', '', 'income-error', /доход больше 0/],
+        ['income-input', '0', 'income-error', /доход больше 0/],
+        ['income-input', '-1', 'income-error', /доход больше 0/],
+        ['purchase-input', '1e3', 'purchase-error', /цену покупки больше 0/],
+        ['purchase-input', '9007199254740992', 'purchase-error', /выше допустимого максимума/],
+        ['hours-input', '0', 'hours-error', /не более 24/],
+        ['hours-input', '7,', 'hours-error', /не более 24/],
+        ['work-days-input', '2,5', 'officeDays-error', /до 2,5/],
+        ['commute-input', '1441', 'commuteMinutes-error', /1 440/],
+        ['overtime-input', '-1', 'overtime-error', /до 168/]
+    ]) {
+        const old = page.nodes.get(id).value;
+        const goalsBefore = page.goals.length;
+        page.edit(id, input);
+        assert.equal(page.nodes.get(id).value, input);
+        assert.match(page.nodes.get(error).textContent, expected);
+        assert.equal(page.nodes.get(error).hidden, false);
+        assert.equal(page.nodes.get('time-answer').hidden, true);
+        assert.equal(page.nodes.get('purchase-hours').textContent, '—');
+        assert.equal(page.nodes.get('save-time-png').disabled, true);
+        assert.equal(page.nodes.get('share-time').disabled, true);
+        await page.shareTimeScenario();
+        assert.equal(page.goals.length, goalsBefore);
+        assert.equal(page.state.officeDays, 3);
+        page.edit(id, old);
+        assert.equal(page.nodes.get('save-time-png').disabled, false);
+        assert.equal(page.nodes.get('share-time').disabled, false);
+    }
+    assert.deepEqual(page.goals, ['calculate_success']);
+});
+
+test('share serialises only the READY scenario and offers manual copy on rejection or absence', async () => {
+    for (const clipboard of [undefined, { writeText: async () => { throw new Error('denied'); } }]) {
+        const page = loadPage('?utm_medium=qa', { clipboard });
+        page.nodes.get('office-0').fire('click');
+        await page.shareTimeScenario();
+        const link = new URL(page.nodes.get('time-share-url').value);
+        assert.equal(link.searchParams.get('office'), '0');
+        assert.equal(link.searchParams.has('commute'), false);
+        assert.equal(link.searchParams.has('utm_medium'), false);
+        assert.equal(page.location.search, '?utm_medium=qa');
+        assert.equal(page.nodes.get('commute-field').hidden, true);
+        assert.equal(page.nodes.get('time-share-dialog').open, true);
+        assert.equal(page.nodes.get('time-share-url').selected, true);
+        assert.equal(page.env.toast, undefined);
+        assert.equal(loadPage(link.search).nodes.get('purchase-hours').textContent, '260');
+    }
+});
+
+test('successful clipboard copy exports the shown state and deduplicates conversion', async () => {
+    let copied;
+    const page = loadPage('', { clipboard: { writeText: async value => { copied = value; } } });
+    page.edit('hours-input', '7,5');
+    page.edit('work-days-input', '3,5');
+    page.edit('office-days-input', '2,5');
+    page.edit('overtime-input', '1,5');
+    await page.shareTimeScenario();
+    const restored = loadPage(new URL(copied).search);
+    assert.equal(restored.nodes.get('purchase-hours').textContent, '213');
+    assert.equal(restored.state.overtime, 1.5);
+    assert.equal(page.location.search, '');
+    assert.equal(page.env.toast, 'Ссылка скопирована');
+    assert.deepEqual(page.goals, ['calculate_success', 'share_click']);
+    assert.deepEqual(restored.goals, []);
 });
