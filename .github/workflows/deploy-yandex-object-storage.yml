@@ -118,6 +118,7 @@ jobs:
 
           rm -f -- \
             "$DEPLOY_DIR/.gitignore" \
+            "$DEPLOY_DIR/AGENTS.md" \
             "$DEPLOY_DIR/PROJECT_HANDOFF.md" \
             "$DEPLOY_DIR/P0_10_DATA_VALIDATION_SPEC.md" \
             "$DEPLOY_DIR/README.md" \
@@ -208,7 +209,11 @@ jobs:
 
           for page in "${calculator_pages[@]}"; do
             grep -Fq 'html2canvas' "$DEPLOY_DIR/$page"
-            grep -Fq 'takeScreenshot(' "$DEPLOY_DIR/$page"
+            if [[ "$page" == millionaire.html ]]; then
+              grep -Fq 'renderScreenshot(' "$DEPLOY_DIR/$page"
+            else
+              grep -Fq 'takeScreenshot(' "$DEPLOY_DIR/$page"
+            fi
           done
 
           echo "Verified 35-file deploy payload from main commit $(git rev-parse HEAD)"
