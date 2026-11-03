@@ -63,7 +63,7 @@ test('audit transparency fixes do not derive unsupported or incomparable results
     assert.doesNotMatch(childCost, /categoryBreakdownChart/);
     assert.doesNotMatch(childCost, /updateCategoryChart/);
 
-    assert.match(goal, /syncAgeFromBirthDate\(\);/);
-    assert.match(goal, /if \(input\.key === 'currentAge' && state\.birthDate\)/);
-    assert.match(goal, /state\.birthDate = '';/);
+    assert.doesNotMatch(goal, /birth-date|current-age|birthDate|currentAge/);
+    assert.match(goal, /const realBalance = balance \/ factor\(month\)/);
+    assert.match(goal, /const realTarget = target \/ factor\(month\)/);
 });
