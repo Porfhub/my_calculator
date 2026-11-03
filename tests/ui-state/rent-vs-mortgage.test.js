@@ -22,29 +22,26 @@ const approximatelyEqual = (actual, expected) =>
     assert.ok(Math.abs(actual - expected) < 0.001, `expected ${actual} to equal ${expected}`);
 
 test('analysis horizon is an always-visible 5–40 year scenario input', () => {
-    assert.match(html, /<label for="years-range"[^>]*>Горизонт анализа<\/label>/);
+    assert.match(html, /<label for="years-input"[^>]*>Сравнить через<\/label>/);
     assert.match(html, /id="years-range" min="5" max="40" step="1" value="20"/);
     assert.match(html, /Number\.isInteger\(state\.analysisYears\) && state\.analysisYears >= 5 && state\.analysisYears <= 40/);
-    assert.match(html, /Период, через который сравнивается итоговый капитал/);
+    assert.match(html, /Может отличаться от срока ипотеки/);
     assert.match(html, /id="mortgage-term-range" min="5" max="30" step="1" value="20"/);
     assert.match(html, /Number\.isInteger\(state\.mortgageTermYears\) && state\.mortgageTermYears >= 5 && state\.mortgageTermYears <= 30/);
-    assert.match(html, /На какой срок рассчитан ежемесячный платёж/);
-    assert.match(html, /id="result-mortgage-term"/);
-    assert.match(html, /id="result-analysis-years"/);
-    assert.match(html, /id="quick-start-assumptions"[^>]*>В быстром старте считаем: жильё \+5% в год, аренда \+4% в год/);
+    assert.match(html, /id="mortgage-payment"/);
+    assert.match(html, /id="quick-start-assumptions"[^>]*>Жильё \+5%, аренда \+4% в год/);
     assert.match(html, /id="dp-range" min="0" max="0\.99"/);
 });
 
 test('purchase and rent inputs are visible together instead of being hidden behind tabs', () => {
     assert.match(html, /id="purchase-section-title"/);
     assert.match(html, /id="rent-section-title"/);
-    assert.match(html, /🏠 Покупка/);
-    assert.match(html, /🔑 Аренда/);
+    assert.match(html, /Покупка в ипотеку/);
+    assert.match(html, /id="rent-section-title"[^>]*>Аренда/);
     assert.match(html, /id="include-investments"/);
     assert.match(html, /id="investment-rate-field"/);
-    assert.match(html, /id="investment-breakdown" hidden/);
-    assert.match(html, /Что инвестируется\?/);
-    assert.match(html, /Это сценарий с инвестиционным допущением, а не прогноз доходности/);
+    assert.match(html, /Как считаем и что учитываем/);
+    assert.match(html, /ежемесячную экономию вы откладываете/);
     assert.doesNotMatch(html, /switchTab|tab-btn-(buy|rent)|tab-content-(buy|rent)/);
 });
 
@@ -93,7 +90,7 @@ test('a higher rent reduces the renter capital under the same assumptions', () =
     assert.ok(higherRent.rentFinal < lowerRent.rentFinal);
 });
 
-test('investment breakdown uses current scenario values and is visible only in investment mode', () => {
+test('renter cash flow metadata follows the current scenario', () => {
     const baseline = calculateScenario({ ...baseScenario, includeInvestments: true });
     assert.equal(baseline.initialRenterCapital, 200_000);
     assert.equal(baseline.initialMonthlyDifference, 16_750);
@@ -106,12 +103,9 @@ test('investment breakdown uses current scenario values and is visible only in i
     assert.notEqual(calculateScenario({ ...baseScenario, includeInvestments: true, investRate: 0 }).monthlyInvestmentRate, baseline.monthlyInvestmentRate);
     assert.notEqual(calculateScenario({ ...baseScenario, includeInvestments: true, analysisYears: 2 }).rentFinal, baseline.rentFinal);
 
-    assert.match(html, /investmentBreakdown\.hidden = !investmentEnabled/);
-    assert.match(html, /investment-initial-capital'\)\.innerText = formatMoney\(result\.initialRenterCapital\)/);
-    assert.match(html, /investment-monthly-difference'\)\.innerText = `\$\{startingDifference < 0 \? '−' : '\+'\}\$\{formatMoney\(Math\.abs\(startingDifference\)\)\} \/ мес`/);
-    assert.match(html, /investment-return-value'\)\.innerText = `\$\{state\.investRate\.toFixed\(1\)\}% в год`/);
-    assert.match(html, /Капитал не растёт от доходности/);
-    assert.match(html, /<dt[^>]*>Стартовая разница в первый месяц<\/dt>/);
+    assert.match(html, /id="ledger-first-month"/);
+    assert.match(html, /id="ledger-return-row"/);
+    assert.match(html, /id="ledger-deposit"/);
 });
 
 const smokeScenario = {

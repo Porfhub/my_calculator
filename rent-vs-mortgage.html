@@ -1,42 +1,45 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Покупка или аренда — сравнение сценариев | Ясномера</title>
-    <meta name="description" content="Сравните покупку жилья в ипотеку и аренду на одном горизонте. Прозрачный сценарный расчёт капитала, расходов и допущений.">
-    <meta name="application-name" content="Ясномера">
-    <meta name="theme-color" content="#166534">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Ясномера">
-    <link rel="canonical" href="https://yasnomera.ru/rent-vs-mortgage.html">
-    <link rel="manifest" href="manifest.webmanifest">
-    <link rel="icon" type="image/svg+xml" href="yasnomera-mark.svg">
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="ru_RU">
-    <meta property="og:site_name" content="Ясномера">
-    <meta property="og:title" content="Покупка или аренда — Ясномера">
-    <meta property="og:description" content="Сравнение сценариев владения и аренды жилья на выбранном горизонте.">
-    <meta property="og:url" content="https://yasnomera.ru/rent-vs-mortgage.html">
-    <meta property="og:image" content="https://yasnomera.ru/assets/yasnomera-og.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:type" content="image/png">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://yasnomera.ru/assets/yasnomera-og.png">
-    <meta name="twitter:title" content="Покупка или аренда — Ясномера">
-    <meta name="twitter:description" content="Сравнение сценариев владения и аренды жилья на выбранном горизонте.">
-    <script type="application/ld+json">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Покупка или аренда — сравнение сценариев | Ясномера</title>
+<meta name="description" content="Сравните покупку жилья в ипотеку и аренду на одном горизонте. Прозрачный сценарный расчёт капитала, расходов и допущений.">
+<meta name="application-name" content="Ясномера">
+<meta name="theme-color" content="#166534">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ясномера">
+<link rel="canonical" href="https://yasnomera.ru/rent-vs-mortgage.html">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="yasnomera-mark.svg">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Ясномера">
+<meta property="og:title" content="Покупка или аренда — Ясномера">
+<meta property="og:description" content="Сравнение сценариев владения и аренды жилья на выбранном горизонте.">
+<meta property="og:url" content="https://yasnomera.ru/rent-vs-mortgage.html">
+<meta property="og:image" content="https://yasnomera.ru/assets/yasnomera-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://yasnomera.ru/assets/yasnomera-og.png">
+<meta name="twitter:title" content="Покупка или аренда — Ясномера">
+<meta name="twitter:description" content="Сравнение сценариев владения и аренды жилья на выбранном горизонте.">
+<script type="application/ld+json">
         {"@context":"https://schema.org","@type":"WebApplication","name":"Покупка или аренда","url":"https://yasnomera.ru/rent-vs-mortgage.html","description":"Сравнение сценариев покупки жилья в ипотеку и аренды.","applicationCategory":"FinanceApplication","operatingSystem":"Any","isAccessibleForFree":true,"inLanguage":"ru-RU","provider":{"@type":"Organization","name":"Ясномера","url":"https://yasnomera.ru/"}}
     </script>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- html2canvas CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com">
+</script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js">
+</script>
+<!-- html2canvas CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+</script>
+<script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
@@ -57,10 +60,14 @@
             }
         }
     </script>
-    <style>
+<style>
+
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
         input[type=number] { -moz-appearance: textfield; }
+
         .tooltip { position: relative; display: inline-block; cursor: help; }
+
         .tooltip .tooltiptext {
             visibility: hidden;
             width: 220px;
@@ -84,20 +91,33 @@
             text-transform: none !important;
             letter-spacing: normal !important;
         }
+
         .tooltip:hover .tooltiptext, .tooltip:focus-within .tooltiptext { visibility: visible; opacity: 1; }
+
         @media (max-width: 400px) {
             #investment-rate-field > div:first-child { flex-wrap: wrap; gap: 0.5rem; }
+
             #investment-rate-field > div:first-child > div { width: 100%; justify-content: space-between; }
+
             #investment-rate-field .tooltiptext { left: auto; right: 0; margin-left: 0; }
+
         }
 
-    </style>
-    <script src="js/theme.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/calculator-state.js"></script>
-    <script src="js/ui-utils.js"></script>
-    <script src="js/rent-vs-mortgage-model.js"></script>
-    <script src="js/trust-layer.js"></script>
+
+
+</style>
+<script src="js/theme.js">
+</script>
+<script src="js/utils.js">
+</script>
+<script src="js/calculator-state.js">
+</script>
+<script src="js/ui-utils.js">
+</script>
+<script src="js/rent-vs-mortgage-model.js">
+</script>
+<script src="js/trust-layer.js">
+</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -116,362 +136,528 @@
         }
     }
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<noscript>
+<div>
+<img src="https://mc.yandex.ru/watch/110360838" style="position:absolute; left:-9999px;" alt="" />
+</div>
+</noscript>
 <!-- /Yandex.Metrika counter -->
-    <link rel="stylesheet" href="css/product-polish.css">
+<link rel="stylesheet" href="css/product-polish.css">
+<style>
+
+:root{--rv-bg:#f6f7f4;--rv-surface:#fff;--rv-ink:#1b292e;--rv-muted:#52656d;--rv-line:#d9e1df;--rv-green:#075446;--rv-tint:#eaf5ef;--rv-focus:#008767;--rv-chart:#71858c}
+
+html.dark{--rv-bg:#192226;--rv-surface:#222e33;--rv-ink:#f1f5f3;--rv-muted:#b8c8c9;--rv-line:#435256;--rv-green:#9ee4c1;--rv-tint:#203e35;--rv-focus:#9ee4c1;--rv-chart:#b5c7cc}
+
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+.rent-page,.rent-page *{box-sizing:border-box}
+.rent-page{margin:0;background:var(--rv-bg);color:var(--rv-ink);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.rent-page [hidden],.rent-page .hidden{display:none!important}
+.rent-page a{color:var(--rv-green)}
+.rent-page button,.rent-page input{font:inherit}
+.rent-page button,.rent-page summary{cursor:pointer}
+.rent-page :is(a,button,input,summary):focus-visible{outline:3px solid var(--rv-focus);outline-offset:3px}
+.rent-page .rv-wrap{max-width:1168px;padding:0 28px;margin:auto}
+.rent-page .rv-header{background:var(--rv-surface);border-bottom:1px solid var(--rv-line)}
+.rent-page .rv-header-row{display:flex;align-items:center;gap:30px;min-height:76px}
+.rent-page .rv-brand{display:inline-flex;align-items:center;gap:11px;min-height:44px;text-decoration:none;color:var(--rv-ink);font-size:23px;font-weight:850;letter-spacing:-.8px}
+.rent-page .rv-brand img{width:35px;height:35px}
+.rent-page .rv-nav{margin-left:auto;font-size:14px;min-height:44px;display:flex;align-items:center;text-decoration:none}
+.rent-page .rv-theme{width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--rv-line);border-radius:12px;background:transparent;color:var(--rv-ink)}
+.rent-page .rv-theme svg{width:21px;height:21px}
+.rent-page .skip-link{position:absolute;top:8px;left:16px;z-index:99;background:var(--rv-surface);padding:12px;transform:translateY(-160%)}
+.rent-page .skip-link:focus{transform:none}
+.rent-page .rv-intro{padding:26px 0 24px}
+.rent-page .rv-back{font-size:12px;display:inline-flex;align-items:center;min-height:40px;color:var(--rv-muted);text-decoration:none}
+.rent-page h1{font-size:clamp(29px,3.4vw,39px);font-weight:800;letter-spacing:-1.2px;line-height:1.15;margin:7px 0 12px}
+.rent-page .rv-intro p{max-width:650px;margin:0;color:var(--rv-muted);font-size:16px}
+.rent-page .rv-layout{display:grid;grid-template-columns:minmax(0,390px) minmax(0,1fr);align-items:start;gap:24px}
+.rent-page .rv-panel{background:var(--rv-surface);border:1px solid var(--rv-line);border-radius:15px;padding:24px;min-width:0}
+.rent-page h2{font-size:19px;line-height:1.3;font-weight:750;letter-spacing:-.4px;margin:0}
+.rent-page h3{font-size:15px;font-weight:750;margin:0}
+.rent-page .rv-section+.rv-section{border-top:1px solid var(--rv-line);padding-top:22px;margin-top:22px}
+.rent-page .rv-section-head{display:flex;gap:10px;align-items:center;margin-bottom:19px}
+.rent-page .rv-section-number{color:var(--rv-green);font-size:12px;display:grid;place-items:center;background:var(--rv-tint);border-radius:7px;width:28px;height:28px;font-weight:750}
+.rent-page .rv-field{margin-top:17px}
+.rent-page .rv-field label{font-size:13px;font-weight:600;display:block;margin-bottom:7px}
+.rent-page .rv-input{position:relative;display:flex;align-items:center;border:1px solid var(--rv-line);border-radius:9px;background:var(--rv-surface);overflow:hidden}
+.rent-page .rv-input:focus-within{border-color:var(--rv-focus)}
+.rent-page .rv-input input{width:100%;min-width:0;border:0;background:transparent;padding:11px 13px;font-size:17px;font-weight:550;color:var(--rv-ink);min-height:48px;border-radius:8px}
+.rent-page .rv-input input:focus-visible{outline-offset:-3px}
+.rent-page .rv-input span{padding-right:13px;color:var(--rv-muted);font-size:13px;white-space:nowrap}
+.rent-page input[aria-invalid=true]{box-shadow:inset 0 0 0 2px #b63e32}
+.rent-page .rv-range{width:100%;height:24px;margin:2px 0 0;accent-color:#008767;cursor:pointer}
+.rent-page .rv-pair{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.rent-page .rv-help{font-size:12px;color:var(--rv-muted);line-height:1.5;margin:7px 0 0}
+.rent-page .rv-check{display:flex;align-items:flex-start;gap:10px;min-height:44px;font-size:13px;font-weight:550;margin-top:13px;cursor:pointer;padding:10px 0}
+.rent-page .rv-check input{width:20px;height:20px;flex-shrink:0;accent-color:#008767;margin-top:1px}
+.rent-page .rv-assumptions{margin-top:21px;border-top:1px solid var(--rv-line);padding-top:9px}
+.rent-page summary{min-height:48px;padding:11px 0;font-size:14px;font-weight:650;color:var(--rv-green)}
+.rent-page .rv-assumptions-summary{display:block;font-size:12px;font-weight:400;color:var(--rv-muted);margin-top:4px}
+.rent-page .rv-assumptions summary{list-style:none}
+.rent-page .rv-assumptions summary{position:relative;padding-right:26px}
+.rent-page .rv-assumptions summary::after{content:'';position:absolute;right:3px;top:20px;width:8px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg)}
+.rent-page .rv-assumptions[open]>summary::after{transform:rotate(225deg);top:24px}
+.rent-page .rv-assumptions-summary{padding-right:22px}
+.rent-page .rv-autocalc{font-size:12px;color:var(--rv-muted);margin:18px 0 0}
+.rent-page .rv-results{min-width:0}
+.rent-page .rv-results[data-ready=false] .ready-only{display:none!important}
+.rent-page .rv-hero{padding:0;overflow:hidden}
+.rent-page .rv-hero-top{background:#075446;color:#f6fff9;padding:24px 26px}
+.rent-page .rv-eyebrow{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:11px;font-weight:650;letter-spacing:.4px}
+.rent-page #scenario-label{font-weight:400;letter-spacing:0;opacity:.85}
+.rent-page #verdict-title{font-size:21px;letter-spacing:-.5px;margin:15px 0 5px;color:inherit}
+.rent-page #verdict-difference{display:block;font-size:clamp(27px,3vw,36px);line-height:1.2;font-weight:800;letter-spacing:-.8px;white-space:nowrap}
+.rent-page #verdict-desc{font-size:12px;line-height:1.55;margin:11px 0 0;max-width:480px;color:#deeee6}
+.rent-page .rv-capitals{padding:24px 26px}
+.rent-page .rv-capitals h3{font-size:15px;margin:0 0 21px}
+.rent-page .rv-capital+.rv-capital{margin-top:20px}
+.rent-page .rv-capital-line{display:flex;align-items:baseline;justify-content:space-between;gap:14px;font-size:13px}
+.rent-page .rv-capital-line strong{font-size:24px;line-height:1.3;letter-spacing:-.5px;white-space:nowrap;font-weight:750}
+.rent-page .rv-verdict-description{white-space:pre-line}
+.rent-page .rv-shortfall{margin-top:10px;padding:12px 14px;border-radius:9px;background:var(--rv-bg);color:var(--rv-muted);font-size:13px;line-height:1.55}
+.rent-page .rv-shortfall p{margin:0;white-space:pre-line}
+.rent-page .rv-shortfall a{display:inline-flex;align-items:center;min-height:44px;font-weight:650}
+.rent-page .rv-bar{height:7px;background:var(--rv-bg);border-radius:9px;overflow:hidden;margin:10px 0 7px}
+.rent-page .rv-bar>div{height:100%;background:var(--rv-green);border-radius:9px}
+.rent-page .rv-bar.rent-bar>div{background:var(--rv-chart)}
+.rent-page .rv-caption{font-size:12px;color:var(--rv-muted);margin:0}
+.rent-page .rv-assumption-note{background:var(--rv-bg);border-radius:9px;padding:12px 14px;margin-top:23px}
+.rent-page .rv-assumption-note p{font-size:12px;line-height:1.55;color:var(--rv-muted);margin:0}
+.rent-page .rv-assumption-note a{display:inline-flex;align-items:center;min-height:32px;font-size:12px;font-weight:600;text-underline-offset:3px}
+.rent-page .rv-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:13px 0 10px}
+.rent-page .rv-button{min-height:46px;padding:10px 15px;background:var(--rv-surface);border:1px solid var(--rv-line);border-radius:9px;color:var(--rv-green);font-size:13px;font-weight:600}
+.rent-page .rv-button:hover{background:var(--rv-tint);border-color:var(--rv-focus)}
+.rent-page .rv-chart-panel{margin-top:23px}
+.rent-page .rv-chart-head{display:flex;align-items:start;justify-content:space-between;gap:16px;margin-bottom:19px}
+.rent-page .rv-chart-head h2{font-size:16px}
+.rent-page .rv-legend{display:flex;gap:13px;flex-shrink:0;font-size:11px;color:var(--rv-muted)}
+.rent-page .rv-legend span{display:flex;align-items:center;gap:5px}
+.rent-page .rv-dot{width:14px;height:3px;background:var(--rv-green);display:inline-block}
+.rent-page .rv-dot.rental{background:var(--rv-chart)}
+.rent-page .rv-chart-frame{position:relative;height:250px}
+.rent-page .rv-explain{margin-top:18px}
+.rent-page .rv-explain>summary{color:var(--rv-ink);font-size:15px}
+.rent-page .rv-explain-body{font-size:13px;color:var(--rv-muted);padding-bottom:4px;line-height:1.55}
+.rent-page .rv-explain-body p{margin:0 0 14px}
+.rent-page .rv-disclosure>summary{list-style:none;position:relative;padding-right:26px}
+.rent-page .rv-disclosure>summary::-webkit-details-marker{display:none}
+.rent-page .rv-disclosure>summary::after{content:'';position:absolute;right:3px;top:18px;width:8px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg)}
+.rent-page .rv-disclosure[open]>summary::after{transform:rotate(225deg);top:22px}
+.rent-page .rv-ledger{padding:19px 0;border-top:1px solid var(--rv-line)}
+.rent-page .rv-ledger h3{font-size:15px;color:var(--rv-ink);margin:0 0 14px;display:flex;align-items:center;gap:9px}
+.rent-page .rv-ledger h3::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--rv-green)}
+.rent-page .rv-ledger.rv-renter-ledger h3::before{background:var(--rv-chart)}
+.rent-page .rv-ledger dl{margin:0}
+.rent-page .rv-ledger dl>div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:7px 0;align-items:baseline}
+.rent-page .rv-ledger dt{color:var(--rv-muted)}
+.rent-page .rv-ledger dd{margin:0;color:var(--rv-ink);font-size:14px;font-weight:600;white-space:nowrap}
+.rent-page .rv-ledger .rv-ledger-total{border-top:1px solid var(--rv-line);margin-top:7px;padding-top:13px}
+.rent-page .rv-ledger .rv-ledger-total dt{font-weight:650;color:var(--rv-ink)}
+.rent-page .rv-ledger .rv-ledger-total dd{font-size:18px;font-weight:750}
+.rent-page .rv-ledger .rv-help{margin-top:12px}
+.rent-page .rv-limitations{border-top:1px solid var(--rv-line);padding-top:3px}
+.rent-page .rv-limitations h4{font-size:13px;font-weight:650;color:var(--rv-ink);margin:17px 0 5px}
+.rent-page .rv-limitations p{margin:0 0 12px}
+.rent-page .rv-payment{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:13px 14px;background:var(--rv-tint);border-radius:9px;margin-top:15px;color:var(--rv-ink);font-size:13px}
+.rent-page .rv-payment small{display:block;color:var(--rv-muted);font-size:11px;margin-top:2px}
+.rent-page .rv-payment-amount{white-space:nowrap}
+.rent-page .rv-payment strong{font-size:19px;letter-spacing:-.3px}
+.rent-page .rv-deposit-labels,.rent-page .rv-deposit-inputs{display:grid;grid-template-columns:minmax(0,1fr) 100px;gap:10px}
+.rent-page .rv-deposit-labels{align-items:end;margin-bottom:7px}
+.rent-page .rv-deposit-labels label{margin:0;font-size:12px}
+.rent-page .rv-deposit-labels label:last-child{color:var(--rv-muted);font-weight:500}
+.rent-page .rv-deposit-inputs input{min-width:0}
+.rent-page .rv-nominal{margin:18px 0 0;font-size:12px;color:var(--rv-muted);line-height:1.5}
+.rent-page .rv-breakdown{padding:13px;background:var(--rv-bg);border-radius:9px;margin-top:12px}
+.rent-page .rv-breakdown dl{margin:12px 0}
+.rent-page .rv-breakdown dt{font-size:12px;color:var(--rv-muted)}
+.rent-page .rv-breakdown dd{font-size:15px;font-weight:650;margin:2px 0 0}
+.rent-page .rv-breakdown dl>div+div{margin-top:13px}
+.rent-page .rv-footer{font-size:12px;color:var(--rv-muted);padding:25px 0 calc(30px + env(safe-area-inset-bottom))}
+.rent-page .rv-footer p{margin:0}
+.rent-page #rent-state-message{padding:20px;border:1px solid #b98a31;border-radius:12px;background:var(--rv-surface);color:var(--rv-ink);font-size:14px}
+.rent-page #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);padding:12px 18px;background:var(--rv-ink);color:var(--rv-bg);font-size:13px;z-index:80;border-radius:10px}
+.rent-page #toast.opacity-0{opacity:0;pointer-events:none}
+.rent-page #toast.opacity-100{opacity:1}
+.rent-page .rv-dialog{max-width:calc(100% - 32px);width:480px;padding:24px;border:1px solid var(--rv-line);border-radius:15px;background:var(--rv-surface);color:var(--rv-ink)}
+.rent-page .rv-dialog::backdrop{background:#0008}
+.rent-page .rv-dialog input{width:100%;margin:16px 0;padding:12px;border:1px solid var(--rv-line);border-radius:8px;background:var(--rv-bg);color:var(--rv-ink)}
+.rent-page .rv-export-head{font-size:12px;color:var(--rv-muted);margin:0 0 15px}
+.rent-page .rv-export-conditions{margin:20px 0;padding:15px;background:var(--rv-bg);border-radius:9px;font-size:12px;color:var(--rv-muted)}
+.rent-page .rv-export-conditions p{margin:5px 0}
+
+@media(max-width:950px){.rent-page .rv-layout{grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:18px}
+.rent-page .rv-panel{padding:20px}
+.rent-page .rv-hero{padding:0}
+.rent-page .rv-hero-top,.rent-page .rv-capitals{padding:22px}
+.rent-page .rv-capital-line{align-items:flex-start;flex-direction:column;gap:5px}
+.rent-page .rv-chart-head{flex-direction:column;gap:8px}
+}
+
+@media(max-width:760px){.rent-page .rv-wrap{padding:0 18px}
+.rent-page .rv-header-row{min-height:65px;gap:13px}
+.rent-page .rv-brand{font-size:19px;gap:8px}
+.rent-page .rv-brand img{width:31px;height:31px}
+.rent-page .rv-nav{font-size:12px}
+.rent-page .rv-intro{padding:15px 0 21px}
+.rent-page h1{font-size:31px;letter-spacing:-1px}
+.rent-page .rv-intro p{font-size:14px}
+.rent-page .rv-layout{grid-template-columns:1fr;gap:20px}
+.rent-page .rv-panel{padding:20px}
+.rent-page .rv-hero{padding:0}
+.rent-page .rv-range{display:none}
+.rent-page .rv-field{margin-top:15px}
+.rent-page .rv-capital-line{flex-direction:row;align-items:baseline;gap:12px}
+.rent-page .rv-capital-line strong{font-size:23px}
+.rent-page .rv-hero-top,.rent-page .rv-capitals{padding:22px}
+.rent-page #verdict-title{font-size:20px}
+.rent-page #verdict-difference{font-size:32px}
+.rent-page .rv-chart-head{flex-direction:column}
+.rent-page .rv-chart-frame{height:230px}
+.rent-page .rv-trust{padding:0 18px}
+.rent-page .rv-input input{font-size:17px}
+.rent-page .rv-pair{gap:12px}
+.rent-page .rv-back{min-height:34px}
+.rent-page .rv-section-head{margin-bottom:15px}
+}
+
+@media(max-width:370px){.rent-page .rv-wrap,.rent-page .rv-trust{padding:0 14px}
+.rent-page .rv-deposit-labels,.rent-page .rv-deposit-inputs{grid-template-columns:minmax(0,1fr) 76px}
+.rent-page .rv-deposit-labels label:last-child{font-size:11px}
+.rent-page .rv-deposit-inputs input{padding-left:10px;padding-right:8px;font-size:16px}
+.rent-page .rv-panel{padding:17px}
+.rent-page .rv-hero{padding:0}
+.rent-page .rv-hero-top,.rent-page .rv-capitals{padding:19px}
+.rent-page .rv-capital-line strong{font-size:21px}
+.rent-page #verdict-difference{font-size:28px}
+.rent-page .rv-brand{font-size:17px}
+.rent-page h1{font-size:29px}
+}
+
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}
+.rent-page *{transition:none!important}
+}
+
+
+</style>
+<style>
+.rent-page .rv-difference{display:flex;align-items:baseline;gap:9px}
+.rent-page .rv-difference>span{font-size:22px}
+.rent-page .rv-header{box-shadow:none;border-bottom:1px solid var(--rv-line)}
+.rent-page .rv-header>.rv-header-row{padding:0 28px!important}
+.rent-page .rv-theme{box-shadow:none!important}
+.rent-page .rv-mobile-result{display:none}
+.rent-page .rv-range{appearance:none;-webkit-appearance:none;background:transparent}
+.rent-page .rv-range::-webkit-slider-runnable-track{height:4px;background:linear-gradient(to right,#008767 var(--fill,20%),var(--rv-line) var(--fill,20%));border-radius:4px}
+.rent-page .rv-range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;height:13px;width:13px;background:#008767;border-radius:50%;margin-top:-4.5px}
+.rent-page .rv-range::-moz-range-track{height:4px;background:var(--rv-line);border-radius:4px}
+.rent-page .rv-range::-moz-range-progress{height:4px;background:#008767}
+.rent-page .rv-range::-moz-range-thumb{height:13px;width:13px;background:#008767;border:0;border-radius:50%}
+@media(max-width:760px){.rent-page .rv-header>.rv-header-row{padding:0 18px!important}
+.rent-page .rv-mobile-result{display:flex;align-items:center;justify-content:center;margin-top:19px;text-decoration:none;background:var(--rv-tint)}
+}
+@media(max-width:370px){.rent-page .rv-header>.rv-header-row{padding:0 14px!important}
+}
+
+</style>
+<style>
+@media(max-width:760px){.rent-page>main.rv-wrap{padding-top:0!important}
+}
+.rent-page .rv-help:empty{display:none}
+.rent-page .rv-payment{margin-top:14px;font-size:13px}
+
+</style>
 </head>
-<body class="calculator-page bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased flex flex-col transition-colors duration-300">
-
-    <!-- Переключатель темной темы -->
-    <div class="product-theme-control fixed top-24 right-4 z-50 md:top-6 md:right-8">
-        <button id="theme-toggle" onclick="toggleDarkMode()" aria-label="Переключить тему" class="p-3 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:scale-110 transition-all active:scale-95">
-            <svg id="sun-icon" class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
-            <svg id="moon-icon" class="w-6 h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
-        </button>
-    </div>
-
-    <!-- Header -->
-    <header class="bg-gradient-to-r from-brand-800 to-slate-900 text-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex items-center space-x-4">
-            <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
-                <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">Ясномера</span>
-            </a>
-            <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
-            <div class="flex items-center space-x-3">
-                <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                </div>
-                <div>
-                    <h1 class="text-2xl font-black tracking-tight">Покупка или аренда</h1>
-                    <p class="text-xs text-brand-200 font-medium">Сравнение сценариев владения и аренды</p>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 w-full">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-            <!-- Parameters Panel (Left Column) -->
-            <div class="lg:col-span-5 space-y-6">
-                <!-- Mode Toggle Widget -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 flex items-center justify-between">
-                    <div>
-                        <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest block">Режим настройки</span>
-                        <span id="mode-status-text" class="text-sm font-extrabold text-slate-800 dark:text-white transition-all">Быстрый старт</span>
-                    </div>
-                    <!-- Slide toggle -->
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="mode-checkbox" onchange="toggleExpertMode(this.checked)" class="sr-only peer">
-                        <div class="w-11 h-6 bg-slate-200 dark:bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-brand-600"></div>
-                    </label>
-                </div>
-                <p id="quick-start-assumptions" class="text-xs leading-relaxed text-slate-500 dark:text-slate-400 px-1">В быстром старте считаем: жильё +5% в год, аренда +4% в год. Изменить можно в экспертном режиме.</p>
-
-                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
-                    <!-- Purchase scenario -->
-                    <section class="space-y-5 rounded-2xl border border-slate-200 bg-slate-50/70 p-5 dark:border-slate-700 dark:bg-slate-800/30" aria-labelledby="purchase-section-title">
-                        <div class="border-b border-slate-200 pb-3 dark:border-slate-700">
-                            <h2 id="purchase-section-title" class="text-base font-black tracking-tight text-slate-900 dark:text-white">🏠 Покупка</h2>
-                        </div>
-                        <div class="space-y-2">
-                            <div class="flex justify-between items-center">
-                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Стоимость квартиры</label>
-                                <span class="text-sm font-bold text-slate-900 dark:text-white" id="cost-display">10 000 000 ₽</span>
-                            </div>
-                            <input type="range" id="cost-range" min="1000000" max="50000000" step="100000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
-                        </div>
-                        <div class="space-y-2">
-                            <div class="flex justify-between items-center">
-                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Ипотечная ставка</label>
-                                <span class="text-sm font-bold text-brand-700 dark:text-brand-400" id="rate-display">16.0%</span>
-                            </div>
-                            <input type="range" id="rate-range" min="1" max="30" step="0.1" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
-                        </div>
-                        <div class="space-y-2">
-                            <div class="flex justify-between items-center">
-                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Первоначальный взнос</label>
-                                <span class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded font-bold" id="dp-percent">20%</span>
-                            </div>
-                            <input type="range" id="dp-range" min="0" max="0.99" step="0.01" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
-                        </div>
-                        <div class="space-y-2">
-                            <div class="flex justify-between items-start gap-4">
-                                <div>
-                                    <label for="mortgage-term-range" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Срок ипотеки</label>
-                                    <p id="mortgage-term-help" class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">На какой срок рассчитан ежемесячный платёж.</p>
-                                </div>
-                                <output for="mortgage-term-range" id="mortgage-term-display" class="shrink-0 text-sm font-extrabold text-brand-700 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20 px-3 py-1 rounded-lg" aria-live="polite">20 лет</output>
-                            </div>
-                            <input type="range" id="mortgage-term-range" min="5" max="30" step="1" value="20" aria-describedby="mortgage-term-help mortgage-term-limits" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
-                            <div id="mortgage-term-limits" class="flex justify-between text-[10px] font-semibold text-slate-400 dark:text-slate-500"><span>5 лет</span><span>30 лет</span></div>
-                        </div>
-                    </section>
-
-                    <!-- Rent scenario -->
-                    <section class="space-y-5 rounded-2xl border border-slate-200 bg-slate-50/70 p-5 dark:border-slate-700 dark:bg-slate-800/30" aria-labelledby="rent-section-title">
-                        <div class="border-b border-slate-200 pb-3 dark:border-slate-700">
-                            <h2 id="rent-section-title" class="text-base font-black tracking-tight text-slate-900 dark:text-white">🔑 Аренда</h2>
-                        </div>
-                        <div class="space-y-2">
-                            <div class="flex justify-between items-center">
-                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Стоимость аренды (в мес.)</label>
-                                <span class="text-sm font-bold text-slate-900 dark:text-white" id="rent-display">50 000 ₽</span>
-                            </div>
-                            <input type="range" id="rent-range" min="10000" max="300000" step="1000" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
-                        </div>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 px-3 py-2.5">
-                                <label for="include-investments" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Учитывать инвестиционный доход</label>
-                                <input type="checkbox" id="include-investments" class="h-5 w-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500" aria-describedby="investment-mode-help">
-                            </div>
-                            <div id="investment-breakdown" hidden class="rounded-xl border border-slate-200 bg-white px-3 py-3 text-[11px] text-slate-600 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300" aria-live="polite">
-                                <h3 class="font-bold text-slate-800 dark:text-white">Что инвестируется?</h3>
-                                <dl class="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
-                                    <div>
-                                        <dt class="font-bold text-slate-800 dark:text-white">Стартовый капитал</dt>
-                                        <dd id="investment-initial-capital" class="mt-0.5 text-sm font-black text-slate-900 dark:text-white">0 ₽</dd>
-                                        <p class="mt-0.5 text-slate-500 dark:text-slate-400">Первоначальный взнос, который не уходит в покупку.</p>
-                                    </div>
-                                    <div>
-                                        <dt class="font-bold text-slate-800 dark:text-white">Стартовая разница в первый месяц</dt>
-                                        <dd id="investment-monthly-difference" class="mt-0.5 text-sm font-black text-slate-900 dark:text-white">0 ₽ / мес</dd>
-                                        <p id="investment-monthly-difference-help" class="mt-0.5 text-slate-500 dark:text-slate-400">Меняется по мере роста аренды и погашения ипотеки.</p>
-                                    </div>
-                                    <div>
-                                        <dt class="font-bold text-slate-800 dark:text-white">Доходность</dt>
-                                        <dd id="investment-return-value" class="mt-0.5 text-sm font-black text-slate-900 dark:text-white">0% в год</dd>
-                                        <p id="investment-return-help" class="mt-0.5 text-slate-500 dark:text-slate-400">Применяется к накопленному капиталу.</p>
-                                    </div>
-                                </dl>
-                                <p class="mt-2 border-t border-slate-100 pt-2 text-slate-500 dark:border-slate-700 dark:text-slate-400">Это сценарий с инвестиционным допущением, а не прогноз доходности.</p>
-                            </div>
-                        </div>
-                        <div id="investment-rate-field" class="space-y-2 hidden">
-                            <div class="flex justify-between items-center">
-                                <div class="flex items-center gap-1.5">
-                                    <label for="invest-range" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Ожидаемая годовая доходность (% в год)</label>
-                                    <span class="tooltip"><button type="button" class="text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-600 w-5 h-5 flex items-center justify-center rounded-full" aria-label="Примеры накоплений" aria-describedby="investment-rate-help">?</button>
-                                        <span id="investment-rate-help" role="tooltip" class="tooltiptext">Примеры: вклад, облигации, ETF, акции и другие инвестиции. Доходность не гарантирована.</span>
-                                    </span>
-                                </div>
-                                <span class="text-sm font-bold text-brand-700 dark:text-brand-400" id="invest-display">15.0%</span>
-                            </div>
-                            <input type="range" id="invest-range" min="0" max="25" step="0.5" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
-                        </div>
-                    </section>
-
-                    <!-- Expert-only market assumptions remain in context, not in a tab. -->
-                    <section id="expert-market-assumptions" class="space-y-5 hidden border-t border-slate-100 pt-6 dark:border-slate-800" aria-labelledby="market-section-title">
-                        <div class="flex items-center gap-2 text-slate-400 dark:text-slate-500 font-bold text-[10px] uppercase tracking-wider">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                            <h2 id="market-section-title">Рыночные предположения</h2>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-bold text-slate-500 uppercase">Рост цен на жилье</label>
-                                <div class="relative">
-                                    <input type="number" id="growth-re" value="5" class="w-full pl-3 pr-8 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-brand-500 outline-none text-xs font-bold text-slate-800 dark:text-white">
-                                    <span class="absolute right-3 top-2 text-[10px] text-slate-400">%</span>
-                                </div>
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-bold text-slate-500 uppercase">Рост аренды</label>
-                                <div class="relative">
-                                    <input type="number" id="growth-rent" value="4" class="w-full pl-3 pr-8 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-brand-500 outline-none text-xs font-bold text-slate-800 dark:text-white">
-                                    <span class="absolute right-3 top-2 text-[10px] text-slate-400">%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <div class="space-y-3 pt-5 border-t border-slate-100 dark:border-slate-800">
-                        <div class="flex justify-between items-start gap-4">
-                            <div>
-                                <label for="years-range" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Горизонт анализа</label>
-                                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Период, через который сравнивается итоговый капитал.</p>
-                            </div>
-                            <output for="years-range" class="shrink-0 text-sm font-extrabold text-brand-700 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20 px-3 py-1 rounded-lg" id="years-display" aria-live="polite">20 лет</output>
-                        </div>
-                        <input type="range" id="years-range" min="5" max="40" step="1" value="20" aria-describedby="years-range-limits" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer">
-                        <div id="years-range-limits" class="flex justify-between text-[10px] font-semibold text-slate-400 dark:text-slate-500">
-                            <span>5 лет</span>
-                            <span>40 лет</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Results Panel (Right Column) -->
-            <div class="lg:col-span-7 space-y-6">
-                <p id="rent-state-message" hidden role="status" class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300"></p>
-                <!-- Verdict Card -->
-                <div id="verdict-card" class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-lg relative overflow-hidden transition-all duration-500">
-                    <!-- Screenshot wrapper -->
-                    <div id="screenshot-area" class="bg-white dark:bg-slate-900 transition-all duration-300">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <span id="verdict-tag" class="text-[10px] uppercase font-black bg-brand-600 text-white px-2.5 py-1 rounded-full tracking-wider">Победитель сценария</span>
-                            <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">Горизонт: <strong id="verdict-period" class="text-slate-800 dark:text-slate-200">20 лет</strong></span>
-                        </div>
-
-                        <div class="mt-4 pb-6 border-b border-slate-100 dark:border-slate-800">
-                            <h2 class="text-3xl font-black text-slate-900 dark:text-white" id="verdict-title">Ипотека выгоднее</h2>
-                            <div class="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                                <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Разница в капитале</span>
-                                <strong class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white" id="verdict-difference">0 ₽</strong>
-                                <span id="verdict-percent" class="text-sm font-bold text-slate-500 dark:text-slate-400">0%</span>
-                            </div>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mt-2" id="verdict-desc">
-                                При выбранных предположениях через 20 лет капитал при ипотеке будет больше капитала при аренде.
-                            </p>
-                            <p class="mt-2 text-xs leading-relaxed text-slate-500 dark:text-slate-400">Платёж по ипотеке рассчитан на срок ипотеки: <span id="result-mortgage-term">20 лет</span>.<br>Итоговый капитал сравнивается через: <span id="result-analysis-years">20 лет</span>.</p>
-                        </div>
-
-                        <div class="mt-6 space-y-5" aria-label="Сравнение итогового чистого капитала">
-                            <div>
-                                <div class="flex items-end justify-between gap-4 mb-2">
-                                    <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Ипотека</span>
-                                    <span class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white text-right" id="final-buy">0 ₽</span>
-                                </div>
-                                <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                    <div id="comparison-bar-buy" role="progressbar" aria-label="Капитал при ипотеке" class="h-full bg-brand-600 rounded-full transition-all duration-500" style="width: 50%"></div>
-                                </div>
-                                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5">Стоимость жилья за вычетом остатка долга</p>
-                            </div>
-                            <div>
-                                <div class="flex items-end justify-between gap-4 mb-2">
-                                    <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Аренда</span>
-                                    <span class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white text-right" id="final-rent" aria-live="polite">0 ₽</span>
-                                </div>
-                                <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                    <div id="comparison-bar-rent" role="progressbar" aria-label="Капитал при аренде" class="h-full bg-slate-400 dark:bg-slate-500 rounded-full transition-all duration-500" style="width: 50%"></div>
-                                </div>
-                                <p id="rent-capital-caption" class="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5">Накопления без инвестиционного дохода</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Блок простого объяснения "На пальцах" -->
-                <div class="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 space-y-4 shadow-inner">
-                    <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                        <span>💡 Как читать результат: чистый капитал</span>
-                    </h3>
-                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                        Калькулятор сравнивает чистый капитал на горизонте <span id="explain-period" class="text-brand-600 dark:text-brand-400 font-extrabold">20 лет</span> при заданных условиях. Это стоимость активов за вычетом обязательств в каждом сценарии:
-                    </p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
-                        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl space-y-2 border border-slate-200/50 dark:border-slate-700/50">
-                            <h4 class="text-xs font-black text-brand-600 dark:text-brand-400 uppercase tracking-wider flex items-center gap-1.5">
-                                <span>🏠 Капитал при Ипотеке</span>
-                            </h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                                Это реальная <strong>стоимость вашей квартиры</strong> (с учетом ежегодного роста цен на недвижимость) минус <strong>остаток вашего долга</strong> перед банком. С каждым платежом долг тает, а ваша доля в квартире растет.
-                            </p>
-                        </div>
-                        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl space-y-2 border border-slate-200/50 dark:border-slate-700/50">
-                            <h4 class="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                                <span>📈 Капитал при Аренде</span>
-                            </h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                                Капитал арендатора сопоставляется с чистым капиталом покупки. Состав инвестиционного сценария показан в блоке «Что инвестируется?» рядом с арендой.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <section class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5" aria-labelledby="assumptions-title">
-                    <h3 id="assumptions-title" class="text-sm font-bold text-slate-800 dark:text-white">Что сильнее всего влияет на этот вывод?</h3>
-                    <div id="key-assumptions" class="mt-3 flex flex-wrap gap-2" role="list" aria-label="Ключевые допущения"><span role="listitem" class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-200">ипотечная ставка</span><span role="listitem" class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-200">рост стоимости жилья</span><span role="listitem" class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-200">рост аренды</span></div>
-                </section>
-
-                <!-- Chart -->
-                <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm h-[420px] sm:h-[400px]">
-                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
-                        <h3 class="font-bold text-slate-800 dark:text-white text-sm">Динамика чистого капитала за <span id="chart-years">20 лет</span></h3>
-                        <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider">
-                            <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-brand-500 rounded-full"></span> Ипотека</span>
-                            <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-slate-300 rounded-full"></span> Аренда</span>
-                        </div>
-                    </div>
-                    <div class="h-[300px]">
-                        <canvas id="comparisonChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Sharing Buttons -->
-                <div class="grid grid-cols-2 gap-4">
-                    <button onclick="shareLink()" class="flex items-center justify-center gap-2 py-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 transition-all shadow-sm active:scale-[0.98]">
-                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
-                        Ссылка
-                    </button>
-                    <button onclick="takeScreenshot('screenshot-area', 'yasnomera-rent-vs-mortgage.png')" class="flex items-center justify-center gap-2 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition-all shadow-sm active:scale-[0.98]">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        Скриншот
-                    </button>
-                </div>
-
-                <!-- Myth Buster section ("Развенчиватель мифов") -->
-                <details class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-5 shadow-sm">
-                    <summary class="flex cursor-pointer list-none items-center gap-3">
-                        <div class="p-2.5 bg-rose-500/10 text-rose-600 rounded-xl">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                        <h3 class="text-lg font-black text-slate-900 dark:text-white">Что важно учесть</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Ставка, рост цен, аренды и горизонт расчёта.</p>
-                        </div>
-                    </summary>
-
-                    <div class="space-y-4 pt-5">
-                        <!-- Myth 1 -->
-                        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-2">
-                            <span class="text-[9px] font-extrabold uppercase bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-400 px-2 py-0.5 rounded-full">Расходы</span>
-                            <h4 class="text-xs font-black text-slate-900 dark:text-white mt-1">Аренда и владение включают разные виды расходов</h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                                В ипотечном сценарии учитываются проценты, обслуживание и долг. В сценарии аренды — арендные платежи и инвестиции разницы. Сверьте предположения с вашей ситуацией.
-                            </p>
-                        </div>
-
-                        <!-- Myth 2 -->
-                        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-2">
-                            <span class="text-[9px] font-extrabold uppercase bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-400 px-2 py-0.5 rounded-full">Ликвидность</span>
-                            <h4 class="text-xs font-black text-slate-900 dark:text-white mt-1">Форма капитала влияет на доступность денег</h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                                Недвижимость и финансовые активы отличаются скоростью продажи, расходами и риском. Калькулятор не оценивает эти факторы за вас.
-                            </p>
-                        </div>
-
-                        <!-- Myth 3 -->
-                        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-2">
-                            <span class="text-[9px] font-extrabold uppercase bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-400 px-2 py-0.5 rounded-full">Допущения</span>
-                            <h4 class="text-xs font-black text-slate-900 dark:text-white mt-1">Доходность и рост цен не гарантированы</h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                                Результат зависит от введённых темпов роста, ставки и срока. Измените их, чтобы увидеть чувствительность сравнения.
-                            </p>
-                        </div>
-                    </div>
-                </details>
-
-            </div>
-
-        </div>
-    </main>
-
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8" data-webwisor="rent-vs-mortgage"></section>
-
-    <footer class="max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-400 border-t border-slate-100 dark:border-slate-800 mt-12">
-        <p>© 2026 Ясномера. Расчёт показывает сценарий, а не прогноз рынка.</p>
-    </footer>
-
-    <!-- Всплывающие уведомления (Toast) -->
-    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-        <span class="text-brand-500 font-bold">✓</span>
-        <span id="toast-message" class="text-sm">Ссылка скопирована!</span>
-    </div>
+<body class="calculator-page rent-page">
+<a class="skip-link" href="#rent-form">Перейти к расчёту</a>
+<header class="rv-header">
+<div class="rv-wrap rv-header-row">
+<a class="rv-brand" href="index.html" aria-label="Ясномера — главная">
+<img src="yasnomera-mark.svg" width="35" height="35" alt="">
+<span>ЯСНОМЕРА</span>
+</a>
+<a class="rv-nav" href="index.html#calculators">Все расчёты</a>
+<button id="theme-toggle" class="rv-theme" onclick="toggleDarkMode()" aria-label="Переключить тему">
+<svg id="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+</svg>
+<svg id="sun-icon" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+<circle cx="12" cy="12" r="4"/>
+<path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>
+</svg>
+</button>
+</div>
+</header>
+<main class="rv-wrap">
+<div class="rv-intro">
+<a class="rv-back" href="index.html">← Все калькуляторы</a>
+<h1>Покупка или аренда</h1>
+<p>Своя квартира или деньги на счёте? Сравните, какой капитал останется при каждом варианте.</p>
+</div>
+<div class="rv-layout">
+<form class="rv-panel" id="rent-form" onsubmit="event.preventDefault()" novalidate>
+<section class="rv-section" aria-labelledby="purchase-section-title">
+<div class="rv-section-head">
+<span class="rv-section-number" aria-hidden="true">01</span>
+<h2 id="purchase-section-title">Покупка в ипотеку</h2>
+</div>
+<div class="rv-field">
+<label for="cost-input">Стоимость квартиры</label>
+<div class="rv-input">
+<input id="cost-input" type="text" inputmode="numeric" data-state="cost" data-money="true" value="10 000 000" autocomplete="off" aria-describedby="cost-help">
+<span aria-hidden="true">₽</span>
+</div>
+<input type="range" id="cost-range" min="1" max="50000000" step="1" value="10000000" class="rv-range" aria-label="Стоимость квартиры, ползунок">
+<p class="rv-help" id="cost-help">
+</p>
+</div>
+<div class="rv-field">
+<div class="rv-deposit-labels">
+<label for="deposit-input">Первоначальный взнос</label>
+<label for="deposit-percent-input">В процентах</label>
+</div>
+<div class="rv-deposit-inputs">
+<div class="rv-input">
+<input id="deposit-input" type="text" inputmode="decimal" data-money="true" value="2 000 000" autocomplete="off" aria-describedby="deposit-help">
+<span aria-hidden="true">₽</span>
+</div>
+<div class="rv-input">
+<input id="deposit-percent-input" type="text" inputmode="decimal" value="20" autocomplete="off" aria-describedby="deposit-help">
+<span aria-hidden="true">%</span>
+</div>
+</div>
+<input type="range" id="dp-range" min="0" max="0.99" step="0.01" value="0.2" class="rv-range" aria-label="Первоначальный взнос, ползунок">
+<p class="rv-help" id="deposit-help">Можно указать сумму или процент.</p>
+</div>
+<div class="rv-pair">
+<div class="rv-field">
+<label for="rate-input">Ставка ипотеки</label>
+<div class="rv-input">
+<input id="rate-input" type="text" inputmode="decimal" data-state="rate" data-money="false" value="16" autocomplete="off" aria-describedby="rate-help">
+<span aria-hidden="true">%</span>
+</div>
+<input type="range" id="rate-range" min="0" max="50" step="0.01" value="16" class="rv-range" aria-label="Ставка ипотеки, ползунок">
+<p class="rv-help" id="rate-help">
+</p>
+</div>
+<div class="rv-field">
+<label for="mortgage-term-input">Срок ипотеки</label>
+<div class="rv-input">
+<input id="mortgage-term-input" type="text" inputmode="decimal" data-state="mortgageTermYears" data-money="false" value="20" autocomplete="off" aria-describedby="mortgage-term-help">
+<span aria-hidden="true">лет</span>
+</div>
+<input type="range" id="mortgage-term-range" min="5" max="30" step="1" value="20" class="rv-range" aria-label="Срок ипотеки, ползунок">
+<p class="rv-help" id="mortgage-term-help"></p>
+</div>
+</div>
+<div class="rv-payment"><span>Платёж по ипотеке<small>Без страховки</small></span><span class="rv-payment-amount"><strong id="mortgage-payment"></strong> / мес.</span></div>
+</section>
+<section class="rv-section" aria-labelledby="rent-section-title">
+<div class="rv-section-head">
+<span class="rv-section-number" aria-hidden="true">02</span>
+<h2 id="rent-section-title">Аренда</h2>
+</div>
+<div class="rv-field">
+<label for="rent-input">Аренда в месяц</label>
+<div class="rv-input">
+<input id="rent-input" type="text" inputmode="numeric" data-state="rent" data-money="true" value="50 000" autocomplete="off" aria-describedby="rent-help">
+<span aria-hidden="true">₽</span>
+</div>
+<input type="range" id="rent-range" min="1" max="300000" step="1" value="50000" class="rv-range" aria-label="Аренда в месяц, ползунок">
+<p class="rv-help" id="rent-help">
+</p>
+</div>
+<p class="rv-help" id="investment-mode-help">При аренде взнос остаётся у вас. Считаем, что ежемесячную экономию вы откладываете. Если аренда дороже покупки, накопления уменьшаются.</p>
+<label class="rv-check">
+<input type="checkbox" id="include-investments" aria-describedby="investment-mode-help">
+<span>Учитывать доход от накоплений</span>
+</label>
+<div id="investment-rate-field" class="hidden">
+<div class="rv-field">
+<label for="invest-input">Доходность в год</label>
+<div class="rv-input">
+<input id="invest-input" type="text" inputmode="decimal" data-state="investRate" data-money="false" value="15" autocomplete="off" aria-describedby="invest-help">
+<span aria-hidden="true">%</span>
+</div>
+<input type="range" id="invest-range" min="0" max="50" step="0.01" value="15" class="rv-range" aria-label="Доходность в год, ползунок">
+<p class="rv-help" id="invest-help">Ваше допущение. Доходность не гарантирована.</p>
+</div>
+</div>
+</section>
+<section class="rv-section" aria-labelledby="horizon-title">
+<div class="rv-section-head">
+<span class="rv-section-number" aria-hidden="true">03</span>
+<h2 id="horizon-title">Период сравнения</h2>
+</div>
+<div class="rv-field">
+<label for="years-input">Сравнить через</label>
+<div class="rv-input">
+<input id="years-input" type="text" inputmode="decimal" data-state="analysisYears" data-money="false" value="20" autocomplete="off" aria-describedby="years-help">
+<span aria-hidden="true">лет</span>
+</div>
+<input type="range" id="years-range" min="5" max="40" step="1" value="20" class="rv-range" aria-label="Через сколько лет сравниваем, ползунок">
+<p class="rv-help" id="years-help">От 5 до 40 лет. Может отличаться от срока ипотеки.</p>
+</div>
+</section>
+<details id="market-assumptions" class="rv-assumptions">
+<summary>Допущения расчёта<span class="rv-assumptions-summary" id="quick-start-assumptions">Жильё +5%, аренда +4% в год</span>
+</summary>
+<p class="rv-help">Измените предположения и посмотрите, как меняется результат. Это сценарий, а не прогноз цен.</p>
+<div class="rv-field">
+<label for="growth-re">Рост стоимости жилья в год, %</label>
+<div class="rv-input">
+<input type="number" id="growth-re" value="5" min="-50" max="50" step="0.1" inputmode="decimal">
+<span>%</span>
+</div>
+</div>
+<div class="rv-field">
+<label for="growth-rent">Рост аренды в год, %</label>
+<div class="rv-input">
+<input type="number" id="growth-rent" value="4" min="-50" max="50" step="0.1" inputmode="decimal">
+<span>%</span>
+</div>
+</div>
+<p class="rv-help">Содержание жилья: 0,1% первоначальной стоимости в год — фиксированное допущение модели.</p>
+</details>
+<a class="rv-mobile-result rv-button" href="#verdict-card">К сравнению ↓</a>
+<p class="rv-autocalc">Расчёт обновляется автоматически.</p>
+</form>
+<div class="rv-results" id="results-panel" data-screenshot-width="560">
+<p id="rent-state-message" hidden role="status">
+</p>
+<section id="verdict-card" class="rv-panel rv-hero ready-only" aria-labelledby="verdict-title">
+<div id="screenshot-area">
+<div class="rv-hero-top">
+<div class="rv-eyebrow">
+<span id="verdict-tag">ПРИ ЭТИХ УСЛОВИЯХ</span>
+<span id="scenario-label">По примеру</span>
+</div>
+<h2 id="verdict-title">Больше капитала при покупке</h2>
+<div class="rv-difference">
+<span>на</span>
+<strong id="verdict-difference">
+</strong>
+</div>
+<p id="verdict-desc" class="rv-verdict-description">
+</p>
+</div>
+<div class="rv-capitals">
+<h3>Капитал в конце периода</h3>
+<div class="rv-capital">
+<div class="rv-capital-line">
+<span>При покупке</span>
+<strong id="final-buy">
+</strong>
+</div>
+<div class="rv-bar">
+<div id="comparison-bar-buy" role="progressbar" aria-label="Капитал при покупке">
+</div>
+</div>
+<p class="rv-caption">Стоимость квартиры за вычетом долга</p>
+</div>
+<div class="rv-capital">
+<div class="rv-capital-line">
+<span id="rent-balance-label">При аренде</span>
+<strong id="final-rent">
+</strong>
+</div>
+<div id="rent-balance-bar" class="rv-bar rent-bar">
+<div id="comparison-bar-rent" role="progressbar" aria-label="Капитал при аренде">
+</div>
+</div>
+<p id="rent-capital-caption" class="rv-caption">
+</p>
+<div id="rent-deficit" class="rv-shortfall" hidden>
+<p id="rent-shortfall-story"></p>
+<a id="explain-rent-balance" href="#comparison-methodology">Из чего сложилась сумма →</a>
+</div>
+</div>
+<div class="rv-assumption-note">
+<p id="result-assumptions">
+</p>
+<a href="#market-assumptions" id="edit-assumptions">Изменить допущения →</a>
+</div>
+<p class="rv-nominal">В будущих ценах, без поправки на инфляцию.</p>
+</div>
+</div>
+</section>
+<div class="rv-actions ready-only" data-screenshot-exclude>
+<button class="rv-button" id="share-result" type="button" onclick="shareRentScenario()">Поделиться</button>
+<button class="rv-button" id="save-png" type="button" onclick="takeScreenshot('results-panel', 'yasnomera-rent-vs-mortgage.png')">Сохранить PNG</button>
+</div>
+<section class="rv-panel rv-chart-panel ready-only" aria-labelledby="chart-title">
+<div class="rv-chart-head">
+<h2 id="chart-title">Как меняется капитал<br>
+<span class="rv-help">За <span id="chart-years">20 лет</span>
+</span>
+</h2>
+<div class="rv-legend">
+<span>
+<i class="rv-dot">
+</i>Покупка</span>
+<span>
+<i class="rv-dot rental">
+</i>Аренда</span>
+</div>
+</div>
+<div class="rv-chart-frame">
+<canvas id="comparisonChart" role="img" aria-label="Динамика капитала при покупке и аренде">
+</canvas>
+</div>
+<p class="rv-help">Значения на конец каждого года, без поправки на инфляцию.</p>
+</section>
+<details id="comparison-methodology" class="rv-panel rv-explain rv-disclosure ready-only" data-screenshot-exclude data-webwisor="rent-vs-mortgage" data-webwisor-rendered="true" data-testid="webwisor-help">
+<summary>Как считаем и что учитываем</summary>
+<div class="rv-explain-body">
+<p>Откуда берётся капитал через <span id="verdict-period">20 лет</span></p>
+<section class="rv-ledger" aria-labelledby="buy-ledger-title">
+<h3 id="buy-ledger-title">При покупке</h3>
+<dl>
+<div><dt>Стоимость квартиры к этому моменту</dt><dd id="ledger-property"></dd></div>
+<div><dt>Минус остаток ипотеки</dt><dd id="ledger-debt"></dd></div>
+<div class="rv-ledger-total"><dt>Ваш капитал</dt><dd id="ledger-buy-total"></dd></div>
+</dl>
+</section>
+<section class="rv-ledger rv-renter-ledger" aria-labelledby="rent-ledger-title">
+<h3 id="rent-ledger-title">При аренде</h3>
+<dl>
+<div><dt>Сохранённый взнос</dt><dd id="ledger-deposit"></dd></div>
+<div><dt id="ledger-cashflow-label">Разница расходов за весь период</dt><dd id="ledger-cashflow"></dd></div>
+<div id="ledger-return-row"><dt id="ledger-return-label">Доход от накоплений</dt><dd id="ledger-return"></dd></div>
+<div class="rv-ledger-total"><dt id="ledger-rent-total-label">Ваш капитал</dt><dd id="ledger-rent-total"></dd></div>
+</dl>
+<p class="rv-help" id="ledger-first-month"></p>
+</section>
+<details class="rv-limitations rv-disclosure">
+<summary>Допущения и ограничения</summary>
+<h4>Что задаёте вы</h4>
+<p>Цена, взнос, ставка, аренда и сроки — ваши условия. Рост цен и доходность — ваши предположения о будущем. Официальные данные здесь не используются.</p>
+<h4>Как сравниваем расходы</h4>
+<p>Каждый месяц сравниваем аренду с платежом по ипотеке и содержанием жилья. Разницу прибавляем к накоплениям арендатора или вычитаем из них. После погашения ипотеки её платёж обнуляется, содержание остаётся.</p>
+<h4>Что учтено</h4>
+<p>Содержание жилья — 0,1% первоначальной цены в год. При включённом доходе от накоплений годовую ставку делим на 12 и начисляем результат ежемесячно. Отрицательный баланс означает нехватку средств в рамках модели.</p>
+<h4>Что не учтено</h4>
+<p>Страховка, налоги, ремонт, расходы на сделку и продажу. Квартира и накопления различаются по риску и возможности быстро получить деньги. Все суммы округлены до рублей, без поправки на инфляцию. Это сравнение сценариев, а не рекомендация купить или арендовать.</p>
+</details>
+</div>
+</details>
+</div>
+</div>
+</main>
+<footer class="rv-wrap rv-footer">
+<p>© 2026 Ясномера. Понятные расчёты для финансовых решений.</p>
+</footer>
+<dialog class="rv-dialog" id="share-dialog">
+<h2>Ссылка на ваш расчёт</h2>
+<p class="rv-help">Скопируйте ссылку — она сохранит условия сравнения.</p>
+<input id="share-url" type="text" readonly aria-label="Ссылка на расчёт">
+<button class="rv-button" onclick="document.getElementById('share-dialog').close()">Закрыть</button>
+</dialog>
+<div id="toast" class="opacity-0" role="status">
+<span id="toast-message">
+</span>
+</div>
 
     <script>
         const state = {
@@ -489,10 +675,14 @@
         };
 
         let chart = null;
+        let renderedResult = null;
+        let successTracked = false;
+        const initialState = { ...state };
+        let renderedSignature = '';
         const rentStateController = CalculatorState.createController({
-            root: 'screenshot-area',
+            root: 'results-panel',
             messageElement: 'rent-state-message',
-            resultElements: ['final-buy', 'final-rent', 'verdict-title', 'verdict-difference', 'verdict-percent', 'verdict-desc'],
+            resultElements: ['final-buy', 'final-rent', 'verdict-title', 'verdict-difference', 'verdict-desc', 'mortgage-payment', 'ledger-property', 'ledger-debt', 'ledger-buy-total', 'ledger-deposit', 'ledger-cashflow', 'ledger-return', 'ledger-rent-total', 'ledger-first-month'],
             onClear: () => {
                 if (chart) {
                     chart.destroy();
@@ -500,15 +690,17 @@
                 }
             },
             onStateChange: (nextState) => {
+                document.getElementById('results-panel').dataset.ready = String(nextState === CalculatorState.STATES.READY);
                 const card = document.getElementById('verdict-card');
                 if (card) card.hidden = nextState !== CalculatorState.STATES.READY;
             }
         });
 
         window.canExportCalculation = () =>
-            rentStateController.getState() === CalculatorState.STATES.READY;
+            rentStateController.getState() === CalculatorState.STATES.READY && renderedSignature === JSON.stringify(state);
 
-        function isValidRentState() {
+        function isValidRentState(candidate = state) {
+            const state = candidate;
             return Number.isFinite(state.cost) && state.cost > 0
                 && Number.isFinite(state.rate) && state.rate >= 0 && state.rate <= 50
                 && Number.isFinite(state.dpPercent) && state.dpPercent >= 0 && state.dpPercent < 1
@@ -520,33 +712,7 @@
                 && Number.isInteger(state.analysisYears) && state.analysisYears >= 5 && state.analysisYears <= 40;
         }
 
-        function toggleExpertMode(isExpert) {
-            state.expertMode = isExpert;
-
-            const marketAssumptions = document.getElementById('expert-market-assumptions');
-            document.getElementById('quick-start-assumptions').hidden = isExpert;
-            const statusText = document.getElementById('mode-status-text');
-
-            if (isExpert) {
-                marketAssumptions.classList.remove('hidden');
-                statusText.innerText = "Экспертный режим";
-                statusText.className = "text-sm font-extrabold text-brand-600 dark:text-brand-400 transition-all";
-            } else {
-                marketAssumptions.classList.add('hidden');
-                statusText.innerText = "Быстрый старт";
-                statusText.className = "text-sm font-extrabold text-slate-800 dark:text-white transition-all";
-                // Reset expert-only market assumptions to defaults.
-                state.growthRE = 5;
-                state.growthRent = 4;
-
-                document.getElementById('growth-re').value = 5;
-                document.getElementById('growth-rent').value = 4;
-
-            }
-            calculate();
-        }
-
-        function calculate() {
+        function calculate(userAction = false) {
             if (!isValidRentState()) {
                 rentStateController.transition(CalculatorState.STATES.INVALID_INPUT, {
                     message: 'Проверьте стоимость жилья, первоначальный взнос, ставки, аренду и горизонт расчёта.'
@@ -557,6 +723,11 @@
             try {
                 calculateRentCore();
                 rentStateController.transition(CalculatorState.STATES.READY, { clearResults: false });
+                renderedSignature = JSON.stringify(state);
+                if (userAction) {
+                    document.getElementById('scenario-label').innerText = 'Ваш сценарий';
+                    if (!successTracked) { reachGoal('calculate_success'); successTracked = true; }
+                }
             } catch (error) {
                 console.error('Rent versus mortgage calculation failed:', error);
                 rentStateController.transition(CalculatorState.STATES.CALCULATION_IMPOSSIBLE, {
@@ -572,87 +743,46 @@
                 throw new Error('Final capital is not finite');
             }
 
+            renderedResult = result;
+            syncInputs();
             updateUI(buyFinal, rentFinal, result);
             updateChart(result.labels, result.dataBuy, result.dataRent);
+            fitResultAmounts();
         }
 
         function updateUI(buyFinal, rentFinal, result) {
-            document.getElementById('cost-display').innerText = formatMoney(state.cost);
-            document.getElementById('rate-display').innerText = state.rate.toFixed(1) + '%';
-            document.getElementById('dp-percent').innerText = Math.round(state.dpPercent * 100) + '%';
-            document.getElementById('rent-display').innerText = formatMoney(state.rent);
-            document.getElementById('invest-display').innerText = state.investRate.toFixed(1) + '%';
             const investmentEnabled = state.includeInvestments;
             document.getElementById('investment-rate-field').classList.toggle('hidden', !investmentEnabled);
-            const investmentBreakdown = document.getElementById('investment-breakdown');
-            investmentBreakdown.hidden = !investmentEnabled;
-            if (investmentEnabled) {
-                const startingDifference = result.initialMonthlyDifference;
-                document.getElementById('investment-initial-capital').innerText = formatMoney(result.initialRenterCapital);
-                document.getElementById('investment-monthly-difference').innerText = `${startingDifference < 0 ? '−' : '+'}${formatMoney(Math.abs(startingDifference))} / мес`;
-                document.getElementById('investment-monthly-difference-help').innerText = startingDifference > 0
-                    ? 'Добавляется к капиталу в первый месяц.'
-                    : startingDifference < 0
-                        ? 'Снимается с капитала в первый месяц.'
-                        : 'В первый месяц не меняет капитал.';
-                document.getElementById('investment-return-value').innerText = `${state.investRate.toFixed(1)}% в год`;
-                document.getElementById('investment-return-help').innerText = state.investRate > 0
-                    ? 'Применяется к накопленному капиталу.'
-                    : 'Капитал не растёт от доходности.';
-            }
-            const rentFinalElement = document.getElementById('final-rent');
-            rentFinalElement.innerText = rentFinal < 0 ? 'Накопления исчерпаны' : formatMoney(rentFinal);
-            rentFinalElement.className = rentFinal < 0
-                ? 'text-base sm:text-lg font-black text-slate-900 dark:text-white text-right'
-                : 'text-xl sm:text-2xl font-black text-slate-900 dark:text-white text-right';
-            document.getElementById('rent-capital-caption').innerText = rentFinal < 0
-                ? 'При выбранных предположениях арендные платежи превысили первоначальный взнос и накопленную разницу ежемесячных расходов.'
+            const hasShortfall = rentFinal < 0;
+            const rentAmount = hasShortfall ? `−${formatMoney(Math.abs(rentFinal))}` : formatMoney(rentFinal);
+            document.getElementById('final-rent').innerText = rentAmount;
+            document.getElementById('rent-balance-label').innerText = hasShortfall ? 'Баланс при аренде' : 'При аренде';
+            document.getElementById('rent-balance-bar').hidden = hasShortfall;
+            document.getElementById('rent-deficit').hidden = !hasShortfall;
+            document.getElementById('rent-shortfall-story').innerText = hasShortfall ? explainRentShortfall(result) : '';
+            document.getElementById('rent-capital-caption').innerText = hasShortfall
+                ? 'Столько не хватает к концу периода при том же бюджете на жильё, что и при покупке.'
                 : state.includeInvestments
-                    ? 'Стоимость инвестиционного портфеля'
-                    : 'Накопления без инвестиционного дохода';
-            const assumptions = ['ипотечная ставка', 'рост стоимости жилья', 'рост аренды'];
-            if (state.includeInvestments) assumptions.unshift('доходность накоплений');
-            const assumptionsElement = document.getElementById('key-assumptions');
-            assumptionsElement.replaceChildren(...assumptions.map((assumption) => {
-                const chip = document.createElement('span');
-                chip.setAttribute('role', 'listitem');
-                chip.className = 'rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-200';
-                chip.textContent = assumption;
-                return chip;
-            }));
+                    ? 'Накопления с доходностью'
+                    : 'Накопленные деньги';
+            document.getElementById('mortgage-payment').innerText = formatMoney(result.mortgagePayment);
+            document.getElementById('quick-start-assumptions').innerText = `Жильё ${state.growthRE > 0 ? '+' : ''}${state.growthRE}%, аренда ${state.growthRent > 0 ? '+' : ''}${state.growthRent}% в год`;
+            document.getElementById('result-assumptions').innerText = `Рост жилья ${state.growthRE}% и аренды ${state.growthRent}% в год. ${state.includeInvestments ? `Доходность накоплений ${state.investRate}% в год.` : 'Доход от накоплений выключен.'} Это допущения расчёта.`;
             const periodLabel = `${state.analysisYears} ${getYearWord(state.analysisYears)}`;
-            const mortgageTermLabel = `${state.mortgageTermYears} ${getYearWord(state.mortgageTermYears)}`;
-            document.getElementById('mortgage-term-display').innerText = mortgageTermLabel;
-            document.getElementById('result-mortgage-term').innerText = mortgageTermLabel;
-            document.getElementById('result-analysis-years').innerText = periodLabel;
-            document.getElementById('years-display').innerText = periodLabel;
             document.getElementById('verdict-period').innerText = periodLabel;
-            document.getElementById('explain-period').innerText = periodLabel;
             document.getElementById('chart-years').innerText = periodLabel;
+            updateLedger(result);
 
             document.getElementById('final-buy').innerText = formatMoney(buyFinal);
 
             const title = document.getElementById('verdict-title');
             const desc = document.getElementById('verdict-desc');
-            const percent = document.getElementById('verdict-percent');
-            const tag = document.getElementById('verdict-tag');
-
             const diff = Math.abs(buyFinal - rentFinal);
-            const winner = buyFinal === rentFinal ? null : (buyFinal > rentFinal ? 'Ипотека' : 'Аренда');
-            const lowerCapital = Math.min(buyFinal, rentFinal);
-            const winnerPercent = lowerCapital > 0 ? Math.round((Math.max(buyFinal, rentFinal) / lowerCapital - 1) * 100) : null;
             document.getElementById('verdict-difference').innerText = formatMoney(diff);
-
-            percent.innerText = winnerPercent === null ? 'н/д' : winnerPercent + '%';
-            if (winner) {
-                title.innerText = `${winner} выгоднее`;
-                desc.innerText = `При выбранных предположениях на горизонте ${periodLabel} чистый капитал при выборе ${winner === 'Ипотека' ? 'ипотеки' : 'аренды'} будет на ${formatMoney(diff)} больше.`;
-                tag.innerText = 'Победитель сценария';
-            } else {
-                title.innerText = 'Капитал одинаковый';
-                desc.innerText = `При выбранных предположениях на горизонте ${periodLabel} оба сценария дают одинаковый чистый капитал.`;
-                tag.innerText = 'Результат сценария';
-            }
+            title.innerText = buyFinal === rentFinal ? 'Капитал одинаковый'
+                : buyFinal > rentFinal ? 'Больше капитала при покупке' : 'Больше капитала при аренде';
+            desc.innerText = `Через ${periodLabel}`;
+            if (hasShortfall) desc.innerText += `\n${formatMoney(buyFinal)} − (${rentAmount})`;
 
             const comparisonMax = Math.max(0, buyFinal, rentFinal);
             const comparisonBars = [
@@ -664,56 +794,121 @@
                 element.setAttribute('aria-valuemin', '0');
                 element.setAttribute('aria-valuemax', String(comparisonMax));
                 element.setAttribute('aria-valuenow', String(Math.max(0, value)));
-                element.setAttribute('aria-valuetext', value < 0 ? 'Накопления исчерпаны' : formatMoney(value));
+                element.setAttribute('aria-valuetext', formatMoney(value));
             });
 
-            if (winner === 'Ипотека') {
-                tag.className = "text-[10px] uppercase font-black bg-brand-600 text-white px-2.5 py-1 rounded-full tracking-wider";
-            } else {
-                tag.className = "text-[10px] uppercase font-black bg-slate-600 text-white px-2.5 py-1 rounded-full tracking-wider";
-            }
         }
 
-        window.shareLink = shareLink;
+        function explainRentShortfall(result) {
+            const moreExpensive = result.firstMonthRentCostsMore;
+            const shortfall = result.firstMonthWithShortfall;
+            if (!moreExpensive || !shortfall) {
+                return 'Когда аренда обходится дороже покупки по месячным расходам, разница уменьшает накопления. Если их не хватает, баланс уходит в минус.';
+            }
+            const when = month => month === 1 ? 'В первый месяц'
+                : month <= 12 ? `В ${month}-м месяце` : `На ${Math.ceil(month / 12)}-м году`;
+            const firstDifference = Math.round(result.initialMonthlyDifference);
+            const sentences = [];
+            if (firstDifference > 0) {
+                sentences.push(`В первый месяц аренда дешевле на ${formatMoney(firstDifference)}.`);
+            }
+            if (moreExpensive === shortfall) {
+                sentences.push(`${when(shortfall)} аренда обходится дороже покупки по месячным расходам, и накоплений уже не хватает.`);
+            } else {
+                sentences.push(`${when(moreExpensive)} аренда впервые обходится дороже покупки по месячным расходам.`);
+                sentences.push(`${when(shortfall)} накоплений впервые не хватает.`);
+            }
+            return sentences.join('\n');
+        }
+
+        function updateLedger(result) {
+            // Reconcile display rounding to the same whole-ruble totals as the hero.
+            const debt = Math.round(result.remainingMortgageDebt);
+            const deposit = Math.round(result.initialRenterCapital);
+            const income = Math.round(result.totalInvestmentReturn);
+            const difference = Math.round(result.rentFinal) - deposit - income;
+            const signedMoney = value => `${value < 0 ? '−' : '+'} ${formatMoney(Math.abs(value))}`;
+            document.getElementById('ledger-property').innerText = formatMoney(Math.round(result.buyFinal) + debt);
+            document.getElementById('ledger-debt').innerText = debt ? `− ${formatMoney(debt)}` : formatMoney(0);
+            document.getElementById('ledger-buy-total').innerText = formatMoney(result.buyFinal);
+            document.getElementById('ledger-deposit').innerText = formatMoney(deposit);
+            document.getElementById('ledger-cashflow').innerText = signedMoney(difference);
+            document.getElementById('ledger-cashflow-label').innerText = difference < 0 ? 'Из накоплений на разницу расходов' : 'Отложенная разница расходов';
+            document.getElementById('ledger-return-row').hidden = !state.includeInvestments;
+            document.getElementById('ledger-return-label').innerText = income < 0 ? 'Изменение баланса от доходности' : 'Доход от накоплений';
+            document.getElementById('ledger-return').innerText = signedMoney(income);
+            document.getElementById('ledger-rent-total-label').innerText = result.rentFinal < 0 ? 'Дефицит по модели' : 'Ваш капитал';
+            document.getElementById('ledger-rent-total').innerText = result.rentFinal < 0 ? `− ${formatMoney(Math.abs(result.rentFinal))}` : formatMoney(result.rentFinal);
+            const first = result.initialMonthlyDifference;
+            document.getElementById('ledger-first-month').innerText = first > 0
+                ? `В первый месяц откладывается ${formatMoney(first)}. Дальше разница меняется вместе с расходами.`
+                : first < 0
+                    ? `В первый месяц из накоплений уходит ${formatMoney(Math.abs(first))} на разницу расходов.`
+                    : 'В первый месяц расходы одинаковы. Дальше разница меняется вместе с расходами.';
+        }
+
+        function fitResultAmounts() {
+            if (typeof getComputedStyle !== 'function') return;
+            for (const id of ['verdict-difference', 'final-buy', 'final-rent']) {
+                const element = document.getElementById(id);
+                element.style.fontSize = '';
+                const parent = element.parentElement;
+                const sibling = element.previousElementSibling;
+                const available = parent.clientWidth - (sibling?.getBoundingClientRect().width || 0) - 14;
+                let size = parseFloat(getComputedStyle(element).fontSize);
+                while (element.scrollWidth > available && size > 16) {
+                    size -= 0.5;
+                    element.style.fontSize = size + 'px';
+                }
+            }
+        }
+        window.addEventListener('resize', fitResultAmounts);
         function updateChart(labels, buy, rent) {
             const ctx = document.getElementById('comparisonChart').getContext('2d');
             if (chart) chart.destroy();
 
+            const dark = document.documentElement.classList.contains('dark');
+            const ink = dark ? '#b8c8c9' : '#52656d';
             chart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [
                         {
-                            label: 'Ипотека (Жилье)',
+                            label: 'Покупка (жильё минус долг)',
                             data: buy,
-                            borderColor: '#16a34a',
+                            borderColor: dark ? '#9ee4c1' : '#008767',
                             backgroundColor: 'rgba(22, 163, 74, 0.1)',
                             fill: true,
                             tension: 0.4,
-                            pointRadius: 2
+                            pointRadius: 0,
+                            pointHoverRadius: 4
                         },
                         {
                             label: state.includeInvestments ? 'Аренда (инвестиции)' : 'Аренда (накопления)',
                             data: rent,
-                            borderColor: '#94a3b8',
+                            borderColor: dark ? '#b5c7cc' : '#71858c',
+                            borderDash: [5, 4],
                             backgroundColor: 'rgba(148, 163, 184, 0.1)',
                             fill: true,
                             tension: 0.4,
-                            pointRadius: 2
+                            pointRadius: 0,
+                            pointHoverRadius: 4
                         }
                     ]
                 },
                 options: {
+                    animation: false,
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
                         y: {
                             grid: { color: 'rgba(148, 163, 184, 0.1)' },
-                            ticks: { callback: (v) => (v / 1000000).toFixed(0) + 'М' }
+                            ticks: { color: ink, callback: (v) => (v / 1000000).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) + ' млн ₽' }
                         },
                         x: {
+                            ticks: { color: ink, maxTicksLimit: 6 },
                             grid: { display: false }
                         }
                     }
@@ -721,46 +916,178 @@
             });
         }
 
-        // Event Listeners
-        document.getElementById('cost-range').addEventListener('input', (e) => { state.cost = parseInt(e.target.value); calculate(); });
-        document.getElementById('rate-range').addEventListener('input', (e) => { state.rate = parseFloat(e.target.value); calculate(); });
-        document.getElementById('dp-range').addEventListener('input', (e) => { state.dpPercent = parseFloat(e.target.value); calculate(); });
-        document.getElementById('rent-range').addEventListener('input', (e) => { state.rent = parseInt(e.target.value); calculate(); });
-        document.getElementById('invest-range').addEventListener('input', (e) => { state.investRate = parseFloat(e.target.value); calculate(); });
-        document.getElementById('include-investments').addEventListener('change', (e) => { state.includeInvestments = e.target.checked; calculate(); });
-        document.getElementById('mortgage-term-range').addEventListener('input', (e) => { state.mortgageTermYears = parseInt(e.target.value); calculate(); });
-        document.getElementById('years-range').addEventListener('input', (e) => { state.analysisYears = parseInt(e.target.value); calculate(); });
-        document.getElementById('growth-re').addEventListener('input', (e) => { state.growthRE = parseFloat(e.target.value); calculate(); });
-        document.getElementById('growth-rent').addEventListener('input', (e) => { state.growthRent = parseFloat(e.target.value); calculate(); });
-
-        // Init ranges
-        document.getElementById('cost-range').value = state.cost;
-        document.getElementById('rate-range').value = state.rate;
-        document.getElementById('dp-range').value = state.dpPercent;
-        document.getElementById('rent-range').value = state.rent;
-        document.getElementById('invest-range').value = state.investRate;
-        document.getElementById('mortgage-term-range').value = state.mortgageTermYears;
-        document.getElementById('years-range').value = state.analysisYears;
-
-        calculate();
-    </script>
-
-    <script>
-        (function() {
-            let tracked = false;
-            function trackFirstChange() {
-                if (!tracked) {
-                    reachGoal('calculate_success');
-                    tracked = true;
-                    // Remove listeners after first trigger
-                    document.removeEventListener('input', trackFirstChange);
-                    document.removeEventListener('change', trackFirstChange);
-                }
+        const fieldBindings = [
+            ['cost', 'cost', 1], ['rate', 'rate', 1],
+            ['rent', 'rent', 1], ['invest', 'investRate', 1],
+            ['mortgage-term', 'mortgageTermYears', 1], ['years', 'analysisYears', 1]
+        ];
+        let depositBasis = 'amount';
+        let depositAmount = state.cost * state.dpPercent;
+        function parseInput(value) {
+            const raw = value.trim().replace(/[\s\u00a0\u202f]/g, '').replace(',', '.');
+            return /^\d+(?:\.\d*)?$/.test(raw) ? Number(raw) : NaN;
+        }
+        function syncInputs() {
+            for (const [id, key, divisor] of fieldBindings) {
+                const value = state[key] * divisor;
+                if (!Number.isFinite(value)) continue;
+                const input = document.getElementById(`${id}-input`);
+                const range = document.getElementById(`${id}-range`);
+                if (document.activeElement !== input) input.value = input.dataset.money === 'true' ? value.toLocaleString('ru-RU', { maximumFractionDigits: 2 }) : String(Number(value.toFixed(6)));
+                range.value = value;
+                const fill = Math.min(100, Math.max(0, (Number(range.value) - Number(range.min)) / (Number(range.max) - Number(range.min)) * 100));
+                range.style.setProperty('--fill', fill + '%');
             }
-            document.addEventListener('input', trackFirstChange);
-            document.addEventListener('change', trackFirstChange);
-        })();
+            syncDepositInputs();
+            document.getElementById('include-investments').checked = state.includeInvestments;
+        }
+        function syncDepositInputs() {
+            const amountInput = document.getElementById('deposit-input');
+            const percentInput = document.getElementById('deposit-percent-input');
+            if (Number.isFinite(depositAmount) && document.activeElement !== amountInput) amountInput.value = depositAmount.toLocaleString('ru-RU', { maximumFractionDigits: 2 });
+            if (Number.isFinite(state.dpPercent) && document.activeElement !== percentInput) percentInput.value = String(Number((state.dpPercent * 100).toFixed(6)));
+            const range = document.getElementById('dp-range');
+            range.value = state.dpPercent;
+            range.style.setProperty('--fill', Math.min(100, Math.max(0, state.dpPercent / .99 * 100)) + '%');
+            const invalid = !Number.isFinite(state.dpPercent) || state.dpPercent < 0 || state.dpPercent >= 1;
+            amountInput.setAttribute('aria-invalid', String(invalid));
+            percentInput.setAttribute('aria-invalid', String(invalid));
+            document.getElementById('deposit-help').innerText = invalid ? 'Взнос должен быть от 0 ₽ до стоимости квартиры, не включая её.' : 'Можно указать сумму или процент.';
+        }
+        function updateDepositForCost() {
+            if (depositBasis === 'amount') state.dpPercent = depositAmount / state.cost;
+            else depositAmount = state.cost * state.dpPercent;
+            syncDepositInputs();
+        }
+        for (const id of ['deposit-input', 'deposit-percent-input']) {
+            const input = document.getElementById(id);
+            input.addEventListener('input', () => {
+                depositBasis = id === 'deposit-input' ? 'amount' : 'percent';
+                if (depositBasis === 'amount') { depositAmount = parseInput(input.value); state.dpPercent = depositAmount / state.cost; }
+                else { state.dpPercent = parseInput(input.value) / 100; depositAmount = state.cost * state.dpPercent; }
+                syncDepositInputs();
+                calculate(true);
+            });
+            input.addEventListener('blur', () => { if (isValidRentState()) syncInputs(); });
+        }
+        document.getElementById('dp-range').addEventListener('input', event => {
+            depositBasis = 'percent'; state.dpPercent = Number(event.target.value);
+            depositAmount = state.cost * state.dpPercent;
+            syncDepositInputs(); calculate(true);
+        });
+        for (const [id, key, divisor] of fieldBindings) {
+            const input = document.getElementById(`${id}-input`);
+            input.addEventListener('input', () => {
+                state[key] = parseInput(input.value) / divisor;
+                if (key === 'cost') updateDepositForCost();
+                input.setAttribute('aria-invalid', String(!isValidRentState({ ...initialState, includeInvestments: true, [key]: state[key] })));
+                calculate(true);
+            });
+            input.addEventListener('blur', () => { if (isValidRentState()) syncInputs(); });
+            document.getElementById(`${id}-range`).addEventListener('input', (event) => {
+                state[key] = Number(event.target.value) / divisor;
+                if (key === 'cost') updateDepositForCost();
+                input.removeAttribute('aria-invalid');
+                calculate(true);
+            });
+        }
+        document.getElementById('include-investments').addEventListener('change', (event) => { state.includeInvestments = event.target.checked; calculate(true); });
+        for (const [id, key] of [['growth-re', 'growthRE'], ['growth-rent', 'growthRent']]) {
+            document.getElementById(id).addEventListener('input', (event) => { state[key] = event.target.value === '' ? NaN : Number(event.target.value); event.target.setAttribute('aria-invalid', String(!isValidRentState({ ...initialState, [key]: state[key] }))); calculate(true); });
+        }
+        document.getElementById('edit-assumptions').addEventListener('click', () => { document.getElementById('market-assumptions').open = true; });
+        document.getElementById('explain-rent-balance').addEventListener('click', () => { document.getElementById('comparison-methodology').open = true; });
+        document.getElementById('market-assumptions').addEventListener('toggle', (event) => { state.expertMode = event.target.open; if (isValidRentState()) renderedSignature = JSON.stringify(state); });
+        const shareKeys = Object.keys(initialState).filter(key => key !== 'expertMode');
+        function restoreRentScenario() {
+            const raw = new URL(location.href).searchParams.get('rv');
+            if (!raw) return;
+            try {
+                if (raw.length > 3000) throw new Error('Long share');
+                const decoded = JSON.parse(raw);
+                if (decoded.v !== 1 || !decoded.s || typeof decoded.s !== 'object') throw new Error('Invalid share');
+                const candidate = { ...initialState };
+                for (const key of shareKeys) {
+                    if (typeof decoded.s[key] !== typeof candidate[key]) throw new Error('Invalid type');
+                    candidate[key] = decoded.s[key];
+                }
+                if (!isValidRentState(candidate)) throw new Error('Invalid state');
+                Object.assign(state, candidate);
+                document.getElementById('growth-re').value = state.growthRE;
+                document.getElementById('growth-rent').value = state.growthRent;
+                document.getElementById('scenario-label').innerText = 'По ссылке';
+            } catch (_) { showToast('Условия в ссылке не удалось прочитать. Открыт исходный пример.'); }
+        }
+        async function shareRentScenario() {
+            if (!canExportCurrentCalculation()) return;
+            reachGoal('share_click');
+            const url = new URL(location.href);
+            const snapshot = Object.fromEntries(shareKeys.map(key => [key, key === 'investRate' && !Number.isFinite(state[key]) ? initialState[key] : state[key]]));
+            url.searchParams.set('rv', JSON.stringify({ v: 1, s: snapshot }));
+            url.hash = '';
+            try {
+                if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+                await navigator.clipboard.writeText(url.href);
+                showToast('Ссылка на расчёт скопирована!');
+            } catch (_) {
+                const input = document.getElementById('share-url');
+                input.value = url.href;
+                document.getElementById('share-dialog').showModal();
+                input.select();
+            }
+        }
+        new MutationObserver(() => { if (chart && renderedResult && isValidRentState()) updateChart(renderedResult.labels, renderedResult.dataBuy, renderedResult.dataRent); }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+        restoreRentScenario();
+        depositAmount = state.cost * state.dpPercent;
+        syncInputs();
+        calculate();
+        window.prepareCalculationScreenshot = async function(stage) {
+            if (!window.canExportCalculation()) throw new Error('Stale calculation');
+            const snapshot = { ...state };
+            const result = renderedResult;
+            const content = document.createElement('div');
+            content.className = 'rv-panel';
+            const clone = document.getElementById('verdict-card').cloneNode(true);
+            clone.removeAttribute('id');
+            clone.querySelectorAll('[id]').forEach(node => { node.style.fontSize = ''; node.removeAttribute('id'); });
+            clone.querySelector('.rv-assumption-note')?.remove();
+            clone.querySelector('.rv-nominal')?.remove();
+            clone.querySelectorAll('a,button').forEach(node => node.remove());
+            const heading = document.createElement('p');
+            heading.className = 'rv-export-head';
+            heading.textContent = 'ЯСНОМЕРА · Покупка или аренда';
+            content.append(heading, clone);
+            const conditions = document.createElement('div');
+            conditions.className = 'rv-export-conditions';
+            const lines = [
+                `Квартира ${formatMoney(snapshot.cost)} · взнос ${formatMoney(snapshot.cost * snapshot.dpPercent)} (${Number((snapshot.dpPercent * 100).toFixed(4))}%)`,
+                `Ипотека ${snapshot.rate}% на ${snapshot.mortgageTermYears} лет · платёж ${formatMoney(result.mortgagePayment)} / мес.`,
+                `Аренда ${formatMoney(snapshot.rent)} / мес. · сравнение через ${snapshot.analysisYears} лет`,
+                `Рост жилья ${snapshot.growthRE}%, аренды ${snapshot.growthRent}% в год`,
+                snapshot.includeInvestments ? `Доходность накоплений ${snapshot.investRate}% в год, начисление ежемесячно` : 'Без инвестиционного дохода',
+                'Содержание жилья 0,1% цены в год. Без страховки, налогов, ремонта и расходов на сделку. Суммы без поправки на инфляцию.'
+            ];
+            for (const line of lines) { const p = document.createElement('p'); p.textContent = line; conditions.append(p); }
+            content.append(conditions);
+            const canvas = document.createElement('canvas');
+            canvas.width = 500; canvas.height = 220;
+            content.append(canvas);
+            stage.replaceChildren(content);
+            stage.style.background = getComputedStyle(document.body).getPropertyValue('--rv-bg');
+            stage.dataset.screenshotBackground = stage.style.background;
+            const dark = document.documentElement.classList.contains('dark');
+            let exportChart;
+            try {
+                exportChart = new Chart(canvas, { type: 'line', data: { labels: [...result.labels], datasets: [
+                    { label: 'Покупка', data: [...result.dataBuy], borderColor: dark ? '#9ee4c1' : '#008767', pointRadius: 0, pointHoverRadius: 0, borderWidth: 2 },
+                    { label: 'Аренда', data: [...result.dataRent], borderColor: dark ? '#b5c7cc' : '#71858c', borderDash: [5,4], pointRadius: 0, pointHoverRadius: 0, borderWidth: 2 }
+                ] }, options: { responsive: false, animation: false, events: [], plugins: { tooltip: { enabled: false }, legend: { labels: { color: dark ? '#b8c8c9' : '#52656d', boxWidth: 18 } } }, scales: { x: { ticks: { color: dark ? '#b8c8c9' : '#52656d', maxTicksLimit: 6 } }, y: { ticks: { color: dark ? '#b8c8c9' : '#52656d', callback: v => (v / 1000000).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) + ' млн ₽' } } } } });
+                const image = new Image(); image.src = canvas.toDataURL('image/png'); image.style.width = '100%'; image.style.height = '220px';
+                await image.decode(); canvas.replaceWith(image);
+            } finally { exportChart?.destroy(); }
+        };
     </script>
+
     <script>
         if ("serviceWorker" in navigator) {
             window.addEventListener("load", () => {

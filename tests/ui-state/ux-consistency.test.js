@@ -36,7 +36,7 @@ test('every production calculator exposes the shared screenshot export without r
     const screenshotPages = {
         'mortgage.html': ['results-panel', 'yasnomera-mortgage-calculation.png'],
         'wealth.html': ['screenshot-area', 'yasnomera-income-comparison.png'],
-        'rent-vs-mortgage.html': ['screenshot-area', 'yasnomera-rent-vs-mortgage.png'],
+        'rent-vs-mortgage.html': ['results-panel', 'yasnomera-rent-vs-mortgage.png'],
         'time-is-money.html': ['results-card', 'yasnomera-time-is-money.png'],
         'inflation-shredder.html': ['screenshot-area', 'yasnomera-inflation-report.png'],
         'car-vs-taxi.html': ['screenshot-area', 'yasnomera-car-vs-taxi.png'],
