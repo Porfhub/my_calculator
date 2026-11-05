@@ -262,11 +262,11 @@
                                 <div class="flex justify-between items-center">
                                     <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Альтернативная доходность капитала</span>
                                     <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" id="lost-opp-toggle" aria-label="Учитывать альтернативную доходность капитала" class="sr-only peer" onchange="handleLostOppToggle(this.checked)">
-                                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none dark:bg-slate-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-600"></div>
+                                        <input type="checkbox" id="lost-opp-toggle" aria-label="Учитывать альтернативную доходность капитала" aria-describedby="opportunity-rate-note" class="sr-only peer" onchange="handleLostOppToggle(this.checked)">
+                                        <div class="w-11 h-6 bg-slate-200 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500 peer-focus-visible:ring-offset-2 dark:ring-offset-slate-900 dark:bg-slate-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-600"></div>
                                     </label>
                                 </div>
-                                <p class="text-[10px] text-slate-400 dark:text-slate-500 leading-relaxed">Покупка автомобиля использует капитал. При включении в итог добавляется расчётная альтернативная доходность: ключевая ставка Банка России минус 2 п.п. (сейчас <span id="deposit-rate-display" class="font-bold text-brand-600 dark:text-brand-400">...%</span>).</p>
+                                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">При включении в расходы на авто добавляется расчётный доход, который мог бы принести вложенный в покупку капитал. <span id="opportunity-rate-note" role="status"></span></p>
                             </div>
                         </div>
                     </div>
@@ -456,14 +456,14 @@
                         </div>
                     </div>
 
-                    <!-- Альтернатива: Депозит (HIGH-CONTRAST PREMIUM VERSION) -->
+                    <!-- Альтернативная доходность -->
                     <div id="lost-opportunity-card" class="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-slate-900 dark:to-indigo-950/40 border border-blue-300 dark:border-indigo-900/60 p-4 rounded-2xl shadow-md transition-all duration-300 hidden">
                         <div class="flex items-start gap-3">
                             <div class="w-9 h-9 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-base shrink-0 shadow-md">📈</div>
                             <div class="flex-1 min-w-0">
-                                <h4 class="text-xs font-black text-indigo-950 dark:text-blue-300 uppercase tracking-wider">Альтернатива: Депозит</h4>
+                                <h4 class="text-xs font-black text-indigo-950 dark:text-blue-300 uppercase tracking-wider">Альтернативная доходность</h4>
                                 <p class="text-[11px] text-slate-800 dark:text-slate-100 leading-relaxed mt-1">
-                                    Если вместо покупки авто за <span id="lost-opp-price" class="font-extrabold text-slate-950 dark:text-white">... ₽</span> открыть вклад под <span id="lost-opp-rate" class="font-extrabold text-emerald-700 dark:text-emerald-400">...%</span> годовых, ваш пассивный доход составит:
+                                    Возможный доход от капитала в размере <span id="lost-opp-price" class="font-extrabold text-slate-950 dark:text-white">... ₽</span> по расчётной доходности сценария:
                                 </p>
                                 <div class="grid grid-cols-2 gap-3 mt-2.5">
                                     <div class="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-blue-200 dark:border-slate-700/60 shadow-sm">
@@ -475,7 +475,7 @@
                                         <p id="lost-opp-annual" class="text-sm font-black text-emerald-700 dark:text-emerald-400">... ₽</p>
                                     </div>
                                 </div>
-                                <p class="text-[9px] text-slate-700 dark:text-slate-300 mt-2.5 italic leading-tight">Для сценария используется ключевая ставка Банка России (<span id="actual-cb-rate-display" class="font-bold text-blue-700 dark:text-blue-400">...%</span>) минус 2 п.п. Это ориентир альтернативного дохода, а не прогноз. <a id="cb-rate-source-link" class="underline" href="https://www.cbr.ru/hd_base/keyrate/" target="_blank" rel="noopener noreferrer">Источник: Банк России</a><span id="cb-rate-period"></span>.</p>
+                                <p id="opportunity-result-rate-note" class="text-xs text-slate-700 dark:text-slate-300 mt-2.5 leading-relaxed"></p>
                             </div>
                         </div>
                     </div>
@@ -645,8 +645,7 @@
             tripsPerMonth: 30,
             tripPrice: 500,
             includeLostOpportunity: false,
-            cbRate: 21, // Fallback default
-            cbRateEffectiveFrom: null
+            cbRate: 21 // Scenario base rate until a usable official rate is available
         };
 
         function toggleAccordion() {
@@ -790,11 +789,9 @@
             if (state.includeLostOpportunity) {
                 if (lostOppCard) lostOppCard.classList.remove('hidden');
                 const pEl = document.getElementById('lost-opp-price');
-                const rEl = document.getElementById('lost-opp-rate');
                 const mEl = document.getElementById('lost-opp-monthly');
                 const aEl = document.getElementById('lost-opp-annual');
-                if (pEl) pEl.innerText = formatNumber(carPrice);
-                if (rEl) rEl.innerText = depositRatePct.toLocaleString('ru-RU', { maximumFractionDigits: 2 }) + '%';
+                if (pEl) pEl.innerText = formatMoney(carPrice);
                 if (mEl) mEl.innerText = formatMoney(lostOppMonthly);
                 if (aEl) aEl.innerText = formatMoney(lostOppAnnual);
             } else {
@@ -920,21 +917,8 @@
             document.getElementById('maintenance').value = formatNumber(state.maintenance);
             document.getElementById('trip-price').value = formatNumber(state.tripPrice);
 
-            // Fetch live rates to calculate deposit interest
-            if (typeof fetchRates === 'function') {
-                fetchRates().then(rates => {
-                    if (rates && rates.cb_rate) {
-                        state.cbRate = rates.cb_rate;
-                        state.cbRateEffectiveFrom = rates.effective_from || rates.key_rate?.effective_from || null;
-                    }
-                    updateDepositRateUI();
-                }).catch(err => {
-                    console.error("Error loading live rates:", err);
-                    updateDepositRateUI();
-                });
-            } else {
-                updateDepositRateUI();
-            }
+            renderOpportunityRate(null, true);
+            loadOpportunityRate();
 
             // Set Comfort Geely Coolray as pre-selected default layout
             setCarPreset('comfort');
@@ -942,19 +926,72 @@
             setTripsPreset(state.tripsPerMonth);
         };
 
-        function updateDepositRateUI() {
-            const depositRate = Math.max(0, state.cbRate - 2);
-            const displayEl = document.getElementById('deposit-rate-display');
-            if (displayEl) {
-                displayEl.innerText = depositRate.toLocaleString('ru-RU', { maximumFractionDigits: 2 }) + '%';
-            }
-            const actualCbEl = document.getElementById('actual-cb-rate-display');
-            if (actualCbEl) {
-                actualCbEl.innerText = state.cbRate.toLocaleString('ru-RU', { maximumFractionDigits: 2 }) + '%';
-            }
-            const periodEl = document.getElementById('cb-rate-period');
-            if (periodEl) periodEl.textContent = state.cbRateEffectiveFrom ? `; действует с ${state.cbRateEffectiveFrom}` : '';
+        async function loadOpportunityRate() {
+            const rates = typeof fetchRates === 'function' ? await fetchRates() : null;
+            const reference = carRateReference(rates);
+            if (reference) state.cbRate = reference.value;
+            renderOpportunityRate(reference);
             calculate();
+        }
+
+        function carRateReference(rates, now = Date.now()) {
+            const metadata = rates?.metadata;
+            if (metadata?.schema_version !== 2 || metadata.dataset_id !== 'key_rate') return null;
+            const status = getDatasetStatus(rates);
+            if (status === 'unavailable' || rates.status !== status) return null;
+
+            const value = rates.key_rate?.value_percent;
+            const date = rates.key_rate?.effective_from;
+            const fetched = metadata.last_successful_fetch_at;
+            const source = metadata.source_url;
+            const hasChecksums = [metadata.source_checksum_sha256, metadata.payload_checksum_sha256]
+                .every(checksum => typeof checksum === 'string' && /^[a-f0-9]{64}$/i.test(checksum));
+            if (typeof value !== 'number' || !/^\d+(?:\.\d{1,4})?$/.test(String(value)) || value > 100 ||
+                typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
+                typeof fetched !== 'string' || !/^\d{4}-\d{2}-\d{2}T/i.test(fetched) ||
+                typeof source !== 'string' || !/^https:\/\/(?:www\.)?cbr\.ru\/hd_base\/keyrate\/$/.test(source) ||
+                typeof metadata.source_export_url !== 'string' || !/^https:\/\/(?:www\.)?cbr\.ru\//.test(metadata.source_export_url) ||
+                !hasChecksums ||
+                rates.cb_rate !== value || rates.effective_from !== date || rates.fetched_at !== fetched ||
+                rates.source_url !== source) return null;
+
+            // Match the read-side freshness rules for the published rates dataset.
+            const hourMs = 60 * 60 * 1000;
+            const age = now - Date.parse(fetched);
+            const effective = new Date(date + 'T00:00:00Z');
+            if (!Number.isFinite(age) || age < -hourMs || age > 7 * 24 * hourMs ||
+                (age > 72 * hourMs && status !== 'stale') ||
+                !Number.isFinite(effective.getTime()) || effective.toISOString().slice(0, 10) !== date ||
+                effective.getTime() > now + hourMs) return null;
+
+            return { value, effective, source, status };
+        }
+
+        function renderOpportunityRate(reference, pending = false) {
+            const note = document.getElementById('opportunity-rate-note');
+            const resultNote = document.getElementById('opportunity-result-rate-note');
+            const formatRate = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 4 });
+            const base = formatRate.format(state.cbRate) + '%';
+            const yieldRate = formatRate.format(Math.max(0, state.cbRate - 2)) + '%';
+
+            if (reference) {
+                const date = reference.effective.toLocaleDateString('ru-RU', { timeZone: 'UTC' });
+                const baseLabel = reference.status === 'stale'
+                    ? 'Последняя доступная ключевая ставка (данные устарели)'
+                    : 'Ключевая ставка';
+                note.textContent = `${baseLabel} — ${base}, дата вступления в силу — ${date}. Расчётная доходность (минус 2 п.п., минимум 0%) — ${yieldRate} годовых. `;
+                const link = document.createElement('a');
+                link.className = 'underline';
+                link.href = reference.source;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.textContent = 'Источник: Банк России';
+                note.append(link, '.');
+            } else {
+                const status = pending ? 'Проверяем официальную ставку.' : 'Пригодные официальные данные недоступны.';
+                note.textContent = `${status} Используется условная базовая ставка ${base}. Расчётная доходность (минус 2 п.п.) — ${yieldRate} годовых. Это допущение, а не текущая ставка Банка России или предложение по вкладу.`;
+            }
+            resultNote.replaceChildren(...Array.from(note.childNodes, node => node.cloneNode(true)));
         }
 
         function toggleLifestyleWidget() {
