@@ -17,7 +17,7 @@ test('methodology and privacy copy match actual local calculator inputs', () => 
     const trustLayer = read('js/trust-layer.js');
     const homepage = read('index.html');
     assert.doesNotMatch(trustLayer, /Город, возраст ребёнка/);
-    assert.match(trustLayer, /Возраст ребёнка, расходы по возрастным этапам/);
+    assert.match(trustLayer, /Месячный бюджет каждого этапа и выбранные условия семьи/);
     assert.match(homepage, /Введённые значения остаются на вашем устройстве/);
     assert.match(homepage, /Доход, возраст или дата могут потребоваться/);
 });
