@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Машина или такси — сравнение расходов | Ясномера</title>
-    <meta name="description" content="Сравните расходы на личный автомобиль и такси по своим условиям: поездки, топливо, обслуживание, амортизация и альтернативная стоимость.">
+    <meta name="description" content="Сравните расходы на личный автомобиль и такси по своим условиям: поездки, топливо, страховка, обслуживание и амортизация.">
     <meta name="application-name" content="Ясномера">
     <meta name="theme-color" content="#166534">
     <meta name="mobile-web-app-capable" content="yes">
@@ -80,6 +80,9 @@
             body {
                 padding-bottom: 240px;
             }
+            #capital-scenario :is(summary, input) {
+                scroll-margin-bottom: 10rem;
+            }
         }
         .dark .mobile-sticky-results {
             background: #0f172a;
@@ -110,7 +113,6 @@
     <script src="js/utils.js"></script>
     <script src="js/ui-utils.js"></script>
     <script src="js/trust-layer.js"></script>
-    <script src="js/api.js"></script>
     <link rel="stylesheet" href="css/product-polish.css">
     <link rel="stylesheet" href="css/design-system.css">
 </head>
@@ -152,7 +154,7 @@
             <div class="lg:col-span-7 space-y-8">
 
                 <!-- Блок Автомобиль -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
+                <div class="ym-hide-content bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
                     <div class="flex items-center gap-3 border-b dark:border-slate-800 pb-4">
                         <div class="w-10 h-10 bg-brand-50 dark:bg-brand-900/20 rounded-xl flex items-center justify-center text-brand-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
@@ -184,7 +186,7 @@
                         <div class="space-y-2">
                             <label for="car-price" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Цена автомобиля</label>
                             <div class="relative">
-                                <input type="text" id="car-price" oninput="handleInput(this, 'carPrice')" class="w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="3 000 000">
+                                <input type="text" id="car-price" oninput="handleInput(this, 'carPrice')" class="ym-disable-keys w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="3 000 000">
                                 <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
                             </div>
                         </div>
@@ -215,13 +217,13 @@
                                 <!-- Расход -->
                                 <div class="space-y-2">
                                     <label for="fuel-consumption" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Расход (л/100 км)</label>
-                                    <input type="number" id="fuel-consumption" oninput="handleRawInput('fuelConsumption', this.value)" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="10">
+                                    <input type="number" id="fuel-consumption" oninput="handleRawInput('fuelConsumption', this.value)" class="ym-disable-keys w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="10">
                                 </div>
                                 <!-- Цена топлива -->
                                 <div class="space-y-2">
                                     <label for="fuel-price" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Цена литра топлива</label>
                                     <div class="relative">
-                                        <input type="number" id="fuel-price" oninput="handleRawInput('fuelPrice', this.value)" class="w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="55">
+                                        <input type="number" id="fuel-price" oninput="handleRawInput('fuelPrice', this.value)" class="ym-disable-keys w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="55">
                                         <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
                                     </div>
                                 </div>
@@ -229,7 +231,7 @@
                                 <div class="space-y-2">
                                     <label for="insurance" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Страховка (ОСАГО+КАСКО) в год</label>
                                     <div class="relative">
-                                        <input type="text" id="insurance" oninput="handleInput(this, 'insurance')" class="w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="80 000">
+                                        <input type="text" id="insurance" oninput="handleInput(this, 'insurance')" class="ym-disable-keys w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="80 000">
                                         <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
                                     </div>
                                 </div>
@@ -237,13 +239,13 @@
                                 <div class="space-y-2">
                                     <label for="maintenance" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">ТО и ремонт в год</label>
                                     <div class="relative">
-                                        <input type="text" id="maintenance" oninput="handleInput(this, 'maintenance')" class="w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="40 000">
+                                        <input type="text" id="maintenance" oninput="handleInput(this, 'maintenance')" class="ym-disable-keys w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="40 000">
                                         <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
                                     </div>
                                 </div>
                                 <div class="space-y-2">
                                     <label for="taxi-trip-distance" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Длина типичной поездки для расчёта пробега</label>
-                                    <div class="relative"><input type="number" min="0.5" step="0.5" id="taxi-trip-distance" oninput="handleRawInput('taxiTripDistance', this.value)" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="10"><span class="absolute right-4 top-3.5 text-slate-400">км</span></div>
+                                    <div class="relative"><input type="number" min="0.5" step="0.5" id="taxi-trip-distance" oninput="handleRawInput('taxiTripDistance', this.value)" class="ym-disable-keys w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="10"><span class="absolute right-4 top-3.5 text-slate-400">км</span></div>
                                 </div>
                             </div>
 
@@ -253,27 +255,15 @@
                                     <label for="depreciation-range" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Потеря стоимости в год</label>
                                     <span id="depreciation-display" class="text-sm font-black text-rose-600">10%</span>
                                 </div>
-                                <input type="range" id="depreciation-range" min="0" max="30" step="1" value="10" class="w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="handleRawInput('depreciation', this.value)">
+                                <input type="range" id="depreciation-range" min="0" max="30" step="1" value="10" class="ym-disable-keys ym-disable-clickmap w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="handleRawInput('depreciation', this.value)">
                                 <p class="text-[10px] text-slate-400 dark:text-slate-500">Средняя потеря стоимости нового авто составляет 10-15% в год. Для б/у машин этот показатель ниже.</p>
-                            </div>
-
-                            <!-- Альтернативная доходность капитала -->
-                            <div class="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-850">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Альтернативная доходность капитала</span>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" id="lost-opp-toggle" aria-label="Учитывать альтернативную доходность капитала" aria-describedby="opportunity-rate-note" class="sr-only peer" onchange="handleLostOppToggle(this.checked)">
-                                        <div class="w-11 h-6 bg-slate-200 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500 peer-focus-visible:ring-offset-2 dark:ring-offset-slate-900 dark:bg-slate-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-600"></div>
-                                    </label>
-                                </div>
-                                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">При включении в расходы на авто добавляется расчётный доход, который мог бы принести вложенный в покупку капитал. <span id="opportunity-rate-note" role="status"></span></p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Блок Такси -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
+                <div class="ym-hide-content bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
                     <div class="flex items-center gap-3 border-b dark:border-slate-800 pb-4">
                         <div class="w-10 h-10 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl flex items-center justify-center text-yellow-600">
                             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 17a2 2 0 11-4 0 2 2 0 014 0zM9 17a2 2 0 11-4 0 2 2 0 014 0z"></path><path d="M13 5h-1.948a1 1 0 00-.894.553L7.382 11H4a1 1 0 00-1 1v5a1 1 0 001 1h1a3 3 0 006 0h2a3 3 0 006 0h1a1 1 0 001-1v-5a1 1 0 00-1-1h-3.382l-2.774-5.447A1 1 0 0013 5z"></path></svg>
@@ -284,11 +274,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <label for="trips-per-month" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Поездок в месяц</label>
-                            <input type="number" min="0" id="trips-per-month" oninput="handleRawInput('tripsPerMonth', this.value)" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="30">
+                            <input type="number" min="0" id="trips-per-month" oninput="handleRawInput('tripsPerMonth', this.value)" class="ym-disable-keys w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="30">
                         </div>
                         <div class="space-y-2">
                             <label for="trip-price" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Средняя стоимость поездки</label>
-                            <div class="relative"><input type="text" id="trip-price" oninput="handleInput(this, 'tripPrice')" class="w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="500"><span class="absolute right-4 top-3.5 text-slate-400">₽</span></div>
+                            <div class="relative"><input type="text" id="trip-price" oninput="handleInput(this, 'tripPrice')" class="ym-disable-keys w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="500"><span class="absolute right-4 top-3.5 text-slate-400">₽</span></div>
                         </div>
                     </div>
                     <div class="pt-4 border-t border-slate-100 dark:border-slate-800">
@@ -319,7 +309,8 @@
             <!-- ПРАВАЯ КОЛОНКА: Результаты -->
             <div class="lg:col-span-5 space-y-6">
 
-                <div id="screenshot-area" class="space-y-4 lg:bg-transparent bg-slate-50 dark:bg-slate-950 p-0 lg:p-0 rounded-3xl">
+                <!-- The PNG renderer clones this root with its replay mask intact. -->
+                <div id="screenshot-area" class="ym-hide-content space-y-4 lg:bg-transparent bg-slate-50 dark:bg-slate-950 p-0 lg:p-0 rounded-3xl">
 
                     <!-- Главный вердикт -->
                     <div id="verdict-card" class="p-5 md:p-6 rounded-2xl transition-all duration-500 flex flex-col items-center text-center space-y-3 shadow-md border">
@@ -351,7 +342,6 @@
                                 <div class="flex justify-between"><span>Топливо:</span><span id="car-monthly-fuel" class="font-bold">0 ₽</span></div>
                                 <div class="flex justify-between"><span>ТО + ОСАГО:</span><span id="car-monthly-fixed" class="font-bold">0 ₽</span></div>
                                 <div class="flex justify-between"><span>Амортизация:</span><span id="car-monthly-depr" class="font-bold">0 ₽</span></div>
-                                <div id="car-monthly-opportunity-row" class="flex justify-between"><span>Доходность капитала:</span><span id="car-monthly-opportunity" class="font-bold">0 ₽</span></div>
                             </div>
                         </div>
 
@@ -384,7 +374,6 @@
                                 <div class="flex justify-between"><span>Топливо:</span><span id="car-annual-fuel" class="font-bold">0 ₽</span></div>
                                 <div class="flex justify-between"><span>ТО + ОСАГО:</span><span id="car-annual-fixed" class="font-bold">0 ₽</span></div>
                                 <div class="flex justify-between"><span>Амортизация:</span><span id="car-annual-depr" class="font-bold">0 ₽</span></div>
-                                <div id="car-annual-opportunity-row" class="flex justify-between"><span>Доходность капитала:</span><span id="car-annual-opportunity" class="font-bold">0 ₽</span></div>
                             </div>
                         </div>
 
@@ -456,29 +445,39 @@
                         </div>
                     </div>
 
-                    <!-- Альтернативная доходность -->
-                    <div id="lost-opportunity-card" class="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-slate-900 dark:to-indigo-950/40 border border-blue-300 dark:border-indigo-900/60 p-4 rounded-2xl shadow-md transition-all duration-300 hidden">
-                        <div class="flex items-start gap-3">
-                            <div class="w-9 h-9 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-base shrink-0 shadow-md">📈</div>
-                            <div class="flex-1 min-w-0">
-                                <h4 class="text-xs font-black text-indigo-950 dark:text-blue-300 uppercase tracking-wider">Альтернативная доходность</h4>
-                                <p class="text-[11px] text-slate-800 dark:text-slate-100 leading-relaxed mt-1">
-                                    Возможный доход от капитала в размере <span id="lost-opp-price" class="font-extrabold text-slate-950 dark:text-white">... ₽</span> по расчётной доходности сценария:
-                                </p>
-                                <div class="grid grid-cols-2 gap-3 mt-2.5">
-                                    <div class="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-blue-200 dark:border-slate-700/60 shadow-sm">
-                                        <p class="text-[9px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-tight">В месяц</p>
-                                        <p id="lost-opp-monthly" class="text-sm font-black text-emerald-700 dark:text-emerald-400">... ₽</p>
-                                    </div>
-                                    <div class="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-blue-200 dark:border-slate-700/60 shadow-sm">
-                                        <p class="text-[9px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-tight">В год</p>
-                                        <p id="lost-opp-annual" class="text-sm font-black text-emerald-700 dark:text-emerald-400">... ₽</p>
-                                    </div>
-                                </div>
-                                <p id="opportunity-result-rate-note" class="text-xs text-slate-700 dark:text-slate-300 mt-2.5 leading-relaxed"></p>
+                </div>
+
+                <div class="yn-scope">
+                    <details id="capital-scenario" class="yn-methodology">
+                        <summary class="yn-methodology-summary">Если оставить деньги на покупку</summary>
+                        <div class="yn-methodology-body ym-hide-content space-y-3 text-sm">
+                            <p>Сценарий для покупки за собственные средства. Возможный доход за первый год считаем от цены автомобиля.</p>
+                            <div class="yn-field">
+                                <label for="opportunity-rate" class="yn-label">Ваша ожидаемая доходность за год, %</label>
+                                <input id="opportunity-rate" class="yn-input ym-disable-keys" type="text" inputmode="decimal" autocomplete="off"
+                                       aria-describedby="opportunity-rate-hint opportunity-rate-error" oninput="calculate()">
+                                <p id="opportunity-rate-hint" class="yn-hint">Укажите ожидаемую доходность доступного вам варианта на 12 месяцев с учётом налогов и комиссий, если они применимы.</p>
                             </div>
+                            <p id="opportunity-rate-error" class="yn-error" aria-live="polite"></p>
+                            <div role="status">
+                                <div id="opportunity-result" class="space-y-2" hidden>
+                                    <dl class="space-y-1">
+                                        <div>
+                                            <dt>Возможный доход за первый год</dt>
+                                            <dd id="opportunity-income" class="yn-number font-bold"></dd>
+                                        </div>
+                                        <div>
+                                            <dt>Сценарная стоимость авто за первый год</dt>
+                                            <dd id="opportunity-car-annual" class="yn-number font-bold"></dd>
+                                        </div>
+                                    </dl>
+                                    <p id="opportunity-comparison" class="yn-number font-bold"></p>
+                                    <p id="opportunity-winner-change"></p>
+                                </div>
+                            </div>
+                            <p class="yn-hint">Расчёт по вашему предположению. Доходность не гарантирована.</p>
                         </div>
-                    </div>
+                    </details>
                 </div>
 
                 <!-- Мобильная кнопка Share (только на мобилках) -->
@@ -597,7 +596,7 @@
     <section class="yn-scope max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8" data-webwisor="car-vs-taxi" data-webwisor-variant="compact"></section>
 
     <!-- Мобильная залипающая панель результатов -->
-    <div class="lg:hidden mobile-sticky-results">
+    <div class="lg:hidden mobile-sticky-results ym-hide-content">
         <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
                 <span id="mobile-verdict-icon" class="text-2xl">🚗</span>
@@ -628,7 +627,7 @@
     </footer>
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-5 right-5 z-[100] bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div id="toast" class="ym-hide-content fixed bottom-5 right-5 z-[100] bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
         <span class="text-brand-500 font-bold">✓</span>
         <span id="toast-message" class="text-sm">Результат сохранен!</span>
     </div>
@@ -643,9 +642,7 @@
             depreciation: 10,
             taxiTripDistance: 10,
             tripsPerMonth: 30,
-            tripPrice: 500,
-            includeLostOpportunity: false,
-            cbRate: 21 // Scenario base rate until a usable official rate is available
+            tripPrice: 500
         };
 
         function toggleAccordion() {
@@ -679,11 +676,6 @@
             if (key === 'tripsPerMonth') {
                 resetTripsPresetHighlight();
             }
-            calculate();
-        }
-
-        function handleLostOppToggle(checked) {
-            state.includeLostOpportunity = checked;
             calculate();
         }
 
@@ -747,6 +739,54 @@
             calculate();
         }
 
+        function renderCapitalScenario(carPrice, baseCarAnnual, taxiAnnual) {
+            const input = document.getElementById('opportunity-rate');
+            const rawRate = input.value.trim();
+            const userRate = /^(?:\d+(?:[.,]\d{1,2})?|[.,]\d{1,2})$/.test(rawRate)
+                ? Number(rawRate.replace(',', '.'))
+                : NaN;
+            const valid = userRate >= 0 && userRate <= 100;
+            const invalid = rawRate !== '' && !valid;
+            const result = document.getElementById('opportunity-result');
+            const income = document.getElementById('opportunity-income');
+            const total = document.getElementById('opportunity-car-annual');
+            const comparison = document.getElementById('opportunity-comparison');
+            const winnerChange = document.getElementById('opportunity-winner-change');
+
+            if (invalid) input.setAttribute('aria-invalid', 'true');
+            else input.removeAttribute('aria-invalid');
+            document.getElementById('opportunity-rate-error').textContent = invalid
+                ? 'Введите число от 0 до 100, не более двух знаков после запятой или точки.'
+                : '';
+
+            result.hidden = !valid;
+            if (!valid) {
+                income.textContent = '';
+                total.textContent = '';
+                comparison.textContent = '';
+                winnerChange.textContent = '';
+                return;
+            }
+
+            const capitalOpportunity = carPrice * (userRate / 100);
+            const scenarioCarAnnual = baseCarAnnual + capitalOpportunity;
+            const difference = scenarioCarAnnual - taxiAnnual;
+            const baseDifference = baseCarAnnual - taxiAnnual;
+            income.textContent = formatMoney(capitalOpportunity);
+            total.textContent = formatMoney(scenarioCarAnnual);
+            if (difference === 0) {
+                comparison.textContent = 'Стоимость авто и такси за первый год одинакова.';
+            } else {
+                const cheaper = difference > 0 ? 'Такси дешевле' : 'Авто дешевле';
+                const absoluteDifference = Math.abs(difference);
+                const amount = absoluteDifference < 0.5 ? 'менее чем на 1 ₽' : `на ${formatMoney(absoluteDifference)}`;
+                comparison.textContent = `${cheaper} ${amount} за первый год.`;
+            }
+            winnerChange.textContent = Math.sign(difference) !== Math.sign(baseDifference)
+                ? 'Сравнение изменилось: если сохранить деньги на покупку, возможный доход увеличивает расчётную стоимость выбора автомобиля.'
+                : '';
+        }
+
         function calculate() {
             // Safe clamping of inputs to prevent negative/zero division bugs
             const tripsPerMonth = Math.max(0, state.tripsPerMonth);
@@ -759,44 +799,21 @@
             const insurance = Math.max(0, state.insurance);
             const maintenance = Math.max(0, state.maintenance);
             const tripPrice = Math.max(0, state.tripPrice);
-            const cbRate = Math.max(0, state.cbRate);
 
             // Машина
             const fuelCostAnnual = (annualMileage / 100) * fuelConsumption * fuelPrice;
             const depreciationAnnual = carPrice * (depreciation / 100);
-            // Упущенная выгода
-            // Key rates can include fractional percentage points; keep the
-            // stated "minus 2 p.p." assumption exact instead of truncating it.
-            const depositRatePct = Math.max(0, cbRate - 2);
-            const lostOppAnnual = carPrice * (depositRatePct / 100);
-            const lostOppMonthly = lostOppAnnual / 12;
-            const includedOpportunityCost = state.includeLostOpportunity ? lostOppAnnual : 0;
-
             // Both scenarios serve the same number of trips. The car mileage
             // is derived using the detailed typical-trip-length assumption.
             const tripsPerYear = tripsPerMonth * 12;
             const totalTaxiAnnual = tripsPerYear * tripPrice;
             const totalTaxiMonthly = totalTaxiAnnual / 12;
-            const totalCarAnnual = fuelCostAnnual + insurance + maintenance + depreciationAnnual + includedOpportunityCost;
+            const totalCarAnnual = fuelCostAnnual + insurance + maintenance + depreciationAnnual;
             const totalCarMonthly = totalCarAnnual / 12;
             const costPerKm = annualMileage > 0 ? (totalCarAnnual / annualMileage) : 0;
 
             // Потеря стоимости за 1 ночь
             const nightlyDeprVal = Math.round(depreciationAnnual / 365);
-
-            // Обновление упущенной выгоды
-            const lostOppCard = document.getElementById('lost-opportunity-card');
-            if (state.includeLostOpportunity) {
-                if (lostOppCard) lostOppCard.classList.remove('hidden');
-                const pEl = document.getElementById('lost-opp-price');
-                const mEl = document.getElementById('lost-opp-monthly');
-                const aEl = document.getElementById('lost-opp-annual');
-                if (pEl) pEl.innerText = formatMoney(carPrice);
-                if (mEl) mEl.innerText = formatMoney(lostOppMonthly);
-                if (aEl) aEl.innerText = formatMoney(lostOppAnnual);
-            } else {
-                if (lostOppCard) lostOppCard.classList.add('hidden');
-            }
 
             // Обновление UI
             document.getElementById('km-cost-main').innerText = costPerKm.toLocaleString('ru-RU', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
@@ -813,8 +830,6 @@
             document.getElementById('car-monthly-fuel').innerText = formatMoney(fuelCostAnnual / 12);
             document.getElementById('car-monthly-fixed').innerText = formatMoney((insurance + maintenance) / 12);
             document.getElementById('car-monthly-depr').innerText = formatMoney(depreciationAnnual / 12);
-            document.getElementById('car-monthly-opportunity').innerText = state.includeLostOpportunity ? formatMoney(lostOppMonthly) : 'Не учитывается';
-            document.getElementById('car-annual-opportunity').innerText = state.includeLostOpportunity ? formatMoney(lostOppAnnual) : 'Не учитывается';
 
             document.getElementById('taxi-monthly-trips').innerText = tripsPerMonth.toLocaleString('ru-RU', { maximumFractionDigits: 0 });
             document.getElementById('taxi-monthly-rate').innerText = formatMoney(tripPrice);
@@ -875,7 +890,7 @@
                 verdictCard.className = "p-8 rounded-3xl transition-all duration-500 flex flex-col items-center text-center space-y-4 shadow-xl border bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/20 dark:to-slate-900 border-emerald-200 dark:border-emerald-900/50 text-slate-900 dark:text-white";
                 verdictIcon.innerText = "🚗";
                 verdictTitle.innerText = "Машина выгоднее";
-                verdictDesc.innerText = "При выбранных предположениях и одинаковой потребности в поездках автомобиль обходится дешевле такси. В расчёт включены потеря стоимости и альтернативная доходность капитала, если она включена.";
+                verdictDesc.innerText = "При выбранных предположениях и одинаковой потребности в поездках автомобиль обходится дешевле такси. В расчёт включена потеря стоимости.";
                 monthlyDiffEl.innerText = formatMoney(diff);
                 monthlyDiffEl.className = "text-4xl font-black text-brand-600 dark:text-brand-400";
 
@@ -888,7 +903,7 @@
                 verdictCard.className = "p-8 rounded-3xl transition-all duration-500 flex flex-col items-center text-center space-y-4 shadow-xl border bg-gradient-to-br from-yellow-50 to-white dark:from-yellow-950/20 dark:to-slate-900 border-yellow-200 dark:border-yellow-900/50 text-slate-900 dark:text-white";
                 verdictIcon.innerText = "🚕";
                 verdictTitle.innerText = "Такси выгоднее";
-                verdictDesc.innerText = "При выбранных предположениях и одинаковой потребности в поездках такси обходится дешевле автомобиля. В расчёт включены потеря стоимости и альтернативная доходность капитала, если она включена.";
+                verdictDesc.innerText = "При выбранных предположениях и одинаковой потребности в поездках такси обходится дешевле автомобиля. В расчёт включена потеря стоимости.";
                 monthlyDiffEl.innerText = formatMoney(diff);
                 monthlyDiffEl.className = "text-4xl font-black text-yellow-600 dark:text-yellow-400";
 
@@ -908,6 +923,7 @@
 
             mobileCar.innerText = formatMoney(totalCarMonthly);
             mobileTaxi.innerText = formatMoney(totalTaxiMonthly);
+            renderCapitalScenario(carPrice, totalCarAnnual, totalTaxiAnnual);
         }
 
         window.onload = function() {
@@ -917,82 +933,11 @@
             document.getElementById('maintenance').value = formatNumber(state.maintenance);
             document.getElementById('trip-price').value = formatNumber(state.tripPrice);
 
-            renderOpportunityRate(null, true);
-            loadOpportunityRate();
-
             // Set Comfort Geely Coolray as pre-selected default layout
             setCarPreset('comfort');
             document.getElementById('taxi-trip-distance').value = state.taxiTripDistance;
             setTripsPreset(state.tripsPerMonth);
         };
-
-        async function loadOpportunityRate() {
-            const rates = typeof fetchRates === 'function' ? await fetchRates() : null;
-            const reference = carRateReference(rates);
-            if (reference) state.cbRate = reference.value;
-            renderOpportunityRate(reference);
-            calculate();
-        }
-
-        function carRateReference(rates, now = Date.now()) {
-            const metadata = rates?.metadata;
-            if (metadata?.schema_version !== 2 || metadata.dataset_id !== 'key_rate') return null;
-            const status = getDatasetStatus(rates);
-            if (status === 'unavailable' || rates.status !== status) return null;
-
-            const value = rates.key_rate?.value_percent;
-            const date = rates.key_rate?.effective_from;
-            const fetched = metadata.last_successful_fetch_at;
-            const source = metadata.source_url;
-            const hasChecksums = [metadata.source_checksum_sha256, metadata.payload_checksum_sha256]
-                .every(checksum => typeof checksum === 'string' && /^[a-f0-9]{64}$/i.test(checksum));
-            if (typeof value !== 'number' || !/^\d+(?:\.\d{1,4})?$/.test(String(value)) || value > 100 ||
-                typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
-                typeof fetched !== 'string' || !/^\d{4}-\d{2}-\d{2}T/i.test(fetched) ||
-                typeof source !== 'string' || !/^https:\/\/(?:www\.)?cbr\.ru\/hd_base\/keyrate\/$/.test(source) ||
-                typeof metadata.source_export_url !== 'string' || !/^https:\/\/(?:www\.)?cbr\.ru\//.test(metadata.source_export_url) ||
-                !hasChecksums ||
-                rates.cb_rate !== value || rates.effective_from !== date || rates.fetched_at !== fetched ||
-                rates.source_url !== source) return null;
-
-            // Match the read-side freshness rules for the published rates dataset.
-            const hourMs = 60 * 60 * 1000;
-            const age = now - Date.parse(fetched);
-            const effective = new Date(date + 'T00:00:00Z');
-            if (!Number.isFinite(age) || age < -hourMs || age > 7 * 24 * hourMs ||
-                (age > 72 * hourMs && status !== 'stale') ||
-                !Number.isFinite(effective.getTime()) || effective.toISOString().slice(0, 10) !== date ||
-                effective.getTime() > now + hourMs) return null;
-
-            return { value, effective, source, status };
-        }
-
-        function renderOpportunityRate(reference, pending = false) {
-            const note = document.getElementById('opportunity-rate-note');
-            const resultNote = document.getElementById('opportunity-result-rate-note');
-            const formatRate = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 4 });
-            const base = formatRate.format(state.cbRate) + '%';
-            const yieldRate = formatRate.format(Math.max(0, state.cbRate - 2)) + '%';
-
-            if (reference) {
-                const date = reference.effective.toLocaleDateString('ru-RU', { timeZone: 'UTC' });
-                const baseLabel = reference.status === 'stale'
-                    ? 'Последняя доступная ключевая ставка (данные устарели)'
-                    : 'Ключевая ставка';
-                note.textContent = `${baseLabel} — ${base}, дата вступления в силу — ${date}. Расчётная доходность (минус 2 п.п., минимум 0%) — ${yieldRate} годовых. `;
-                const link = document.createElement('a');
-                link.className = 'underline';
-                link.href = reference.source;
-                link.target = '_blank';
-                link.rel = 'noopener noreferrer';
-                link.textContent = 'Источник: Банк России';
-                note.append(link, '.');
-            } else {
-                const status = pending ? 'Проверяем официальную ставку.' : 'Пригодные официальные данные недоступны.';
-                note.textContent = `${status} Используется условная базовая ставка ${base}. Расчётная доходность (минус 2 п.п.) — ${yieldRate} годовых. Это допущение, а не текущая ставка Банка России или предложение по вкладу.`;
-            }
-            resultNote.replaceChildren(...Array.from(note.childNodes, node => node.cloneNode(true)));
-        }
 
         function toggleLifestyleWidget() {
             const content = document.getElementById('lifestyle-widget-content');
@@ -1064,8 +1009,8 @@
     <script>
         (function() {
             let tracked = false;
-            function trackFirstChange() {
-                if (!tracked) {
+            function trackFirstChange(event) {
+                if (!tracked && event.target.id !== 'opportunity-rate') {
                     reachGoal('calculate_success');
                     tracked = true;
                     // Remove listeners after first trigger

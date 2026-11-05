@@ -42,7 +42,8 @@ test('calculation displays are not intentionally capped or mislabeled', () => {
     assert.match(credit, /high = monthly \/ initialInflow/);
     assert.match(mortgage, /Из чего складываются выплаты/);
     assert.match(mortgage, /Всего выплат/);
-    assert.match(car, /const depositRatePct = Math\.max\(0, cbRate - 2\);/);
+    assert.match(car, /const totalCarAnnual = fuelCostAnnual \+ insurance \+ maintenance \+ depreciationAnnual;/);
+    assert.match(car, /const capitalOpportunity = carPrice \* \(userRate \/ 100\);/);
     assert.match(car, /tugVerdict = 'Расходы равны';/);
 });
 

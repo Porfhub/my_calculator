@@ -3,120 +3,181 @@ const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
 const vm = require('node:vm');
-const { payloadChecksum } = require('../../data_validation/validate.js');
 
 const root = path.join(__dirname, '..', '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
-const script = read('car-vs-taxi.html').match(/<script>\s*(const state = \{[\s\S]*?)<\/script>/)[1];
-const fixture = require('../data-validation/fixtures/financial-goal-rates.json');
-const now = Date.parse('2026-11-05T12:00:00Z');
-const hourMs = 60 * 60 * 1000;
-
-function rates({ value = 16.25, status = 'ok', age = hourMs } = {}) {
-    const fetched = new Date(now - age).toISOString();
-    const keyRate = { ...fixture.key_rate, value_percent: value };
-    return {
-        ...fixture, status, fetched_at: fetched, cb_rate: value,
-        key_rate: keyRate,
-        metadata: {
-            ...fixture.metadata, status, status_reason: status === 'ok' ? null : 'fetch_failed',
-            last_successful_fetch_at: fetched, last_attempt_at: new Date(now).toISOString(),
-            payload_checksum_sha256: payloadChecksum(keyRate)
-        }
-    };
-}
-
-const textNode = (value) => ({ textContent: value, cloneNode: () => textNode(value) });
+const html = read('car-vs-taxi.html');
+const script = html.match(/<script>\s*(const state = \{[\s\S]*?)<\/script>/)[1];
+const goalsScript = html.match(/<script>\s*((?:\(function\(\) \{\s*let tracked = false;)[\s\S]*?)<\/script>/)[1];
 
 function node() {
-    const classes = new Set();
+    const attributes = new Map();
     return {
-        style: {},
+        value: '',
         innerText: '',
-        childNodes: [],
-        classList: {
-            add: (name) => classes.add(name),
-            remove: (name) => classes.delete(name),
-            contains: (name) => classes.has(name)
-        },
-        set textContent(value) { this.childNodes = [textNode(value)]; },
-        get textContent() { return this.childNodes.map(child => child.textContent).join(''); },
-        append(...children) {
-            this.childNodes.push(...children.map(child => typeof child === 'string' ? textNode(child) : child));
-        },
-        replaceChildren(...children) { this.childNodes = children; },
-        cloneNode() { return Object.assign(node(), this); }
+        textContent: '',
+        style: {},
+        classList: { add() {}, remove() {} },
+        setAttribute: (name, value) => attributes.set(name, value),
+        removeAttribute: (name) => attributes.delete(name),
+        getAttribute: (name) => attributes.get(name),
+        setSelectionRange() {}
     };
 }
 
-function page(fetch) {
+function page(dataResponse) {
     const nodes = new Map();
+    const listeners = new Map();
+    const requests = [];
+    const goals = [];
     const element = (id) => {
         if (!nodes.has(id)) nodes.set(id, node());
         return nodes.get(id);
     };
     const env = vm.createContext({
-        document: { getElementById: element, querySelectorAll: () => [], createElement: node },
-        window: {}, fetch, console: { error() {} },
-        Date: class extends Date { static now() { return now; } },
+        document: {
+            getElementById: element,
+            querySelectorAll: () => [],
+            addEventListener: (type, listener) => listeners.set(type, listener),
+            removeEventListener: (type) => listeners.delete(type)
+        },
+        window: {},
+        fetch: (...args) => {
+            requests.push(args);
+            return dataResponse?.();
+        },
+        reachGoal: (...args) => goals.push(args),
         initTheme() {}, showToast() {}, shareLink() {}
     });
-    vm.runInContext(read('js/api.js') + read('js/utils.js') + script, env);
+    vm.runInContext(read('js/utils.js') + script + goalsScript, env);
     const run = (code) => vm.runInContext(code, env);
-    run("setCarPreset('comfort')");
-    return { run, element };
+    run('window.onload()');
+    return {
+        run, element, requests, goals,
+        change(type, id) { listeners.get(type)?.({ target: { id } }); },
+        rate(value) {
+            element('opportunity-rate').value = value;
+            run('calculate()');
+        }
+    };
 }
 
-const rubles = (element) => Number(element.innerText.replace(/[^\d]/g, ''));
+const rubles = (text) => Number(text.replace(/[^\d]/g, ''));
+const baseIds = [
+    'grid-car-annual', 'grid-taxi-annual', 'grid-car-monthly', 'grid-taxi-monthly',
+    'monthly-diff', 'verdict-title', 'verdict-description', 'tug-of-war-verdict',
+    'tug-car-pct', 'tug-taxi-pct', 'tug-car-bar', 'tug-taxi-bar', 'km-cost-main',
+    'mobile-verdict-title', 'mobile-monthly-diff', 'mobile-car-total', 'mobile-taxi-total'
+];
+const baseSnapshot = ({ element }) => baseIds.map((id) => [element(id).innerText, element(id).style.width]);
 
-for (const scenario of [
-    { name: 'fresh official rate with decimals', data: rates(), base: 16.25, opportunity: 370500 },
-    { name: 'stale official rate at hard TTL', data: rates({ status: 'stale', age: 168 * hourMs }), base: 16.25, opportunity: 370500, stale: true },
-    { name: 'official zero rate', data: rates({ value: 0 }), base: 0, opportunity: 0 },
-    { name: 'expired stale rate', data: rates({ status: 'stale', age: 168 * hourMs + 1 }) },
-    { name: 'old snapshot still marked ok', data: rates({ age: 72 * hourMs + 1 }) },
-    { name: 'published unavailable status', data: rates({ status: 'unavailable' }) },
-    { name: 'conflicting statuses', data: { ...rates(), status: 'stale' } },
-    { name: 'network failure', fetch: async () => { throw new Error('offline'); } },
-    { name: 'HTTP error', fetch: async () => ({ ok: false }) },
-    { name: 'invalid JSON', fetch: async () => ({ ok: true, json: async () => JSON.parse('{') }) },
-    { name: 'legacy number without provenance', data: { cb_rate: 16.25 } },
-    { name: 'missing checksum', data: { ...rates(), metadata: { ...rates().metadata, source_checksum_sha256: null } } },
-    { name: 'invalid effective date', data: { ...rates(), effective_from: '2026-09-31', key_rate: { value_percent: 16.25, effective_from: '2026-09-31' } } },
-    { name: 'untrusted source', data: { ...rates(), metadata: { ...rates().metadata, source_url: 'https://www.cbr.ru.example/hd_base/keyrate/' } } },
-    { name: 'contradictory rate values', data: { ...rates(), cb_rate: 19 } },
-    { name: 'malformed rate value', data: rates({ value: '16.25' }) }
+test('car/taxi starts from the base annual benchmark and a blank scenario', () => {
+    const { element } = page();
+    assert.equal(rubles(element('grid-car-annual').innerText), 418748);
+    assert.equal(rubles(element('grid-taxi-annual').innerText), 180000);
+    assert.equal(rubles(element('annual-mileage-display').innerText), 3600);
+    assert.equal(element('opportunity-rate').value, '');
+    assert.equal(element('opportunity-result').hidden, true);
+    assert.equal(element('opportunity-rate-error').textContent, '');
+});
+
+for (const [input, amount] of [
+    ['0', 0], ['0,00', 0], ['12', 312000], ['12.34', 320840], ['12,34', 320840],
+    ['.5', 13000], [',01', 260], ['100', 2600000], ['100.00', 2600000]
 ]) {
-    test(`car/taxi uses the correct rate and disclosure with ${scenario.name}`, async () => {
-        const { run, element } = page(scenario.fetch ?? (async () => ({ ok: true, json: async () => scenario.data })));
-        await run('loadOpportunityRate()');
-        const official = scenario.base !== undefined;
-        const opportunity = scenario.opportunity ?? 494000;
-        assert.equal(run('state.cbRate'), scenario.base ?? 21);
-        assert.equal(rubles(element('grid-car-annual')), 418748);
-        assert.equal(rubles(element('grid-taxi-annual')), 180000);
-        assert.equal(element('lost-opportunity-card').classList.contains('hidden'), true);
-
-        run('handleLostOppToggle(true)');
-        assert.equal(rubles(element('grid-car-annual')), 418748 + opportunity);
-        assert.equal(rubles(element('grid-taxi-annual')), 180000);
-        assert.equal(rubles(element('lost-opp-annual')), opportunity);
-        assert.equal(element('lost-opportunity-card').classList.contains('hidden'), false);
-        const note = element('opportunity-rate-note');
-        assert.equal(note.textContent, element('opportunity-result-rate-note').textContent);
-        if (official) {
-            assert.match(note.textContent, /27\.07\.2026/);
-            assert.match(note.textContent, scenario.base === 0 ? /0% годовых/ : /16,25%.*14,25% годовых/);
-            assert.equal(note.childNodes[1].href, fixture.source_url);
-            assert.equal(note.textContent.includes('данные устарели'), Boolean(scenario.stale));
-        } else {
-            assert.match(note.textContent, /данные недоступны.*условная базовая ставка 21%.*19% годовых.*Это допущение/);
-            assert.doesNotMatch(note.textContent, /Источник:|\d{2}\.\d{2}\.\d{4}/);
-            assert.equal(note.childNodes.length, 1);
-        }
-
-        run('handleLostOppToggle(false)');
-        assert.equal(rubles(element('grid-car-annual')), 418748);
-        assert.equal(element('lost-opportunity-card').classList.contains('hidden'), true);
+    test(`car/taxi accepts ${input}% in the isolated scenario`, () => {
+        const app = page();
+        const before = baseSnapshot(app);
+        app.rate(input);
+        assert.equal(app.element('opportunity-rate').getAttribute('aria-invalid'), undefined);
+        assert.equal(app.element('opportunity-result').hidden, false);
+        assert.equal(rubles(app.element('opportunity-income').textContent), amount);
+        assert.equal(rubles(app.element('opportunity-car-annual').textContent), 418748 + amount);
+        assert.equal(rubles(app.element('opportunity-comparison').textContent), 238748 + amount);
+        assert.equal(app.element('opportunity-winner-change').textContent, '');
+        assert.deepEqual(baseSnapshot(app), before);
     });
 }
+
+for (const input of ['-1', '+12', '100.01', '99999999999999999999', '12,345', '12.3.4', '12%', '1e2', 'NaN', '1 2', '12,']) {
+    test(`car/taxi rejects ${input}% and clears a previous scenario`, () => {
+        const app = page();
+        app.rate('12');
+        app.rate(input);
+        assert.equal(app.element('opportunity-rate').getAttribute('aria-invalid'), 'true');
+        assert.match(app.element('opportunity-rate-error').textContent, /от 0 до 100/);
+        assert.equal(app.element('opportunity-result').hidden, true);
+        assert.equal(app.element('opportunity-income').textContent, '');
+        assert.equal(app.element('opportunity-car-annual').textContent, '');
+        assert.equal(app.element('opportunity-comparison').textContent, '');
+
+        app.rate('');
+        assert.equal(app.element('opportunity-result').hidden, true);
+        assert.equal(app.element('opportunity-rate').getAttribute('aria-invalid'), undefined);
+        assert.equal(app.element('opportunity-rate-error').textContent, '');
+    });
+}
+
+test('car/taxi recalculates the retained scenario after the price changes with the disclosure closed', () => {
+    const app = page();
+    app.rate('12');
+    app.element('capital-scenario').open = false;
+    app.element('car-price').value = '3000000';
+    app.run("handleInput(document.getElementById('car-price'), 'carPrice')");
+    app.element('capital-scenario').open = true;
+    assert.equal(app.element('opportunity-rate').value, '12');
+    assert.equal(rubles(app.element('grid-car-annual').innerText), 462748);
+    assert.equal(rubles(app.element('opportunity-income').textContent), 360000);
+    assert.equal(rubles(app.element('opportunity-car-annual').textContent), 822748);
+});
+
+test('car/taxi compares the scenario separately when the base winner is the car', () => {
+    const app = page();
+    app.run("handleRawInput('tripsPerMonth', '30'); handleRawInput('tripPrice', '1500')");
+    const before = baseSnapshot(app);
+    assert.equal(app.element('verdict-title').innerText, 'Машина выгоднее');
+    app.rate('0');
+    assert.match(app.element('opportunity-comparison').textContent, /^Авто дешевле/);
+    app.rate('12');
+    assert.match(app.element('opportunity-comparison').textContent, /^Такси дешевле/);
+    assert.equal(rubles(app.element('opportunity-comparison').textContent), 190748);
+    assert.match(app.element('opportunity-winner-change').textContent, /Сравнение изменилось/);
+    assert.deepEqual(baseSnapshot(app), before);
+});
+
+test('car/taxi scenario handles equal expenses', () => {
+    const app = page();
+    app.run("handleRawInput('tripsPerMonth', '0'); handleRawInput('insurance', '0'); handleRawInput('maintenance', '0'); handleRawInput('depreciation', '0')");
+    app.rate('0');
+    assert.equal(app.element('opportunity-comparison').textContent, 'Стоимость авто и такси за первый год одинакова.');
+    assert.equal(app.element('opportunity-winner-change').textContent, '');
+    app.rate('12');
+    assert.match(app.element('opportunity-comparison').textContent, /^Такси дешевле/);
+    assert.match(app.element('opportunity-winner-change').textContent, /Сравнение изменилось/);
+    assert.equal(app.element('verdict-title').innerText, 'Расходы равны');
+});
+
+test('car/taxi results require no rates request in any dataset or network state', () => {
+    assert.doesNotMatch(html, /js\/api\.js|rates\.json|fetchRates|cbRate/);
+    for (const respond of [
+        ...['ok', 'stale', 'unavailable'].map(status => () => ({ ok: true, json: async () => ({ status }) })),
+        () => { throw new Error('offline'); }
+    ]) {
+        const app = page(respond);
+        app.rate('12');
+        assert.deepEqual(app.requests, []);
+        assert.equal(rubles(app.element('grid-car-annual').innerText), 418748);
+        assert.equal(rubles(app.element('grid-taxi-annual').innerText), 180000);
+        assert.equal(rubles(app.element('opportunity-car-annual').textContent), 730748);
+    }
+});
+
+test('car/taxi keeps the legacy goal on existing inputs without tracking the new rate', () => {
+    const app = page();
+    app.change('input', 'opportunity-rate');
+    app.change('change', 'opportunity-rate');
+    assert.deepEqual(app.goals, []);
+    app.change('input', 'car-price');
+    app.change('change', 'trips-per-month');
+    assert.deepEqual(app.goals, [['calculate_success']]);
+});
