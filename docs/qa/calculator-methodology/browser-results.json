@@ -1,0 +1,2046 @@
+{
+  "chrome": "156.0.8078.48",
+  "matrix": [
+    {
+      "name": "financial-freedom",
+      "width": 1366,
+      "theme": "light",
+      "metrics": {
+        "height": 595,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 1366,
+        "scroll": 1366,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 5.585866566434078
+      },
+      "initial": [
+        "Запас прочности: 13 месяцев",
+        "Примерно декабрь 2027 года",
+        "13 мес."
+      ],
+      "updated": [
+        "Запас прочности: 27 месяцев",
+        "Примерно февраль 2029 года",
+        "27 мес."
+      ],
+      "chartSeries": [
+        3
+      ],
+      "flow": {
+        "clipboard": "/financial-freedom.html",
+        "png": [
+          "yasnomera-financial-freedom.png",
+          1456,
+          2200
+        ]
+      },
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "financial-freedom",
+      "width": 1366,
+      "theme": "dark",
+      "metrics": {
+        "height": 595,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 1366,
+        "scroll": 1366,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 9.505552495922872
+      },
+      "initial": [
+        "Запас прочности: 13 месяцев",
+        "Примерно декабрь 2027 года",
+        "13 мес."
+      ],
+      "updated": [
+        "Запас прочности: 27 месяцев",
+        "Примерно февраль 2029 года",
+        "27 мес."
+      ],
+      "chartSeries": [
+        3
+      ],
+      "flow": {
+        "clipboard": "/financial-freedom.html",
+        "png": [
+          "yasnomera-financial-freedom.png",
+          1456,
+          2200
+        ]
+      },
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "financial-freedom",
+      "width": 390,
+      "theme": "light",
+      "metrics": {
+        "height": 907,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 390,
+        "scroll": 390,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 5.585866566434078
+      },
+      "initial": [
+        "Запас прочности: 13 месяцев",
+        "Примерно декабрь 2027 года",
+        "13 мес."
+      ],
+      "updated": [
+        "Запас прочности: 27 месяцев",
+        "Примерно февраль 2029 года",
+        "27 мес."
+      ],
+      "chartSeries": [
+        3
+      ],
+      "flow": {
+        "share": {
+          "url": "/financial-freedom.html",
+          "text": "Я рассчитал запас прочности своей финансовой подушки: 27 мес.. Оцените свой финансовый резерв!"
+        },
+        "png": [
+          "yasnomera-financial-freedom.png",
+          780,
+          2372
+        ]
+      },
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "financial-freedom",
+      "width": 390,
+      "theme": "dark",
+      "metrics": {
+        "height": 907,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 390,
+        "scroll": 390,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 12.674305043733488
+      },
+      "initial": [
+        "Запас прочности: 13 месяцев",
+        "Примерно декабрь 2027 года",
+        "13 мес."
+      ],
+      "updated": [
+        "Запас прочности: 27 месяцев",
+        "Примерно февраль 2029 года",
+        "27 мес."
+      ],
+      "chartSeries": [
+        3
+      ],
+      "flow": {
+        "share": {
+          "url": "/financial-freedom.html",
+          "text": "Я рассчитал запас прочности своей финансовой подушки: 27 мес.. Оцените свой финансовый резерв!"
+        },
+        "png": [
+          "yasnomera-financial-freedom.png",
+          780,
+          2372
+        ]
+      },
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "financial-freedom",
+      "width": 375,
+      "theme": "light",
+      "metrics": {
+        "height": 931,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 375,
+        "scroll": 375,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 5.585866566434078
+      },
+      "initial": [
+        "Запас прочности: 13 месяцев",
+        "Примерно декабрь 2027 года",
+        "13 мес."
+      ],
+      "updated": [
+        "Запас прочности: 27 месяцев",
+        "Примерно февраль 2029 года",
+        "27 мес."
+      ],
+      "chartSeries": [
+        3
+      ],
+      "flow": {},
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ]
+      ]
+    },
+    {
+      "name": "financial-freedom",
+      "width": 375,
+      "theme": "dark",
+      "metrics": {
+        "height": 931,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 375,
+        "scroll": 375,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 9.505552495922872
+      },
+      "initial": [
+        "Запас прочности: 13 месяцев",
+        "Примерно декабрь 2027 года",
+        "13 мес."
+      ],
+      "updated": [
+        "Запас прочности: 27 месяцев",
+        "Примерно февраль 2029 года",
+        "27 мес."
+      ],
+      "chartSeries": [
+        3
+      ],
+      "flow": {},
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ]
+      ]
+    },
+    {
+      "name": "financial-freedom",
+      "width": 320,
+      "theme": "light",
+      "metrics": {
+        "height": 1123,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 320,
+        "scroll": 320,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 5.585866566434078
+      },
+      "initial": [
+        "Запас прочности: 13 месяцев",
+        "Примерно декабрь 2027 года",
+        "13 мес."
+      ],
+      "updated": [
+        "Запас прочности: 27 месяцев",
+        "Примерно февраль 2029 года",
+        "27 мес."
+      ],
+      "chartSeries": [
+        3
+      ],
+      "flow": {},
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ]
+      ]
+    },
+    {
+      "name": "financial-freedom",
+      "width": 320,
+      "theme": "dark",
+      "metrics": {
+        "height": 1123,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 320,
+        "scroll": 320,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 9.505552495922872
+      },
+      "initial": [
+        "Запас прочности: 13 месяцев",
+        "Примерно декабрь 2027 года",
+        "13 мес."
+      ],
+      "updated": [
+        "Запас прочности: 27 месяцев",
+        "Примерно февраль 2029 года",
+        "27 мес."
+      ],
+      "chartSeries": [
+        3
+      ],
+      "flow": {},
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ]
+      ]
+    },
+    {
+      "name": "inflation-shredder",
+      "width": 1366,
+      "theme": "light",
+      "metrics": {
+        "height": 571,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 1366,
+        "scroll": 1366,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 14.303574460526931
+      },
+      "initial": [
+        "1 835 ₽",
+        "545 ₽",
+        "455 ₽"
+      ],
+      "updated": [
+        "3 670 ₽",
+        "1 090 ₽",
+        "910 ₽"
+      ],
+      "chartSeries": [
+        1
+      ],
+      "flow": {
+        "clipboard": "/inflation-shredder.html",
+        "png": [
+          "yasnomera-inflation-report.png",
+          1472,
+          2042
+        ]
+      },
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "inflation-shredder",
+      "width": 1366,
+      "theme": "dark",
+      "metrics": {
+        "height": 571,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 1366,
+        "scroll": 1366,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 12.674305043733488
+      },
+      "initial": [
+        "1 835 ₽",
+        "545 ₽",
+        "455 ₽"
+      ],
+      "updated": [
+        "3 670 ₽",
+        "1 090 ₽",
+        "910 ₽"
+      ],
+      "chartSeries": [
+        1
+      ],
+      "flow": {
+        "clipboard": "/inflation-shredder.html",
+        "png": [
+          "yasnomera-inflation-report.png",
+          1472,
+          2042
+        ]
+      },
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "inflation-shredder",
+      "width": 390,
+      "theme": "light",
+      "metrics": {
+        "height": 811,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 390,
+        "scroll": 390,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 14.303574460526931
+      },
+      "initial": [
+        "1 835 ₽",
+        "545 ₽",
+        "455 ₽"
+      ],
+      "updated": [
+        "3 670 ₽",
+        "1 090 ₽",
+        "910 ₽"
+      ],
+      "chartSeries": [
+        1
+      ],
+      "flow": {
+        "share": {
+          "url": "/inflation-shredder.html",
+          "text": "По официальным данным Росстата потеря покупательной способности выбранной суммы составила около 910 ₽."
+        },
+        "png": [
+          "yasnomera-inflation-report.png",
+          788,
+          2560
+        ]
+      },
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "inflation-shredder",
+      "width": 390,
+      "theme": "dark",
+      "metrics": {
+        "height": 811,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 390,
+        "scroll": 390,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 12.674305043733488
+      },
+      "initial": [
+        "1 835 ₽",
+        "545 ₽",
+        "455 ₽"
+      ],
+      "updated": [
+        "3 670 ₽",
+        "1 090 ₽",
+        "910 ₽"
+      ],
+      "chartSeries": [
+        1
+      ],
+      "flow": {
+        "share": {
+          "url": "/inflation-shredder.html",
+          "text": "По официальным данным Росстата потеря покупательной способности выбранной суммы составила около 910 ₽."
+        },
+        "png": [
+          "yasnomera-inflation-report.png",
+          788,
+          2560
+        ]
+      },
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "inflation-shredder",
+      "width": 375,
+      "theme": "light",
+      "metrics": {
+        "height": 835,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 375,
+        "scroll": 375,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 5.585866566434078
+      },
+      "initial": [
+        "1 835 ₽",
+        "545 ₽",
+        "455 ₽"
+      ],
+      "updated": [
+        "3 670 ₽",
+        "1 090 ₽",
+        "910 ₽"
+      ],
+      "chartSeries": [
+        1
+      ],
+      "flow": {},
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ]
+      ]
+    },
+    {
+      "name": "inflation-shredder",
+      "width": 375,
+      "theme": "dark",
+      "metrics": {
+        "height": 835,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 375,
+        "scroll": 375,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 9.505552495922872
+      },
+      "initial": [
+        "1 835 ₽",
+        "545 ₽",
+        "455 ₽"
+      ],
+      "updated": [
+        "3 670 ₽",
+        "1 090 ₽",
+        "910 ₽"
+      ],
+      "chartSeries": [
+        1
+      ],
+      "flow": {},
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ]
+      ]
+    },
+    {
+      "name": "inflation-shredder",
+      "width": 320,
+      "theme": "light",
+      "metrics": {
+        "height": 1027,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 320,
+        "scroll": 320,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 14.303574460526931
+      },
+      "initial": [
+        "1 835 ₽",
+        "545 ₽",
+        "455 ₽"
+      ],
+      "updated": [
+        "3 670 ₽",
+        "1 090 ₽",
+        "910 ₽"
+      ],
+      "chartSeries": [
+        1
+      ],
+      "flow": {},
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ]
+      ]
+    },
+    {
+      "name": "inflation-shredder",
+      "width": 320,
+      "theme": "dark",
+      "metrics": {
+        "height": 1027,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 320,
+        "scroll": 320,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 12.674305043733488
+      },
+      "initial": [
+        "1 835 ₽",
+        "545 ₽",
+        "455 ₽"
+      ],
+      "updated": [
+        "3 670 ₽",
+        "1 090 ₽",
+        "910 ₽"
+      ],
+      "chartSeries": [
+        1
+      ],
+      "flow": {},
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ]
+      ]
+    },
+    {
+      "name": "car-vs-taxi",
+      "width": 1366,
+      "theme": "light",
+      "metrics": {
+        "height": 595,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 1366,
+        "scroll": 1366,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 5.585866566434078
+      },
+      "initial": [
+        "418 748 ₽",
+        "180 000 ₽",
+        "19 896 ₽",
+        "Такси выгоднее",
+        "Ключевая ставка — 14%, дата вступления в силу — 27.07.2026. Расчётная доходность (минус 2 п.п., минимум 0%) — 12% годовых. Источник: Банк России."
+      ],
+      "updated": [
+        "436 496 ₽",
+        "360 000 ₽",
+        "6 375 ₽",
+        "Такси выгоднее",
+        "Ключевая ставка — 14%, дата вступления в силу — 27.07.2026. Расчётная доходность (минус 2 п.п., минимум 0%) — 12% годовых. Источник: Банк России."
+      ],
+      "chartSeries": [],
+      "flow": {
+        "clipboard": "/car-vs-taxi.html",
+        "png": [
+          "yasnomera-car-vs-taxi.png",
+          976,
+          2332
+        ]
+      },
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "car-vs-taxi",
+      "width": 1366,
+      "theme": "dark",
+      "metrics": {
+        "height": 595,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 1366,
+        "scroll": 1366,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 9.505552495922872
+      },
+      "initial": [
+        "418 748 ₽",
+        "180 000 ₽",
+        "19 896 ₽",
+        "Такси выгоднее",
+        "Ключевая ставка — 14%, дата вступления в силу — 27.07.2026. Расчётная доходность (минус 2 п.п., минимум 0%) — 12% годовых. Источник: Банк России."
+      ],
+      "updated": [
+        "436 496 ₽",
+        "360 000 ₽",
+        "6 375 ₽",
+        "Такси выгоднее",
+        "Ключевая ставка — 14%, дата вступления в силу — 27.07.2026. Расчётная доходность (минус 2 п.п., минимум 0%) — 12% годовых. Источник: Банк России."
+      ],
+      "chartSeries": [],
+      "flow": {
+        "clipboard": "/car-vs-taxi.html",
+        "png": [
+          "yasnomera-car-vs-taxi.png",
+          976,
+          2332
+        ]
+      },
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "car-vs-taxi",
+      "width": 390,
+      "theme": "light",
+      "metrics": {
+        "height": 883,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 390,
+        "scroll": 390,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 5.585866566434078
+      },
+      "initial": [
+        "418 748 ₽",
+        "180 000 ₽",
+        "19 896 ₽",
+        "Такси выгоднее",
+        "Ключевая ставка — 14%, дата вступления в силу — 27.07.2026. Расчётная доходность (минус 2 п.п., минимум 0%) — 12% годовых. Источник: Банк России."
+      ],
+      "updated": [
+        "436 496 ₽",
+        "360 000 ₽",
+        "6 375 ₽",
+        "Такси выгоднее",
+        "Ключевая ставка — 14%, дата вступления в силу — 27.07.2026. Расчётная доходность (минус 2 п.п., минимум 0%) — 12% годовых. Источник: Банк России."
+      ],
+      "chartSeries": [],
+      "flow": {
+        "share": {
+          "url": "/car-vs-taxi.html",
+          "text": "Я сравнил расходы на личный автомобиль и такси в Ясномере. Разница по выбранным параметрам: 32 375 ₽ в месяц. Результат зависит от введённых условий."
+        },
+        "png": "desktop only"
+      },
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "car-vs-taxi",
+      "width": 390,
+      "theme": "dark",
+      "metrics": {
+        "height": 883,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 390,
+        "scroll": 390,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 12.674305043733488
+      },
+      "initial": [
+        "418 748 ₽",
+        "180 000 ₽",
+        "19 896 ₽",
+        "Такси выгоднее",
+        "Ключевая ставка — 14%, дата вступления в силу — 27.07.2026. Расчётная доходность (минус 2 п.п., минимум 0%) — 12% годовых. Источник: Банк России."
+      ],
+      "updated": [
+        "436 496 ₽",
+        "360 000 ₽",
+        "6 375 ₽",
+        "Такси выгоднее",
+        "Ключевая ставка — 14%, дата вступления в силу — 27.07.2026. Расчётная доходность (минус 2 п.п., минимум 0%) — 12% годовых. Источник: Банк России."
+      ],
+      "chartSeries": [],
+      "flow": {
+        "share": {
+          "url": "/car-vs-taxi.html",
+          "text": "Я сравнил расходы на личный автомобиль и такси в Ясномере. Разница по выбранным параметрам: 32 375 ₽ в месяц. Результат зависит от введённых условий."
+        },
+        "png": "desktop only"
+      },
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "car-vs-taxi",
+      "width": 375,
+      "theme": "light",
+      "metrics": {
+        "height": 883,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 375,
+        "scroll": 375,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 5.585866566434078
+      },
+      "initial": [
+        "418 748 ₽",
+        "180 000 ₽",
+        "19 896 ₽",
+        "Такси выгоднее",
+        "Ключевая ставка — 14%, дата вступления в силу — 27.07.2026. Расчётная доходность (минус 2 п.п., минимум 0%) — 12% годовых. Источник: Банк России."
+      ],
+      "updated": [
+        "436 496 ₽",
+        "360 000 ₽",
+        "6 375 ₽",
+        "Такси выгоднее",
+        "Ключевая ставка — 14%, дата вступления в силу — 27.07.2026. Расчётная доходность (минус 2 п.п., минимум 0%) — 12% годовых. Источник: Банк России."
+      ],
+      "chartSeries": [],
+      "flow": {},
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ]
+      ]
+    },
+    {
+      "name": "car-vs-taxi",
+      "width": 375,
+      "theme": "dark",
+      "metrics": {
+        "height": 883,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 375,
+        "scroll": 375,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 12.674305043733488
+      },
+      "initial": [
+        "418 748 ₽",
+        "180 000 ₽",
+        "19 896 ₽",
+        "Такси выгоднее",
+        "Ключевая ставка — 14%, дата вступления в силу — 27.07.2026. Расчётная доходность (минус 2 п.п., минимум 0%) — 12% годовых. Источник: Банк России."
+      ],
+      "updated": [
+        "436 496 ₽",
+        "360 000 ₽",
+        "6 375 ₽",
+        "Такси выгоднее",
+        "Ключевая ставка — 14%, дата вступления в силу — 27.07.2026. Расчётная доходность (минус 2 п.п., минимум 0%) — 12% годовых. Источник: Банк России."
+      ],
+      "chartSeries": [],
+      "flow": {},
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ]
+      ]
+    },
+    {
+      "name": "car-vs-taxi",
+      "width": 320,
+      "theme": "light",
+      "metrics": {
+        "height": 1027,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 320,
+        "scroll": 320,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 5.585866566434078
+      },
+      "initial": [
+        "418 748 ₽",
+        "180 000 ₽",
+        "19 896 ₽",
+        "Такси выгоднее",
+        "Ключевая ставка — 14%, дата вступления в силу — 27.07.2026. Расчётная доходность (минус 2 п.п., минимум 0%) — 12% годовых. Источник: Банк России."
+      ],
+      "updated": [
+        "436 496 ₽",
+        "360 000 ₽",
+        "6 375 ₽",
+        "Такси выгоднее",
+        "Ключевая ставка — 14%, дата вступления в силу — 27.07.2026. Расчётная доходность (минус 2 п.п., минимум 0%) — 12% годовых. Источник: Банк России."
+      ],
+      "chartSeries": [],
+      "flow": {},
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ]
+      ]
+    },
+    {
+      "name": "car-vs-taxi",
+      "width": 320,
+      "theme": "dark",
+      "metrics": {
+        "height": 1027,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 320,
+        "scroll": 320,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 9.505552495922872
+      },
+      "initial": [
+        "418 748 ₽",
+        "180 000 ₽",
+        "19 896 ₽",
+        "Такси выгоднее",
+        "Ключевая ставка — 14%, дата вступления в силу — 27.07.2026. Расчётная доходность (минус 2 п.п., минимум 0%) — 12% годовых. Источник: Банк России."
+      ],
+      "updated": [
+        "436 496 ₽",
+        "360 000 ₽",
+        "6 375 ₽",
+        "Такси выгоднее",
+        "Ключевая ставка — 14%, дата вступления в силу — 27.07.2026. Расчётная доходность (минус 2 п.п., минимум 0%) — 12% годовых. Источник: Банк России."
+      ],
+      "chartSeries": [],
+      "flow": {},
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "calculate_success"
+        ]
+      ]
+    },
+    {
+      "name": "genetic-wealth",
+      "width": 1366,
+      "theme": "light",
+      "metrics": {
+        "height": 571,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 1366,
+        "scroll": 1366,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 14.303574460526931
+      },
+      "initial": [
+        "9 780 000",
+        "20 130 574 ₽",
+        "20 130 574 ₽"
+      ],
+      "updated": [
+        "34 680 000",
+        "74 970 270 ₽",
+        "74 970 270 ₽"
+      ],
+      "chartSeries": [
+        2
+      ],
+      "flow": {
+        "clipboard": "/genetic-wealth.html",
+        "png": [
+          "yasnomera-child-cost.png",
+          1456,
+          1898
+        ]
+      },
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "genetic-wealth",
+      "width": 1366,
+      "theme": "dark",
+      "metrics": {
+        "height": 571,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 1366,
+        "scroll": 1366,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 12.674305043733488
+      },
+      "initial": [
+        "9 780 000",
+        "20 130 574 ₽",
+        "20 130 574 ₽"
+      ],
+      "updated": [
+        "34 680 000",
+        "74 970 270 ₽",
+        "74 970 270 ₽"
+      ],
+      "chartSeries": [
+        2
+      ],
+      "flow": {
+        "clipboard": "/genetic-wealth.html",
+        "png": [
+          "yasnomera-child-cost.png",
+          1456,
+          1898
+        ]
+      },
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "genetic-wealth",
+      "width": 390,
+      "theme": "light",
+      "metrics": {
+        "height": 859,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 390,
+        "scroll": 390,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 14.303574460526931
+      },
+      "initial": [
+        "9 780 000",
+        "20 130 574 ₽",
+        "20 130 574 ₽"
+      ],
+      "updated": [
+        "34 680 000",
+        "74 970 270 ₽",
+        "74 970 270 ₽"
+      ],
+      "chartSeries": [
+        2
+      ],
+      "flow": {
+        "share": {
+          "url": "/genetic-wealth.html",
+          "text": "Я оценил расходы на воспитание ребёнка от 0 до 18 лет: 74 970 270 ₽ с учётом инфляции. Это сценарная оценка, а не прогноз личных расходов."
+        },
+        "png": [
+          "yasnomera-child-cost.png",
+          780,
+          2196
+        ]
+      },
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "genetic-wealth",
+      "width": 390,
+      "theme": "dark",
+      "metrics": {
+        "height": 859,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 390,
+        "scroll": 390,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 12.674305043733488
+      },
+      "initial": [
+        "9 780 000",
+        "20 130 574 ₽",
+        "20 130 574 ₽"
+      ],
+      "updated": [
+        "34 680 000",
+        "74 970 270 ₽",
+        "74 970 270 ₽"
+      ],
+      "chartSeries": [
+        2
+      ],
+      "flow": {
+        "share": {
+          "url": "/genetic-wealth.html",
+          "text": "Я оценил расходы на воспитание ребёнка от 0 до 18 лет: 74 970 270 ₽ с учётом инфляции. Это сценарная оценка, а не прогноз личных расходов."
+        },
+        "png": [
+          "yasnomera-child-cost.png",
+          780,
+          2196
+        ]
+      },
+      "analytics": [
+        [
+          "init",
+          true
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ],
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "genetic-wealth",
+      "width": 375,
+      "theme": "light",
+      "metrics": {
+        "height": 883,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 375,
+        "scroll": 375,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 5.585866566434078
+      },
+      "initial": [
+        "9 780 000",
+        "20 130 574 ₽",
+        "20 130 574 ₽"
+      ],
+      "updated": [
+        "34 680 000",
+        "74 970 270 ₽",
+        "74 970 270 ₽"
+      ],
+      "chartSeries": [
+        2
+      ],
+      "flow": {},
+      "analytics": [
+        [
+          "init",
+          true
+        ]
+      ]
+    },
+    {
+      "name": "genetic-wealth",
+      "width": 375,
+      "theme": "dark",
+      "metrics": {
+        "height": 883,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 375,
+        "scroll": 375,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 9.505552495922872
+      },
+      "initial": [
+        "9 780 000",
+        "20 130 574 ₽",
+        "20 130 574 ₽"
+      ],
+      "updated": [
+        "34 680 000",
+        "74 970 270 ₽",
+        "74 970 270 ₽"
+      ],
+      "chartSeries": [
+        2
+      ],
+      "flow": {},
+      "analytics": [
+        [
+          "init",
+          true
+        ]
+      ]
+    },
+    {
+      "name": "genetic-wealth",
+      "width": 320,
+      "theme": "light",
+      "metrics": {
+        "height": 1027,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 320,
+        "scroll": 320,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 5.585866566434078
+      },
+      "initial": [
+        "9 780 000",
+        "20 130 574 ₽",
+        "20 130 574 ₽"
+      ],
+      "updated": [
+        "34 680 000",
+        "74 970 270 ₽",
+        "74 970 270 ₽"
+      ],
+      "chartSeries": [
+        2
+      ],
+      "flow": {},
+      "analytics": [
+        [
+          "init",
+          true
+        ]
+      ]
+    },
+    {
+      "name": "genetic-wealth",
+      "width": 320,
+      "theme": "dark",
+      "metrics": {
+        "height": 1027,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 320,
+        "scroll": 320,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 12.674305043733488
+      },
+      "initial": [
+        "9 780 000",
+        "20 130 574 ₽",
+        "20 130 574 ₽"
+      ],
+      "updated": [
+        "34 680 000",
+        "74 970 270 ₽",
+        "74 970 270 ₽"
+      ],
+      "chartSeries": [
+        2
+      ],
+      "flow": {},
+      "analytics": [
+        [
+          "init",
+          true
+        ]
+      ]
+    },
+    {
+      "name": "wealth",
+      "width": 1366,
+      "theme": "light",
+      "metrics": {
+        "height": 595,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 1366,
+        "scroll": 1366,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 5.585866566434078
+      },
+      "initial": [
+        "—",
+        "—",
+        "",
+        ""
+      ],
+      "updated": [
+        "180 000 ₽",
+        "107 660 ₽ выше средней зарплаты выбранного региона (+108%).",
+        "Медианная зарплата73 871 ₽✓ Выше на 180%Источник: Росстат — Социальное положение и уровень жизни населения России. 2025Период: апрель 2025Средняя зарплата99 399 ₽✓ Выше на 108%Источник: Росстат — Социальное положение и уровень жизни населен",
+        "Прожиточный минимум трудоспособного населения20 644 ₽Медианная зарплата73 871 ₽Средняя зарплата99 399 ₽Ваша зарплата207 059 ₽"
+      ],
+      "chartSeries": [],
+      "flow": {
+        "png": [
+          "yasnomera-income-comparison.png",
+          1628,
+          2144
+        ]
+      },
+      "analytics": [
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "wealth",
+      "width": 1366,
+      "theme": "dark",
+      "metrics": {
+        "height": 595,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 1366,
+        "scroll": 1366,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 12.674305043733488
+      },
+      "initial": [
+        "—",
+        "—",
+        "",
+        ""
+      ],
+      "updated": [
+        "180 000 ₽",
+        "107 660 ₽ выше средней зарплаты выбранного региона (+108%).",
+        "Медианная зарплата73 871 ₽✓ Выше на 180%Источник: Росстат — Социальное положение и уровень жизни населения России. 2025Период: апрель 2025Средняя зарплата99 399 ₽✓ Выше на 108%Источник: Росстат — Социальное положение и уровень жизни населен",
+        "Прожиточный минимум трудоспособного населения20 644 ₽Медианная зарплата73 871 ₽Средняя зарплата99 399 ₽Ваша зарплата207 059 ₽"
+      ],
+      "chartSeries": [],
+      "flow": {
+        "png": [
+          "yasnomera-income-comparison.png",
+          1628,
+          2144
+        ]
+      },
+      "analytics": [
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "wealth",
+      "width": 390,
+      "theme": "light",
+      "metrics": {
+        "height": 907,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 390,
+        "scroll": 390,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 5.585866566434078
+      },
+      "initial": [
+        "—",
+        "—",
+        "",
+        ""
+      ],
+      "updated": [
+        "180 000 ₽",
+        "107 660 ₽ выше средней зарплаты выбранного региона (+108%).",
+        "Медианная зарплата73 871 ₽✓ Выше на 180%Источник: Росстат — Социальное положение и уровень жизни населения России. 2025Период: апрель 2025Средняя зарплата99 399 ₽✓ Выше на 108%Источник: Росстат — Социальное положение и уровень жизни населен",
+        "Прожиточный минимум трудоспособного населения20 644 ₽Медианная зарплата73 871 ₽Средняя зарплата99 399 ₽Ваша зарплата207 059 ₽"
+      ],
+      "chartSeries": [],
+      "flow": {
+        "png": [
+          "yasnomera-income-comparison.png",
+          616,
+          3272
+        ]
+      },
+      "analytics": [
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "wealth",
+      "width": 390,
+      "theme": "dark",
+      "metrics": {
+        "height": 907,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 390,
+        "scroll": 390,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 9.505552495922872
+      },
+      "initial": [
+        "—",
+        "—",
+        "",
+        ""
+      ],
+      "updated": [
+        "180 000 ₽",
+        "107 660 ₽ выше средней зарплаты выбранного региона (+108%).",
+        "Медианная зарплата73 871 ₽✓ Выше на 180%Источник: Росстат — Социальное положение и уровень жизни населения России. 2025Период: апрель 2025Средняя зарплата99 399 ₽✓ Выше на 108%Источник: Росстат — Социальное положение и уровень жизни населен",
+        "Прожиточный минимум трудоспособного населения20 644 ₽Медианная зарплата73 871 ₽Средняя зарплата99 399 ₽Ваша зарплата207 059 ₽"
+      ],
+      "chartSeries": [],
+      "flow": {
+        "png": [
+          "yasnomera-income-comparison.png",
+          616,
+          3272
+        ]
+      },
+      "analytics": [
+        [
+          "reachGoal",
+          "share_click"
+        ]
+      ]
+    },
+    {
+      "name": "wealth",
+      "width": 375,
+      "theme": "light",
+      "metrics": {
+        "height": 931,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 375,
+        "scroll": 375,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 5.585866566434078
+      },
+      "initial": [
+        "—",
+        "—",
+        "",
+        ""
+      ],
+      "updated": [
+        "180 000 ₽",
+        "107 660 ₽ выше средней зарплаты выбранного региона (+108%).",
+        "Медианная зарплата73 871 ₽✓ Выше на 180%Источник: Росстат — Социальное положение и уровень жизни населения России. 2025Период: апрель 2025Средняя зарплата99 399 ₽✓ Выше на 108%Источник: Росстат — Социальное положение и уровень жизни населен",
+        "Прожиточный минимум трудоспособного населения20 644 ₽Медианная зарплата73 871 ₽Средняя зарплата99 399 ₽Ваша зарплата207 059 ₽"
+      ],
+      "chartSeries": [],
+      "flow": {},
+      "analytics": []
+    },
+    {
+      "name": "wealth",
+      "width": 375,
+      "theme": "dark",
+      "metrics": {
+        "height": 931,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 375,
+        "scroll": 375,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 9.505552495922872
+      },
+      "initial": [
+        "—",
+        "—",
+        "",
+        ""
+      ],
+      "updated": [
+        "180 000 ₽",
+        "107 660 ₽ выше средней зарплаты выбранного региона (+108%).",
+        "Медианная зарплата73 871 ₽✓ Выше на 180%Источник: Росстат — Социальное положение и уровень жизни населения России. 2025Период: апрель 2025Средняя зарплата99 399 ₽✓ Выше на 108%Источник: Росстат — Социальное положение и уровень жизни населен",
+        "Прожиточный минимум трудоспособного населения20 644 ₽Медианная зарплата73 871 ₽Средняя зарплата99 399 ₽Ваша зарплата207 059 ₽"
+      ],
+      "chartSeries": [],
+      "flow": {},
+      "analytics": []
+    },
+    {
+      "name": "wealth",
+      "width": 320,
+      "theme": "light",
+      "metrics": {
+        "height": 1075,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 320,
+        "scroll": 320,
+        "minFont": 16,
+        "minTextContrast": 6.102761475436297,
+        "focusContrast": 5.585866566434078
+      },
+      "initial": [
+        "—",
+        "—",
+        "",
+        ""
+      ],
+      "updated": [
+        "180 000 ₽",
+        "107 660 ₽ выше средней зарплаты выбранного региона (+108%).",
+        "Медианная зарплата73 871 ₽✓ Выше на 180%Источник: Росстат — Социальное положение и уровень жизни населения России. 2025Период: апрель 2025Средняя зарплата99 399 ₽✓ Выше на 108%Источник: Росстат — Социальное положение и уровень жизни населен",
+        "Прожиточный минимум трудоспособного населения20 644 ₽Медианная зарплата73 871 ₽Средняя зарплата99 399 ₽Ваша зарплата207 059 ₽"
+      ],
+      "chartSeries": [],
+      "flow": {},
+      "analytics": []
+    },
+    {
+      "name": "wealth",
+      "width": 320,
+      "theme": "dark",
+      "metrics": {
+        "height": 1075,
+        "summaryHeight": 48,
+        "overflow": false,
+        "width": 320,
+        "scroll": 320,
+        "minFont": 16,
+        "minTextContrast": 8.05990161399342,
+        "focusContrast": 9.505552495922872
+      },
+      "initial": [
+        "—",
+        "—",
+        "",
+        ""
+      ],
+      "updated": [
+        "180 000 ₽",
+        "107 660 ₽ выше средней зарплаты выбранного региона (+108%).",
+        "Медианная зарплата73 871 ₽✓ Выше на 180%Источник: Росстат — Социальное положение и уровень жизни населения России. 2025Период: апрель 2025Средняя зарплата99 399 ₽✓ Выше на 108%Источник: Росстат — Социальное положение и уровень жизни населен",
+        "Прожиточный минимум трудоспособного населения20 644 ₽Медианная зарплата73 871 ₽Средняя зарплата99 399 ₽Ваша зарплата207 059 ₽"
+      ],
+      "chartSeries": [],
+      "flow": {},
+      "analytics": []
+    }
+  ],
+  "isolation": [
+    {
+      "name": "mortgage",
+      "width": 1366,
+      "theme": "light"
+    },
+    {
+      "name": "mortgage",
+      "width": 1366,
+      "theme": "dark"
+    },
+    {
+      "name": "mortgage",
+      "width": 390,
+      "theme": "light"
+    },
+    {
+      "name": "mortgage",
+      "width": 390,
+      "theme": "dark"
+    },
+    {
+      "name": "rent-vs-mortgage",
+      "width": 1366,
+      "theme": "light"
+    },
+    {
+      "name": "rent-vs-mortgage",
+      "width": 1366,
+      "theme": "dark"
+    },
+    {
+      "name": "rent-vs-mortgage",
+      "width": 390,
+      "theme": "light"
+    },
+    {
+      "name": "rent-vs-mortgage",
+      "width": 390,
+      "theme": "dark"
+    },
+    {
+      "name": "time-is-money",
+      "width": 1366,
+      "theme": "light"
+    },
+    {
+      "name": "time-is-money",
+      "width": 1366,
+      "theme": "dark"
+    },
+    {
+      "name": "time-is-money",
+      "width": 390,
+      "theme": "light"
+    },
+    {
+      "name": "time-is-money",
+      "width": 390,
+      "theme": "dark"
+    },
+    {
+      "name": "honest-credit",
+      "width": 1366,
+      "theme": "light"
+    },
+    {
+      "name": "honest-credit",
+      "width": 1366,
+      "theme": "dark"
+    },
+    {
+      "name": "honest-credit",
+      "width": 390,
+      "theme": "light"
+    },
+    {
+      "name": "honest-credit",
+      "width": 390,
+      "theme": "dark"
+    },
+    {
+      "name": "millionaire",
+      "width": 1366,
+      "theme": "light"
+    },
+    {
+      "name": "millionaire",
+      "width": 1366,
+      "theme": "dark"
+    },
+    {
+      "name": "millionaire",
+      "width": 390,
+      "theme": "light"
+    },
+    {
+      "name": "millionaire",
+      "width": 390,
+      "theme": "dark"
+    }
+  ],
+  "dataScenarios": [
+    {
+      "name": "car-vs-taxi",
+      "file": "rates.json",
+      "scenario": "stale",
+      "result": "Последняя доступная ключевая ставка (данные устарели) — 14%, дата вступления в силу — 27.07.2026. Расчётная доходность (минус 2 п.п., минимум 0%) — 12% годовых. Источник: Банк России."
+    },
+    {
+      "name": "car-vs-taxi",
+      "file": "rates.json",
+      "scenario": "HTTP 503",
+      "result": "Пригодные официальные данные недоступны. Используется условная базовая ставка 21%. Расчётная доходность (минус 2 п.п.) — 19% годовых. Это допущение, а не текущая ставка Банка России или предложение по вкладу."
+    },
+    {
+      "name": "genetic-wealth",
+      "file": "inflation.json",
+      "scenario": "stale",
+      "result": [
+        "READY",
+        "STALE",
+        true
+      ]
+    },
+    {
+      "name": "genetic-wealth",
+      "file": "inflation.json",
+      "scenario": "HTTP 503",
+      "result": [
+        "DATA_UNAVAILABLE",
+        "DATA_UNAVAILABLE",
+        false
+      ]
+    },
+    {
+      "name": "financial-freedom",
+      "file": "rates.json",
+      "scenario": "HTTP 503",
+      "result": [
+        "DATA_UNAVAILABLE",
+        "DATA_UNAVAILABLE",
+        false
+      ]
+    },
+    {
+      "name": "inflation-shredder",
+      "file": "inflation.json",
+      "scenario": "HTTP 503",
+      "result": [
+        "DATA_UNAVAILABLE",
+        null,
+        false
+      ]
+    },
+    {
+      "name": "wealth",
+      "file": "regions.json",
+      "scenario": "HTTP 503",
+      "result": "Данные недоступны"
+    }
+  ],
+  "errors": [],
+  "textAt32px": [
+    {
+      "name": "financial-freedom",
+      "theme": "light",
+      "textPx": 32,
+      "panelOverflow": false,
+      "bodyOverflow": false,
+      "summaryOverflow": false
+    },
+    {
+      "name": "financial-freedom",
+      "theme": "dark",
+      "textPx": 32,
+      "panelOverflow": false,
+      "bodyOverflow": false,
+      "summaryOverflow": false
+    },
+    {
+      "name": "inflation-shredder",
+      "theme": "light",
+      "textPx": 32,
+      "panelOverflow": false,
+      "bodyOverflow": false,
+      "summaryOverflow": false
+    },
+    {
+      "name": "inflation-shredder",
+      "theme": "dark",
+      "textPx": 32,
+      "panelOverflow": false,
+      "bodyOverflow": false,
+      "summaryOverflow": false
+    },
+    {
+      "name": "car-vs-taxi",
+      "theme": "light",
+      "textPx": 32,
+      "panelOverflow": false,
+      "bodyOverflow": false,
+      "summaryOverflow": false
+    },
+    {
+      "name": "car-vs-taxi",
+      "theme": "dark",
+      "textPx": 32,
+      "panelOverflow": false,
+      "bodyOverflow": false,
+      "summaryOverflow": false
+    },
+    {
+      "name": "genetic-wealth",
+      "theme": "light",
+      "textPx": 32,
+      "panelOverflow": false,
+      "bodyOverflow": false,
+      "summaryOverflow": false
+    },
+    {
+      "name": "genetic-wealth",
+      "theme": "dark",
+      "textPx": 32,
+      "panelOverflow": false,
+      "bodyOverflow": false,
+      "summaryOverflow": false
+    },
+    {
+      "name": "wealth",
+      "theme": "light",
+      "textPx": 32,
+      "panelOverflow": false,
+      "bodyOverflow": false,
+      "summaryOverflow": false
+    },
+    {
+      "name": "wealth",
+      "theme": "dark",
+      "textPx": 32,
+      "panelOverflow": false,
+      "bodyOverflow": false,
+      "summaryOverflow": false
+    }
+  ]
+}

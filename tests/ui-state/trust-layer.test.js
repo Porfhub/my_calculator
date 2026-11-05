@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const vm = require('node:vm');
 
 const root = path.join(__dirname, '..', '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
@@ -65,6 +66,51 @@ test('every production calculator has one methodology block', () => {
 
     assert.match(trustLayer, /ℹ️ Как устроен расчёт/);
     assert.doesNotMatch(trustLayer, /<summary>[^\n]*WebWisor/);
+});
+
+test('shared trust layer uses the compact disclosure only on the five opted-in pages', () => {
+    const compact = new Set(['car-vs-taxi', 'financial-freedom', 'genetic-wealth', 'inflation-shredder', 'wealth']);
+    const script = read('js/trust-layer.js');
+    const rendered = new Map();
+
+    for (const page of [...compact, 'mortgage', 'rent-vs-mortgage', 'time-is-money', 'honest-credit', 'millionaire']) {
+        const html = read(`${page}.html`);
+        const host = html.match(/<[^>]*data-webwisor="[^"]+"[^>]*>/)?.[0];
+        const variant = host?.match(/data-webwisor-variant="([^"]+)"/)?.[1];
+        assert.equal(variant, compact.has(page) ? 'compact' : undefined, page);
+        if (compact.has(page)) assert.match(host, /class="[^"]*\byn-scope\b/, page);
+
+        const container = {
+            dataset: {
+                webwisor: page,
+                webwisorVariant: variant,
+                webwisorRendered: host?.includes('data-webwisor-rendered="true"') ? 'true' : undefined
+            },
+            innerHTML: 'original'
+        };
+        const document = {
+            readyState: 'complete',
+            head: { appendChild() {} },
+            createElement: () => ({}),
+            querySelectorAll: () => host ? [container] : []
+        };
+        vm.runInNewContext(script, { document, window: { location: { pathname: `/${page}.html` } } });
+        rendered.set(page, container.innerHTML);
+
+        if (compact.has(page)) {
+            assert.match(container.innerHTML, /<details class="yn-methodology"[^>]*>\s*<summary class="yn-methodology-summary">Как устроен расчёт<\/summary>/);
+            assert.equal((container.innerHTML.match(/class="yn-methodology-group"/g) || []).length, 4);
+            assert.doesNotMatch(container.innerHTML, /<dl>|\bopen\b/);
+        } else if (page === 'mortgage') {
+            assert.match(container.innerHTML, /<details class="webwisor"/);
+            assert.doesNotMatch(container.innerHTML, /yn-methodology/);
+        } else {
+            assert.equal(container.innerHTML, 'original');
+        }
+    }
+
+    assert.doesNotMatch(read('genetic-wealth.html'), /Методология расчетов|id="inflation-val-text"/);
+    assert.match(rendered.get('genetic-wealth'), /<span id="inflation-val-text" hidden>/);
 });
 
 test('calculator copy does not retain prototype labels or manipulative prompts', () => {

@@ -17,6 +17,7 @@
 | [#101](https://github.com/Porfhub/my_calculator/pull/101) | 05.11.2026 | Фундамент дизайн-системы и включение CSS в статический пакет. Merge [22f0321](https://github.com/Porfhub/my_calculator/commit/22f032171928b9f160608449df82c8b7b3f2c64c) |
 | [#102](https://github.com/Porfhub/my_calculator/pull/102) | 05.11.2026 | Пилот общей шапки на страницах инфляции, финансовой свободы и авто/такси. Merge [78f461a](https://github.com/Porfhub/my_calculator/commit/78f461a). [QA](../qa/calculator-header-pilot/README.md) |
 | [#103](https://github.com/Porfhub/my_calculator/pull/103) | 05.11.2026 | Явное происхождение официальной и сценарной ставки в авто/такси. Merge [91026f7](https://github.com/Porfhub/my_calculator/commit/91026f7) |
+| [#104](https://github.com/Porfhub/my_calculator/pull/104) | 05.11.2026 | Единая шапка ещё на шести калькуляторах. Merge [9a0f83e](https://github.com/Porfhub/my_calculator/commit/9a0f83e). [QA](../qa/calculator-headers/README.md) |
 
 ## Страницы
 
@@ -38,5 +39,5 @@
 - Версионированные [ставка](../../rates.json), [инфляция](../../inflation.json) и [регионы](../../regions.json) читаются с проверкой метаданных. У регионов частичный охват. Наличие файла в Git не гарантирует его текущую свежесть. Для проверки см. [техническую передачу](02_TECHNICAL_HANDOFF.md).
 - По сообщению владельца повторный тест ипотечной рекламы стартовал 03.11, плановый период до 09.11 и бюджет 3 000 ₽. Состояние кабинета, фактические расходы и конверсии для этого среза не подтверждены.
 - Текущий пакет документации и обновление механизма зеркала готовятся к review.
-- Срез GitHub main от 05.11.2026 для унификации шапок — merge #103. Расширение общей шапки на шесть калькуляторов подготовлено в ветке `codex/calculator-headers`. Срез публикации описан отдельно выше. [Отчёт и скриншоты](../qa/calculator-headers/README.md) · [Контракт](../design-system/README.md)
+- База доработки методологии пяти калькуляторов — GitHub main после merge #104. Изменение подготовлено в ветке `codex/calculator-methodology`. Срез публикации описан отдельно выше. [Отчёт и скриншоты](../qa/calculator-methodology/README.md)
 - [AGENTS.md](../../AGENTS.md) задаёт правила сопровождения. [Паспорта](../pages/README.md) хранят текущие контракты, [журнал](01_DECISION_LOG.md) — основания, [runbook](03_CONTEXT_MIRROR_RUNBOOK.md) — порядок установки.

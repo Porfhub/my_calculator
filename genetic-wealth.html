@@ -288,23 +288,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Методология -->
-                <div class="bg-slate-100 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-200 dark:border-slate-700">
-                    <div class="flex gap-4">
-                        <div class="shrink-0 w-10 h-10 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center text-brand-600 shadow-sm border border-slate-100 dark:border-slate-700">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-slate-900 dark:text-white">Методология расчетов</h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                                Расходы задаются пользователем для каждого этапа. Для долгосрочной оценки используется средняя годовая инфляция из официального ряда Росстата (<span id="inflation-val-text">...</span>). Это сценарный ориентир, а не прогноз личных расходов.
-                            </p>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- ПРАВАЯ КОЛОНКА: Результаты -->
@@ -385,7 +368,7 @@
         </div>
     </main>
 
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8" data-webwisor="genetic-wealth"></section>
+    <section class="yn-scope max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8" data-webwisor="genetic-wealth" data-webwisor-variant="compact"></section>
 
     <footer class="py-12 text-center text-xs text-slate-400 border-t dark:border-slate-800 mt-12">
         <p class="max-w-md mx-auto px-6">Расчёт ориентировочный. Используется средняя годовая инфляция из официального ряда Росстата; фактические расходы семьи могут отличаться.</p>
@@ -458,10 +441,15 @@
             externalDataStatus = externalDataReady ? datasetStatus : 'unavailable';
             state.avgInflation = externalDataReady ? averageInflation : null;
 
-            if (externalDataReady) {
-                CalculatorState.writeSafeText('inflation-val-text', `${(state.avgInflation * 100).toFixed(1)}%`);
-            } else {
-                CalculatorState.writeSafeText('inflation-val-text', null);
+            const inflationNote = document.getElementById('inflation-val-text');
+            if (inflationNote && externalDataReady) {
+                const annualRate = new Intl.NumberFormat('ru-RU', {
+                    style: 'percent',
+                    minimumFractionDigits: 1,
+                    maximumFractionDigits: 1
+                }).format(state.avgInflation);
+                inflationNote.textContent = `В этом расчёте — ${annualRate} в год.`;
+                inflationNote.hidden = false;
             }
 
             externalDataLoading = false;
