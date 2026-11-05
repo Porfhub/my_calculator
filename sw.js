@@ -1,4 +1,5 @@
 const CACHE_NAME = 'yasnomera-cache-v18';
+const PREVIOUS_CACHE_NAME = 'yasnomera-cache-v17';
 const EXTERNAL_LIBS = [
     'https://cdn.tailwindcss.com',
     'https://cdn.jsdelivr.net/npm/chart.js',
@@ -37,29 +38,39 @@ const INTERNAL_FILES = [
     '/regions.json'
 ];
 
-// Установка Service Worker и кеширование ресурсов
+async function installCache() {
+    const cache = await caches.open(CACHE_NAME);
+    await cache.addAll(INTERNAL_FILES);
+
+    // Preserve existing CDN responses before activation can remove the old cache.
+    const missing = await Promise.all(EXTERNAL_LIBS.map(async (url) => {
+        if (await cache.match(url)) return null;
+        const previous = await caches.match(url, { cacheName: PREVIOUS_CACHE_NAME });
+        if (!previous || (!previous.ok && previous.type !== 'opaque')) return url;
+        await cache.put(url, previous);
+        return null;
+    }));
+
+    // A slow, unavailable or CORS-blocked CDN must not fail installation.
+    await Promise.allSettled(missing.filter(Boolean).map(async (url) => {
+        const response = await fetch(url, { mode: 'cors', signal: AbortSignal.timeout(4000) });
+        if (response.ok) await cache.put(url, response);
+    }));
+
+    await self.skipWaiting();
+}
+
 self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll([...EXTERNAL_LIBS, ...INTERNAL_FILES]);
-        })
-    );
-    self.skipWaiting();
+    event.waitUntil(installCache());
 });
 
 self.addEventListener('activate', (event) => {
-    event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheName !== CACHE_NAME) {
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
-    );
-    self.clients.claim();
+    event.waitUntil((async () => {
+        const cacheNames = await caches.keys();
+        const oldCaches = cacheNames.filter((name) => /^yasnomera-cache-v\d+$/.test(name) && name !== CACHE_NAME);
+        await Promise.all(oldCaches.map((name) => caches.delete(name)));
+        await self.clients.claim();
+    })());
 });
 
 // Стратегия обработки запросов
@@ -71,23 +82,25 @@ self.addEventListener('fetch', (event) => {
         event.respondWith(
             fetch(event.request)
                 .then((response) => {
-                    // Обновляем кеш при успешном ответе
-                    const responseClone = response.clone();
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, responseClone);
-                    });
+                    // Keep the last usable response on HTTP errors and opaque CDN responses.
+                    if (response.ok && event.request.method === 'GET') {
+                        const responseClone = response.clone();
+                        event.waitUntil(caches.open(CACHE_NAME)
+                            .then((cache) => cache.put(event.request, responseClone))
+                            .catch(() => {}));
+                    }
                     return response;
                 })
                 .catch(() => {
                     // Если сети нет — отдаем из кеша
-                    return caches.match(event.request);
+                    return caches.match(event.request, { cacheName: CACHE_NAME });
                 })
         );
     }
     // Для внешних библиотек и прочего — Cache First (Сначала кеш)
     else {
         event.respondWith(
-            caches.match(event.request).then((response) => {
+            caches.match(event.request, { cacheName: CACHE_NAME }).then((response) => {
                 return response || fetch(event.request);
             })
         );
