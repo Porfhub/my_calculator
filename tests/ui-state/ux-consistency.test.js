@@ -75,10 +75,31 @@ test('financial freedom tooltip styles stay inside the mobile viewport', () => {
     assert.match(html, /@media \(max-width: 639px\)[\s\S]*?\.tooltip \.tooltiptext[\s\S]*?position: fixed;[\s\S]*?right: 1rem;[\s\S]*?left: 1rem;/);
 });
 
-test('service worker cache is advanced with the shared export behaviour', () => {
-    assert.match(read('sw.js'), /yasnomera-cache-v17/);
+test('service worker precaches the shared styles and export dependencies', () => {
+    assert.match(read('sw.js'), /yasnomera-cache-v18/);
+    assert.match(read('sw.js'), /'\/css\/design-system\.css'/);
     assert.match(read('sw.js'), /'\/js\/trust-layer\.js'/);
     assert.match(read('sw.js'), /'\/js\/ui-utils\.js'/);
+});
+
+test('the header pilot opts in only the selected calculators and keeps one title in main', () => {
+    const pages = fs.readdirSync(root).filter((file) => file.endsWith('.html'));
+    const pilot = ['inflation-shredder.html', 'financial-freedom.html', 'car-vs-taxi.html'];
+
+    for (const file of pages) {
+        const html = read(file);
+        if (!pilot.includes(file)) {
+            assert.doesNotMatch(html, /design-system\.css/, file);
+            continue;
+        }
+        assert.match(html, /css\/product-polish\.css">\s*<link rel="stylesheet" href="css\/design-system\.css">/, file);
+        const header = html.match(/<div class="yn-scope">\s*<header class="yn-header">([\s\S]*?)<\/header>\s*<\/div>/)?.[1];
+        assert.ok(header, file);
+        assert.match(header, /class="yn-link" href="index\.html#catalog-section"/, file);
+        assert.match(header, /id="theme-toggle"[^>]*onclick="toggleDarkMode\(\)"/, file);
+        assert.equal([...html.matchAll(/<h1\b/g)].length, 1, file);
+        assert.match(html, /<main\b[^>]*>[\s\S]*?<h1\b[\s\S]*?<\/main>/, file);
+    }
 });
 
 test('every product page loads the shared interaction and responsive polish layer', () => {

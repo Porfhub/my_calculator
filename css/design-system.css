@@ -38,9 +38,9 @@
     --yn-focus-ring: 3px solid var(--yn-color-focus);
     --yn-focus-offset: 3px;
     --yn-control-size: max(44px, 2.75rem);
-    --yn-header-size: 4.75rem;
-    --yn-content-width: 73rem;
-    --yn-gutter: clamp(var(--yn-space-lg), 3vw, var(--yn-space-xl));
+    --yn-header-size: clamp(4rem, 6vw, 4.75rem);
+    --yn-content-width: 80rem;
+    --yn-gutter: clamp(var(--yn-space-lg), 3vw, 2rem);
 }
 
 :where(html.dark) .yn-scope {
@@ -95,6 +95,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0 var(--yn-space-lg);
+    margin-inline-start: auto;
 }
 
 :where(.yn-scope) :is(.yn-brand, .yn-link) {
@@ -150,7 +151,6 @@
 
 :where(.yn-scope) .yn-theme-toggle {
     inline-size: var(--yn-control-size);
-    margin-inline-start: auto;
     padding: var(--yn-space-sm);
 }
 

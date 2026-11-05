@@ -1,4 +1,4 @@
-const CACHE_NAME = 'yasnomera-cache-v17';
+const CACHE_NAME = 'yasnomera-cache-v18';
 const EXTERNAL_LIBS = [
     'https://cdn.tailwindcss.com',
     'https://cdn.jsdelivr.net/npm/chart.js',
@@ -22,6 +22,7 @@ const INTERNAL_FILES = [
     '/yasnomera-mark.svg',
     '/js/rent-vs-mortgage-model.js',
     '/css/product-polish.css',
+    '/css/design-system.css',
     '/js/api.js',
     '/js/income-comparison.js',
     '/js/ndfl.js',

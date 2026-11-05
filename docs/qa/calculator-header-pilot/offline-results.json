@@ -1,0 +1,220 @@
+{
+  "native": [
+    {
+      "version": "before",
+      "controlled": false,
+      "caches": [
+        "yasnomera-cache-v17"
+      ],
+      "failed": [
+        [
+          "https://cdn.tailwindcss.com/",
+          "net::ERR_FAILED",
+          true
+        ],
+        [
+          "https://cdn.jsdelivr.net/npm/chart.js",
+          "net::ERR_ABORTED",
+          true
+        ]
+      ],
+      "responses": [
+        [
+          "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+          200,
+          "*"
+        ]
+      ]
+    },
+    {
+      "version": "after",
+      "controlled": false,
+      "caches": [
+        "yasnomera-cache-v18"
+      ],
+      "failed": [
+        [
+          "https://cdn.tailwindcss.com/",
+          "net::ERR_FAILED",
+          true
+        ],
+        [
+          "https://cdn.jsdelivr.net/npm/chart.js",
+          "net::ERR_ABORTED",
+          true
+        ],
+        [
+          "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+          "net::ERR_ABORTED",
+          true
+        ]
+      ],
+      "responses": [
+        [
+          "https://cdn.jsdelivr.net/npm/chart.js",
+          200,
+          "*"
+        ]
+      ]
+    }
+  ],
+  "mirrored": [
+    {
+      "step": "v17 installed",
+      "active": "activated",
+      "controlled": true,
+      "caches": [
+        "yasnomera-cache-v17"
+      ],
+      "css": false
+    },
+    {
+      "step": "v18 upgraded",
+      "active": "activated",
+      "controlled": true,
+      "caches": [
+        "yasnomera-cache-v18"
+      ],
+      "css": true
+    },
+    {
+      "step": "offline first navigation",
+      "name": "inflation-shredder",
+      "responses": {
+        "/inflation-shredder.html": [
+          200,
+          true
+        ],
+        "/css/design-system.css": [
+          200,
+          true
+        ]
+      },
+      "headerHeight": 65,
+      "chart": true,
+      "value": "545 ₽"
+    },
+    {
+      "step": "offline first navigation",
+      "name": "financial-freedom",
+      "responses": {
+        "/financial-freedom.html": [
+          200,
+          true
+        ],
+        "/css/design-system.css": [
+          200,
+          true
+        ]
+      },
+      "headerHeight": 65,
+      "chart": true,
+      "value": "13 мес."
+    },
+    {
+      "step": "offline first navigation",
+      "name": "car-vs-taxi",
+      "responses": {
+        "/car-vs-taxi.html": [
+          200,
+          true
+        ],
+        "/css/design-system.css": [
+          200,
+          true
+        ]
+      },
+      "headerHeight": 65,
+      "chart": false,
+      "value": "19 896 ₽"
+    },
+    {
+      "step": "offline first navigation",
+      "name": "mortgage",
+      "responses": {
+        "/mortgage.html": [
+          200,
+          true
+        ]
+      },
+      "headerHeight": 65,
+      "chart": true,
+      "value": "111 300 ₽"
+    }
+  ],
+  "fresh": [
+    {
+      "step": "v18 clean install",
+      "active": "activated",
+      "controlled": true,
+      "caches": [
+        "yasnomera-cache-v18"
+      ],
+      "css": true
+    },
+    {
+      "step": "offline first navigation",
+      "name": "inflation-shredder",
+      "responses": {
+        "/inflation-shredder.html": [
+          200,
+          true
+        ],
+        "/css/design-system.css": [
+          200,
+          true
+        ]
+      },
+      "headerHeight": 65,
+      "chart": true,
+      "value": "545 ₽"
+    },
+    {
+      "step": "offline first navigation",
+      "name": "financial-freedom",
+      "responses": {
+        "/financial-freedom.html": [
+          200,
+          true
+        ],
+        "/css/design-system.css": [
+          200,
+          true
+        ]
+      },
+      "headerHeight": 65,
+      "chart": true,
+      "value": "13 мес."
+    },
+    {
+      "step": "offline first navigation",
+      "name": "car-vs-taxi",
+      "responses": {
+        "/car-vs-taxi.html": [
+          200,
+          true
+        ],
+        "/css/design-system.css": [
+          200,
+          true
+        ]
+      },
+      "headerHeight": 65,
+      "chart": false,
+      "value": "19 896 ₽"
+    },
+    {
+      "step": "offline first navigation",
+      "name": "mortgage",
+      "responses": {
+        "/mortgage.html": [
+          200,
+          true
+        ]
+      },
+      "headerHeight": 65,
+      "chart": true,
+      "value": "111 300 ₽"
+    }
+  ]
+}

@@ -116,45 +116,40 @@
     <script src="js/ui-utils.js"></script>
     <script src="js/trust-layer.js"></script>
     <link rel="stylesheet" href="css/product-polish.css">
+    <link rel="stylesheet" href="css/design-system.css">
 </head>
 <body class="calculator-page bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
 
-    <!-- Переключатель темной темы -->
-    <div class="product-theme-control fixed top-24 right-4 z-50 md:top-6 md:right-8">
-        <button id="theme-toggle" onclick="toggleDarkMode()" aria-label="Переключить тему" class="p-3 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:scale-110 transition-all active:scale-95">
-            <svg id="sun-icon" class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
-            <svg id="moon-icon" class="w-6 h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
-        </button>
-    </div>
-
-    <!-- Шапка приложения -->
-    <header class="bg-gradient-to-r from-brand-800 to-slate-900 text-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div class="flex items-center space-x-4">
-                <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 group">
-                    <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">Ясномера</span>
+    <div class="yn-scope">
+        <header class="yn-header">
+            <div class="yn-header-inner">
+                <a class="yn-brand" href="index.html">
+                    <img src="yasnomera-mark.svg" alt="" width="32" height="32">
+                    ЯСНОМЕРА
                 </a>
-                <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
-                <div class="flex items-center space-x-3">
-                    <div class="p-2.5 bg-brand-600 rounded-xl shadow-inner">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h1 class="text-2xl font-black tracking-tight flex items-center gap-2">
-                            <span>Покупательная способность</span>
-                            <span class="text-xs font-bold uppercase bg-rose-600 text-white px-2 py-0.5 rounded-md animate-pulse">Инфляция</span>
-                        </h1>
-                        <p class="text-xs text-brand-200">Оценка изменения покупательной способности по официальному годовому ряду</p>
-                    </div>
-                </div>
+                <nav class="yn-header-nav" aria-label="Основная навигация">
+                    <a class="yn-link" href="index.html#catalog-section">Все расчёты</a>
+                </nav>
+                <button id="theme-toggle" class="yn-theme-toggle" type="button" onclick="toggleDarkMode()" aria-label="Переключить тему">
+                    <svg id="sun-icon" class="yn-theme-icon hidden" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
+                    <svg id="moon-icon" class="yn-theme-icon" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+                </button>
+            </div>
+        </header>
+    </div>
+    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <div class="mb-5 flex items-start gap-3 sm:mb-8">
+            <div class="shrink-0 rounded-xl bg-rose-700 p-2.5 text-white">
+                <svg class="h-6 w-6" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+            </div>
+            <div class="min-w-0">
+                <span class="inline-block mb-1 rounded-md bg-rose-700 px-2 py-0.5 text-xs font-bold uppercase text-white">Инфляция</span>
+                <h1 class="text-2xl font-black leading-tight tracking-tight sm:text-3xl">Покупательная способность</h1>
+                <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Оценка изменения покупательной способности по официальному годовому ряду</p>
             </div>
         </div>
-    </header>
-
-    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
 
             <!-- ЛЕВАЯ КОЛОНКА: Ввод параметров -->

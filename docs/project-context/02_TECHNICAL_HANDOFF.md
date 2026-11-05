@@ -8,7 +8,7 @@
 
 [theme.js](../../js/theme.js) и [product-polish.css](../../css/product-polish.css) содержат общие компоненты. Часть страниц использует CDN Tailwind, Chart.js или html2canvas. Главная использует собственный CSS и статический каталог, а новые страницы могут иметь локальные компоненты. [manifest](../../manifest.webmanifest) и [service worker](../../sw.js) определяют PWA. Для HTML применяется network-first, политика данных и список precache находятся в самом SW. Browser QA с отключённым SW и локальными CDN-ресурсами не заменяет production smoke и отдельную проверку офлайн.
 
-[Дизайн-система](../design-system/README.md) поставляется отдельным [CSS](../../css/design-system.css). Токены наследуются внутри `.yn-scope`, компоненты требуют явных классов `yn-*`. Графитовые токены используют существующий `html.dark`. Первый этап не подключает CSS в HTML или service worker. Политику кеширования этого ресурса нужно проверить при первом подключении.
+[Дизайн-система](../design-system/README.md) поставляется отдельным [CSS](../../css/design-system.css). Токены наследуются внутри `.yn-scope`, компоненты требуют явных классов `yn-*`. Графитовые токены используют существующий `html.dark`. Пилот подключает CSS после `product-polish.css` в трёх HTML. Версия SW v18 добавляет CSS к существующему precache и network-first для внутренних файлов. Установка зависит от доступности всех записей `addAll`, включая Tailwind CDN. [QA чистой установки и обновления кеша](../qa/calculator-header-pilot/README.md)
 
 ## Финансовые данные
 

@@ -67,7 +67,3 @@ test('genetic wealth clears every result card and the supported stage chart on n
     assert.match(html, /element\.hidden\s*=\s*!hasResult/);
     assert.match(html, /state\.avgInflation\s*=\s*externalDataReady\s*\?\s*averageInflation\s*:\s*null/);
 });
-
-test('service worker cache is advanced for the shared runtime update', () => {
-    assert.match(read('sw.js'), /yasnomera-cache-v17/);
-});
