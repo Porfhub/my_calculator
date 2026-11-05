@@ -51,6 +51,7 @@ if (timeUrlIsClean) {
 <script src="js/ui-utils.js"></script>
 <script src="js/trust-layer.js"></script>
 <link rel="stylesheet" href="css/product-polish.css">
+<link rel="stylesheet" href="css/design-system.css">
 <style>
 :root {
     color-scheme: light;
@@ -88,17 +89,11 @@ html.dark {
 [hidden], .hidden { display: none !important; }
 .time-page { margin: 0; color: var(--time-ink); background: var(--time-bg); font: 16px/1.5 system-ui, sans-serif; }
 .time-page h1, .time-page h2, .time-page p, .time-page dl, .time-page dd { margin: 0; }
-.time-page a { color: var(--time-accent); }
+.time-page a:not(:where(.yn-scope *)) { color: var(--time-accent); }
 .time-page :is(a, button, input, summary, [tabindex]):focus-visible { outline: 3px solid var(--time-focus); outline-offset: 3px; }
 .time-page input:focus-visible { border-color: var(--time-focus) !important; box-shadow: none !important; }
 .time-wrap { width: min(100%, 1168px); margin-inline: auto; padding-inline: 16px; }
-.time-header { background: var(--time-surface); border-bottom: 1px solid var(--time-line); }
-.time-nav { display: flex; justify-content: space-between; align-items: center; min-height: 62px; gap: 12px; }
-.time-page .time-brand { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; color: var(--time-ink); font-size: 22px; font-weight: 800; letter-spacing: -.03em; text-decoration: none; }
-.time-brand img { width: 33px; height: 33px; }
 .time-page button { font: inherit; cursor: pointer; }
-.time-page #theme-toggle { width: 44px; height: 44px; display: grid; place-items: center; padding: 0; color: var(--time-ink); background: var(--time-input); border: 1px solid var(--time-line); border-radius: 10px; }
-#theme-toggle svg { width: 21px; height: 21px; }
 .time-intro { padding-block: 21px 18px; }
 .time-intro .time-eyebrow, .time-result .time-eyebrow { color: var(--time-accent); font-size: 14px; font-weight: 700; }
 .time-intro h1 { max-width: 780px; margin-block: 4px 6px; font-size: clamp(28px, 5vw, 44px); line-height: 1.1; letter-spacing: -.038em; }
@@ -202,15 +197,23 @@ html.dark {
 </head>
 <body class="time-page">
 <noscript><img src="https://mc.yandex.ru/watch/110360838" referrerpolicy="no-referrer" hidden alt=""></noscript>
-<header class="time-header">
-    <div class="time-wrap time-nav">
-        <a href="index.html" aria-label="На главную Ясномеры" class="time-brand"><img src="yasnomera-mark.svg" alt="" width="33" height="33">Ясномера</a>
-        <button id="theme-toggle" type="button" onclick="toggleDarkMode()" aria-label="Переключить тему">
-            <svg id="sun-icon" class="hidden" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/><circle cx="12" cy="12" r="4"/></svg>
-            <svg id="moon-icon" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linejoin="round" d="M20.9 14.7A9 9 0 0 1 9.3 3.1 9 9 0 1 0 20.9 14.7Z"/></svg>
-        </button>
-    </div>
-</header>
+<div class="yn-scope">
+    <header class="yn-header">
+        <div class="yn-header-inner">
+            <a class="yn-brand" href="index.html">
+                <img src="yasnomera-mark.svg" alt="" width="32" height="32">
+                ЯСНОМЕРА
+            </a>
+            <nav class="yn-header-nav" aria-label="Основная навигация">
+                <a class="yn-link" href="index.html#catalog-section">Все расчёты</a>
+            </nav>
+            <button id="theme-toggle" class="yn-theme-toggle" type="button" onclick="toggleDarkMode()" aria-label="Переключить тему">
+                <svg id="sun-icon" class="yn-theme-icon hidden" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
+                <svg id="moon-icon" class="yn-theme-icon" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+            </button>
+        </div>
+    </header>
+</div>
 <main class="time-wrap">
     <section class="time-intro">
         <p class="time-eyebrow">Калькулятор «Цена времени»</p>

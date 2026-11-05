@@ -82,21 +82,38 @@ test('service worker precaches the shared styles and export dependencies', () =>
     assert.match(read('sw.js'), /'\/js\/ui-utils\.js'/);
 });
 
-test('the header pilot opts in only the selected calculators and keeps one title in main', () => {
+test('the shared calculator header leaves the homepage and mortgage out and keeps one title in main', () => {
     const pages = fs.readdirSync(root).filter((file) => file.endsWith('.html'));
-    const pilot = ['inflation-shredder.html', 'financial-freedom.html', 'car-vs-taxi.html'];
+    const sharedHeader = [
+        'inflation-shredder.html', 'financial-freedom.html', 'car-vs-taxi.html',
+        'rent-vs-mortgage.html', 'time-is-money.html', 'honest-credit.html',
+        'millionaire.html', 'genetic-wealth.html', 'wealth.html'
+    ];
+    const listenerPages = ['honest-credit.html', 'millionaire.html'];
 
     for (const file of pages) {
         const html = read(file);
-        if (!pilot.includes(file)) {
+        if (!sharedHeader.includes(file)) {
             assert.doesNotMatch(html, /design-system\.css/, file);
             continue;
         }
         assert.match(html, /css\/product-polish\.css">\s*<link rel="stylesheet" href="css\/design-system\.css">/, file);
         const header = html.match(/<div class="yn-scope">\s*<header class="yn-header">([\s\S]*?)<\/header>\s*<\/div>/)?.[1];
         assert.ok(header, file);
-        assert.match(header, /class="yn-link" href="index\.html#catalog-section"/, file);
-        assert.match(header, /id="theme-toggle"[^>]*onclick="toggleDarkMode\(\)"/, file);
+        assert.match(header, /class="yn-brand" href="index\.html">\s*<img src="yasnomera-mark\.svg"[^>]*>\s*ЯСНОМЕРА/, file);
+        assert.match(header, /class="yn-link" href="index\.html#catalog-section">Все расчёты<\/a>/, file);
+        assert.equal([...html.matchAll(/id="theme-toggle"/g)].length, 1, file);
+        const button = header.match(/<button\b[^>]*id="theme-toggle"[^>]*>/)?.[0];
+        assert.ok(button, file);
+        assert.match(button, /class="yn-theme-toggle"/, file);
+        assert.match(button, /type="button"/, file);
+        if (listenerPages.includes(file)) {
+            assert.doesNotMatch(button, /onclick=/, file);
+            assert.match(button, /aria-pressed="false"/, file);
+            assert.match(html, /(?:themeButton|byId\('theme-toggle'\))\.addEventListener\('click', \(\) => \{\s*toggleDarkMode\(\);/, file);
+        } else {
+            assert.match(button, /onclick="toggleDarkMode\(\)"/, file);
+        }
         assert.equal([...html.matchAll(/<h1\b/g)].length, 1, file);
         assert.match(html, /<main\b[^>]*>[\s\S]*?<h1\b[\s\S]*?<\/main>/, file);
     }

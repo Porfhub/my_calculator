@@ -32,6 +32,7 @@
     </script>
     <!-- Tailwind CSS CDN -->
     <link rel="stylesheet" href="css/product-polish.css">
+    <link rel="stylesheet" href="css/design-system.css">
     <script src="js/theme.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/calculator-state.js"></script>
@@ -90,18 +91,8 @@
             font: 1rem/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
         }
         .goal-page :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
-        .goal-page a { color: var(--accent); }
+        .goal-page a:not(:where(.yn-scope *)) { color: var(--accent); }
         .goal-shell { width: min(100% - 32px, 1080px); margin-inline: auto; }
-        .goal-top { background: var(--panel); border-bottom: 1px solid var(--line); }
-        .goal-nav { min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-        .goal-page .goal-brand {
-            display: inline-flex; align-items: center; gap: 9px; min-height: 44px; color: var(--text);
-            font-size: 1.22rem; font-weight: 850; letter-spacing: -.035em; text-decoration: none;
-        }
-        .goal-brand img { width: 28px; height: 28px; }
-        .goal-button.goal-theme { display: grid; place-items: center; width: 44px; padding: 0; }
-        .goal-theme svg { width: 21px; height: 21px; }
-        .goal-theme .hidden { display: none; }
         .goal-intro { padding-block: clamp(19px, 4vw, 46px) 18px; }
         .goal-kicker { margin: 0 0 5px; color: var(--accent); font-size: .82rem; font-weight: 750; letter-spacing: .045em; text-transform: uppercase; }
         .goal-intro h1 { margin: 0; font-size: clamp(1.75rem, 5vw, 3rem); line-height: 1.12; letter-spacing: -.035em; text-wrap: balance; }
@@ -188,15 +179,23 @@
     </style>
 </head>
 <body class="goal-page">
-    <header class="goal-top">
-        <nav class="goal-shell goal-nav" aria-label="Навигация">
-            <a class="goal-brand" href="index.html"><img src="yasnomera-mark.svg" alt="">ЯСНОМЕРА</a>
-            <button id="theme-toggle" class="goal-button goal-theme" type="button" aria-label="Переключить тему" aria-pressed="false">
-                <svg id="sun-icon" class="hidden" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>
-                <svg id="moon-icon" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14A9 9 0 0 1 10 3.5 9 9 0 1 0 20.5 14Z"/></svg>
-            </button>
-        </nav>
-    </header>
+    <div class="yn-scope">
+        <header class="yn-header">
+            <div class="yn-header-inner">
+                <a class="yn-brand" href="index.html">
+                    <img src="yasnomera-mark.svg" alt="" width="32" height="32">
+                    ЯСНОМЕРА
+                </a>
+                <nav class="yn-header-nav" aria-label="Основная навигация">
+                    <a class="yn-link" href="index.html#catalog-section">Все расчёты</a>
+                </nav>
+                <button id="theme-toggle" class="yn-theme-toggle" type="button" aria-label="Переключить тему" aria-pressed="false">
+                    <svg id="sun-icon" class="yn-theme-icon hidden" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
+                    <svg id="moon-icon" class="yn-theme-icon" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+                </button>
+            </div>
+        </header>
+    </div>
     <main class="goal-shell">
         <div class="goal-intro">
             <p class="goal-kicker">Финансовая цель</p>
