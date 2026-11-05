@@ -137,6 +137,7 @@ jobs:
           cat > "$EXPECTED_FILES" <<'EOF'
           assets/yasnomera-og.png
           car-vs-taxi.html
+          css/design-system.css
           css/product-polish.css
           financial-freedom.html
           genetic-wealth.html
@@ -175,8 +176,8 @@ jobs:
           find "$DEPLOY_DIR" -type f -printf '%P\n' | LC_ALL=C sort > "$ACTUAL_FILES"
           diff -u "$EXPECTED_FILES" "$ACTUAL_FILES"
 
-          if [[ "$(wc -l < "$ACTUAL_FILES")" -ne 35 ]]; then
-            echo "Expected exactly 35 deploy files" >&2
+          if [[ "$(wc -l < "$ACTUAL_FILES")" -ne 36 ]]; then
+            echo "Expected exactly 36 deploy files" >&2
             exit 1
           fi
 
@@ -216,7 +217,7 @@ jobs:
             fi
           done
 
-          echo "Verified 35-file deploy payload from main commit $(git rev-parse HEAD)"
+          echo "Verified 36-file deploy payload from main commit $(git rev-parse HEAD)"
 
       - name: Verify AWS CLI
         shell: bash
@@ -255,6 +256,7 @@ jobs:
             /mortgage.html
             /rent-vs-mortgage.html
             /time-is-money.html
+            /css/design-system.css
             /sw.js
             /rates.json
           )

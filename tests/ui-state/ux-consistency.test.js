@@ -105,6 +105,12 @@ test('every product page loads the shared interaction and responsive polish laye
     assert.match(read('sw.js'), /'\/css\/product-polish\.css'/);
 });
 
+test('the protected mortgage reference stays outside the design system', () => {
+    const mortgage = read('mortgage.html');
+    assert.doesNotMatch(mortgage, /design-system\.css/);
+    assert.doesNotMatch(mortgage, /\sclass\s*=\s*["'](?:[^"']*\s)?yn-[\w-]+/);
+});
+
 test('state-managed calculators keep fixed mobile results hidden until a valid result exists', () => {
     const stateMachine = read('js/calculator-state.js');
     const polish = read('css/product-polish.css');
