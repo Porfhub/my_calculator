@@ -1,0 +1,550 @@
+{
+  "browser": "156.0.8078.48",
+  "reference": "22f032171928b9f160608449df82c8b7b3f2c64c",
+  "pages": [
+    {
+      "page": "car-vs-taxi",
+      "width": 320,
+      "theme": "dark",
+      "scrollWidthBefore": 320,
+      "scrollWidthAfter": 320,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "19 896 ₽",
+      "mobileResultVisible": true,
+      "chart": false
+    },
+    {
+      "page": "car-vs-taxi",
+      "width": 320,
+      "theme": "light",
+      "scrollWidthBefore": 320,
+      "scrollWidthAfter": 320,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "19 896 ₽",
+      "mobileResultVisible": true,
+      "chart": false
+    },
+    {
+      "page": "car-vs-taxi",
+      "width": 375,
+      "theme": "dark",
+      "scrollWidthBefore": 375,
+      "scrollWidthAfter": 375,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "19 896 ₽",
+      "mobileResultVisible": true,
+      "chart": false
+    },
+    {
+      "page": "car-vs-taxi",
+      "width": 375,
+      "theme": "light",
+      "scrollWidthBefore": 375,
+      "scrollWidthAfter": 375,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "19 896 ₽",
+      "mobileResultVisible": true,
+      "chart": false
+    },
+    {
+      "page": "car-vs-taxi",
+      "width": 390,
+      "theme": "dark",
+      "scrollWidthBefore": 390,
+      "scrollWidthAfter": 390,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "19 896 ₽",
+      "mobileResultVisible": true,
+      "chart": false
+    },
+    {
+      "page": "car-vs-taxi",
+      "width": 390,
+      "theme": "light",
+      "scrollWidthBefore": 390,
+      "scrollWidthAfter": 390,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "19 896 ₽",
+      "mobileResultVisible": true,
+      "chart": false
+    },
+    {
+      "page": "car-vs-taxi",
+      "width": 1366,
+      "theme": "dark",
+      "scrollWidthBefore": 1366,
+      "scrollWidthAfter": 1366,
+      "headerHeight": 77,
+      "singleH1InMain": true,
+      "defaultResult": "19 896 ₽",
+      "mobileResultVisible": false,
+      "chart": false
+    },
+    {
+      "page": "car-vs-taxi",
+      "width": 1366,
+      "theme": "light",
+      "scrollWidthBefore": 1366,
+      "scrollWidthAfter": 1366,
+      "headerHeight": 77,
+      "singleH1InMain": true,
+      "defaultResult": "19 896 ₽",
+      "mobileResultVisible": false,
+      "chart": false
+    },
+    {
+      "page": "financial-freedom",
+      "width": 320,
+      "theme": "dark",
+      "scrollWidthBefore": 320,
+      "scrollWidthAfter": 320,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "13 мес.",
+      "mobileResultVisible": true,
+      "chart": true
+    },
+    {
+      "page": "financial-freedom",
+      "width": 320,
+      "theme": "light",
+      "scrollWidthBefore": 320,
+      "scrollWidthAfter": 320,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "13 мес.",
+      "mobileResultVisible": true,
+      "chart": true
+    },
+    {
+      "page": "financial-freedom",
+      "width": 375,
+      "theme": "dark",
+      "scrollWidthBefore": 375,
+      "scrollWidthAfter": 375,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "13 мес.",
+      "mobileResultVisible": true,
+      "chart": true
+    },
+    {
+      "page": "financial-freedom",
+      "width": 375,
+      "theme": "light",
+      "scrollWidthBefore": 375,
+      "scrollWidthAfter": 375,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "13 мес.",
+      "mobileResultVisible": true,
+      "chart": true
+    },
+    {
+      "page": "financial-freedom",
+      "width": 390,
+      "theme": "dark",
+      "scrollWidthBefore": 390,
+      "scrollWidthAfter": 390,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "13 мес.",
+      "mobileResultVisible": true,
+      "chart": true
+    },
+    {
+      "page": "financial-freedom",
+      "width": 390,
+      "theme": "light",
+      "scrollWidthBefore": 390,
+      "scrollWidthAfter": 390,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "13 мес.",
+      "mobileResultVisible": true,
+      "chart": true
+    },
+    {
+      "page": "financial-freedom",
+      "width": 1366,
+      "theme": "dark",
+      "scrollWidthBefore": 1366,
+      "scrollWidthAfter": 1366,
+      "headerHeight": 77,
+      "singleH1InMain": true,
+      "defaultResult": "13 мес.",
+      "mobileResultVisible": false,
+      "chart": true
+    },
+    {
+      "page": "financial-freedom",
+      "width": 1366,
+      "theme": "light",
+      "scrollWidthBefore": 1366,
+      "scrollWidthAfter": 1366,
+      "headerHeight": 77,
+      "singleH1InMain": true,
+      "defaultResult": "13 мес.",
+      "mobileResultVisible": false,
+      "chart": true
+    },
+    {
+      "page": "inflation-shredder",
+      "width": 320,
+      "theme": "dark",
+      "scrollWidthBefore": 372,
+      "scrollWidthAfter": 320,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "545 ₽",
+      "mobileResultVisible": true,
+      "chart": true,
+      "themeButtonOverlapsBadgeBefore": true,
+      "badgeAboveHeadingAfter": true
+    },
+    {
+      "page": "inflation-shredder",
+      "width": 320,
+      "theme": "light",
+      "scrollWidthBefore": 372,
+      "scrollWidthAfter": 320,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "545 ₽",
+      "mobileResultVisible": true,
+      "chart": true,
+      "themeButtonOverlapsBadgeBefore": true,
+      "badgeAboveHeadingAfter": true
+    },
+    {
+      "page": "inflation-shredder",
+      "width": 375,
+      "theme": "dark",
+      "scrollWidthBefore": 375,
+      "scrollWidthAfter": 375,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "545 ₽",
+      "mobileResultVisible": true,
+      "chart": true,
+      "themeButtonOverlapsBadgeBefore": true,
+      "badgeAboveHeadingAfter": true
+    },
+    {
+      "page": "inflation-shredder",
+      "width": 375,
+      "theme": "light",
+      "scrollWidthBefore": 375,
+      "scrollWidthAfter": 375,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "545 ₽",
+      "mobileResultVisible": true,
+      "chart": true,
+      "themeButtonOverlapsBadgeBefore": true,
+      "badgeAboveHeadingAfter": true
+    },
+    {
+      "page": "inflation-shredder",
+      "width": 390,
+      "theme": "dark",
+      "scrollWidthBefore": 390,
+      "scrollWidthAfter": 390,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "545 ₽",
+      "mobileResultVisible": true,
+      "chart": true,
+      "themeButtonOverlapsBadgeBefore": true,
+      "badgeAboveHeadingAfter": true
+    },
+    {
+      "page": "inflation-shredder",
+      "width": 390,
+      "theme": "light",
+      "scrollWidthBefore": 390,
+      "scrollWidthAfter": 390,
+      "headerHeight": 65,
+      "singleH1InMain": true,
+      "defaultResult": "545 ₽",
+      "mobileResultVisible": true,
+      "chart": true,
+      "themeButtonOverlapsBadgeBefore": true,
+      "badgeAboveHeadingAfter": true
+    },
+    {
+      "page": "inflation-shredder",
+      "width": 1366,
+      "theme": "dark",
+      "scrollWidthBefore": 1366,
+      "scrollWidthAfter": 1366,
+      "headerHeight": 77,
+      "singleH1InMain": true,
+      "defaultResult": "545 ₽",
+      "mobileResultVisible": false,
+      "chart": true,
+      "themeButtonOverlapsBadgeBefore": false,
+      "badgeAboveHeadingAfter": true
+    },
+    {
+      "page": "inflation-shredder",
+      "width": 1366,
+      "theme": "light",
+      "scrollWidthBefore": 1366,
+      "scrollWidthAfter": 1366,
+      "headerHeight": 77,
+      "singleH1InMain": true,
+      "defaultResult": "545 ₽",
+      "mobileResultVisible": false,
+      "chart": true,
+      "themeButtonOverlapsBadgeBefore": false,
+      "badgeAboveHeadingAfter": true
+    }
+  ],
+  "flows": [
+    {
+      "name": "inflation-shredder",
+      "version": "before",
+      "width": 1366,
+      "theme": "light",
+      "before": "545 ₽",
+      "after": "1 090 ₽",
+      "png": [
+        "yasnomera-inflation-report.png",
+        1472,
+        2042
+      ],
+      "mobileShare": false
+    },
+    {
+      "name": "inflation-shredder",
+      "version": "after",
+      "width": 1366,
+      "theme": "light",
+      "before": "545 ₽",
+      "after": "1 090 ₽",
+      "png": [
+        "yasnomera-inflation-report.png",
+        1472,
+        2042
+      ],
+      "mobileShare": false
+    },
+    {
+      "name": "inflation-shredder",
+      "version": "before",
+      "width": 390,
+      "theme": "dark",
+      "before": "545 ₽",
+      "after": "1 090 ₽",
+      "png": [
+        "yasnomera-inflation-report.png",
+        788,
+        2560
+      ],
+      "mobileShare": true
+    },
+    {
+      "name": "inflation-shredder",
+      "version": "after",
+      "width": 390,
+      "theme": "dark",
+      "before": "545 ₽",
+      "after": "1 090 ₽",
+      "png": [
+        "yasnomera-inflation-report.png",
+        788,
+        2560
+      ],
+      "mobileShare": true
+    },
+    {
+      "name": "financial-freedom",
+      "version": "before",
+      "width": 1366,
+      "theme": "light",
+      "before": "13 мес.",
+      "after": "27 мес.",
+      "png": [
+        "yasnomera-financial-freedom.png",
+        1456,
+        2200
+      ],
+      "mobileShare": false
+    },
+    {
+      "name": "financial-freedom",
+      "version": "after",
+      "width": 1366,
+      "theme": "light",
+      "before": "13 мес.",
+      "after": "27 мес.",
+      "png": [
+        "yasnomera-financial-freedom.png",
+        1456,
+        2200
+      ],
+      "mobileShare": false
+    },
+    {
+      "name": "financial-freedom",
+      "version": "before",
+      "width": 390,
+      "theme": "dark",
+      "before": "13 мес.",
+      "after": "27 мес.",
+      "png": [
+        "yasnomera-financial-freedom.png",
+        780,
+        2372
+      ],
+      "mobileShare": true
+    },
+    {
+      "name": "financial-freedom",
+      "version": "after",
+      "width": 390,
+      "theme": "dark",
+      "before": "13 мес.",
+      "after": "27 мес.",
+      "png": [
+        "yasnomera-financial-freedom.png",
+        780,
+        2372
+      ],
+      "mobileShare": true
+    },
+    {
+      "name": "car-vs-taxi",
+      "version": "before",
+      "width": 1366,
+      "theme": "light",
+      "before": "19 896 ₽",
+      "after": "6 375 ₽",
+      "png": [
+        "yasnomera-car-vs-taxi.png",
+        976,
+        1852
+      ],
+      "mobileShare": false
+    },
+    {
+      "name": "car-vs-taxi",
+      "version": "after",
+      "width": 1366,
+      "theme": "light",
+      "before": "19 896 ₽",
+      "after": "6 375 ₽",
+      "png": [
+        "yasnomera-car-vs-taxi.png",
+        976,
+        1852
+      ],
+      "mobileShare": false
+    },
+    {
+      "name": "car-vs-taxi",
+      "version": "before",
+      "width": 390,
+      "theme": "dark",
+      "before": "19 896 ₽",
+      "after": "6 375 ₽",
+      "png": "desktop only",
+      "mobileShare": true
+    },
+    {
+      "name": "car-vs-taxi",
+      "version": "after",
+      "width": 390,
+      "theme": "dark",
+      "before": "19 896 ₽",
+      "after": "6 375 ₽",
+      "png": "desktop only",
+      "mobileShare": true
+    },
+    {
+      "name": "mortgage",
+      "version": "before",
+      "width": 1366,
+      "theme": "light",
+      "before": "111 300 ₽",
+      "after": "117 496 ₽",
+      "png": [
+        "yasnomera-mortgage-calculation.png",
+        1200,
+        1710
+      ],
+      "mobileShare": false
+    },
+    {
+      "name": "mortgage",
+      "version": "after",
+      "width": 1366,
+      "theme": "light",
+      "before": "111 300 ₽",
+      "after": "117 496 ₽",
+      "png": [
+        "yasnomera-mortgage-calculation.png",
+        1200,
+        1710
+      ],
+      "mobileShare": false
+    },
+    {
+      "name": "mortgage",
+      "version": "before",
+      "width": 390,
+      "theme": "dark",
+      "before": "111 300 ₽",
+      "after": "117 496 ₽",
+      "png": [
+        "yasnomera-mortgage-calculation.png",
+        1200,
+        1710
+      ],
+      "mobileShare": false
+    },
+    {
+      "name": "mortgage",
+      "version": "after",
+      "width": 390,
+      "theme": "dark",
+      "before": "111 300 ₽",
+      "after": "117 496 ₽",
+      "png": [
+        "yasnomera-mortgage-calculation.png",
+        1200,
+        1710
+      ],
+      "mobileShare": false
+    }
+  ],
+  "mortgageScreenshots": [
+    {
+      "width": 390,
+      "theme": "dark",
+      "sha256": "b2f3c2e95d9ad4780d88caeecdfa48276b1a847c579ddd225607f83d241b3758"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "sha256": "7fb79a4dca6bd07318d7164ea703b1b29c8a695f3b5b3989d600fd9d8295bf54"
+    },
+    {
+      "width": 1366,
+      "theme": "dark",
+      "sha256": "855ba3b614569e0a1a2941105a3d1a5660d980a2487c01e8a6fc397c742ea57e"
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "sha256": "62b4c0ffd252e948057ab2f15f4331fd883459c387fb77000da145cde6defc23"
+    }
+  ]
+}

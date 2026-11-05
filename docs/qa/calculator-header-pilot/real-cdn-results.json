@@ -1,0 +1,1157 @@
+{
+  "chrome": "156.0.8078.48",
+  "unmodifiedV17": {
+    "state": {
+      "names": [
+        "yasnomera-cache-v17"
+      ],
+      "active": null,
+      "installing": null,
+      "controlled": false,
+      "local": [],
+      "libraries": {
+        "https://cdn.tailwindcss.com/": null,
+        "https://cdn.jsdelivr.net/npm/chart.js": null,
+        "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": null
+      }
+    },
+    "cdn": [
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "failure": "net::ERR_FAILED",
+        "worker": true
+      },
+      {
+        "url": "https://cdn.jsdelivr.net/npm/chart.js",
+        "failure": "net::ERR_ABORTED",
+        "worker": true
+      },
+      {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+        "failure": "net::ERR_ABORTED",
+        "worker": true
+      }
+    ]
+  },
+  "clean": {
+    "state": {
+      "names": [
+        "yasnomera-cache-v18"
+      ],
+      "active": "activated",
+      "installing": null,
+      "controlled": true,
+      "local": [
+        "/",
+        "/car-vs-taxi.html",
+        "/css/design-system.css",
+        "/css/product-polish.css",
+        "/financial-freedom.html",
+        "/genetic-wealth.html",
+        "/honest-credit.html",
+        "/index.html",
+        "/inflation-shredder.html",
+        "/inflation.json",
+        "/js/api.js",
+        "/js/calculator-state.js",
+        "/js/income-comparison.js",
+        "/js/inflation-calculator.js",
+        "/js/ndfl.js",
+        "/js/rent-vs-mortgage-model.js",
+        "/js/theme.js",
+        "/js/trust-layer.js",
+        "/js/ui-utils.js",
+        "/js/utils.js",
+        "/manifest.webmanifest",
+        "/millionaire.html",
+        "/mortgage.html",
+        "/rates.json",
+        "/regions.json",
+        "/rent-vs-mortgage.html",
+        "/time-is-money.html",
+        "/wealth.html",
+        "/yasnomera-mark.svg"
+      ],
+      "libraries": {
+        "https://cdn.tailwindcss.com/": null,
+        "https://cdn.jsdelivr.net/npm/chart.js": {
+          "type": "cors",
+          "status": 200
+        },
+        "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+          "type": "cors",
+          "status": 200
+        }
+      }
+    },
+    "cdn": [
+      {
+        "url": "https://cdn.jsdelivr.net/npm/chart.js",
+        "http": 200,
+        "worker": true,
+        "fromServiceWorker": false,
+        "cors": "*"
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "failure": "net::ERR_FAILED",
+        "worker": true
+      },
+      {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+        "http": 200,
+        "worker": true,
+        "fromServiceWorker": false,
+        "cors": "*"
+      },
+      {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": null
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "failure": "net::ERR_INTERNET_DISCONNECTED",
+        "worker": true
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "failure": "net::ERR_FAILED",
+        "worker": false
+      },
+      {
+        "url": "https://cdn.jsdelivr.net/npm/chart.js",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": "*"
+      },
+      {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": null
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "failure": "net::ERR_INTERNET_DISCONNECTED",
+        "worker": true
+      },
+      {
+        "url": "https://cdn.jsdelivr.net/npm/chart.js",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": "*"
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "failure": "net::ERR_FAILED",
+        "worker": false
+      },
+      {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": null
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "failure": "net::ERR_INTERNET_DISCONNECTED",
+        "worker": true
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "failure": "net::ERR_FAILED",
+        "worker": false
+      },
+      {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": null
+      },
+      {
+        "url": "https://cdn.jsdelivr.net/npm/chart.js",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": "*"
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "failure": "net::ERR_INTERNET_DISCONNECTED",
+        "worker": true
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "failure": "net::ERR_FAILED",
+        "worker": false
+      },
+      {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": null
+      },
+      {
+        "url": "https://cdn.jsdelivr.net/npm/chart.js",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": "*"
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "http": 302,
+        "worker": true,
+        "fromServiceWorker": false,
+        "cors": null
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/3.4.17",
+        "http": 200,
+        "worker": true,
+        "fromServiceWorker": false,
+        "cors": null
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": null
+      },
+      {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": null
+      },
+      {
+        "url": "https://cdn.jsdelivr.net/npm/chart.js",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": "*"
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "http": 302,
+        "worker": true,
+        "fromServiceWorker": false,
+        "cors": null
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/3.4.17",
+        "http": 200,
+        "worker": true,
+        "fromServiceWorker": false,
+        "cors": null
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": null
+      },
+      {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": null
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "http": 302,
+        "worker": true,
+        "fromServiceWorker": false,
+        "cors": null
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/3.4.17",
+        "http": 200,
+        "worker": true,
+        "fromServiceWorker": false,
+        "cors": null
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": null
+      },
+      {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": null
+      },
+      {
+        "url": "https://cdn.jsdelivr.net/npm/chart.js",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": "*"
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "http": 302,
+        "worker": true,
+        "fromServiceWorker": false,
+        "cors": null
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/3.4.17",
+        "http": 200,
+        "worker": true,
+        "fromServiceWorker": false,
+        "cors": null
+      },
+      {
+        "url": "https://cdn.tailwindcss.com/",
+        "http": 200,
+        "worker": false,
+        "fromServiceWorker": true,
+        "cors": null
+      }
+    ],
+    "offline": [
+      {
+        "name": "inflation-shredder",
+        "metrics": {
+          "result": "545 ₽",
+          "state": "READY",
+          "tailwind": false,
+          "chart": true,
+          "exportRenderer": true,
+          "headerHeight": 65,
+          "hasPilotCss": true,
+          "h1": "Покупательная способность",
+          "width": 390,
+          "scrollWidth": 414,
+          "activeTheme": "dark",
+          "chartRendered": true,
+          "layoutStyle": "none"
+        },
+        "responses": {
+          "/inflation-shredder.html": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdn.jsdelivr.net/npm/chart.js": {
+            "status": 200,
+            "worker": true
+          },
+          "/css/design-system.css": {
+            "status": 200,
+            "worker": true
+          }
+        },
+        "errors": [
+          "tailwind is not defined"
+        ],
+        "networkHeader": "local server",
+        "themeToggled": "light"
+      },
+      {
+        "name": "financial-freedom",
+        "metrics": {
+          "result": "13 мес.",
+          "state": "READY",
+          "tailwind": false,
+          "chart": true,
+          "exportRenderer": true,
+          "headerHeight": 65,
+          "hasPilotCss": true,
+          "h1": "Таймер свободы",
+          "width": 390,
+          "scrollWidth": 414,
+          "activeTheme": "light",
+          "chartRendered": true,
+          "layoutStyle": "none"
+        },
+        "responses": {
+          "/financial-freedom.html": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdn.jsdelivr.net/npm/chart.js": {
+            "status": 200,
+            "worker": true
+          },
+          "/css/design-system.css": {
+            "status": 200,
+            "worker": true
+          }
+        },
+        "errors": [
+          "tailwind is not defined"
+        ],
+        "networkHeader": "local server",
+        "themeToggled": "dark"
+      },
+      {
+        "name": "car-vs-taxi",
+        "metrics": {
+          "result": "19 896 ₽",
+          "state": null,
+          "tailwind": false,
+          "chart": false,
+          "exportRenderer": true,
+          "headerHeight": 65,
+          "hasPilotCss": true,
+          "h1": "Машина или такси",
+          "width": 390,
+          "scrollWidth": 414,
+          "activeTheme": "dark",
+          "chartRendered": false,
+          "layoutStyle": "none"
+        },
+        "responses": {
+          "/car-vs-taxi.html": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+            "status": 200,
+            "worker": true
+          },
+          "/css/design-system.css": {
+            "status": 200,
+            "worker": true
+          }
+        },
+        "errors": [
+          "tailwind is not defined"
+        ],
+        "networkHeader": "local server",
+        "themeToggled": "light"
+      },
+      {
+        "name": "mortgage",
+        "metrics": {
+          "result": "111 300 ₽",
+          "state": "READY",
+          "tailwind": false,
+          "chart": true,
+          "exportRenderer": true,
+          "headerHeight": 85,
+          "hasPilotCss": false,
+          "h1": "Ипотечный калькулятор",
+          "width": 390,
+          "scrollWidth": 414,
+          "activeTheme": "light",
+          "chartRendered": true,
+          "layoutStyle": "1248px"
+        },
+        "responses": {
+          "/mortgage.html": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdn.jsdelivr.net/npm/chart.js": {
+            "status": 200,
+            "worker": true
+          }
+        },
+        "errors": [
+          "tailwind is not defined"
+        ],
+        "networkHeader": "local server"
+      }
+    ],
+    "online": [
+      {
+        "name": "inflation-shredder",
+        "metrics": {
+          "result": "545 ₽",
+          "state": "READY",
+          "tailwind": true,
+          "chart": true,
+          "exportRenderer": true,
+          "headerHeight": 65,
+          "hasPilotCss": true,
+          "h1": "Покупательная способность",
+          "width": 390,
+          "scrollWidth": 390,
+          "activeTheme": "light",
+          "chartRendered": true,
+          "layoutStyle": "1280px"
+        },
+        "responses": {
+          "/inflation-shredder.html": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdn.jsdelivr.net/npm/chart.js": {
+            "status": 200,
+            "worker": true
+          },
+          "/css/design-system.css": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdn.tailwindcss.com/": {
+            "status": 200,
+            "worker": true
+          }
+        },
+        "errors": [],
+        "networkHeader": "local server"
+      },
+      {
+        "name": "financial-freedom",
+        "metrics": {
+          "result": "13 мес.",
+          "state": "READY",
+          "tailwind": true,
+          "chart": true,
+          "exportRenderer": true,
+          "headerHeight": 65,
+          "hasPilotCss": true,
+          "h1": "Таймер свободы",
+          "width": 390,
+          "scrollWidth": 390,
+          "activeTheme": "light",
+          "chartRendered": true,
+          "layoutStyle": "1280px"
+        },
+        "responses": {
+          "/financial-freedom.html": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdn.jsdelivr.net/npm/chart.js": {
+            "status": 200,
+            "worker": true
+          },
+          "/css/design-system.css": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdn.tailwindcss.com/": {
+            "status": 200,
+            "worker": true
+          }
+        },
+        "errors": [],
+        "networkHeader": "local server"
+      },
+      {
+        "name": "car-vs-taxi",
+        "metrics": {
+          "result": "19 896 ₽",
+          "state": null,
+          "tailwind": true,
+          "chart": false,
+          "exportRenderer": true,
+          "headerHeight": 65,
+          "hasPilotCss": true,
+          "h1": "Машина или такси",
+          "width": 390,
+          "scrollWidth": 390,
+          "activeTheme": "light",
+          "chartRendered": false,
+          "layoutStyle": "1280px"
+        },
+        "responses": {
+          "/car-vs-taxi.html": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+            "status": 200,
+            "worker": true
+          },
+          "/css/design-system.css": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdn.tailwindcss.com/": {
+            "status": 200,
+            "worker": true
+          }
+        },
+        "errors": [],
+        "networkHeader": "local server"
+      },
+      {
+        "name": "mortgage",
+        "metrics": {
+          "result": "111 300 ₽",
+          "state": "READY",
+          "tailwind": true,
+          "chart": true,
+          "exportRenderer": true,
+          "headerHeight": 65,
+          "hasPilotCss": false,
+          "h1": "Ипотечный калькулятор",
+          "width": 390,
+          "scrollWidth": 390,
+          "activeTheme": "light",
+          "chartRendered": true,
+          "layoutStyle": "1248px"
+        },
+        "responses": {
+          "/mortgage.html": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdn.jsdelivr.net/npm/chart.js": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdn.tailwindcss.com/": {
+            "status": 200,
+            "worker": true
+          }
+        },
+        "errors": [],
+        "networkHeader": "local server"
+      }
+    ],
+    "badHTTP": {
+      "httpError": 503,
+      "fallbackStatus": 200
+    },
+    "afterOnline": {
+      "names": [
+        "yasnomera-cache-v18"
+      ],
+      "active": "activated",
+      "installing": null,
+      "controlled": true,
+      "local": [
+        "/",
+        "/car-vs-taxi.html",
+        "/css/design-system.css",
+        "/css/product-polish.css",
+        "/financial-freedom.html",
+        "/genetic-wealth.html",
+        "/honest-credit.html",
+        "/index.html",
+        "/inflation-shredder.html",
+        "/inflation.json",
+        "/js/api.js",
+        "/js/calculator-state.js",
+        "/js/income-comparison.js",
+        "/js/inflation-calculator.js",
+        "/js/ndfl.js",
+        "/js/rent-vs-mortgage-model.js",
+        "/js/theme.js",
+        "/js/trust-layer.js",
+        "/js/ui-utils.js",
+        "/js/utils.js",
+        "/manifest.webmanifest",
+        "/millionaire.html",
+        "/mortgage.html",
+        "/rates.json",
+        "/regions.json",
+        "/rent-vs-mortgage.html",
+        "/time-is-money.html",
+        "/wealth.html",
+        "/yasnomera-mark.svg"
+      ],
+      "libraries": {
+        "https://cdn.tailwindcss.com/": null,
+        "https://cdn.jsdelivr.net/npm/chart.js": {
+          "type": "cors",
+          "status": 200
+        },
+        "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+          "type": "cors",
+          "status": 200
+        }
+      }
+    }
+  },
+  "migration": {
+    "legacyBootstrap": "Actual Tailwind response body, CORS header added only during initial v17 installation",
+    "bootstrapDigest": "176e894661aa9cdc9a5cba6c720044cbbf7b8bd80d1c9a142a7c24b1b6c50d15",
+    "old": {
+      "names": [
+        "yasnomera-cache-v17"
+      ],
+      "active": "activated",
+      "installing": null,
+      "controlled": true,
+      "local": [
+        "/",
+        "/car-vs-taxi.html",
+        "/css/product-polish.css",
+        "/financial-freedom.html",
+        "/genetic-wealth.html",
+        "/honest-credit.html",
+        "/index.html",
+        "/inflation-shredder.html",
+        "/inflation.json",
+        "/js/api.js",
+        "/js/calculator-state.js",
+        "/js/income-comparison.js",
+        "/js/inflation-calculator.js",
+        "/js/ndfl.js",
+        "/js/rent-vs-mortgage-model.js",
+        "/js/theme.js",
+        "/js/trust-layer.js",
+        "/js/ui-utils.js",
+        "/js/utils.js",
+        "/manifest.webmanifest",
+        "/millionaire.html",
+        "/mortgage.html",
+        "/rates.json",
+        "/regions.json",
+        "/rent-vs-mortgage.html",
+        "/time-is-money.html",
+        "/wealth.html",
+        "/yasnomera-mark.svg"
+      ],
+      "libraries": {
+        "https://cdn.tailwindcss.com/": {
+          "type": "cors",
+          "status": 200
+        },
+        "https://cdn.jsdelivr.net/npm/chart.js": {
+          "type": "cors",
+          "status": 200
+        },
+        "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+          "type": "cors",
+          "status": 200
+        }
+      }
+    },
+    "failedUpdate": {
+      "state": {
+        "names": [
+          "yasnomera-cache-v17",
+          "qa-unrelated-cache",
+          "yasnomera-cache-v18"
+        ],
+        "active": "activated",
+        "installing": null,
+        "controlled": true,
+        "local": [
+          "/",
+          "/car-vs-taxi.html",
+          "/css/product-polish.css",
+          "/financial-freedom.html",
+          "/genetic-wealth.html",
+          "/honest-credit.html",
+          "/index.html",
+          "/inflation-shredder.html",
+          "/inflation.json",
+          "/js/api.js",
+          "/js/calculator-state.js",
+          "/js/income-comparison.js",
+          "/js/inflation-calculator.js",
+          "/js/ndfl.js",
+          "/js/rent-vs-mortgage-model.js",
+          "/js/theme.js",
+          "/js/trust-layer.js",
+          "/js/ui-utils.js",
+          "/js/utils.js",
+          "/manifest.webmanifest",
+          "/millionaire.html",
+          "/mortgage.html",
+          "/rates.json",
+          "/regions.json",
+          "/rent-vs-mortgage.html",
+          "/time-is-money.html",
+          "/wealth.html",
+          "/yasnomera-mark.svg"
+        ],
+        "libraries": {
+          "https://cdn.tailwindcss.com/": {
+            "type": "cors",
+            "status": 200
+          },
+          "https://cdn.jsdelivr.net/npm/chart.js": {
+            "type": "cors",
+            "status": 200
+          },
+          "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+            "type": "cors",
+            "status": 200
+          }
+        }
+      },
+      "localFailure": [
+        "head",
+        "/css/design-system.css",
+        503
+      ],
+      "offlineMortgage": {
+        "name": "mortgage",
+        "metrics": {
+          "result": "111 300 ₽",
+          "state": "READY",
+          "tailwind": true,
+          "chart": true,
+          "exportRenderer": true,
+          "headerHeight": 65,
+          "hasPilotCss": false,
+          "h1": "Ипотечный калькулятор",
+          "width": 390,
+          "scrollWidth": 390,
+          "activeTheme": "dark",
+          "chartRendered": true,
+          "layoutStyle": "1248px"
+        },
+        "responses": {
+          "/mortgage.html": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdn.jsdelivr.net/npm/chart.js": {
+            "status": 200,
+            "worker": true
+          },
+          "https://cdn.tailwindcss.com/": {
+            "status": 200,
+            "worker": true
+          }
+        },
+        "errors": [],
+        "networkHeader": "local server"
+      }
+    },
+    "updated": {
+      "state": {
+        "names": [
+          "qa-unrelated-cache",
+          "yasnomera-cache-v18"
+        ],
+        "active": "activated",
+        "installing": null,
+        "controlled": true,
+        "local": [
+          "/",
+          "/car-vs-taxi.html",
+          "/css/design-system.css",
+          "/css/product-polish.css",
+          "/financial-freedom.html",
+          "/genetic-wealth.html",
+          "/honest-credit.html",
+          "/index.html",
+          "/inflation-shredder.html",
+          "/inflation.json",
+          "/js/api.js",
+          "/js/calculator-state.js",
+          "/js/income-comparison.js",
+          "/js/inflation-calculator.js",
+          "/js/ndfl.js",
+          "/js/rent-vs-mortgage-model.js",
+          "/js/theme.js",
+          "/js/trust-layer.js",
+          "/js/ui-utils.js",
+          "/js/utils.js",
+          "/manifest.webmanifest",
+          "/millionaire.html",
+          "/mortgage.html",
+          "/rates.json",
+          "/regions.json",
+          "/rent-vs-mortgage.html",
+          "/time-is-money.html",
+          "/wealth.html",
+          "/yasnomera-mark.svg"
+        ],
+        "libraries": {
+          "https://cdn.tailwindcss.com/": {
+            "type": "cors",
+            "status": 200
+          },
+          "https://cdn.jsdelivr.net/npm/chart.js": {
+            "type": "cors",
+            "status": 200
+          },
+          "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+            "type": "cors",
+            "status": 200
+          }
+        }
+      },
+      "tailwindDigest": "176e894661aa9cdc9a5cba6c720044cbbf7b8bd80d1c9a142a7c24b1b6c50d15",
+      "cdn": [
+        {
+          "url": "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+          "http": 200,
+          "worker": true,
+          "fromServiceWorker": false,
+          "cors": "*"
+        }
+      ],
+      "offline": [
+        {
+          "name": "inflation-shredder",
+          "metrics": {
+            "result": "545 ₽",
+            "state": "READY",
+            "tailwind": true,
+            "chart": true,
+            "exportRenderer": true,
+            "headerHeight": 65,
+            "hasPilotCss": true,
+            "h1": "Покупательная способность",
+            "width": 390,
+            "scrollWidth": 390,
+            "activeTheme": "dark",
+            "chartRendered": true,
+            "layoutStyle": "1280px"
+          },
+          "responses": {
+            "/inflation-shredder.html": {
+              "status": 200,
+              "worker": true
+            },
+            "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+              "status": 200,
+              "worker": true
+            },
+            "https://cdn.jsdelivr.net/npm/chart.js": {
+              "status": 200,
+              "worker": true
+            },
+            "/css/design-system.css": {
+              "status": 200,
+              "worker": true
+            },
+            "https://cdn.tailwindcss.com/": {
+              "status": 200,
+              "worker": true
+            }
+          },
+          "errors": [],
+          "networkHeader": "local server",
+          "themeToggled": "light"
+        },
+        {
+          "name": "financial-freedom",
+          "metrics": {
+            "result": "13 мес.",
+            "state": "READY",
+            "tailwind": true,
+            "chart": true,
+            "exportRenderer": true,
+            "headerHeight": 65,
+            "hasPilotCss": true,
+            "h1": "Таймер свободы",
+            "width": 390,
+            "scrollWidth": 390,
+            "activeTheme": "light",
+            "chartRendered": true,
+            "layoutStyle": "1280px"
+          },
+          "responses": {
+            "/financial-freedom.html": {
+              "status": 200,
+              "worker": true
+            },
+            "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+              "status": 200,
+              "worker": true
+            },
+            "https://cdn.jsdelivr.net/npm/chart.js": {
+              "status": 200,
+              "worker": true
+            },
+            "/css/design-system.css": {
+              "status": 200,
+              "worker": true
+            },
+            "https://cdn.tailwindcss.com/": {
+              "status": 200,
+              "worker": true
+            }
+          },
+          "errors": [],
+          "networkHeader": "local server",
+          "themeToggled": "dark"
+        },
+        {
+          "name": "car-vs-taxi",
+          "metrics": {
+            "result": "19 896 ₽",
+            "state": null,
+            "tailwind": true,
+            "chart": false,
+            "exportRenderer": true,
+            "headerHeight": 65,
+            "hasPilotCss": true,
+            "h1": "Машина или такси",
+            "width": 390,
+            "scrollWidth": 390,
+            "activeTheme": "dark",
+            "chartRendered": false,
+            "layoutStyle": "1280px"
+          },
+          "responses": {
+            "/car-vs-taxi.html": {
+              "status": 200,
+              "worker": true
+            },
+            "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+              "status": 200,
+              "worker": true
+            },
+            "/css/design-system.css": {
+              "status": 200,
+              "worker": true
+            },
+            "https://cdn.tailwindcss.com/": {
+              "status": 200,
+              "worker": true
+            }
+          },
+          "errors": [],
+          "networkHeader": "local server",
+          "themeToggled": "light"
+        },
+        {
+          "name": "mortgage",
+          "metrics": {
+            "result": "111 300 ₽",
+            "state": "READY",
+            "tailwind": true,
+            "chart": true,
+            "exportRenderer": true,
+            "headerHeight": 65,
+            "hasPilotCss": false,
+            "h1": "Ипотечный калькулятор",
+            "width": 390,
+            "scrollWidth": 390,
+            "activeTheme": "light",
+            "chartRendered": true,
+            "layoutStyle": "1248px"
+          },
+          "responses": {
+            "/mortgage.html": {
+              "status": 200,
+              "worker": true
+            },
+            "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": {
+              "status": 200,
+              "worker": true
+            },
+            "https://cdn.jsdelivr.net/npm/chart.js": {
+              "status": 200,
+              "worker": true
+            },
+            "https://cdn.tailwindcss.com/": {
+              "status": 200,
+              "worker": true
+            }
+          },
+          "errors": [],
+          "networkHeader": "local server",
+          "recalculated": "117 496 ₽",
+          "png": [
+            1200,
+            1710
+          ]
+        }
+      ]
+    }
+  },
+  "mortgage": [
+    {
+      "before": {
+        "site": "base",
+        "width": 1366,
+        "theme": "light",
+        "photoSHA256": "cb925536597cd716ace49387c2dea5c04d7c030435708a8059d04b1ea9669a11",
+        "initial": "111 300 ₽",
+        "changed": "117 496 ₽",
+        "shareRestorable": true,
+        "png": [
+          1200,
+          1710
+        ],
+        "fromServiceWorker": false
+      },
+      "after": {
+        "site": "head",
+        "width": 1366,
+        "theme": "light",
+        "photoSHA256": "cb925536597cd716ace49387c2dea5c04d7c030435708a8059d04b1ea9669a11",
+        "initial": "111 300 ₽",
+        "changed": "117 496 ₽",
+        "shareRestorable": true,
+        "png": [
+          1200,
+          1710
+        ],
+        "fromServiceWorker": true
+      }
+    },
+    {
+      "before": {
+        "site": "base",
+        "width": 390,
+        "theme": "dark",
+        "photoSHA256": "e5f0f3e45307d44d592f884a9d4f47e63771b950038636d574a840e03f045c15",
+        "initial": "111 300 ₽",
+        "changed": "117 496 ₽",
+        "shareRestorable": true,
+        "png": [
+          1200,
+          1710
+        ],
+        "fromServiceWorker": false
+      },
+      "after": {
+        "site": "head",
+        "width": 390,
+        "theme": "dark",
+        "photoSHA256": "e5f0f3e45307d44d592f884a9d4f47e63771b950038636d574a840e03f045c15",
+        "initial": "111 300 ₽",
+        "changed": "117 496 ₽",
+        "shareRestorable": true,
+        "png": [
+          1200,
+          1710
+        ],
+        "fromServiceWorker": true
+      }
+    }
+  ]
+}
