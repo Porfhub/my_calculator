@@ -8,6 +8,8 @@
 
 [theme.js](../../js/theme.js) и [product-polish.css](../../css/product-polish.css) содержат общие компоненты. Часть страниц использует CDN Tailwind, Chart.js или html2canvas. Главная использует собственный CSS и статический каталог, а новые страницы могут иметь локальные компоненты. [manifest](../../manifest.webmanifest) и [service worker](../../sw.js) определяют PWA. Для HTML применяется network-first, политика данных и список precache находятся в самом SW. Browser QA с отключённым SW и локальными CDN-ресурсами не заменяет production smoke и отдельную проверку офлайн.
 
+[Дизайн-система](../design-system/README.md) поставляется отдельным [CSS](../../css/design-system.css). Токены наследуются внутри `.yn-scope`, компоненты требуют явных классов `yn-*`. Графитовые токены используют существующий `html.dark`. Первый этап не подключает CSS в HTML или service worker. Политику кеширования этого ресурса нужно проверить при первом подключении.
+
 ## Финансовые данные
 
 | Пакет | Назначение и жизненный цикл |
@@ -28,7 +30,7 @@
 
 - Установи зависимости через npm в рабочей среде. `npm test` запускает Node-тесты UI-state, математических контрактов и изоляции updater. `npm run validate:data` проверяет реальные snapshots по текущим часам. Тестовые fixture из PR #91 должны быть независимы от возраста production JSON.
 - [Validate Financial Data](../../.github/workflows/data-validation.yml) запускает гейты по своему набору путей. [Update Mortgage Rates](../../.github/workflows/rates.yml) обслуживает данные по расписанию. Health advisory и блокирующий publish gate различаются.
-- [Deploy Yandex Object Storage Mirror](../../.github/workflows/deploy-yandex-object-storage.yml) архивирует main, исключает служебные файлы, сверяет 35 путей, Git-хеши и PNG-маркеры, синхронизирует Object Storage, затем проверяет URL. Успешный updater на main может запустить deploy через workflow_run. PR #99 исключил корневой AGENTS.md и добавил поддержку PNG-маркера «Финансовой цели». Docs и dev_tools исключены из runtime-пакета.
+- [Deploy Yandex Object Storage Mirror](../../.github/workflows/deploy-yandex-object-storage.yml) архивирует main, исключает служебные файлы, сверяет 36 путей, Git-хеши, отсутствие симлинков и PNG-маркеры, синхронизирует Object Storage, затем проверяет URL, включая CSS дизайн-системы. Успешный updater на main может запустить deploy через workflow_run. PR #99 исключил корневой AGENTS.md и добавил поддержку PNG-маркера «Финансовой цели». Docs и dev_tools исключены из runtime-пакета.
 - При пользовательских изменениях запускай профильные числовые и browser QA, обе темы и mobile/desktop. Подтверждай merge, deploy и фактическое поведение раздельно. Настройку обязательных веточных checks сверяй в GitHub.
 
 Технический долг включает крупные inline-страницы, неодинаковую строгость legacy-аналитики и частичное покрытие региональных данных. Механизм доставки знаний описан в [runbook](03_CONTEXT_MIRROR_RUNBOOK.md). Изменения финансовых контрактов сопровождаются паспортами в том же PR. [Правила](../../AGENTS.md)

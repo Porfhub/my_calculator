@@ -1,0 +1,286 @@
+/* Tokens are inherited only inside an opt-in scope. Components opt in individually. */
+.yn-scope {
+    --yn-color-surface: #fff;
+    --yn-color-text: #1b292e;
+    --yn-color-muted: #52656d;
+    --yn-color-line: #d9e1df;
+    --yn-color-control-border: #778a8c;
+    --yn-color-accent: #075446;
+    --yn-color-on-accent: #fff;
+    --yn-color-accent-hover: #063e35;
+    --yn-color-hover: #eaf5ef;
+    --yn-color-disabled: #eef2f1;
+    --yn-color-focus: #007358;
+    --yn-color-success: #075446;
+    --yn-color-success-surface: #eaf5ef;
+    --yn-color-warning: #734a0c;
+    --yn-color-warning-surface: #fff4da;
+    --yn-color-error: #9a2b35;
+    --yn-color-error-surface: #fff0f1;
+
+    --yn-font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    --yn-font-body: 1rem;
+    --yn-font-small: 0.875rem;
+    --yn-font-brand: clamp(1rem, 3vw, 1.4375rem);
+    --yn-line-body: 1.5;
+    --yn-weight-action: 650;
+    --yn-weight-brand: 800;
+    --yn-space-xs: 0.25rem;
+    --yn-space-sm: 0.5rem;
+    --yn-space-md: 0.75rem;
+    --yn-space-lg: 1rem;
+    --yn-space-xl: 1.5rem;
+    --yn-radius-control: 0.625rem;
+    --yn-radius-panel: 1rem;
+    --yn-border-width: 1px;
+    --yn-border: var(--yn-border-width) solid var(--yn-color-line);
+    --yn-control-border: var(--yn-border-width) solid var(--yn-color-control-border);
+    --yn-focus-ring: 3px solid var(--yn-color-focus);
+    --yn-focus-offset: 3px;
+    --yn-control-size: max(44px, 2.75rem);
+    --yn-header-size: 4.75rem;
+    --yn-content-width: 73rem;
+    --yn-gutter: clamp(var(--yn-space-lg), 3vw, var(--yn-space-xl));
+}
+
+:where(html.dark) .yn-scope {
+    --yn-color-surface: #222e33;
+    --yn-color-text: #f1f5f3;
+    --yn-color-muted: #b8c8c9;
+    --yn-color-line: #435256;
+    --yn-color-control-border: #899d9f;
+    --yn-color-accent: #9ee4c1;
+    --yn-color-on-accent: #162b24;
+    --yn-color-accent-hover: #bcefd5;
+    --yn-color-hover: #203e35;
+    --yn-color-disabled: #303d42;
+    --yn-color-focus: #9ee4c1;
+    --yn-color-success: #9ee4c1;
+    --yn-color-success-surface: #203e35;
+    --yn-color-warning: #f7cf8d;
+    --yn-color-warning-surface: #453722;
+    --yn-color-error: #ffb3b8;
+    --yn-color-error-surface: #4d2b34;
+}
+
+:where(.yn-scope) :is(.yn-header, .yn-button, .yn-theme-toggle, .yn-field, .yn-methodology, .yn-status, .yn-footer) {
+    color: var(--yn-color-text);
+    font-family: var(--yn-font-family);
+    font-size: var(--yn-font-body);
+    line-height: var(--yn-line-body);
+}
+
+/* Header and footer leave page layout and copy to the caller. */
+:where(.yn-scope) .yn-header {
+    background: var(--yn-color-surface);
+    border-block-end: var(--yn-border);
+}
+
+:where(.yn-scope) :is(.yn-header-inner, .yn-footer-inner) {
+    box-sizing: border-box;
+    max-inline-size: var(--yn-content-width);
+    margin-inline: auto;
+    padding: var(--yn-space-sm) var(--yn-gutter);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--yn-space-xs) var(--yn-space-sm);
+}
+
+:where(.yn-scope) .yn-header-inner {
+    min-block-size: var(--yn-header-size);
+}
+
+:where(.yn-scope) .yn-header-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--yn-space-lg);
+}
+
+:where(.yn-scope) :is(.yn-brand, .yn-link) {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--yn-control-size);
+    overflow-wrap: anywhere;
+}
+
+:where(.yn-scope) .yn-brand {
+    gap: var(--yn-space-sm);
+    color: var(--yn-color-text);
+    font-size: var(--yn-font-brand);
+    font-weight: var(--yn-weight-brand);
+    text-decoration: none;
+}
+
+:where(.yn-scope) .yn-link {
+    color: var(--yn-color-accent);
+    font-size: var(--yn-font-small);
+    font-weight: var(--yn-weight-action);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+:where(.yn-scope) :is(.yn-button, .yn-theme-toggle, .yn-input) {
+    box-sizing: border-box;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    min-block-size: var(--yn-control-size);
+    background: var(--yn-color-surface);
+    border: var(--yn-control-border);
+    border-radius: var(--yn-radius-control);
+}
+
+:where(.yn-scope) :is(.yn-button, .yn-theme-toggle) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--yn-space-sm) var(--yn-space-lg);
+    font-weight: var(--yn-weight-action);
+    text-align: center;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+}
+
+:where(.yn-scope) .yn-button--primary {
+    color: var(--yn-color-on-accent);
+    background: var(--yn-color-accent);
+    border-color: var(--yn-color-accent);
+}
+
+:where(.yn-scope) .yn-theme-toggle {
+    inline-size: var(--yn-control-size);
+    margin-inline-start: auto;
+    padding: var(--yn-space-sm);
+}
+
+:where(.yn-scope) .yn-theme-icon {
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+}
+
+:where(.yn-scope) .yn-theme-icon.hidden {
+    display: none;
+}
+
+:where(.yn-scope) .yn-field {
+    display: grid;
+    gap: var(--yn-space-xs);
+    min-inline-size: 0;
+}
+
+:where(.yn-scope) .yn-label {
+    font-weight: var(--yn-weight-action);
+}
+
+:where(.yn-scope) .yn-input {
+    inline-size: 100%;
+    padding: var(--yn-space-sm) var(--yn-space-md);
+    color: var(--yn-color-text);
+    font: inherit;
+}
+
+:where(.yn-scope) .yn-input[aria-invalid="true"] {
+    border-color: var(--yn-color-error);
+}
+
+:where(.yn-scope) :is(.yn-hint, .yn-error) {
+    margin: 0;
+    color: var(--yn-color-muted);
+    font-size: var(--yn-font-small);
+}
+
+:where(.yn-scope) .yn-error {
+    color: var(--yn-color-error);
+}
+
+:where(.yn-scope) .yn-number {
+    font-variant-numeric: tabular-nums;
+}
+
+:where(.yn-scope) .yn-methodology {
+    background: var(--yn-color-surface);
+    border: var(--yn-border);
+    border-radius: var(--yn-radius-panel);
+}
+
+:where(.yn-scope) .yn-methodology-summary {
+    box-sizing: border-box;
+    min-block-size: var(--yn-control-size);
+    padding: var(--yn-space-md) var(--yn-space-lg);
+    border-radius: var(--yn-radius-panel);
+    font-weight: var(--yn-weight-action);
+    cursor: pointer;
+}
+
+:where(.yn-scope) .yn-methodology-body {
+    padding: var(--yn-space-md) var(--yn-space-lg) var(--yn-space-lg);
+    border-block-start: var(--yn-border);
+}
+
+:where(.yn-scope) .yn-status {
+    margin: 0;
+    padding: var(--yn-space-sm) var(--yn-space-md);
+    color: var(--yn-color-muted);
+    background: var(--yn-color-surface);
+    border: var(--yn-border);
+    border-radius: var(--yn-radius-control);
+    font-size: var(--yn-font-small);
+    overflow-wrap: anywhere;
+}
+
+:where(.yn-scope) .yn-status--success {
+    color: var(--yn-color-success);
+    background: var(--yn-color-success-surface);
+}
+
+:where(.yn-scope) .yn-status--warning {
+    color: var(--yn-color-warning);
+    background: var(--yn-color-warning-surface);
+}
+
+:where(.yn-scope) .yn-status--error {
+    color: var(--yn-color-error);
+    background: var(--yn-color-error-surface);
+}
+
+:where(.yn-scope) .yn-footer {
+    padding-block-end: env(safe-area-inset-bottom);
+    color: var(--yn-color-muted);
+    background: var(--yn-color-surface);
+    border-block-start: var(--yn-border);
+    font-size: var(--yn-font-small);
+}
+
+:where(.yn-scope) .yn-footer-inner {
+    justify-content: space-between;
+}
+
+:where(.yn-scope) :is(.yn-brand, .yn-link, .yn-button, .yn-theme-toggle, .yn-input, .yn-methodology-summary):focus-visible {
+    outline: var(--yn-focus-ring);
+    outline-offset: var(--yn-focus-offset);
+}
+
+:where(.yn-scope) :is(.yn-button, .yn-theme-toggle, .yn-input):disabled {
+    color: var(--yn-color-muted);
+    background: var(--yn-color-disabled);
+    border: var(--yn-control-border);
+    opacity: 1;
+    cursor: not-allowed;
+}
+
+/* Keep the native hidden contract when component display differs from the UA default. */
+:where(.yn-scope) :is(.yn-header-inner, .yn-footer-inner, .yn-header-nav, .yn-brand, .yn-link, .yn-button, .yn-theme-toggle, .yn-field)[hidden] {
+    display: none;
+}
+
+@media (hover: hover) {
+    :where(.yn-scope) :is(.yn-button, .yn-theme-toggle):not(:disabled):hover {
+        background: var(--yn-color-hover);
+    }
+
+    :where(.yn-scope) .yn-button--primary:not(:disabled):hover {
+        background: var(--yn-color-accent-hover);
+        border-color: var(--yn-color-accent-hover);
+    }
+}
