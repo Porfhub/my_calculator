@@ -150,6 +150,7 @@
     <script src="js/trust-layer.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" async></script>
     <link rel="stylesheet" href="css/product-polish.css">
+    <link rel="stylesheet" href="css/design-system.css">
     <script>
         (function(m,e,t,r,i,k,a){
             m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -179,24 +180,15 @@
         .credit-page *, .credit-page *::before, .credit-page *::after { box-sizing: border-box; }
         .credit-page [hidden] { display: none !important; }
         .credit-page :is(h1, h2, h3, p, dl, dd, fieldset) { margin: 0; }
-        .credit-page a { color: var(--credit-accent); }
+        .credit-page a:not(:where(.yn-scope *)) { color: var(--credit-accent); }
         .credit-page :is(a, button, input, select, summary):focus-visible { outline: 3px solid var(--credit-focus); outline-offset: 2px; }
         .credit-shell { width: min(100% - 32px, 1104px); margin-inline: auto; }
-        .credit-header { border-bottom: 1px solid var(--credit-line); background: var(--credit-surface); }
-        .credit-nav { display: flex; align-items: center; gap: 16px; min-height: 60px; }
-        .credit-brand { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; text-decoration: none; font-weight: 800; }
-        .credit-brand img { width: 28px; height: 28px; }
-        .credit-home { display: inline-flex; align-items: center; min-height: 44px; font-size: .875rem; }
-        .credit-nav #theme-toggle { position: static; margin-left: auto; }
         .credit-page button, .credit-page select { font: inherit; }
         .credit-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; min-width: 44px;
             border: 1px solid var(--credit-field-line); border-radius: 10px; padding: 7px 13px; background: var(--credit-surface);
             color: var(--credit-ink); font-weight: 650; cursor: pointer; }
         .credit-button.primary { background: var(--credit-button); color: white; border-color: transparent; }
         .credit-button:disabled { cursor: default; opacity: .6; }
-        .credit-theme-icon { width: 20px; height: 20px; }
-        .credit-sun, .dark .credit-moon { display: none; }
-        .dark .credit-sun { display: block; }
         .credit-intro { padding-block: clamp(20px, 4vw, 44px) clamp(14px, 2.5vw, 24px); }
         .credit-eyebrow { color: var(--credit-accent); font-size: .78rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
         .credit-intro h1 { font-size: clamp(1.9rem, 5.4vw, 3.1rem); line-height: 1.08; letter-spacing: -.035em; margin-block: 5px 9px; }
@@ -287,21 +279,27 @@
         }
         @media (max-width: 359px) {
             .credit-shell { width: calc(100% - 24px); }
-            .credit-nav { gap: 10px; }
         }
     </style>
 </head>
 <body class="credit-page">
-    <header class="credit-header">
-        <nav class="credit-shell credit-nav" aria-label="Навигация">
-            <a class="credit-brand" href="./"><img src="yasnomera-mark.svg" alt="" width="28" height="28">Ясномера</a>
-            <a class="credit-home" href="./#catalog-section">Калькуляторы</a>
-            <button type="button" id="theme-toggle" class="credit-button" aria-label="Переключить тему">
-                <svg class="credit-theme-icon credit-moon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20.8 14A9 9 0 0 1 10 3.2 9 9 0 1 0 20.8 14Z"/></svg>
-                <svg class="credit-theme-icon credit-sun" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/></svg>
-            </button>
-        </nav>
-    </header>
+    <div class="yn-scope">
+        <header class="yn-header">
+            <div class="yn-header-inner">
+                <a class="yn-brand" href="index.html">
+                    <img src="yasnomera-mark.svg" alt="" width="32" height="32">
+                    ЯСНОМЕРА
+                </a>
+                <nav class="yn-header-nav" aria-label="Основная навигация">
+                    <a class="yn-link" href="index.html#catalog-section">Все расчёты</a>
+                </nav>
+                <button id="theme-toggle" class="yn-theme-toggle" type="button" aria-label="Переключить тему" aria-pressed="false">
+                    <svg id="sun-icon" class="yn-theme-icon hidden" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
+                    <svg id="moon-icon" class="yn-theme-icon" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+                </button>
+            </div>
+        </header>
+    </div>
     <main class="credit-shell">
         <div class="credit-intro">
             <p class="credit-eyebrow">Стоимость кредита</p>

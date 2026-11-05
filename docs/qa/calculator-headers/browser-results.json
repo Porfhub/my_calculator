@@ -1,0 +1,2030 @@
+{
+  "base": "91026f7f8956e831d375cacdfba64a6dea00d6dd",
+  "chrome": "156.0.8078.48",
+  "rows": [
+    {
+      "name": "genetic-wealth",
+      "width": 1366,
+      "height": 900,
+      "theme": "light",
+      "baselineDocumentWidth": 1366,
+      "headerHeight": 77,
+      "documentWidth": 1366,
+      "titleHeight": 36,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "9 780 000",
+          "20 130 574 ₽"
+        ],
+        "edited": [
+          "4 032 000",
+          "8 312 241 ₽"
+        ],
+        "chart": {
+          "type": "bar",
+          "points": [
+            4,
+            4
+          ]
+        },
+        "png": {
+          "before": [
+            1456,
+            1898
+          ],
+          "after": [
+            1456,
+            1898
+          ]
+        },
+        "share": {
+          "path": "/genetic-wealth.html",
+          "scenario": false,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "genetic-wealth",
+      "width": 1366,
+      "height": 900,
+      "theme": "dark",
+      "baselineDocumentWidth": 1366,
+      "headerHeight": 77,
+      "documentWidth": 1366,
+      "titleHeight": 36,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "9 780 000",
+          "20 130 574 ₽"
+        ],
+        "edited": [
+          "4 032 000",
+          "8 312 241 ₽"
+        ],
+        "chart": {
+          "type": "bar",
+          "points": [
+            4,
+            4
+          ]
+        },
+        "png": {
+          "before": [
+            1456,
+            1898
+          ],
+          "after": [
+            1456,
+            1898
+          ]
+        },
+        "share": {
+          "path": "/genetic-wealth.html",
+          "scenario": false,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "genetic-wealth",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "baselineDocumentWidth": 390,
+      "headerHeight": 65,
+      "documentWidth": 390,
+      "titleHeight": 25,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "9 780 000",
+          "20 130 574 ₽"
+        ],
+        "edited": [
+          "4 032 000",
+          "8 312 241 ₽"
+        ],
+        "chart": {
+          "type": "bar",
+          "points": [
+            4,
+            4
+          ]
+        },
+        "png": {
+          "before": [
+            780,
+            2196
+          ],
+          "after": [
+            780,
+            2196
+          ]
+        },
+        "share": {
+          "path": "/genetic-wealth.html",
+          "scenario": false,
+          "nativePayload": true
+        }
+      }
+    },
+    {
+      "name": "genetic-wealth",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "baselineDocumentWidth": 390,
+      "headerHeight": 65,
+      "documentWidth": 390,
+      "titleHeight": 25,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "9 780 000",
+          "20 130 574 ₽"
+        ],
+        "edited": [
+          "4 032 000",
+          "8 312 241 ₽"
+        ],
+        "chart": {
+          "type": "bar",
+          "points": [
+            4,
+            4
+          ]
+        },
+        "png": {
+          "before": [
+            780,
+            2196
+          ],
+          "after": [
+            780,
+            2196
+          ]
+        },
+        "share": {
+          "path": "/genetic-wealth.html",
+          "scenario": false,
+          "nativePayload": true
+        }
+      }
+    },
+    {
+      "name": "genetic-wealth",
+      "width": 375,
+      "height": 812,
+      "theme": "light",
+      "baselineDocumentWidth": 375,
+      "headerHeight": 65,
+      "documentWidth": 375,
+      "titleHeight": 50,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "9 780 000",
+          "20 130 574 ₽"
+        ],
+        "edited": [
+          "4 032 000",
+          "8 312 241 ₽"
+        ],
+        "chart": {
+          "type": "bar",
+          "points": [
+            4,
+            4
+          ]
+        },
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "genetic-wealth",
+      "width": 375,
+      "height": 812,
+      "theme": "dark",
+      "baselineDocumentWidth": 375,
+      "headerHeight": 65,
+      "documentWidth": 375,
+      "titleHeight": 50,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "9 780 000",
+          "20 130 574 ₽"
+        ],
+        "edited": [
+          "4 032 000",
+          "8 312 241 ₽"
+        ],
+        "chart": {
+          "type": "bar",
+          "points": [
+            4,
+            4
+          ]
+        },
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "genetic-wealth",
+      "width": 320,
+      "height": 680,
+      "theme": "light",
+      "baselineDocumentWidth": 320,
+      "headerHeight": 65,
+      "documentWidth": 320,
+      "titleHeight": 50,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "9 780 000",
+          "20 130 574 ₽"
+        ],
+        "edited": [
+          "4 032 000",
+          "8 312 241 ₽"
+        ],
+        "chart": {
+          "type": "bar",
+          "points": [
+            4,
+            4
+          ]
+        },
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "genetic-wealth",
+      "width": 320,
+      "height": 680,
+      "theme": "dark",
+      "baselineDocumentWidth": 320,
+      "headerHeight": 65,
+      "documentWidth": 320,
+      "titleHeight": 50,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "9 780 000",
+          "20 130 574 ₽"
+        ],
+        "edited": [
+          "4 032 000",
+          "8 312 241 ₽"
+        ],
+        "chart": {
+          "type": "bar",
+          "points": [
+            4,
+            4
+          ]
+        },
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "honest-credit",
+      "width": 1366,
+      "height": 900,
+      "theme": "light",
+      "baselineDocumentWidth": 1366,
+      "headerHeight": 77,
+      "documentWidth": 1366,
+      "titleHeight": 53.546875,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "605 624,51 ₽",
+          "12,900 %"
+        ],
+        "edited": [
+          "569 938,39 ₽",
+          "12,900 %"
+        ],
+        "chart": null,
+        "png": {
+          "before": [
+            1200,
+            2198
+          ],
+          "after": [
+            1200,
+            2198
+          ]
+        },
+        "share": {
+          "path": "/honest-credit.html",
+          "scenario": true,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "honest-credit",
+      "width": 1366,
+      "height": 900,
+      "theme": "dark",
+      "baselineDocumentWidth": 1366,
+      "headerHeight": 77,
+      "documentWidth": 1366,
+      "titleHeight": 53.546875,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "605 624,51 ₽",
+          "12,900 %"
+        ],
+        "edited": [
+          "569 938,39 ₽",
+          "12,900 %"
+        ],
+        "chart": null,
+        "png": {
+          "before": [
+            1200,
+            2198
+          ],
+          "after": [
+            1200,
+            2198
+          ]
+        },
+        "share": {
+          "path": "/honest-credit.html",
+          "scenario": true,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "honest-credit",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "baselineDocumentWidth": 390,
+      "headerHeight": 65,
+      "documentWidth": 390,
+      "titleHeight": 65.65625,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "605 624,51 ₽",
+          "12,900 %"
+        ],
+        "edited": [
+          "569 938,39 ₽",
+          "12,900 %"
+        ],
+        "chart": null,
+        "png": {
+          "before": [
+            1200,
+            2136
+          ],
+          "after": [
+            1200,
+            2136
+          ]
+        },
+        "share": {
+          "path": "/honest-credit.html",
+          "scenario": true,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "honest-credit",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "baselineDocumentWidth": 390,
+      "headerHeight": 65,
+      "documentWidth": 390,
+      "titleHeight": 65.65625,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "605 624,51 ₽",
+          "12,900 %"
+        ],
+        "edited": [
+          "569 938,39 ₽",
+          "12,900 %"
+        ],
+        "chart": null,
+        "png": {
+          "before": [
+            1200,
+            2136
+          ],
+          "after": [
+            1200,
+            2136
+          ]
+        },
+        "share": {
+          "path": "/honest-credit.html",
+          "scenario": true,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "honest-credit",
+      "width": 375,
+      "height": 812,
+      "theme": "light",
+      "baselineDocumentWidth": 375,
+      "headerHeight": 65,
+      "documentWidth": 375,
+      "titleHeight": 65.65625,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "605 624,51 ₽",
+          "12,900 %"
+        ],
+        "edited": [
+          "569 938,39 ₽",
+          "12,900 %"
+        ],
+        "chart": null,
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "honest-credit",
+      "width": 375,
+      "height": 812,
+      "theme": "dark",
+      "baselineDocumentWidth": 375,
+      "headerHeight": 65,
+      "documentWidth": 375,
+      "titleHeight": 65.65625,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "605 624,51 ₽",
+          "12,900 %"
+        ],
+        "edited": [
+          "569 938,39 ₽",
+          "12,900 %"
+        ],
+        "chart": null,
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "honest-credit",
+      "width": 320,
+      "height": 680,
+      "theme": "light",
+      "baselineDocumentWidth": 320,
+      "headerHeight": 65,
+      "documentWidth": 320,
+      "titleHeight": 65.65625,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "605 624,51 ₽",
+          "12,900 %"
+        ],
+        "edited": [
+          "569 938,39 ₽",
+          "12,900 %"
+        ],
+        "chart": null,
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "honest-credit",
+      "width": 320,
+      "height": 680,
+      "theme": "dark",
+      "baselineDocumentWidth": 320,
+      "headerHeight": 65,
+      "documentWidth": 320,
+      "titleHeight": 65.65625,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "605 624,51 ₽",
+          "12,900 %"
+        ],
+        "edited": [
+          "569 938,39 ₽",
+          "12,900 %"
+        ],
+        "chart": null,
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "millionaire",
+      "width": 1366,
+      "height": 900,
+      "theme": "light",
+      "baselineDocumentWidth": 1366,
+      "headerHeight": 77,
+      "documentWidth": 1366,
+      "titleHeight": 53.75,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "1 год",
+          "При взносе 80 000 ₽ в месяц, без доходности и роста суммы цели."
+        ],
+        "edited": [
+          "2 года",
+          "При взносе 80 000 ₽ в месяц, без доходности и роста суммы цели."
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            25,
+            25
+          ]
+        },
+        "png": {
+          "before": [
+            1180,
+            2026
+          ],
+          "after": [
+            1180,
+            2026
+          ]
+        },
+        "share": {
+          "path": "/millionaire.html",
+          "scenario": false,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "millionaire",
+      "width": 1366,
+      "height": 900,
+      "theme": "dark",
+      "baselineDocumentWidth": 1366,
+      "headerHeight": 77,
+      "documentWidth": 1366,
+      "titleHeight": 53.75,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "1 год",
+          "При взносе 80 000 ₽ в месяц, без доходности и роста суммы цели."
+        ],
+        "edited": [
+          "2 года",
+          "При взносе 80 000 ₽ в месяц, без доходности и роста суммы цели."
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            25,
+            25
+          ]
+        },
+        "png": {
+          "before": [
+            1180,
+            2026
+          ],
+          "after": [
+            1180,
+            2026
+          ]
+        },
+        "share": {
+          "path": "/millionaire.html",
+          "scenario": false,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "millionaire",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "baselineDocumentWidth": 390,
+      "headerHeight": 65,
+      "documentWidth": 390,
+      "titleHeight": 62.71875,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "1 год",
+          "При взносе 80 000 ₽ в месяц, без доходности и роста суммы цели."
+        ],
+        "edited": [
+          "2 года",
+          "При взносе 80 000 ₽ в месяц, без доходности и роста суммы цели."
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            25,
+            25
+          ]
+        },
+        "png": {
+          "before": [
+            1180,
+            2002
+          ],
+          "after": [
+            1180,
+            2002
+          ]
+        },
+        "share": {
+          "path": "/millionaire.html",
+          "scenario": false,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "millionaire",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "baselineDocumentWidth": 390,
+      "headerHeight": 65,
+      "documentWidth": 390,
+      "titleHeight": 62.71875,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "1 год",
+          "При взносе 80 000 ₽ в месяц, без доходности и роста суммы цели."
+        ],
+        "edited": [
+          "2 года",
+          "При взносе 80 000 ₽ в месяц, без доходности и роста суммы цели."
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            25,
+            25
+          ]
+        },
+        "png": {
+          "before": [
+            1180,
+            2002
+          ],
+          "after": [
+            1180,
+            2002
+          ]
+        },
+        "share": {
+          "path": "/millionaire.html",
+          "scenario": false,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "millionaire",
+      "width": 375,
+      "height": 812,
+      "theme": "light",
+      "baselineDocumentWidth": 375,
+      "headerHeight": 65,
+      "documentWidth": 375,
+      "titleHeight": 62.71875,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "1 год",
+          "При взносе 80 000 ₽ в месяц, без доходности и роста суммы цели."
+        ],
+        "edited": [
+          "2 года",
+          "При взносе 80 000 ₽ в месяц, без доходности и роста суммы цели."
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            25,
+            25
+          ]
+        },
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "millionaire",
+      "width": 375,
+      "height": 812,
+      "theme": "dark",
+      "baselineDocumentWidth": 375,
+      "headerHeight": 65,
+      "documentWidth": 375,
+      "titleHeight": 62.71875,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "1 год",
+          "При взносе 80 000 ₽ в месяц, без доходности и роста суммы цели."
+        ],
+        "edited": [
+          "2 года",
+          "При взносе 80 000 ₽ в месяц, без доходности и роста суммы цели."
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            25,
+            25
+          ]
+        },
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "millionaire",
+      "width": 320,
+      "height": 680,
+      "theme": "light",
+      "baselineDocumentWidth": 320,
+      "headerHeight": 65,
+      "documentWidth": 320,
+      "titleHeight": 94.078125,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "1 год",
+          "При взносе 80 000 ₽ в месяц, без доходности и роста суммы цели."
+        ],
+        "edited": [
+          "2 года",
+          "При взносе 80 000 ₽ в месяц, без доходности и роста суммы цели."
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            25,
+            25
+          ]
+        },
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "millionaire",
+      "width": 320,
+      "height": 680,
+      "theme": "dark",
+      "baselineDocumentWidth": 320,
+      "headerHeight": 65,
+      "documentWidth": 320,
+      "titleHeight": 94.078125,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "1 год",
+          "При взносе 80 000 ₽ в месяц, без доходности и роста суммы цели."
+        ],
+        "edited": [
+          "2 года",
+          "При взносе 80 000 ₽ в месяц, без доходности и роста суммы цели."
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            25,
+            25
+          ]
+        },
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "mortgage",
+      "width": 1366,
+      "height": 900,
+      "theme": "light",
+      "baselineDocumentWidth": 1366,
+      "functional": {
+        "initial": [
+          "111 300 ₽"
+        ],
+        "edited": [
+          "117 496 ₽"
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            30,
+            30
+          ]
+        },
+        "png": {
+          "before": [
+            1200,
+            1710
+          ],
+          "after": [
+            1200,
+            1710
+          ]
+        },
+        "share": {
+          "path": "/mortgage.html",
+          "scenario": true,
+          "nativePayload": false
+        }
+      },
+      "identicalScreenshotSha256": "12f017a7bbe7e9cbbd1f2294c76660c906f22c815e035667c6621e9c3c4b51e6"
+    },
+    {
+      "name": "mortgage",
+      "width": 1366,
+      "height": 900,
+      "theme": "dark",
+      "baselineDocumentWidth": 1366,
+      "functional": {
+        "initial": [
+          "111 300 ₽"
+        ],
+        "edited": [
+          "117 496 ₽"
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            30,
+            30
+          ]
+        },
+        "png": {
+          "before": [
+            1200,
+            1710
+          ],
+          "after": [
+            1200,
+            1710
+          ]
+        },
+        "share": {
+          "path": "/mortgage.html",
+          "scenario": true,
+          "nativePayload": false
+        }
+      },
+      "identicalScreenshotSha256": "1e753f0064dbf0db2978e084ca0e11fafa78fe0eca4ec6ca71d4bd1ace6f7738"
+    },
+    {
+      "name": "mortgage",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "baselineDocumentWidth": 390,
+      "functional": {
+        "initial": [
+          "111 300 ₽"
+        ],
+        "edited": [
+          "117 496 ₽"
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            30,
+            30
+          ]
+        },
+        "png": {
+          "before": [
+            1200,
+            1710
+          ],
+          "after": [
+            1200,
+            1710
+          ]
+        },
+        "share": {
+          "path": "/mortgage.html",
+          "scenario": true,
+          "nativePayload": false
+        }
+      },
+      "identicalScreenshotSha256": "d5b8f164e4871f5da8230b74149e9f8617b30045105420e4ad82233d8d440294"
+    },
+    {
+      "name": "mortgage",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "baselineDocumentWidth": 390,
+      "functional": {
+        "initial": [
+          "111 300 ₽"
+        ],
+        "edited": [
+          "117 496 ₽"
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            30,
+            30
+          ]
+        },
+        "png": {
+          "before": [
+            1200,
+            1710
+          ],
+          "after": [
+            1200,
+            1710
+          ]
+        },
+        "share": {
+          "path": "/mortgage.html",
+          "scenario": true,
+          "nativePayload": false
+        }
+      },
+      "identicalScreenshotSha256": "e5f0f3e45307d44d592f884a9d4f47e63771b950038636d574a840e03f045c15"
+    },
+    {
+      "name": "rent-vs-mortgage",
+      "width": 1366,
+      "height": 900,
+      "theme": "light",
+      "baselineDocumentWidth": 1366,
+      "headerHeight": 77,
+      "documentWidth": 1366,
+      "titleHeight": 44.84375,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "26 532 977 ₽",
+          "10 720 028 ₽",
+          "111 300 ₽"
+        ],
+        "edited": [
+          "31 839 572 ₽",
+          "17 438 056 ₽",
+          "139 126 ₽"
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            21,
+            21
+          ]
+        },
+        "png": {
+          "before": [
+            1200,
+            1962
+          ],
+          "after": [
+            1200,
+            1962
+          ]
+        },
+        "share": {
+          "path": "/rent-vs-mortgage.html",
+          "scenario": true,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "rent-vs-mortgage",
+      "width": 1366,
+      "height": 900,
+      "theme": "dark",
+      "baselineDocumentWidth": 1366,
+      "headerHeight": 77,
+      "documentWidth": 1366,
+      "titleHeight": 44.84375,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "26 532 977 ₽",
+          "10 720 028 ₽",
+          "111 300 ₽"
+        ],
+        "edited": [
+          "31 839 572 ₽",
+          "17 438 056 ₽",
+          "139 126 ₽"
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            21,
+            21
+          ]
+        },
+        "png": {
+          "before": [
+            1200,
+            1962
+          ],
+          "after": [
+            1200,
+            1962
+          ]
+        },
+        "share": {
+          "path": "/rent-vs-mortgage.html",
+          "scenario": true,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "rent-vs-mortgage",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "baselineDocumentWidth": 390,
+      "headerHeight": 65,
+      "documentWidth": 390,
+      "titleHeight": 35.640625,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "26 532 977 ₽",
+          "10 720 028 ₽",
+          "111 300 ₽"
+        ],
+        "edited": [
+          "31 839 572 ₽",
+          "17 438 056 ₽",
+          "139 126 ₽"
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            21,
+            21
+          ]
+        },
+        "png": {
+          "before": [
+            1200,
+            1924
+          ],
+          "after": [
+            1200,
+            1924
+          ]
+        },
+        "share": {
+          "path": "/rent-vs-mortgage.html",
+          "scenario": true,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "rent-vs-mortgage",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "baselineDocumentWidth": 390,
+      "headerHeight": 65,
+      "documentWidth": 390,
+      "titleHeight": 35.640625,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "26 532 977 ₽",
+          "10 720 028 ₽",
+          "111 300 ₽"
+        ],
+        "edited": [
+          "31 839 572 ₽",
+          "17 438 056 ₽",
+          "139 126 ₽"
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            21,
+            21
+          ]
+        },
+        "png": {
+          "before": [
+            1200,
+            1924
+          ],
+          "after": [
+            1200,
+            1924
+          ]
+        },
+        "share": {
+          "path": "/rent-vs-mortgage.html",
+          "scenario": true,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "rent-vs-mortgage",
+      "width": 375,
+      "height": 812,
+      "theme": "light",
+      "baselineDocumentWidth": 375,
+      "headerHeight": 65,
+      "documentWidth": 375,
+      "titleHeight": 35.640625,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "26 532 977 ₽",
+          "10 720 028 ₽",
+          "111 300 ₽"
+        ],
+        "edited": [
+          "31 839 572 ₽",
+          "17 438 056 ₽",
+          "139 126 ₽"
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            21,
+            21
+          ]
+        },
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "rent-vs-mortgage",
+      "width": 375,
+      "height": 812,
+      "theme": "dark",
+      "baselineDocumentWidth": 375,
+      "headerHeight": 65,
+      "documentWidth": 375,
+      "titleHeight": 35.640625,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "26 532 977 ₽",
+          "10 720 028 ₽",
+          "111 300 ₽"
+        ],
+        "edited": [
+          "31 839 572 ₽",
+          "17 438 056 ₽",
+          "139 126 ₽"
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            21,
+            21
+          ]
+        },
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "rent-vs-mortgage",
+      "width": 320,
+      "height": 680,
+      "theme": "light",
+      "baselineDocumentWidth": 320,
+      "headerHeight": 65,
+      "documentWidth": 320,
+      "titleHeight": 33.34375,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "26 532 977 ₽",
+          "10 720 028 ₽",
+          "111 300 ₽"
+        ],
+        "edited": [
+          "31 839 572 ₽",
+          "17 438 056 ₽",
+          "139 126 ₽"
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            21,
+            21
+          ]
+        },
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "rent-vs-mortgage",
+      "width": 320,
+      "height": 680,
+      "theme": "dark",
+      "baselineDocumentWidth": 320,
+      "headerHeight": 65,
+      "documentWidth": 320,
+      "titleHeight": 33.34375,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "26 532 977 ₽",
+          "10 720 028 ₽",
+          "111 300 ₽"
+        ],
+        "edited": [
+          "31 839 572 ₽",
+          "17 438 056 ₽",
+          "139 126 ₽"
+        ],
+        "chart": {
+          "type": "line",
+          "points": [
+            21,
+            21
+          ]
+        },
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "time-is-money",
+      "width": 1366,
+      "height": 900,
+      "theme": "light",
+      "baselineDocumentWidth": 1366,
+      "headerHeight": 77,
+      "documentWidth": 1366,
+      "titleHeight": 96.78125,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "299",
+          "299 часов"
+        ],
+        "edited": [
+          "399",
+          "399 часов"
+        ],
+        "chart": null,
+        "png": {
+          "before": [
+            1200,
+            1360
+          ],
+          "after": [
+            1200,
+            1360
+          ]
+        },
+        "share": {
+          "path": "/time-is-money.html",
+          "scenario": true,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "time-is-money",
+      "width": 1366,
+      "height": 900,
+      "theme": "dark",
+      "baselineDocumentWidth": 1366,
+      "headerHeight": 77,
+      "documentWidth": 1366,
+      "titleHeight": 96.78125,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "299",
+          "299 часов"
+        ],
+        "edited": [
+          "399",
+          "399 часов"
+        ],
+        "chart": null,
+        "png": {
+          "before": [
+            1200,
+            1360
+          ],
+          "after": [
+            1200,
+            1360
+          ]
+        },
+        "share": {
+          "path": "/time-is-money.html",
+          "scenario": true,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "time-is-money",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "baselineDocumentWidth": 390,
+      "headerHeight": 65,
+      "documentWidth": 390,
+      "titleHeight": 61.59375,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "299",
+          "299 часов"
+        ],
+        "edited": [
+          "399",
+          "399 часов"
+        ],
+        "chart": null,
+        "png": {
+          "before": [
+            1200,
+            1260
+          ],
+          "after": [
+            1200,
+            1260
+          ]
+        },
+        "share": {
+          "path": "/time-is-money.html",
+          "scenario": true,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "time-is-money",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "baselineDocumentWidth": 390,
+      "headerHeight": 65,
+      "documentWidth": 390,
+      "titleHeight": 61.59375,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "299",
+          "299 часов"
+        ],
+        "edited": [
+          "399",
+          "399 часов"
+        ],
+        "chart": null,
+        "png": {
+          "before": [
+            1200,
+            1260
+          ],
+          "after": [
+            1200,
+            1260
+          ]
+        },
+        "share": {
+          "path": "/time-is-money.html",
+          "scenario": true,
+          "nativePayload": false
+        }
+      }
+    },
+    {
+      "name": "time-is-money",
+      "width": 375,
+      "height": 812,
+      "theme": "light",
+      "baselineDocumentWidth": 375,
+      "headerHeight": 65,
+      "documentWidth": 375,
+      "titleHeight": 61.59375,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "299",
+          "299 часов"
+        ],
+        "edited": [
+          "399",
+          "399 часов"
+        ],
+        "chart": null,
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "time-is-money",
+      "width": 375,
+      "height": 812,
+      "theme": "dark",
+      "baselineDocumentWidth": 375,
+      "headerHeight": 65,
+      "documentWidth": 375,
+      "titleHeight": 61.59375,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "299",
+          "299 часов"
+        ],
+        "edited": [
+          "399",
+          "399 часов"
+        ],
+        "chart": null,
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "time-is-money",
+      "width": 320,
+      "height": 680,
+      "theme": "light",
+      "baselineDocumentWidth": 320,
+      "headerHeight": 65,
+      "documentWidth": 320,
+      "titleHeight": 92.390625,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "299",
+          "299 часов"
+        ],
+        "edited": [
+          "399",
+          "399 часов"
+        ],
+        "chart": null,
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "time-is-money",
+      "width": 320,
+      "height": 680,
+      "theme": "dark",
+      "baselineDocumentWidth": 320,
+      "headerHeight": 65,
+      "documentWidth": 320,
+      "titleHeight": 92.390625,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "299",
+          "299 часов"
+        ],
+        "edited": [
+          "399",
+          "399 часов"
+        ],
+        "chart": null,
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "wealth",
+      "width": 1366,
+      "height": 900,
+      "theme": "light",
+      "baselineDocumentWidth": 1366,
+      "headerHeight": 77,
+      "documentWidth": 1366,
+      "titleHeight": 36,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "—",
+          "—"
+        ],
+        "edited": [
+          "180 000 ₽",
+          "107 660 ₽ выше средней зарплаты выбранного региона (+108%)."
+        ],
+        "chart": null,
+        "png": {
+          "before": [
+            1628,
+            2144
+          ],
+          "after": [
+            1628,
+            2144
+          ]
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "wealth",
+      "width": 1366,
+      "height": 900,
+      "theme": "dark",
+      "baselineDocumentWidth": 1366,
+      "headerHeight": 77,
+      "documentWidth": 1366,
+      "titleHeight": 36,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "—",
+          "—"
+        ],
+        "edited": [
+          "180 000 ₽",
+          "107 660 ₽ выше средней зарплаты выбранного региона (+108%)."
+        ],
+        "chart": null,
+        "png": {
+          "before": [
+            1628,
+            2144
+          ],
+          "after": [
+            1628,
+            2144
+          ]
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "wealth",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "baselineDocumentWidth": 390,
+      "headerHeight": 65,
+      "documentWidth": 390,
+      "titleHeight": 30,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "—",
+          "—"
+        ],
+        "edited": [
+          "180 000 ₽",
+          "107 660 ₽ выше средней зарплаты выбранного региона (+108%)."
+        ],
+        "chart": null,
+        "png": {
+          "before": [
+            616,
+            3272
+          ],
+          "after": [
+            616,
+            3272
+          ]
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "wealth",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "baselineDocumentWidth": 390,
+      "headerHeight": 65,
+      "documentWidth": 390,
+      "titleHeight": 30,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "—",
+          "—"
+        ],
+        "edited": [
+          "180 000 ₽",
+          "107 660 ₽ выше средней зарплаты выбранного региона (+108%)."
+        ],
+        "chart": null,
+        "png": {
+          "before": [
+            616,
+            3272
+          ],
+          "after": [
+            616,
+            3272
+          ]
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "wealth",
+      "width": 375,
+      "height": 812,
+      "theme": "light",
+      "baselineDocumentWidth": 375,
+      "headerHeight": 65,
+      "documentWidth": 375,
+      "titleHeight": 30,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "—",
+          "—"
+        ],
+        "edited": [
+          "180 000 ₽",
+          "107 660 ₽ выше средней зарплаты выбранного региона (+108%)."
+        ],
+        "chart": null,
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "wealth",
+      "width": 375,
+      "height": 812,
+      "theme": "dark",
+      "baselineDocumentWidth": 375,
+      "headerHeight": 65,
+      "documentWidth": 375,
+      "titleHeight": 30,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "—",
+          "—"
+        ],
+        "edited": [
+          "180 000 ₽",
+          "107 660 ₽ выше средней зарплаты выбранного региона (+108%)."
+        ],
+        "chart": null,
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "wealth",
+      "width": 320,
+      "height": 680,
+      "theme": "light",
+      "baselineDocumentWidth": 320,
+      "headerHeight": 65,
+      "documentWidth": 320,
+      "titleHeight": 30,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "—",
+          "—"
+        ],
+        "edited": [
+          "180 000 ₽",
+          "107 660 ₽ выше средней зарплаты выбранного региона (+108%)."
+        ],
+        "chart": null,
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    },
+    {
+      "name": "wealth",
+      "width": 320,
+      "height": 680,
+      "theme": "dark",
+      "baselineDocumentWidth": 320,
+      "headerHeight": 65,
+      "documentWidth": 320,
+      "titleHeight": 30,
+      "targetHeights": [
+        44,
+        44,
+        44
+      ],
+      "functional": {
+        "initial": [
+          "—",
+          "—"
+        ],
+        "edited": [
+          "180 000 ₽",
+          "107 660 ₽ выше средней зарплаты выбранного региона (+108%)."
+        ],
+        "chart": null,
+        "png": {
+          "before": null,
+          "after": null
+        },
+        "share": null
+      }
+    }
+  ]
+}

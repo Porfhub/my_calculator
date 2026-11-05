@@ -143,6 +143,7 @@
 </noscript>
 <!-- /Yandex.Metrika counter -->
 <link rel="stylesheet" href="css/product-polish.css">
+<link rel="stylesheet" href="css/design-system.css">
 <style>
 
 :root{--rv-bg:#f6f7f4;--rv-surface:#fff;--rv-ink:#1b292e;--rv-muted:#52656d;--rv-line:#d9e1df;--rv-green:#075446;--rv-tint:#eaf5ef;--rv-focus:#008767;--rv-chart:#71858c}
@@ -153,22 +154,14 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 .rent-page,.rent-page *{box-sizing:border-box}
 .rent-page{margin:0;background:var(--rv-bg);color:var(--rv-ink);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 .rent-page [hidden],.rent-page .hidden{display:none!important}
-.rent-page a{color:var(--rv-green)}
+.rent-page a:not(:where(.yn-scope *)){color:var(--rv-green)}
 .rent-page button,.rent-page input{font:inherit}
 .rent-page button,.rent-page summary{cursor:pointer}
 .rent-page :is(a,button,input,summary):focus-visible{outline:3px solid var(--rv-focus);outline-offset:3px}
 .rent-page .rv-wrap{max-width:1168px;padding:0 28px;margin:auto}
-.rent-page .rv-header{background:var(--rv-surface);border-bottom:1px solid var(--rv-line)}
-.rent-page .rv-header-row{display:flex;align-items:center;gap:30px;min-height:76px}
-.rent-page .rv-brand{display:inline-flex;align-items:center;gap:11px;min-height:44px;text-decoration:none;color:var(--rv-ink);font-size:23px;font-weight:850;letter-spacing:-.8px}
-.rent-page .rv-brand img{width:35px;height:35px}
-.rent-page .rv-nav{margin-left:auto;font-size:14px;min-height:44px;display:flex;align-items:center;text-decoration:none}
-.rent-page .rv-theme{width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--rv-line);border-radius:12px;background:transparent;color:var(--rv-ink)}
-.rent-page .rv-theme svg{width:21px;height:21px}
 .rent-page .skip-link{position:absolute;top:8px;left:16px;z-index:99;background:var(--rv-surface);padding:12px;transform:translateY(-160%)}
 .rent-page .skip-link:focus{transform:none}
 .rent-page .rv-intro{padding:26px 0 24px}
-.rent-page .rv-back{font-size:12px;display:inline-flex;align-items:center;min-height:40px;color:var(--rv-muted);text-decoration:none}
 .rent-page h1{font-size:clamp(29px,3.4vw,39px);font-weight:800;letter-spacing:-1.2px;line-height:1.15;margin:7px 0 12px}
 .rent-page .rv-intro p{max-width:650px;margin:0;color:var(--rv-muted);font-size:16px}
 .rent-page .rv-layout{display:grid;grid-template-columns:minmax(0,390px) minmax(0,1fr);align-items:start;gap:24px}
@@ -296,10 +289,6 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 }
 
 @media(max-width:760px){.rent-page .rv-wrap{padding:0 18px}
-.rent-page .rv-header-row{min-height:65px;gap:13px}
-.rent-page .rv-brand{font-size:19px;gap:8px}
-.rent-page .rv-brand img{width:31px;height:31px}
-.rent-page .rv-nav{font-size:12px}
 .rent-page .rv-intro{padding:15px 0 21px}
 .rent-page h1{font-size:31px;letter-spacing:-1px}
 .rent-page .rv-intro p{font-size:14px}
@@ -318,7 +307,6 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 .rent-page .rv-trust{padding:0 18px}
 .rent-page .rv-input input{font-size:17px}
 .rent-page .rv-pair{gap:12px}
-.rent-page .rv-back{min-height:34px}
 .rent-page .rv-section-head{margin-bottom:15px}
 }
 
@@ -331,7 +319,6 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 .rent-page .rv-hero-top,.rent-page .rv-capitals{padding:19px}
 .rent-page .rv-capital-line strong{font-size:21px}
 .rent-page #verdict-difference{font-size:28px}
-.rent-page .rv-brand{font-size:17px}
 .rent-page h1{font-size:29px}
 }
 
@@ -342,11 +329,13 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 
 </style>
 <style>
+#theme-toggle.yn-theme-toggle {
+    padding: var(--yn-space-sm) !important;
+    border-radius: var(--yn-radius-control);
+    box-shadow: none;
+}
 .rent-page .rv-difference{display:flex;align-items:baseline;gap:9px}
 .rent-page .rv-difference>span{font-size:22px}
-.rent-page .rv-header{box-shadow:none;border-bottom:1px solid var(--rv-line)}
-.rent-page .rv-header>.rv-header-row{padding:0 28px!important}
-.rent-page .rv-theme{box-shadow:none!important}
 .rent-page .rv-mobile-result{display:none}
 .rent-page .rv-range{appearance:none;-webkit-appearance:none;background:transparent}
 .rent-page .rv-range::-webkit-slider-runnable-track{height:4px;background:linear-gradient(to right,#008767 var(--fill,20%),var(--rv-line) var(--fill,20%));border-radius:4px}
@@ -354,10 +343,8 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 .rent-page .rv-range::-moz-range-track{height:4px;background:var(--rv-line);border-radius:4px}
 .rent-page .rv-range::-moz-range-progress{height:4px;background:#008767}
 .rent-page .rv-range::-moz-range-thumb{height:13px;width:13px;background:#008767;border:0;border-radius:50%}
-@media(max-width:760px){.rent-page .rv-header>.rv-header-row{padding:0 18px!important}
+@media(max-width:760px){
 .rent-page .rv-mobile-result{display:flex;align-items:center;justify-content:center;margin-top:19px;text-decoration:none;background:var(--rv-tint)}
-}
-@media(max-width:370px){.rent-page .rv-header>.rv-header-row{padding:0 14px!important}
 }
 
 </style>
@@ -371,27 +358,25 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}
 </head>
 <body class="calculator-page rent-page">
 <a class="skip-link" href="#rent-form">Перейти к расчёту</a>
-<header class="rv-header">
-<div class="rv-wrap rv-header-row">
-<a class="rv-brand" href="index.html" aria-label="Ясномера — главная">
-<img src="yasnomera-mark.svg" width="35" height="35" alt="">
-<span>ЯСНОМЕРА</span>
-</a>
-<a class="rv-nav" href="index.html#calculators">Все расчёты</a>
-<button id="theme-toggle" class="rv-theme" onclick="toggleDarkMode()" aria-label="Переключить тему">
-<svg id="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-</svg>
-<svg id="sun-icon" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-<circle cx="12" cy="12" r="4"/>
-<path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>
-</svg>
-</button>
+<div class="yn-scope">
+    <header class="yn-header">
+        <div class="yn-header-inner">
+            <a class="yn-brand" href="index.html">
+                <img src="yasnomera-mark.svg" alt="" width="32" height="32">
+                ЯСНОМЕРА
+            </a>
+            <nav class="yn-header-nav" aria-label="Основная навигация">
+                <a class="yn-link" href="index.html#catalog-section">Все расчёты</a>
+            </nav>
+            <button id="theme-toggle" class="yn-theme-toggle" type="button" onclick="toggleDarkMode()" aria-label="Переключить тему">
+                <svg id="sun-icon" class="yn-theme-icon hidden" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
+                <svg id="moon-icon" class="yn-theme-icon" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+            </button>
+        </div>
+    </header>
 </div>
-</header>
 <main class="rv-wrap">
 <div class="rv-intro">
-<a class="rv-back" href="index.html">← Все калькуляторы</a>
 <h1>Покупка или аренда</h1>
 <p>Своя квартира или деньги на счёте? Сравните, какой капитал останется при каждом варианте.</p>
 </div>

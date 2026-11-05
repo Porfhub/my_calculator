@@ -52,20 +52,38 @@
         .comparison-marker.user .dot { background: #16a34a; box-shadow: 0 0 0 5px rgba(34,197,94,.15); }
     </style>
     <link rel="stylesheet" href="css/product-polish.css">
+    <link rel="stylesheet" href="css/design-system.css">
+    <style>
+        #theme-toggle.yn-theme-toggle {
+            padding: var(--yn-space-sm) !important;
+            border-radius: var(--yn-radius-control);
+            box-shadow: none;
+        }
+    </style>
 </head>
 <body class="calculator-page bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased flex flex-col">
-    <div class="product-theme-control fixed top-6 right-4 z-50 md:right-8">
-        <button id="theme-toggle" onclick="toggleDarkMode()" aria-label="Переключить тему" class="p-3 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
-            <span class="dark:hidden">☾</span><span class="hidden dark:inline">☀</span>
-        </button>
+    <div class="yn-scope">
+        <header class="yn-header">
+            <div class="yn-header-inner">
+                <a class="yn-brand" href="index.html">
+                    <img src="yasnomera-mark.svg" alt="" width="32" height="32">
+                    ЯСНОМЕРА
+                </a>
+                <nav class="yn-header-nav" aria-label="Основная навигация">
+                    <a class="yn-link" href="index.html#catalog-section">Все расчёты</a>
+                </nav>
+                <button id="theme-toggle" class="yn-theme-toggle" type="button" onclick="toggleDarkMode()" aria-label="Переключить тему">
+                    <svg id="sun-icon" class="yn-theme-icon hidden" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
+                    <svg id="moon-icon" class="yn-theme-icon" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+                </button>
+            </div>
+        </header>
     </div>
-    <header class="bg-gradient-to-r from-brand-800 to-slate-900 text-white shadow-md">
-        <div class="max-w-4xl mx-auto px-4 py-6 sm:px-6 flex items-center gap-4">
-            <a href="index.html" class="p-2 hover:bg-white/10 rounded-xl transition flex items-center gap-2" aria-label="Ясномера — на главную">← <span class="text-xs font-bold uppercase tracking-wider hidden sm:inline">Ясномера</span></a>
-            <div><h1 class="text-2xl font-black tracking-tight">Сравнение зарплаты</h1><p class="text-xs text-brand-100">Официальные ориентиры без рейтингов и ярлыков</p></div>
-        </div>
-    </header>
     <main class="flex-grow p-4 sm:p-8">
+        <div class="max-w-4xl mx-auto mb-5 sm:mb-8">
+            <h1 class="text-2xl font-black leading-tight tracking-tight sm:text-3xl">Сравнение зарплаты</h1>
+            <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Официальные ориентиры без рейтингов и ярлыков</p>
+        </div>
         <div class="max-w-4xl mx-auto bg-white dark:bg-slate-900 rounded-3xl p-6 md:p-10 shadow-sm border border-slate-100 dark:border-slate-800">
             <div class="text-center mb-8">
                 <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-2">Как ваша зарплата соотносится с официальными ориентирами?</h2>
