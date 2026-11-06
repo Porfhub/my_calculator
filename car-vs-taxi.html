@@ -110,14 +110,14 @@
             border-radius: var(--yn-radius-panel);
             padding: clamp(0.85rem, 2.5vw, 1.5rem);
         }
-        .ct-panel > * + *, .ct-extras { margin-top: 0.75rem; }
+        .ct-panel:not(.ct-result) > * + * { margin-top: 0.75rem; }
         .ct-muted { color: var(--yn-color-muted); font-size: 0.875rem; line-height: 1.45; }
         .ct-main .yn-field { display: block; min-width: 0; }
         .ct-main .yn-label { display: block; margin-bottom: 0.25rem; font-size: 0.875rem; line-height: 1.25; }
         .ct-main .yn-input { display: block; width: 100%; min-width: 0; font-variant-numeric: tabular-nums; }
         .ct-main .yn-hint, .ct-main .yn-error { margin: 0.25rem 0 0; }
         .ct-main .yn-error:empty { margin: 0; }
-        .ct-main :is(input, button, a, summary):focus-visible, .ct-sticky a:focus-visible, .ct-result h2:focus {
+        .ct-main :is(input, button, a, summary):focus-visible, .ct-sticky a:focus-visible, :is(#verdict-title, #car-heading):focus {
             outline: var(--yn-focus-ring);
             outline-offset: 2px;
             box-shadow: none !important;
@@ -127,7 +127,8 @@
         .ct-distance .yn-label { margin: 0; }
         .ct-distance .yn-error { grid-column: 1 / -1; }
         .ct-mileage { display: block; border-top: var(--yn-border); padding-top: 0.65rem; font-weight: 650; }
-        .ct-mileage + p { margin-top: 0.25rem; }
+        .ct-trip .ct-mileage { margin-top: 0.6rem; }
+        .ct-trip .ct-mileage + p { margin-top: 0.25rem; }
         .ct-presets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.375rem; }
         .ct-main .ct-presets button { display: block; min-width: 0; padding: 0.3rem 0.15rem; font-size: 0.8125rem; line-height: 1.2; }
         .ct-presets small { display: block; margin-top: 0.15rem; font-size: 0.75rem; font-weight: 500; }
@@ -158,39 +159,90 @@
         .ct-main input[type="range"] { width: 100%; min-height: 2.75rem; accent-color: var(--yn-color-accent); }
         .ct-depreciation { display: block; margin-top: 0.25rem; font-weight: 650; }
 
-        .ct-result { border-top: 3px solid var(--yn-color-accent); }
+        .ct-car { padding-block: 0.85rem 0.4rem; border: 0; border-top: var(--yn-border); border-radius: 0; background: transparent; }
+        #car-heading { scroll-margin-top: 1rem; width: fit-content; }
+        .ct-car .ct-inline-details { border-color: var(--yn-color-control-border); }
+
+        .ct-result {
+            --ct-hero-surface: #e8f4ed;
+            --ct-car-bar: #4f697a;
+            --ct-result-gutter: clamp(0.85rem, 3vw, 1.75rem);
+            padding: 0;
+        }
+        html.dark .ct-result { --ct-hero-surface: #263d35; --ct-car-bar: #9bb8cb; }
+        .ct-hero {
+            padding: 0.7rem var(--ct-result-gutter) 0.75rem;
+            background: var(--ct-hero-surface);
+            border-radius: calc(var(--yn-radius-panel) - 1px) calc(var(--yn-radius-panel) - 1px) 0 0;
+        }
         .ct-result-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; }
-        .ct-print-title[hidden] + .ct-result-head { margin-top: 0; }
-        .ct-result-head p { font-weight: 700; font-size: 0.875rem; }
-        .ct-period { display: inline-flex; gap: 0.25rem; }
-        .ct-main .ct-period button { padding: 0.25rem 0.65rem; font-size: 0.875rem; }
+        .ct-result-head p { font-weight: 700; font-size: 0.875rem; color: var(--yn-color-muted); }
+        .ct-period { display: inline-flex; gap: 0.125rem; padding: 0.125rem; border: var(--yn-control-border); border-radius: 0.75rem; background: var(--yn-color-surface); }
+        .ct-main .ct-period button { padding: 0.2rem 0.65rem; font-size: 0.875rem; border-color: transparent; }
+        .ct-verdict { margin-top: 0.55rem; }
         .ct-result h2 {
             width: fit-content;
-            color: var(--yn-color-accent);
-            font-size: clamp(1.45rem, 3.5vw, 2.125rem);
-            line-height: 1.12;
-            letter-spacing: -0.025em;
+            max-width: 100%;
+            font-size: clamp(1.25rem, 3vw, 1.625rem);
+            line-height: 1.15;
+            letter-spacing: -0.02em;
             scroll-margin-top: 1rem;
         }
         .ct-result h2, .ct-result dd, .ct-sticky strong { overflow-wrap: anywhere; }
-        .ct-delta { display: inline-block; max-width: 100%; }
-        .ct-verdict > * + * { margin-top: 0.3rem; }
-        .ct-comparison { border-block: var(--yn-border); padding-block: 0.8rem; }
-        .ct-comparison dl { display: grid; gap: 0.75rem; }
-        .ct-compare-row { position: relative; display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 0.65rem; padding-bottom: 0.725rem; }
-        .ct-compare-row dt { font-weight: 650; }
-        .ct-compare-row dd { font-size: clamp(1rem, 2.8vw, 1.25rem); font-weight: 750; text-align: right; }
-        .ct-track { display: block; position: absolute; inset: auto 0 0; height: 0.375rem; background: var(--yn-color-line); border-radius: 1rem; }
-        .ct-track > span { display: block; height: 100%; background: var(--yn-color-accent); border-radius: inherit; }
-        .ct-scale { margin-top: 0.45rem; font-size: 0.8125rem; }
-        .ct-reason { font-size: 0.9375rem; line-height: 1.45; }
+        .ct-delta {
+            display: block;
+            margin-block: 0.2rem 0.3rem;
+            color: var(--yn-color-accent);
+            font-size: clamp(2.15rem, 8.5vw, 3.75rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.055em;
+        }
+        .ct-delta-prefix { font-size: 0.5em; letter-spacing: 0; }
+        .ct-delta-unit { font-size: 0.46em; letter-spacing: -0.02em; }
+        .ct-verdict p { margin-top: 0.3rem; }
+        .ct-car-context { display: flex; flex-wrap: wrap; align-items: center; column-gap: 0.7rem; margin-top: 0.1rem; font-size: 0.875rem; }
+        .ct-car-context p { font-weight: 700; }
+        .ct-car-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--yn-color-accent); font-weight: 650; text-decoration: underline; text-underline-offset: 0.2em; }
+        .ct-result-body { padding: 0.9rem var(--ct-result-gutter) 0.5rem; }
+        .ct-comparison dl { display: grid; gap: 0.6rem; }
+        .ct-compare-row { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 0.65rem; padding-bottom: 0.8rem; }
+        .ct-compare-row dt { font-weight: 700; }
+        .ct-compare-row dd { font-size: clamp(1.1rem, 3vw, 1.4rem); font-weight: 750; text-align: right; }
+        .ct-track { display: block; position: absolute; inset: auto 0 0; height: 0.425rem; background: var(--yn-color-line); border-radius: 1rem; }
+        .ct-track > span { display: block; height: 100%; border-radius: inherit; }
+        .ct-track-car > span { background: var(--ct-car-bar); }
+        .ct-track-taxi > span { background: var(--yn-color-accent); }
+        .ct-scale { margin-top: 0.5rem; font-size: 0.8125rem; }
+        .ct-costs { margin-top: 0.8rem; border-top: var(--yn-border); padding-top: 0.75rem; }
+        .ct-reason { margin-bottom: 0.5rem; font-size: 0.9375rem; font-weight: 700; line-height: 1.4; }
         .ct-breakdown { display: grid; gap: 0.55rem; }
         .ct-breakdown div { display: grid; grid-template-columns: 1fr minmax(0, auto); gap: 0 0.5rem; align-items: baseline; }
         .ct-breakdown dt { font-size: 0.875rem; line-height: 1.35; }
         .ct-breakdown dd { font-size: 0.875rem; font-weight: 700; text-align: right; }
         .ct-breakdown small { display: block; margin-top: 0.125rem; font-size: 0.8125rem; }
-        .ct-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.65rem; }
-        .ct-main .ct-actions .yn-button { font-size: 0.875rem; text-align: left; padding-inline: 0.65rem; }
+        .ct-result-body > details { margin-top: 0.45rem; }
+        .ct-main :is(.ct-actions, .ct-result-body > details, .ct-extras .yn-methodology) { background: transparent; border: 0; border-radius: 0; }
+        .ct-main :is(.ct-actions, .ct-result-body > details, .ct-extras .yn-methodology) > summary { padding-inline-start: 0; }
+        .ct-main :is(.ct-actions, .ct-result-body > details, .ct-extras .yn-methodology) > summary::after { right: 0.25rem; }
+        .ct-result-body > details > summary { color: var(--yn-color-accent); font-size: 0.875rem; }
+        .ct-main .ct-actions { margin-inline: var(--ct-actions-gutter, 0.85rem); }
+        .ct-actions > summary { color: var(--yn-color-muted); font-size: 0.875rem; }
+        .ct-actions-list { display: flex; flex-wrap: wrap; column-gap: 0.85rem; border-top: var(--yn-border); }
+        .ct-main .ct-actions-list .yn-button {
+            justify-content: flex-start;
+            border: 0;
+            background: transparent;
+            color: var(--yn-color-accent);
+            padding: 0.25rem 0;
+            font-size: 0.875rem;
+            text-align: left;
+            text-decoration: underline;
+            text-underline-offset: 0.2em;
+        }
+        .ct-extras { display: block; border-top: var(--yn-border); margin-top: 1.25rem; }
+        .ct-extras > * + *, .ct-main .ct-extras > .yn-methodology + .yn-methodology { border-top: var(--yn-border); }
+        .ct-extras .yn-methodology-body { padding-inline: 0; }
         .ct-extras :is(summary, .yn-methodology-body) { font-size: 0.9375rem; }
         .ct-quiz-heading { font-weight: 700; margin-bottom: 0.6rem; }
         .ct-quiz-options { display: grid; gap: 1rem; margin-top: 0.75rem; }
@@ -199,15 +251,21 @@
         .ct-quiz-caption { display: block; margin-top: 0.2rem; font-weight: 500; }
         .ct-quiz-result { border-top: var(--yn-border); margin-top: 1rem; padding-top: 0.75rem; }
         .ct-main [hidden], .ct-sticky[hidden], .ct-print-title { display: none !important; }
-        [data-screenshot-stage] .ct-print-title { display: block !important; font-size: 0.875rem; font-weight: 750; }
-        [data-screenshot-stage] .ct-print-title + .ct-result-head { margin-top: 0.75rem; }
-        [data-screenshot-stage] .ct-result { padding: 1.25rem; }
-        [data-screenshot-stage] .ct-result h2 { font-size: 1.625rem; }
+        [data-screenshot-stage] .ct-print-title { display: block !important; font-size: 0.875rem; font-weight: 750; margin-bottom: 0.35rem; }
+        [data-screenshot-stage] .ct-print-period { display: inline; }
+        [data-screenshot-stage] .ct-hero { padding-top: 1.125rem; }
+        [data-screenshot-stage] .ct-result { --ct-result-gutter: 1.25rem; }
+        [data-screenshot-stage] .ct-result h2 { font-size: 1.375rem; }
+        [data-screenshot-stage] .ct-delta { font-size: 2.65rem; }
+        [data-screenshot-stage] .ct-result-body { padding-bottom: 1.125rem; }
         [data-screenshot-stage] .ct-compare-row dd { font-size: 1.125rem; }
 
         .ct-sticky { display: none; }
         .ct-footer { padding: 1rem 1rem 2rem; text-align: center; }
         @media (max-width: 767px) {
+            .ct-trip .ct-fields { row-gap: 0.65rem; }
+            .ct-actions-list { display: grid; grid-template-columns: max-content minmax(0, 1fr); }
+            .ct-actions-list #copy-link { grid-column: 1 / -1; }
             html:has(.ct-sticky:not([hidden])) { scroll-padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
             .ct-sticky:not([hidden]) {
                 position: fixed;
@@ -269,7 +327,7 @@
             </div>
         </div>
         <div class="ct-layout">
-            <section class="ct-panel ym-hide-content" aria-labelledby="trip-heading">
+            <section class="ct-panel ct-trip ym-hide-content" aria-labelledby="trip-heading">
                 <h2 class="ct-section-title" id="trip-heading">Условия поездок</h2>
                 <div class="ct-fields">
                     <div class="yn-field">
@@ -298,63 +356,76 @@
 
             <div class="ct-result-stack">
                 <section class="ct-panel ct-result yn-scope ym-hide-content" id="screenshot-area" data-screenshot-width="500" aria-label="Результат расчёта">
-                    <p class="ct-print-title" hidden>Ясномера · Машина или такси</p>
-                    <div class="ct-result-head">
-                        <p id="result-period">Первый год · в среднем за месяц</p>
-                        <div id="period-switch" class="ct-period" role="group" aria-label="Период сравнения" data-screenshot-exclude>
-                            <button type="button" id="period-month" class="yn-button" aria-pressed="true" data-period="month">Месяц</button>
-                            <button type="button" id="period-year" class="yn-button" aria-pressed="false" data-period="year">Год</button>
+                    <div class="ct-hero" id="result-hero">
+                        <p class="ct-print-title" hidden>Ясномера · Машина или такси</p>
+                        <div class="ct-result-head">
+                            <p id="result-period">Первый год<span id="print-period" class="ct-print-period" hidden></span></p>
+                            <div id="period-switch" class="ct-period" role="group" aria-label="Период сравнения" data-screenshot-exclude>
+                                <button type="button" id="period-month" class="yn-button" aria-pressed="true" data-period="month">Месяц</button>
+                                <button type="button" id="period-year" class="yn-button" aria-pressed="false" data-period="year">Год</button>
+                            </div>
+                        </div>
+                        <div class="ct-verdict" id="result-verdict" role="status" aria-atomic="true">
+                            <h2 id="verdict-title" class="yn-number" tabindex="-1"><span id="verdict-phrase">Сравнение расходов</span><span id="verdict-join" class="sr-only"></span><span id="verdict-figure" class="ct-delta" hidden><span id="verdict-prefix" class="ct-delta-prefix"></span><span id="verdict-amount"></span><span id="verdict-unit" class="ct-delta-unit"></span></span></h2>
+                            <p class="ct-muted" id="verdict-detail"></p>
+                        </div>
+                        <div class="ct-car-context" data-screenshot-exclude>
+                            <p id="result-car-context"></p>
+                            <a class="ct-car-link" id="edit-car" href="#car-heading">Изменить автомобиль</a>
                         </div>
                     </div>
-                    <div class="ct-verdict" id="result-verdict" role="status" aria-atomic="true">
-                        <h2 id="verdict-title" class="yn-number" tabindex="-1"><span id="verdict-phrase">Сравнение расходов</span><span id="verdict-amount" class="ct-delta"></span></h2>
-                        <p class="ct-muted" id="verdict-detail"></p>
-                    </div>
-                    <div class="ct-comparison" id="comparison" hidden>
-                        <dl>
-                            <div class="ct-compare-row">
-                                <dt>Машина</dt>
-                                <dd class="yn-number"><span id="car-total"></span><span class="ct-track" aria-hidden="true"><span id="car-bar"></span></span></dd>
-                            </div>
-                            <div class="ct-compare-row">
-                                <dt>Такси</dt>
-                                <dd class="yn-number"><span id="taxi-total"></span><span class="ct-track" aria-hidden="true"><span id="taxi-bar"></span></span></dd>
-                            </div>
-                        </dl>
-                        <p class="ct-muted ct-scale" id="comparison-scale"></p>
-                    </div>
-                    <p class="ct-reason" id="result-reason" hidden></p>
-                    <dl class="ct-breakdown" id="result-breakdown" aria-label="Из чего складывается стоимость машины" hidden>
-                        <div><dt>Денежные расходы на машину</dt><dd class="yn-number" id="car-cash"></dd></div>
-                        <div><dt>Потеря стоимости машины<small class="ct-muted">Оценка снижения цены, без платежа</small></dt><dd class="yn-number" id="car-loss"></dd></div>
-                    </dl>
-                    <details class="yn-methodology ct-inline-details" id="result-details" data-screenshot-exclude hidden>
-                        <summary class="yn-methodology-summary">Подробнее о расходах</summary>
-                        <div class="yn-methodology-body">
-                            <dl class="ct-breakdown">
-                                <div><dt>Топливо</dt><dd class="yn-number" id="car-fuel"></dd></div>
-                                <div><dt>Страховка и обслуживание</dt><dd class="yn-number" id="car-fixed"></dd></div>
-                                <div><dt>Прочие расходы</dt><dd class="yn-number" id="car-other"></dd></div>
-                                <div><dt>Стоимость километра на машине</dt><dd class="yn-number" id="car-per-km"></dd></div>
+                    <div class="ct-result-body" id="result-body" hidden>
+                        <div class="ct-comparison" id="comparison">
+                            <dl>
+                                <div class="ct-compare-row">
+                                    <dt>Машина</dt>
+                                    <dd class="yn-number"><span id="car-total"></span><span class="ct-track ct-track-car" aria-hidden="true"><span id="car-bar"></span></span></dd>
+                                </div>
+                                <div class="ct-compare-row">
+                                    <dt>Такси</dt>
+                                    <dd class="yn-number"><span id="taxi-total"></span><span class="ct-track ct-track-taxi" aria-hidden="true"><span id="taxi-bar"></span></span></dd>
+                                </div>
+                            </dl>
+                            <p class="ct-muted ct-scale" id="comparison-scale"></p>
+                        </div>
+                        <div class="ct-costs">
+                            <p class="ct-reason" id="result-reason"></p>
+                            <dl class="ct-breakdown" id="result-breakdown" aria-label="Из чего складывается стоимость машины">
+                                <div><dt>Денежные расходы машины</dt><dd class="yn-number" id="car-cash"></dd></div>
+                                <div><dt>Расчётная потеря стоимости<small class="ct-muted">Снижение цены, без платежа</small></dt><dd class="yn-number" id="car-loss"></dd></div>
                             </dl>
                         </div>
-                    </details>
+                        <details class="yn-methodology" id="result-details" data-screenshot-exclude>
+                            <summary class="yn-methodology-summary">Подробнее о расходах</summary>
+                            <div class="yn-methodology-body">
+                                <dl class="ct-breakdown">
+                                    <div><dt>Топливо</dt><dd class="yn-number" id="car-fuel"></dd></div>
+                                    <div><dt>Страховка и обслуживание</dt><dd class="yn-number" id="car-fixed"></dd></div>
+                                    <div><dt>Прочие расходы</dt><dd class="yn-number" id="car-other"></dd></div>
+                                    <div><dt>Стоимость километра на машине</dt><dd class="yn-number" id="car-per-km"></dd></div>
+                                </dl>
+                            </div>
+                        </details>
+                    </div>
                 </section>
-                <div class="ct-actions" aria-label="Действия с результатом" role="group">
-                    <button type="button" class="yn-button" id="export-png" onclick="takeScreenshot('screenshot-area', 'yasnomera-car-vs-taxi.png')" disabled>Сохранить PNG</button>
-                    <button type="button" class="yn-button" id="copy-link">Скопировать ссылку на калькулятор</button>
-                    <button type="button" class="yn-button" id="share-result" disabled hidden>Поделиться результатом</button>
-                </div>
+                <details class="yn-methodology ct-actions" id="result-actions">
+                    <summary class="yn-methodology-summary">Сохранить или поделиться</summary>
+                    <div class="ct-actions-list">
+                        <button type="button" class="yn-button" id="export-png" onclick="takeScreenshot('screenshot-area', 'yasnomera-car-vs-taxi.png')" disabled>Сохранить PNG</button>
+                        <button type="button" class="yn-button" id="share-result" disabled hidden>Поделиться результатом</button>
+                        <button type="button" class="yn-button" id="copy-link">Скопировать ссылку на калькулятор</button>
+                    </div>
+                </details>
             </div>
 
             <section class="ct-panel ct-car ym-hide-content" aria-labelledby="car-heading">
-                <h2 class="ct-section-title" id="car-heading">Автомобиль</h2>
+                <h2 class="ct-section-title" id="car-heading" tabindex="-1">Автомобиль</h2>
                 <div>
                     <p class="ct-muted ct-presets-label">Примеры параметров, без привязки к рыночным ценам</p>
                     <div class="ct-presets" id="car-presets" role="group" aria-label="Примеры параметров автомобиля">
-                        <button type="button" id="preset-economy" class="yn-button" data-preset="economy" aria-pressed="false">Lada Granta<small>Эконом</small></button>
-                        <button type="button" id="preset-comfort" class="yn-button" data-preset="comfort" aria-pressed="true">Geely Coolray<small>Комфорт</small></button>
-                        <button type="button" id="preset-premium" class="yn-button" data-preset="premium" aria-pressed="false">EXEED RX<small>Премиум</small></button>
+                        <button type="button" id="preset-economy" class="yn-button" data-preset="economy" aria-pressed="false"><span id="preset-economy-name">Lada Granta</span><small>Эконом</small></button>
+                        <button type="button" id="preset-comfort" class="yn-button" data-preset="comfort" aria-pressed="true"><span id="preset-comfort-name">Geely Coolray</span><small>Комфорт</small></button>
+                        <button type="button" id="preset-premium" class="yn-button" data-preset="premium" aria-pressed="false"><span id="preset-premium-name">EXEED RX</span><small>Премиум</small></button>
                     </div>
                 </div>
                 <div class="yn-field">
@@ -579,10 +650,19 @@
                 : `${formatTrips(tripsPerMonth)} × ${number.format(taxiTripDistance)} км × 12 = ${number.format(mileage)} км в год`;
             byId('depreciation-display').textContent = `${depreciation ?? '—'}% · ${carPrice === null || depreciation === null
                 ? '—' : formatMoney(carPrice * (depreciation / 100))} за год`;
+            let carLabel = 'Свои параметры';
             for (const [type, preset] of Object.entries(presets)) {
                 const active = otherExpenses === 0 && Object.entries(preset).every(([id, value]) => values[fields[id].key] === value);
                 byId(`preset-${type}`).setAttribute('aria-pressed', active);
+                if (active) carLabel = byId(`preset-${type}-name`).textContent;
             }
+            let carContext = 'Уточните цену автомобиля';
+            if (carPrice !== null) {
+                const priceLabel = carPrice >= 1000000 && carPrice % 100000 === 0
+                    ? `${number.format(carPrice / 1000000)} млн ₽` : displayAmount(carPrice, true);
+                carContext = `${carLabel} · ${priceLabel}`;
+            }
+            byId('result-car-context').textContent = carContext;
 
             base = Object.values(values).includes(null) ? null : calculateBase(values);
             if (base) {
@@ -622,11 +702,11 @@
         }
 
         function comparisonReason({ totalTaxiAnnual, depreciationAnnual, carCashAnnual, fuelCostAnnual, insurance, maintenance, otherExpenses }, difference) {
-            if (difference === 0) return 'При этих условиях оба варианта стоят одинаково.';
-            if (totalTaxiAnnual === 0) return 'Расчётные расходы на такси равны нулю, а у машины есть собственные затраты.';
-            if (difference < 0) return 'Стоимость поездок на такси выше всех расходов на машину вместе с оценкой потери стоимости.';
+            if (difference === 0) return '';
+            if (totalTaxiAnnual === 0) return 'У машины сохраняются расходы при нулевой стоимости такси.';
+            if (difference < 0) return 'Поездки на такси обходятся дороже всех затрат на машину.';
             if (depreciationAnnual > 0 && carCashAnnual <= totalTaxiAnnual) {
-                return 'Разницу определяет потеря стоимости машины. По денежным расходам машина обходится не дороже такси.';
+                return 'Разницу определяет потеря стоимости машины.';
             }
             const largest = Math.max(depreciationAnnual, fuelCostAnnual, insurance + maintenance, otherExpenses);
             if (largest === depreciationAnnual) return 'Больше всего в стоимости машины весит потеря её цены за первый год.';
@@ -644,22 +724,30 @@
             return `${number.format(trips)} ${forms[tripPlural.select(trips)]}`;
         }
 
+        function renderVerdict(title, detail, amount = '', unit = '', belowKopeck = false) {
+            byId('verdict-phrase').textContent = title;
+            byId('verdict-figure').hidden = !amount;
+            byId('verdict-join').textContent = amount ? (belowKopeck ? ' ' : ' на ') : '';
+            byId('verdict-prefix').textContent = belowKopeck ? 'менее чем на ' : '';
+            byId('verdict-amount').textContent = amount;
+            byId('verdict-unit').textContent = unit;
+            byId('verdict-detail').textContent = detail;
+        }
+
         function renderResult() {
             const month = period === 'month';
             const unit = month ? '/мес.' : '/год';
             const divisor = month ? 12 : 1;
             const moneyForPeriod = (amount) => displayAmount(amount / divisor);
             const valid = Boolean(base);
-            byId('result-period').textContent = month ? 'Первый год · в среднем за месяц' : 'Расходы за первый год';
+            byId('print-period').textContent = month ? ' · в среднем за месяц' : '';
             byId('period-month').setAttribute('aria-pressed', month);
             byId('period-year').setAttribute('aria-pressed', !month);
-            for (const id of ['comparison', 'result-reason', 'result-breakdown', 'result-details']) byId(id).hidden = !valid;
+            byId('result-body').hidden = !valid;
             byId('export-png').disabled = !valid;
             byId('share-result').disabled = !valid;
             if (!base) {
-                byId('verdict-phrase').textContent = 'Проверьте условия расчёта';
-                byId('verdict-amount').textContent = '';
-                byId('verdict-detail').textContent = 'Исправьте отмеченные поля, чтобы увидеть сравнение.';
+                renderVerdict('Проверьте условия расчёта', 'Исправьте отмеченные поля, чтобы увидеть сравнение.');
                 updateSticky();
                 return;
             }
@@ -669,15 +757,14 @@
             const { difference, title, close } = getComparison(totalCarAnnual, totalTaxiAnnual);
             const delta = Math.abs(difference) / divisor;
             const belowKopeck = delta > 0 && delta < 0.01;
-            const amount = (belowKopeck ? '0,01 ₽' : displayAmount(delta, close || (delta > 0 && delta < 0.5))) + unit;
+            const amount = belowKopeck ? '0,01 ₽' : displayAmount(delta, close || (delta > 0 && delta < 0.5));
             const hasWinner = !close && difference !== 0;
             const trips = `${formatTrips(tripsPerMonth)} в месяц · ${number.format(taxiTripDistance)} км за поездку`;
             const direction = difference > 0 ? 'машина дороже' : 'такси дороже';
-            const differenceLabel = belowKopeck ? `менее ${amount}` : amount;
+            const differenceLabel = `${belowKopeck ? 'менее ' : ''}${amount}${unit}`;
             const detail = close ? `Разница ${differenceLabel}, ${direction}. ${trips}` : trips;
-            byId('verdict-phrase').textContent = hasWinner ? `${title} ${belowKopeck ? 'менее чем на' : 'на'} ` : title;
-            byId('verdict-amount').textContent = hasWinner ? amount : '';
-            byId('verdict-detail').textContent = detail;
+            if (hasWinner) renderVerdict(title, detail, amount, unit, belowKopeck);
+            else renderVerdict(title, detail);
             byId('mobile-verdict-title').textContent = title;
             byId('mobile-difference').textContent = differenceLabel;
             byId('car-total').textContent = moneyForPeriod(totalCarAnnual);
@@ -686,7 +773,9 @@
             byId('car-bar').style.width = `${maximum ? totalCarAnnual / maximum * 100 : 0}%`;
             byId('taxi-bar').style.width = `${maximum ? totalTaxiAnnual / maximum * 100 : 0}%`;
             byId('comparison-scale').textContent = `Общая шкала от 0 до ${moneyForPeriod(maximum)}${unit}`;
-            byId('result-reason').textContent = comparisonReason(base, difference);
+            const reason = comparisonReason(base, difference);
+            byId('result-reason').textContent = reason;
+            byId('result-reason').hidden = !reason;
             byId('car-cash').textContent = moneyForPeriod(carCashAnnual);
             byId('car-loss').textContent = moneyForPeriod(depreciationAnnual);
             byId('car-fuel').textContent = moneyForPeriod(fuelCostAnnual);
@@ -840,7 +929,7 @@
                 verdictVisible = entry.isIntersecting;
                 updateSticky();
             });
-            verdictObserver.observe(byId('screenshot-area'));
+            verdictObserver.observe(byId('result-hero'));
             document.addEventListener('focusin', updateSticky);
             document.addEventListener('focusout', event => {
                 const id = event.target.id;
@@ -851,16 +940,24 @@
                 window.requestAnimationFrame(updateSticky);
             });
             window.visualViewport?.addEventListener('resize', updateSticky);
-            byId('jump-to-result').addEventListener('click', event => {
-                event.preventDefault();
-                byId('verdict-title').focus({ preventScroll: true });
-                byId('verdict-title').scrollIntoView({ block: 'start' });
-            });
+            for (const id of ['jump-to-result', 'edit-car']) {
+                byId(id).addEventListener('click', event => {
+                    event.preventDefault();
+                    const heading = byId(event.currentTarget.hash.slice(1));
+                    heading.focus({ preventScroll: true });
+                    heading.scrollIntoView({ block: 'start' });
+                });
+            }
             updateBase();
         }
 
         window.canExportCalculation = () => Boolean(base);
-        window.prepareCalculationScreenshot = stage => stage.classList.add('ym-hide-content');
+        window.prepareCalculationScreenshot = stage => {
+            stage.classList.add('ym-hide-content');
+            const background = getComputedStyle(document.body).backgroundColor;
+            stage.style.background = background;
+            stage.dataset.screenshotBackground = background;
+        };
         initCalculator();
     </script>
     <script>

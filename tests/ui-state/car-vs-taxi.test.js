@@ -17,10 +17,11 @@ function page(dataResponse) {
         if (!nodes.has(id)) {
             const attributes = new Map();
             const input = html.match(new RegExp('<input[^>]*\\bid="' + id + '"[^>]*>'))?.[0] || '';
+            const caption = html.match(new RegExp('<span id="' + id + '">([^<]*)</span>'))?.[1] ?? '';
             nodes.set(id, {
                 value: input.match(/\bvalue="([^"]*)"/)?.[1] ?? '',
                 type: input.match(/\btype="([^"]*)"/)?.[1],
-                textContent: '',
+                textContent: caption,
                 style: {},
                 setAttribute: (name, value) => attributes.set(name, String(value)),
                 removeAttribute: (name) => attributes.delete(name),
@@ -29,7 +30,8 @@ function page(dataResponse) {
             });
             if (id === 'verdict-title') {
                 Object.defineProperty(nodes.get(id), 'textContent', {
-                    get: () => element('verdict-phrase').textContent + element('verdict-amount').textContent
+                    get: () => ['verdict-phrase', 'verdict-join', 'verdict-prefix', 'verdict-amount', 'verdict-unit']
+                        .map(part => element(part).textContent).join('')
                 });
             }
         }
@@ -222,7 +224,7 @@ test('car/taxi rejects invalid edits and suspends all result exports until recov
         app.edit(id, value);
         assert.equal(app.element(id).getAttribute('aria-invalid'), 'true');
         assert.equal(app.element('verdict-title').textContent, 'Проверьте условия расчёта');
-        assert.equal(app.element('comparison').hidden, true);
+        assert.equal(app.element('result-body').hidden, true);
         assert.equal(app.element('trip-sticky').hidden, true);
         assert.equal(app.element('opportunity-result').hidden, true);
         assert.equal(app.run('window.canExportCalculation()'), false);
@@ -248,6 +250,21 @@ test('car/taxi differentiates close, equal and zero-mileage states', () => {
     assert.equal(app.element('verdict-title').textContent, 'Расходы равны');
     assert.equal(app.element('car-bar').style.width, '0%');
     assert.equal(app.element('taxi-bar').style.width, '0%');
+});
+
+test('car/taxi reflects the matching preset and current price without a stale label', () => {
+    const app = page();
+    const context = app.element('result-car-context');
+    assert.equal(context.textContent, 'Geely Coolray · 2,6 млн ₽');
+    app.period('year');
+    assert.equal(context.textContent, 'Geely Coolray · 2,6 млн ₽');
+    app.run("applyCarPreset('premium', true)");
+    assert.equal(context.textContent, 'EXEED RX · 4,7 млн ₽');
+    app.edit('car-price', '2679183,50');
+    assert.equal(context.textContent, 'Свои параметры · 2 679 183,5 ₽');
+    app.edit('car-price', '');
+    assert.equal(context.textContent, 'Уточните цену автомобиля');
+    assert.equal(app.element('verdict-figure').hidden, true);
 });
 
 test('car/taxi tracks a real valid change once and skips autofill, setup, equivalent edits and scenarios', () => {
