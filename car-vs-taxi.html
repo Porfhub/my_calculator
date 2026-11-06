@@ -90,15 +90,13 @@
         .ct-main {
             max-width: 72rem;
             margin-inline: auto;
-            padding: clamp(1.1rem, 3vw, 2.5rem) clamp(0.75rem, 3vw, 2rem) 1.5rem;
+            padding: 1.5rem clamp(0.75rem, 3vw, 2rem) 1.5rem;
         }
         .ct-main h1 { font-size: clamp(1.5rem, 3.5vw, 2.25rem); font-weight: 800; line-height: 1.14; }
         .ct-main h2, .ct-result h2 { font-weight: 750; }
         .ct-main .ct-section-title { font-size: 1.125rem; }
-        .ct-intro { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: clamp(1rem, 3vw, 2rem); }
-        .ct-intro p { margin-top: 0.3rem; }
-        .ct-intro-icon { flex: none; background: #15803d; color: white; border-radius: 0.75rem; padding: 0.55rem; }
-        .ct-intro-icon svg { width: 1.5rem; height: 1.5rem; }
+        .ct-intro { margin-bottom: 1.25rem; }
+        .ct-intro p { margin-top: 0.2rem; }
         .ct-layout, .ct-fields, .ct-extras { display: grid; gap: 0.85rem; min-width: 0; }
         .ct-layout { align-items: start; }
         .ct-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
@@ -327,6 +325,9 @@
         .ct-sticky { display: none; }
         .ct-footer { padding: 1rem 1rem 2rem; text-align: center; }
         @media (max-width: 767px) {
+            .calculator-page > .ct-main { padding-top: 0.75rem !important; }
+            .ct-intro { margin-bottom: 0.5rem; }
+            .ct-intro p { font-size: clamp(0.75rem, 3.6vw, 0.8125rem); line-height: 1.4; text-wrap: balance; }
             .ct-trip .ct-fields { row-gap: 0.65rem; }
             .ct-actions-list { display: grid; grid-template-columns: max-content minmax(0, 1fr); }
             .ct-actions-list #copy-link { grid-column: 1 / -1; }
@@ -349,6 +350,9 @@
             .ct-sticky strong { display: block; margin-top: 0.2rem; font-size: 1rem; }
             .ct-sticky .yn-button { flex: none; font-size: 0.875rem; padding-inline: 0.65rem; }
             .ct-footer { padding-bottom: calc(6.5rem + env(safe-area-inset-bottom)); }
+        }
+        @media (max-width: 340px) {
+            .ct-intro p { letter-spacing: -0.018em; }
         }
         @media (min-width: 768px) {
             .ct-layout { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-rows: auto 1fr; gap: 1rem 1.5rem; }
@@ -384,16 +388,8 @@
     </div>
     <main class="ct-main yn-scope" id="calculator">
         <div class="ct-intro">
-            <div class="ct-intro-icon">
-                <svg aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5h-1.948a1 1 0 00-.894.553L7.382 11H4a1 1 0 00-1 1v5a1 1 0 001 1h1a3 3 0 006 0h2a3 3 0 006 0h1a1 1 0 001-1v-5a1 1 0 00-1-1h-3.382l-2.774-5.447A1 1 0 0013 5z"></path>
-                </svg>
-            </div>
-            <div>
-                <h1>Машина или такси</h1>
-                <p class="ct-muted">Сравните расходы за первый год.</p>
-            </div>
+            <h1>Машина или такси</h1>
+            <p class="ct-muted">Сравните расходы на поездки за первый год — включая содержание и потерю стоимости автомобиля</p>
         </div>
         <div class="ct-layout">
             <section class="ct-panel ct-trip ym-hide-content" aria-labelledby="trip-heading">
