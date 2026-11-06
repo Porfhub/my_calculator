@@ -19,6 +19,7 @@
 | [#103](https://github.com/Porfhub/my_calculator/pull/103) | 05.11.2026 | Явное происхождение официальной и сценарной ставки в авто/такси. Merge [91026f7](https://github.com/Porfhub/my_calculator/commit/91026f7) |
 | [#104](https://github.com/Porfhub/my_calculator/pull/104) | 05.11.2026 | Единая шапка ещё на шести калькуляторах. Merge [9a0f83e](https://github.com/Porfhub/my_calculator/commit/9a0f83e). [QA](../qa/calculator-headers/README.md) |
 | [#105](https://github.com/Porfhub/my_calculator/pull/105) | 05.11.2026 | Нативная методология на пяти калькуляторах. Merge [9719af2](https://github.com/Porfhub/my_calculator/commit/9719af2). HTML авто/такси совпал с этим коммитом при проверке 06.11.2026. [QA](../qa/calculator-methodology/README.md) |
+| [#106](https://github.com/Porfhub/my_calculator/pull/106) | 06.11.2026 | Независимый сценарий ручной доходности и разметка Вебвизора в авто/такси. Публичный HTML совпал с [dd4725d](https://github.com/Porfhub/my_calculator/commit/dd4725d) при повторной проверке 06.11.2026. [QA](../qa/car-taxi-model-privacy/README.md) |
 
 ## Страницы
 
@@ -31,7 +32,7 @@
 | [Финансовая цель](../pages/millionaire.md) | Финальная модель, настройки доходности, локальная шапка и обновлённые нижние блоки |
 | [Финансовая свобода](../pages/financial-freedom.md) | Рабочий инструмент каталога, отдельный новый UX-аудит не зафиксирован |
 | [Инфляционный шредер](../pages/inflation-shredder.md) | Рабочий инструмент каталога, отдельный новый UX-аудит не зафиксирован |
-| [Машина или такси](../pages/car-vs-taxi.md) | Рабочий инструмент каталога, отдельный новый UX-аудит не зафиксирован |
+| [Машина или такси](../pages/car-vs-taxi.md) | Модель и приватность после #106. UX/UI B+ Final проверен локально в отдельной ветке. |
 | [Стоимость воспитания ребёнка](../pages/genetic-wealth.md) | Рабочий инструмент каталога, отдельный новый UX-аудит не зафиксирован |
 | [Сравнение зарплаты](../pages/wealth.md) | Рабочий инструмент каталога с частичным охватом, отдельный новый UX-аудит не зафиксирован |
 
