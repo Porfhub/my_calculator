@@ -18,6 +18,7 @@
 | [#102](https://github.com/Porfhub/my_calculator/pull/102) | 05.11.2026 | Пилот общей шапки на страницах инфляции, финансовой свободы и авто/такси. Merge [78f461a](https://github.com/Porfhub/my_calculator/commit/78f461a). [QA](../qa/calculator-header-pilot/README.md) |
 | [#103](https://github.com/Porfhub/my_calculator/pull/103) | 05.11.2026 | Явное происхождение официальной и сценарной ставки в авто/такси. Merge [91026f7](https://github.com/Porfhub/my_calculator/commit/91026f7) |
 | [#104](https://github.com/Porfhub/my_calculator/pull/104) | 05.11.2026 | Единая шапка ещё на шести калькуляторах. Merge [9a0f83e](https://github.com/Porfhub/my_calculator/commit/9a0f83e). [QA](../qa/calculator-headers/README.md) |
+| [#105](https://github.com/Porfhub/my_calculator/pull/105) | 05.11.2026 | Нативная методология на пяти калькуляторах. Merge [9719af2](https://github.com/Porfhub/my_calculator/commit/9719af2). HTML авто/такси совпал с этим коммитом при проверке 06.11.2026. [QA](../qa/calculator-methodology/README.md) |
 
 ## Страницы
 

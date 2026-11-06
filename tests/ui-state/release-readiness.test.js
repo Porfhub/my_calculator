@@ -48,10 +48,11 @@ test('release audit scenarios keep their units, transport need and source contex
 
     assert.match(car, /id="trips-per-month"/);
     assert.match(car, /id="trip-price"/);
-    assert.match(car, /includeLostOpportunity: false/);
+    assert.match(car, /<details id="capital-scenario"/);
+    assert.doesNotMatch(car, /<input id="opportunity-rate"[^>]*(?:value|placeholder)=/);
     assert.match(car, /min="0\.5" step="0\.5" id="taxi-trip-distance"/);
     assert.match(car, /const annualMileage = tripsPerMonth \* 12 \* taxiTripDistance;/);
-    assert.match(car, /const totalCarAnnual = fuelCostAnnual \+ insurance \+ maintenance \+ depreciationAnnual \+ includedOpportunityCost;/);
+    assert.match(car, /const totalCarAnnual = fuelCostAnnual \+ insurance \+ maintenance \+ depreciationAnnual;/);
 
     assert.match(goal, /name="goal-mode" value="today"/);
     assert.match(goal, /name="goal-mode" value="fixed" checked/);
