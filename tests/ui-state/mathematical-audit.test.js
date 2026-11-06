@@ -42,9 +42,10 @@ test('calculation displays are not intentionally capped or mislabeled', () => {
     assert.match(credit, /high = monthly \/ initialInflow/);
     assert.match(mortgage, /Из чего складываются выплаты/);
     assert.match(mortgage, /Всего выплат/);
-    assert.match(car, /const totalCarAnnual = fuelCostAnnual \+ insurance \+ maintenance \+ depreciationAnnual;/);
+    assert.match(car, /const carCashAnnual = fuelCostAnnual \+ insurance \+ maintenance \+ otherExpenses;/);
+    assert.match(car, /const totalCarAnnual = carCashAnnual \+ depreciationAnnual;/);
     assert.match(car, /const capitalOpportunity = carPrice \* \(userRate \/ 100\);/);
-    assert.match(car, /tugVerdict = 'Расходы равны';/);
+    assert.match(car, /difference: 0, title: 'Расходы равны'/);
 });
 
 test('audit transparency fixes do not derive unsupported or incomparable results', () => {
@@ -52,7 +53,7 @@ test('audit transparency fixes do not derive unsupported or incomparable results
     const childCost = read('genetic-wealth.html');
     const goal = read('millionaire.html');
 
-    assert.match(car, /Число поездок задаёт общую потребность в передвижении/);
+    assert.match(car, /Число поездок одинаково для машины и такси/);
     assert.match(car, /const annualMileage = tripsPerMonth \* 12 \* taxiTripDistance;/);
     assert.match(car, /const tripsPerYear = tripsPerMonth \* 12;/);
     assert.match(car, /const totalTaxiAnnual = tripsPerYear \* tripPrice;/);

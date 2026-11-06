@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Машина или такси — сравнение расходов | Ясномера</title>
     <meta name="description" content="Сравните расходы на личный автомобиль и такси по своим условиям: поездки, топливо, страховка, обслуживание и амортизация.">
     <meta name="application-name" content="Ясномера">
@@ -55,40 +55,6 @@
             }
         }
     </script>
-    <style>
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
-        @media (max-width: 1023px) {
-            .mobile-sticky-results {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                z-index: 50;
-                background: white;
-                box-shadow: 0 -10px 15px -3px rgba(0, 0, 0, 0.1);
-                border-top: 1px solid #e2e8f0;
-                padding: 1rem;
-                border-radius: 1.5rem 1.5rem 0 0;
-            }
-            body {
-                padding-bottom: 240px;
-            }
-            #capital-scenario :is(summary, input) {
-                scroll-margin-bottom: 10rem;
-            }
-        }
-        .dark .mobile-sticky-results {
-            background: #0f172a;
-            border-top-color: #1e293b;
-        }
-    </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -112,11 +78,296 @@
     <script src="js/theme.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/ui-utils.js"></script>
-    <script src="js/trust-layer.js"></script>
     <link rel="stylesheet" href="css/product-polish.css">
     <link rel="stylesheet" href="css/design-system.css">
+    <style>
+        .ct-page { background: #f5f8f7; }
+        html.dark .ct-page { background: #182125; }
+        .ct-main, .ct-sticky, .ct-result {
+            font-family: var(--yn-font-family);
+            color: var(--yn-color-text);
+        }
+        .ct-main {
+            max-width: 72rem;
+            margin-inline: auto;
+            padding: 1.5rem clamp(0.75rem, 3vw, 2rem) 1.5rem;
+        }
+        .ct-main h1 { font-size: clamp(1.5rem, 3.5vw, 2.25rem); font-weight: 800; line-height: 1.14; }
+        .ct-main h2, .ct-result h2 { font-weight: 750; }
+        .ct-main .ct-section-title { font-size: 1.125rem; }
+        .ct-intro { margin-bottom: 1.25rem; }
+        .ct-intro p { margin-top: 0.2rem; }
+        .ct-layout, .ct-fields, .ct-extras { display: grid; gap: 0.85rem; min-width: 0; }
+        .ct-layout { align-items: start; }
+        .ct-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+        .ct-panel {
+            min-width: 0;
+            background: var(--yn-color-surface);
+            border: var(--yn-border);
+            border-radius: var(--yn-radius-panel);
+            padding: clamp(0.85rem, 2.5vw, 1.5rem);
+        }
+        .ct-panel:not(.ct-result) > * + * { margin-top: 0.75rem; }
+        .ct-muted { color: var(--yn-color-muted); font-size: 0.875rem; line-height: 1.45; }
+        .ct-main .yn-field { display: block; min-width: 0; }
+        .ct-main .yn-label { display: block; margin-bottom: 0.25rem; font-size: 0.875rem; line-height: 1.25; }
+        .ct-main .yn-input { display: block; width: 100%; min-width: 0; font-variant-numeric: tabular-nums; }
+        .ct-main .yn-hint, .ct-main .yn-error { margin: 0.25rem 0 0; }
+        .ct-main .yn-error:empty { margin: 0; }
+        .ct-main :is(input, button, a, summary):focus-visible, .ct-sticky a:focus-visible, :is(#verdict-title, #car-heading):focus {
+            outline: var(--yn-focus-ring);
+            outline-offset: 2px;
+            box-shadow: none !important;
+        }
+        .ct-main .yn-input:focus {
+            border-color: transparent !important;
+            outline: 2px solid var(--yn-color-focus);
+            outline-offset: -2px;
+            box-shadow: none !important;
+        }
+        .ct-distance, .ct-full { grid-column: 1 / -1; }
+        .ct-main .ct-distance { display: grid; grid-template-columns: 1fr minmax(4.5rem, 35%); gap: 0 0.5rem; align-items: center; }
+        .ct-distance .yn-label { margin: 0; }
+        .ct-distance .yn-error { grid-column: 1 / -1; }
+        .ct-mileage { display: block; border-top: var(--yn-border); padding-top: 0.65rem; font-weight: 650; }
+        .ct-trip .ct-mileage { margin-top: 0.6rem; }
+        .ct-trip .ct-mileage + p { margin-top: 0.25rem; }
+        .ct-presets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.375rem; }
+        .ct-main .ct-presets button { display: block; min-width: 0; padding: 0.3rem 0.15rem; font-size: 0.8125rem; line-height: 1.2; }
+        .ct-presets small { display: block; margin-top: 0.15rem; font-size: 0.75rem; font-weight: 500; }
+        .ct-main [aria-pressed="true"] {
+            color: var(--yn-color-on-accent);
+            background: var(--yn-color-accent);
+            border-color: var(--yn-color-accent);
+        }
+        .ct-main [aria-pressed="true"]:not(:disabled):hover { background: var(--yn-color-accent-hover); }
+        .ct-presets-label { margin-bottom: 0.4rem; }
+        .ct-main .yn-methodology-summary { position: relative; padding-inline-end: 2.5rem; list-style: none; }
+        .ct-main .yn-methodology-summary::-webkit-details-marker { display: none; }
+        .ct-main .yn-methodology-summary::after {
+            content: '';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 0.55rem;
+            height: 0.55rem;
+            border: solid var(--yn-color-accent);
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        .ct-main details[open] > .yn-methodology-summary::after { top: 1.2rem; transform: rotate(225deg); }
+        .ct-main .ct-inline-details { background: transparent; }
+        .ct-main .ct-inline-details > summary { padding-inline-start: 0.75rem; }
+        .ct-main .ct-inline-details > .yn-methodology-body { padding: 0.75rem; }
+        .ct-main input[type="range"] { width: 100%; min-height: 2.75rem; accent-color: var(--yn-color-accent); }
+        .ct-depreciation { display: block; margin-top: 0.25rem; font-weight: 650; }
+
+        .ct-car { padding-block: 0.85rem 0.4rem; border: 0; border-top: var(--yn-border); border-radius: 0; background: transparent; }
+        #car-heading { scroll-margin-top: 1rem; width: fit-content; }
+        .ct-car .ct-inline-details { border-color: var(--yn-color-control-border); }
+
+        .ct-result {
+            --ct-hero-surface: #e8f4ed;
+            --ct-car-bar: #4f697a;
+            --ct-result-gutter: clamp(0.85rem, 3vw, 1.75rem);
+            padding: 0;
+        }
+        html.dark .ct-result { --ct-hero-surface: #263d35; --ct-car-bar: #9bb8cb; }
+        .ct-hero {
+            padding: 0.7rem var(--ct-result-gutter) 0.75rem;
+            background: var(--ct-hero-surface);
+            border-radius: calc(var(--yn-radius-panel) - 1px) calc(var(--yn-radius-panel) - 1px) 0 0;
+        }
+        .ct-result-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; }
+        .ct-result-head p { font-weight: 700; font-size: 0.875rem; color: var(--yn-color-muted); }
+        .ct-period { display: inline-flex; gap: 0.125rem; padding: 0.125rem; border: var(--yn-control-border); border-radius: 0.75rem; background: var(--yn-color-surface); }
+        .ct-main .ct-period button { padding: 0.2rem 0.65rem; font-size: 0.875rem; border-color: transparent; }
+        .ct-verdict { margin-top: 0.55rem; }
+        .ct-result h2 {
+            width: fit-content;
+            max-width: 100%;
+            font-size: clamp(1.25rem, 3vw, 1.625rem);
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            scroll-margin-top: 1rem;
+        }
+        .ct-result h2, .ct-result dd, .ct-sticky strong { overflow-wrap: anywhere; }
+        .ct-delta {
+            display: block;
+            margin-block: 0.2rem 0.3rem;
+            color: var(--yn-color-accent);
+            font-size: clamp(2.15rem, 8.5vw, 3.75rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.055em;
+        }
+        .ct-delta-prefix { font-size: 0.5em; letter-spacing: 0; }
+        .ct-delta-unit { font-size: 0.46em; letter-spacing: -0.02em; }
+        .ct-verdict p { margin-top: 0.3rem; }
+        .ct-car-context { display: flex; flex-wrap: wrap; align-items: center; column-gap: 0.7rem; margin-top: 0.1rem; font-size: 0.875rem; }
+        .ct-car-context p { font-weight: 700; }
+        .ct-car-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--yn-color-accent); font-weight: 650; text-decoration: underline; text-underline-offset: 0.2em; }
+        .ct-result-body { padding: 0.9rem var(--ct-result-gutter) 0.5rem; }
+        .ct-comparison dl { display: grid; gap: 0.6rem; }
+        .ct-compare-row { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 0.65rem; padding-bottom: 0.8rem; }
+        .ct-compare-row dt { font-weight: 700; }
+        .ct-compare-row dd { font-size: clamp(1.1rem, 3vw, 1.4rem); font-weight: 750; text-align: right; }
+        .ct-track { display: block; position: absolute; inset: auto 0 0; height: 0.425rem; background: var(--yn-color-line); border-radius: 1rem; }
+        .ct-track > span { display: block; height: 100%; border-radius: inherit; }
+        .ct-track-car > span { background: var(--ct-car-bar); }
+        .ct-track-taxi > span { background: var(--yn-color-accent); }
+        .ct-scale { margin-top: 0.5rem; font-size: 0.8125rem; }
+        .ct-costs { margin-top: 0.8rem; border-top: var(--yn-border); padding-top: 0.75rem; }
+        .ct-reason { margin-bottom: 0.5rem; font-size: 0.9375rem; font-weight: 700; line-height: 1.4; }
+        .ct-breakdown { display: grid; gap: 0.55rem; }
+        .ct-breakdown div { display: grid; grid-template-columns: 1fr minmax(0, auto); gap: 0 0.5rem; align-items: baseline; }
+        .ct-breakdown dt { font-size: 0.875rem; line-height: 1.35; }
+        .ct-breakdown dd { font-size: 0.875rem; font-weight: 700; text-align: right; }
+        .ct-breakdown small { display: block; margin-top: 0.125rem; font-size: 0.8125rem; }
+        .ct-result-body > details { margin-top: 0.45rem; }
+        .ct-main :is(.ct-actions, .ct-result-body > details) { background: transparent; border: 0; border-radius: 0; }
+        .ct-main :is(.ct-actions, .ct-result-body > details) > summary { padding-inline-start: 0; }
+        .ct-main :is(.ct-actions, .ct-result-body > details) > summary::after { right: 0.25rem; }
+        .ct-result-body > details > summary { color: var(--yn-color-accent); font-size: 0.875rem; }
+        .ct-main .ct-actions { margin-inline: var(--ct-actions-gutter, 0.85rem); }
+        .ct-actions > summary { color: var(--yn-color-muted); font-size: 0.875rem; }
+        .ct-actions-list { display: flex; flex-wrap: wrap; column-gap: 0.85rem; border-top: var(--yn-border); }
+        .ct-main .ct-actions-list .yn-button {
+            justify-content: flex-start;
+            border: 0;
+            background: transparent;
+            color: var(--yn-color-accent);
+            padding: 0.25rem 0;
+            font-size: 0.875rem;
+            text-align: left;
+            text-decoration: underline;
+            text-underline-offset: 0.2em;
+        }
+        .ct-extras { gap: 1rem; margin-top: clamp(1.35rem, 4vw, 2rem); }
+        .ct-extras > details { --ct-extra-pad: clamp(0.9rem, 3vw, 1.5rem); }
+        .ct-main .ct-extra-summary {
+            padding: 0.85rem 2.25rem 0.85rem var(--ct-extra-pad);
+        }
+        .ct-extra-heading {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.35rem 1rem;
+        }
+        .ct-main .ct-extra-summary::after { top: 50%; transform: translateY(-70%) rotate(45deg); }
+        .ct-main details[open] > .ct-extra-summary::after { top: 50%; transform: translateY(-35%) rotate(225deg); }
+        .ct-extra-summary .ct-muted { display: block; font-weight: 500; margin-top: 0.2rem; }
+        .ct-extra-title { display: block; font-size: clamp(1.15rem, 2.7vw, 1.55rem); font-weight: 750; line-height: 1.2; }
+        .ct-kicker, .ct-extra-action { color: var(--yn-color-accent); font-size: 0.875rem; font-weight: 700; }
+        .ct-kicker { display: block; margin-bottom: 0.35rem; }
+        .ct-extra-action { text-decoration: underline; text-underline-offset: 0.2em; }
+        .ct-action-open, .ct-extras details[open] > summary .ct-action-closed { display: none; }
+        .ct-extras details[open] > summary .ct-action-open { display: inline; }
+        .ct-extras .yn-methodology-body { padding: 0.85rem var(--ct-extra-pad) var(--ct-extra-pad); }
+
+        .ct-extras .ct-capital { background: var(--yn-color-success-surface); }
+        .ct-capital-grid { display: grid; gap: 0.75rem; align-items: start; }
+        .ct-extras .ct-capital-grid { padding-bottom: 0.9rem; }
+        .ct-capital-input { max-width: 24rem; }
+        .ct-capital-rate { position: relative; max-width: 10rem; }
+        .ct-capital-rate .yn-input { padding-inline-end: 2rem; }
+        .ct-capital-rate > span { position: absolute; inset: 0 0.75rem 0 auto; display: grid; align-items: center; pointer-events: none; }
+        .ct-capital-note { margin-top: 0.55rem; }
+        .ct-capital-result { background: var(--yn-color-surface); border-radius: 0.75rem; padding: 0.75rem 0.9rem; }
+        .ct-capital-result dd { font-size: 1.25rem; font-weight: 750; line-height: 1.25; overflow-wrap: anywhere; }
+        .ct-capital-result dd small { display: inline-block; max-width: 100%; font-weight: 500; }
+        .ct-capital-difference { border-top: var(--yn-border); margin-top: 0.55rem; padding-top: 0.55rem; }
+        .ct-capital-difference dt { font-weight: 700; }
+        .ct-capital-difference dd { font-size: 1.45rem; color: var(--yn-color-accent); }
+        .ct-capital-difference p { margin-top: 0.2rem; font-weight: 500; }
+
+        .ct-quiz-options { display: grid; gap: 1rem; }
+        .ct-quiz-options fieldset { min-width: 0; }
+        .ct-quiz-options legend { font-weight: 750; margin-bottom: 0.55rem; }
+        .ct-factors { display: grid; gap: 0.45rem; }
+        .ct-factor {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.55rem;
+            min-height: 44px;
+            padding: 0.55rem 0.6rem;
+            border: var(--yn-control-border);
+            border-radius: var(--yn-radius-control);
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+        .ct-factor:has(input:checked) { background: var(--yn-color-success-surface); border-color: var(--yn-color-accent); }
+        .ct-main .ct-factor:has(input:focus-visible) { outline: var(--yn-focus-ring); outline-offset: 2px; }
+        .ct-main .ct-factor input:focus-visible { outline: none; }
+        .ct-factor input { flex: none; margin-top: 0.2rem; accent-color: var(--yn-color-accent); width: 1rem; height: 1rem; }
+        .ct-factor small { display: block; margin-top: 0.1rem; font-size: 0.8125rem; }
+        .ct-quiz-result { margin-top: 0.9rem; padding: 0.75rem 0.85rem; border-inline-start: 3px solid var(--yn-color-accent); background: var(--yn-color-hover); border-radius: 0.4rem; }
+        .ct-quiz-result strong { display: block; margin-bottom: 0.2rem; }
+
+        .ct-extras .ct-method { background: transparent; }
+        .ct-method-formula { padding: 0.7rem 0.8rem; border-inline-start: 3px solid var(--yn-color-accent); background: var(--yn-color-surface); font-weight: 700; }
+        .ct-method-topics { display: grid; gap: 0.85rem; margin-top: 0.85rem; }
+        .ct-method-topics section { border-top: var(--yn-border); padding-top: 0.65rem; }
+        .ct-method-topics h3 { margin-bottom: 0.3rem; font-weight: 750; }
+        .ct-method-topics p + p { margin-top: 0.4rem; }
+        .ct-method-topics strong { color: var(--yn-color-text); }
+        .ct-main [hidden], .ct-sticky[hidden], .ct-print-title { display: none !important; }
+        [data-screenshot-stage] .ct-print-title { display: block !important; font-size: 0.875rem; font-weight: 750; margin-bottom: 0.35rem; }
+        [data-screenshot-stage] .ct-print-period { display: inline; }
+        [data-screenshot-stage] .ct-hero { padding-top: 1.125rem; }
+        [data-screenshot-stage] .ct-result { --ct-result-gutter: 1.25rem; }
+        [data-screenshot-stage] .ct-result h2 { font-size: 1.375rem; }
+        [data-screenshot-stage] .ct-delta { font-size: 2.65rem; }
+        [data-screenshot-stage] .ct-result-body { padding-bottom: 1.125rem; }
+        [data-screenshot-stage] .ct-compare-row dd { font-size: 1.125rem; }
+
+        .ct-sticky { display: none; }
+        .ct-footer { padding: 1rem 1rem 2rem; text-align: center; }
+        @media (max-width: 767px) {
+            .calculator-page > .ct-main { padding-top: 0.75rem !important; }
+            .ct-intro { margin-bottom: 0.5rem; }
+            .ct-intro p { font-size: clamp(0.75rem, 3.6vw, 0.8125rem); line-height: 1.4; text-wrap: balance; }
+            .ct-trip .ct-fields { row-gap: 0.65rem; }
+            .ct-actions-list { display: grid; grid-template-columns: max-content minmax(0, 1fr); }
+            .ct-actions-list #copy-link { grid-column: 1 / -1; }
+            html:has(.ct-sticky:not([hidden])) { scroll-padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
+            .ct-sticky:not([hidden]) {
+                position: fixed;
+                inset: auto 0 0;
+                z-index: 50;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.45rem max(0.75rem, env(safe-area-inset-right)) calc(0.45rem + env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
+                background: var(--yn-color-surface);
+                border-top: var(--yn-control-border);
+                box-shadow: 0 -4px 16px #0001;
+                font-size: 0.875rem;
+                line-height: 1.2;
+            }
+            .ct-sticky strong { display: block; margin-top: 0.2rem; font-size: 1rem; }
+            .ct-sticky .yn-button { flex: none; font-size: 0.875rem; padding-inline: 0.65rem; }
+            .ct-footer { padding-bottom: calc(6.5rem + env(safe-area-inset-bottom)); }
+        }
+        @media (max-width: 340px) {
+            .ct-intro p { letter-spacing: -0.018em; }
+        }
+        @media (min-width: 768px) {
+            .ct-layout { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-rows: auto 1fr; gap: 1rem 1.5rem; }
+            .ct-result-stack { grid-column: 2; grid-row: 1 / span 2; }
+            .ct-car { grid-column: 1; grid-row: 2; }
+            .ct-capital-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 1.25rem; }
+            .ct-quiz-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .ct-method-topics { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; }
+        }
+        @media (min-width: 980px) {
+            .ct-factors { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+    </style>
 </head>
-<body class="calculator-page bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
+<body class="calculator-page ct-page bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 min-h-screen font-sans antialiased transition-colors duration-300">
 
     <div class="yn-scope">
         <header class="yn-header">
@@ -135,611 +386,718 @@
             </div>
         </header>
     </div>
-    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div class="mb-5 flex items-start gap-3 sm:mb-8">
-            <div class="shrink-0 rounded-xl bg-brand-700 p-2.5 text-white">
-                <svg class="h-6 w-6" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5h-1.948a1 1 0 00-.894.553L7.382 11H4a1 1 0 00-1 1v5a1 1 0 001 1h1a3 3 0 006 0h2a3 3 0 006 0h1a1 1 0 001-1v-5a1 1 0 00-1-1h-3.382l-2.774-5.447A1 1 0 0013 5z"></path>
-                </svg>
-            </div>
-            <div class="min-w-0">
-                <h1 class="text-2xl font-black leading-tight tracking-tight sm:text-3xl">Машина или такси</h1>
-                <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Сравнение расходов на автомобиль и такси</p>
-            </div>
+    <main class="ct-main yn-scope" id="calculator">
+        <div class="ct-intro">
+            <h1>Машина или такси</h1>
+            <p class="ct-muted">Сравните расходы на поездки за первый год — включая содержание и потерю стоимости автомобиля</p>
         </div>
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-            <!-- ЛЕВАЯ КОЛОНКА: Ввод параметров -->
-            <div class="lg:col-span-7 space-y-8">
-
-                <!-- Блок Автомобиль -->
-                <div class="ym-hide-content bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
-                    <div class="flex items-center gap-3 border-b dark:border-slate-800 pb-4">
-                        <div class="w-10 h-10 bg-brand-50 dark:bg-brand-900/20 rounded-xl flex items-center justify-center text-brand-600">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        <div class="ct-layout">
+            <section class="ct-panel ct-trip ym-hide-content" aria-labelledby="trip-heading">
+                <h2 class="ct-section-title" id="trip-heading">Условия поездок</h2>
+                <div class="ct-fields">
+                    <div class="yn-field">
+                            <label for="trips-per-month" class="yn-label">Поездки в месяц</label>
+                            <input class="yn-input ym-disable-keys" id="trips-per-month" type="text" inputmode="numeric" autocomplete="off"
+                                   value="30" required aria-describedby="trips-per-month-error">
+                            <p class="yn-error" id="trips-per-month-error" aria-live="polite"></p>
                         </div>
-                        <h2 class="text-lg font-bold text-slate-900 dark:text-white">Автомобиль</h2>
-                    </div>
-
-                    <!-- Пресеты классов авто -->
-                    <div class="space-y-3">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Быстрые пресеты автомобилей (2026)</label>
-                        <div class="grid grid-cols-3 gap-3">
-                            <button id="preset-economy" onclick="setCarPreset('economy')" class="preset-car-btn py-3 px-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-black text-slate-600 dark:text-slate-400 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 dark:hover:text-brand-400 transition-all uppercase flex flex-col items-center justify-center gap-1 active:scale-95">
-                                <span class="tracking-tight text-center">Lada Granta</span>
-                                <span class="opacity-60 text-[9px] font-bold uppercase">Эконом</span>
-                            </button>
-                            <button id="preset-comfort" onclick="setCarPreset('comfort')" class="preset-car-btn py-3 px-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-black text-slate-600 dark:text-slate-400 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 dark:hover:text-brand-400 transition-all uppercase flex flex-col items-center justify-center gap-1 active:scale-95">
-                                <span class="tracking-tight text-center">Geely Coolray</span>
-                                <span class="opacity-60 text-[9px] font-bold uppercase">Комфорт</span>
-                            </button>
-                            <button id="preset-premium" onclick="setCarPreset('premium')" class="preset-car-btn py-3 px-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-black text-slate-600 dark:text-slate-400 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 dark:hover:text-brand-400 transition-all uppercase flex flex-col items-center justify-center gap-1 active:scale-95">
-                                <span class="tracking-tight text-center">EXEED RX</span>
-                                <span class="opacity-60 text-[9px] font-bold uppercase">Премиум</span>
-                            </button>
+                    <div class="yn-field">
+                            <label for="trip-price" class="yn-label">Такси, ₽/поездка</label>
+                            <input class="yn-input ym-disable-keys" id="trip-price" type="text" inputmode="decimal" autocomplete="off"
+                                   value="500" required aria-describedby="trip-price-hint trip-price-error">
+                            <span id="trip-price-hint" class="sr-only">Средняя цена поездки</span>
+                            <p class="yn-error" id="trip-price-error" aria-live="polite"></p>
                         </div>
-                    </div>
+                    <div class="yn-field ct-distance">
+                            <label for="taxi-trip-distance" class="yn-label">Длина поездки, км</label>
+                            <input class="yn-input ym-disable-keys" id="taxi-trip-distance" type="text" inputmode="decimal" autocomplete="off"
+                                   value="10" required aria-describedby="taxi-trip-distance-error">
+                            <p class="yn-error" id="taxi-trip-distance-error" aria-live="polite"></p>
+                        </div>
+                </div>
+                <p class="ct-mileage ct-muted" id="annual-mileage-display"></p>
+                <p class="ct-muted">Число поездок одинаково для машины и такси.</p>
+            </section>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Цена авто -->
-                        <div class="space-y-2">
-                            <label for="car-price" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Цена автомобиля</label>
-                            <div class="relative">
-                                <input type="text" id="car-price" oninput="handleInput(this, 'carPrice')" class="ym-disable-keys w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="3 000 000">
-                                <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
+            <div class="ct-result-stack">
+                <section class="ct-panel ct-result yn-scope ym-hide-content" id="screenshot-area" data-screenshot-width="500" aria-label="Результат расчёта">
+                    <div class="ct-hero" id="result-hero">
+                        <p class="ct-print-title" hidden>Ясномера · Машина или такси</p>
+                        <div class="ct-result-head">
+                            <p id="result-period">Первый год<span id="print-period" class="ct-print-period" hidden></span></p>
+                            <div id="period-switch" class="ct-period" role="group" aria-label="Период сравнения" data-screenshot-exclude>
+                                <button type="button" id="period-month" class="yn-button" aria-pressed="true" data-period="month">Месяц</button>
+                                <button type="button" id="period-year" class="yn-button" aria-pressed="false" data-period="year">Год</button>
                             </div>
                         </div>
-                        <!-- Расчётный пробег -->
-                        <div class="space-y-2">
-                            <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Расчётный пробег за год</span>
-                            <output id="annual-mileage-display" class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-bold text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-white" aria-live="polite">—</output>
-                            <p class="text-[10px] text-slate-500 dark:text-slate-400">Выводится из числа поездок; длину типичной поездки можно изменить в деталях.</p>
+                        <div class="ct-verdict" id="result-verdict" role="status" aria-atomic="true">
+                            <h2 id="verdict-title" class="yn-number" tabindex="-1"><span id="verdict-phrase">Сравнение расходов</span><span id="verdict-join" class="sr-only"></span><span id="verdict-figure" class="ct-delta" hidden><span id="verdict-prefix" class="ct-delta-prefix"></span><span id="verdict-amount"></span><span id="verdict-unit" class="ct-delta-unit"></span></span></h2>
+                            <p class="ct-muted" id="verdict-detail"></p>
+                        </div>
+                        <div class="ct-car-context" data-screenshot-exclude>
+                            <p id="result-car-context"></p>
+                            <a class="ct-car-link" id="edit-car" href="#car-heading">Изменить автомобиль</a>
                         </div>
                     </div>
-
-                    <!-- Accordion container for detailed configurations to avoid cognitive overload -->
-                    <div class="border border-slate-100 dark:border-slate-800 rounded-2xl overflow-hidden transition-all duration-300">
-                        <button onclick="toggleAccordion()" type="button" aria-expanded="false" aria-controls="accordion-content" id="accordion-toggle" class="w-full flex justify-between items-center px-5 py-4 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-bold text-slate-700 dark:text-slate-300 transition active:scale-[0.99]">
-                            <span class="flex items-center gap-2">
-                                <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                Детальные настройки (ТО, Страховка, Топливо)
-                            </span>
-                            <svg id="accordion-chevron" class="w-5 h-5 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div id="accordion-content" class="hidden px-5 py-6 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 space-y-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Расход -->
-                                <div class="space-y-2">
-                                    <label for="fuel-consumption" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Расход (л/100 км)</label>
-                                    <input type="number" id="fuel-consumption" oninput="handleRawInput('fuelConsumption', this.value)" class="ym-disable-keys w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="10">
+                    <div class="ct-result-body" id="result-body" hidden>
+                        <div class="ct-comparison" id="comparison">
+                            <dl>
+                                <div class="ct-compare-row">
+                                    <dt>Машина</dt>
+                                    <dd class="yn-number"><span id="car-total"></span><span class="ct-track ct-track-car" aria-hidden="true"><span id="car-bar"></span></span></dd>
                                 </div>
-                                <!-- Цена топлива -->
-                                <div class="space-y-2">
-                                    <label for="fuel-price" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Цена литра топлива</label>
-                                    <div class="relative">
-                                        <input type="number" id="fuel-price" oninput="handleRawInput('fuelPrice', this.value)" class="ym-disable-keys w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="55">
-                                        <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
-                                    </div>
+                                <div class="ct-compare-row">
+                                    <dt>Такси</dt>
+                                    <dd class="yn-number"><span id="taxi-total"></span><span class="ct-track ct-track-taxi" aria-hidden="true"><span id="taxi-bar"></span></span></dd>
                                 </div>
-                                <!-- Страховка -->
-                                <div class="space-y-2">
-                                    <label for="insurance" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Страховка (ОСАГО+КАСКО) в год</label>
-                                    <div class="relative">
-                                        <input type="text" id="insurance" oninput="handleInput(this, 'insurance')" class="ym-disable-keys w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="80 000">
-                                        <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
-                                    </div>
-                                </div>
-                                <!-- Обслуживание -->
-                                <div class="space-y-2">
-                                    <label for="maintenance" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">ТО и ремонт в год</label>
-                                    <div class="relative">
-                                        <input type="text" id="maintenance" oninput="handleInput(this, 'maintenance')" class="ym-disable-keys w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="40 000">
-                                        <span class="absolute right-4 top-3.5 text-slate-400">₽</span>
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <label for="taxi-trip-distance" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Длина типичной поездки для расчёта пробега</label>
-                                    <div class="relative"><input type="number" min="0.5" step="0.5" id="taxi-trip-distance" oninput="handleRawInput('taxiTripDistance', this.value)" class="ym-disable-keys w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="10"><span class="absolute right-4 top-3.5 text-slate-400">км</span></div>
-                                </div>
+                            </dl>
+                            <p class="ct-muted ct-scale" id="comparison-scale"></p>
+                        </div>
+                        <div class="ct-costs">
+                            <p class="ct-reason" id="result-reason"></p>
+                            <dl class="ct-breakdown" id="result-breakdown" aria-label="Из чего складывается стоимость машины">
+                                <div><dt>Денежные расходы машины</dt><dd class="yn-number" id="car-cash"></dd></div>
+                                <div><dt>Расчётная потеря стоимости<small class="ct-muted">Снижение цены, без платежа</small></dt><dd class="yn-number" id="car-loss"></dd></div>
+                            </dl>
+                        </div>
+                        <details class="yn-methodology" id="result-details" data-screenshot-exclude>
+                            <summary class="yn-methodology-summary">Подробнее о расходах</summary>
+                            <div class="yn-methodology-body">
+                                <dl class="ct-breakdown">
+                                    <div><dt>Топливо</dt><dd class="yn-number" id="car-fuel"></dd></div>
+                                    <div><dt>Страховка и обслуживание</dt><dd class="yn-number" id="car-fixed"></dd></div>
+                                    <div><dt>Прочие расходы</dt><dd class="yn-number" id="car-other"></dd></div>
+                                    <div><dt>Стоимость километра на машине</dt><dd class="yn-number" id="car-per-km"></dd></div>
+                                </dl>
                             </div>
-
-                            <!-- Девальвация (Потеря стоимости) -->
-                            <div class="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-850">
-                                <div class="flex justify-between items-center">
-                                    <label for="depreciation-range" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Потеря стоимости в год</label>
-                                    <span id="depreciation-display" class="text-sm font-black text-rose-600">10%</span>
-                                </div>
-                                <input type="range" id="depreciation-range" min="0" max="30" step="1" value="10" class="ym-disable-keys ym-disable-clickmap w-full accent-brand-600 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer" oninput="handleRawInput('depreciation', this.value)">
-                                <p class="text-[10px] text-slate-400 dark:text-slate-500">Средняя потеря стоимости нового авто составляет 10-15% в год. Для б/у машин этот показатель ниже.</p>
-                            </div>
-                        </div>
+                        </details>
                     </div>
-                </div>
-
-                <!-- Блок Такси -->
-                <div class="ym-hide-content bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 space-y-6">
-                    <div class="flex items-center gap-3 border-b dark:border-slate-800 pb-4">
-                        <div class="w-10 h-10 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl flex items-center justify-center text-yellow-600">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 17a2 2 0 11-4 0 2 2 0 014 0zM9 17a2 2 0 11-4 0 2 2 0 014 0z"></path><path d="M13 5h-1.948a1 1 0 00-.894.553L7.382 11H4a1 1 0 00-1 1v5a1 1 0 001 1h1a3 3 0 006 0h2a3 3 0 006 0h1a1 1 0 001-1v-5a1 1 0 00-1-1h-3.382l-2.774-5.447A1 1 0 0013 5z"></path></svg>
-                        </div>
-                        <h2 class="text-lg font-bold text-slate-900 dark:text-white">Поездки на такси</h2>
+                </section>
+                <details class="yn-methodology ct-actions" id="result-actions">
+                    <summary class="yn-methodology-summary">Сохранить или поделиться</summary>
+                    <div class="ct-actions-list">
+                        <button type="button" class="yn-button" id="export-png" onclick="takeScreenshot('screenshot-area', 'yasnomera-car-vs-taxi.png')" disabled>Сохранить PNG</button>
+                        <button type="button" class="yn-button" id="share-result" disabled hidden>Поделиться результатом</button>
+                        <button type="button" class="yn-button" id="copy-link">Скопировать ссылку на калькулятор</button>
                     </div>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Число поездок задаёт общую потребность в передвижении. Из неё рассчитывается пробег автомобиля при длине типичной поездки из детальных настроек.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-2">
-                            <label for="trips-per-month" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Поездок в месяц</label>
-                            <input type="number" min="0" id="trips-per-month" oninput="handleRawInput('tripsPerMonth', this.value)" class="ym-disable-keys w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="30">
-                        </div>
-                        <div class="space-y-2">
-                            <label for="trip-price" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Средняя стоимость поездки</label>
-                            <div class="relative"><input type="text" id="trip-price" oninput="handleInput(this, 'tripPrice')" class="ym-disable-keys w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none transition font-bold text-slate-800 dark:text-white" value="500"><span class="absolute right-4 top-3.5 text-slate-400">₽</span></div>
-                        </div>
-                    </div>
-                    <div class="pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <label class="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-3 uppercase">Быстрые пресеты поездок</label>
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                            <button id="preset-trips-10" onclick="setTripsPreset(10)" class="preset-trips-btn py-2 px-1 text-[11px] font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition uppercase active:scale-95">Редко (10)</button>
-                            <button id="preset-trips-30" onclick="setTripsPreset(30)" class="preset-trips-btn py-2 px-1 text-[11px] font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition uppercase active:scale-95">Обычно (30)</button>
-                            <button id="preset-trips-44" onclick="setTripsPreset(44)" class="preset-trips-btn py-2 px-1 text-[11px] font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition uppercase active:scale-95">Работа (44)</button>
-                            <button id="preset-trips-60" onclick="setTripsPreset(60)" class="preset-trips-btn py-2 px-1 text-[11px] font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition uppercase active:scale-95">Часто (60)</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Кнопки Поделиться (десктоп) -->
-                <div class="hidden lg:grid grid-cols-2 gap-4">
-                    <button onclick="shareResult()" class="flex items-center justify-center gap-2 py-4 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 transition-all shadow-sm active:scale-[0.98]">
-                        <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
-                        Поделиться расчетом
-                    </button>
-                    <button onclick="takeScreenshot('screenshot-area', 'yasnomera-car-vs-taxi.png')" class="flex items-center justify-center gap-2 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition-all shadow-sm active:scale-[0.98]">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        Сохранить скриншот
-                    </button>
-                </div>
-
+                </details>
             </div>
 
-            <!-- ПРАВАЯ КОЛОНКА: Результаты -->
-            <div class="lg:col-span-5 space-y-6">
-
-                <!-- The PNG renderer clones this root with its replay mask intact. -->
-                <div id="screenshot-area" class="ym-hide-content space-y-4 lg:bg-transparent bg-slate-50 dark:bg-slate-950 p-0 lg:p-0 rounded-3xl">
-
-                    <!-- Главный вердикт -->
-                    <div id="verdict-card" class="p-5 md:p-6 rounded-2xl transition-all duration-500 flex flex-col items-center text-center space-y-3 shadow-md border">
-                        <div class="flex items-center gap-3">
-                            <div id="verdict-icon" class="w-12 h-12 rounded-full flex items-center justify-center text-3xl shrink-0">🚗</div>
-                            <div class="text-left">
-                                <h3 id="verdict-title" class="text-xl font-black leading-tight text-slate-900 dark:text-white">Выгоднее на машине</h3>
-                                <p id="verdict-description" class="text-xs text-slate-600 dark:text-slate-300 opacity-90 leading-normal max-w-sm">С учетом всех расходов, включая потерю стоимости авто, владение машиной обходится дешевле такси.</p>
-                            </div>
-                        </div>
-                        <div class="w-full pt-4 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center px-2">
-                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Разница в месяц:</span>
-                            <span id="monthly-diff" class="text-2xl font-black">0 ₽</span>
-                        </div>
+            <section class="ct-panel ct-car ym-hide-content" aria-labelledby="car-heading">
+                <h2 class="ct-section-title" id="car-heading" tabindex="-1">Автомобиль</h2>
+                <div>
+                    <p class="ct-muted ct-presets-label">Примеры параметров, без привязки к рыночным ценам</p>
+                    <div class="ct-presets" id="car-presets" role="group" aria-label="Примеры параметров автомобиля">
+                        <button type="button" id="preset-economy" class="yn-button" data-preset="economy" aria-pressed="false"><span id="preset-economy-name">Lada Granta</span><small>Эконом</small></button>
+                        <button type="button" id="preset-comfort" class="yn-button" data-preset="comfort" aria-pressed="true"><span id="preset-comfort-name">Geely Coolray</span><small>Комфорт</small></button>
+                        <button type="button" id="preset-premium" class="yn-button" data-preset="premium" aria-pressed="false"><span id="preset-premium-name">EXEED RX</span><small>Премиум</small></button>
                     </div>
-
-                    <!-- 2x2 СЕТКА СРАВНЕНИЯ: МЕСЯЦ И ГОД -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <!-- В МЕСЯЦ: Машина -->
-                        <div class="bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/20 dark:to-slate-900 border border-emerald-100 dark:border-emerald-900/50 p-4 rounded-xl shadow-sm flex flex-col justify-between">
-                            <div>
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="text-base">🚗</span>
-                                    <span class="text-[10px] font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">Машина / Месяц</span>
-                                </div>
-                                <p id="grid-car-monthly" class="text-xl font-black text-slate-900 dark:text-white">0 ₽</p>
-                            </div>
-                            <div class="mt-3 pt-2 border-t border-emerald-100/50 dark:border-emerald-900/30 text-[10px] text-slate-500 dark:text-slate-400 space-y-1">
-                                <div class="flex justify-between"><span>Топливо:</span><span id="car-monthly-fuel" class="font-bold">0 ₽</span></div>
-                                <div class="flex justify-between"><span>ТО + ОСАГО:</span><span id="car-monthly-fixed" class="font-bold">0 ₽</span></div>
-                                <div class="flex justify-between"><span>Амортизация:</span><span id="car-monthly-depr" class="font-bold">0 ₽</span></div>
-                            </div>
-                        </div>
-
-                        <!-- В МЕСЯЦ: Такси -->
-                        <div class="bg-gradient-to-br from-amber-50 to-white dark:from-amber-950/20 dark:to-slate-900 border border-amber-100 dark:border-amber-900/50 p-4 rounded-xl shadow-sm flex flex-col justify-between">
-                            <div>
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="text-base">🚕</span>
-                                    <span class="text-[10px] font-black text-amber-700 dark:text-amber-400 uppercase tracking-wider">Такси / Месяц</span>
-                                </div>
-                                <p id="grid-taxi-monthly" class="text-xl font-black text-slate-900 dark:text-white">0 ₽</p>
-                            </div>
-                            <div class="mt-3 pt-2 border-t border-amber-100/50 dark:border-amber-900/30 text-[10px] text-slate-500 dark:text-slate-400 space-y-1">
-                                <div class="flex justify-between"><span>Поездок:</span><span id="taxi-monthly-trips" class="font-bold">0</span></div>
-                                <div class="flex justify-between"><span>За поездку:</span><span id="taxi-monthly-rate" class="font-bold">0 ₽</span></div>
-                                <div class="flex justify-between"><span>Итого:</span><span class="font-bold">100%</span></div>
-                            </div>
-                        </div>
-
-                        <!-- В ГОД: Машина -->
-                        <div class="bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/20 dark:to-slate-900 border border-emerald-100 dark:border-emerald-900/50 p-4 rounded-xl shadow-sm flex flex-col justify-between">
-                            <div>
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="text-base">🚗</span>
-                                    <span class="text-[10px] font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">Машина / Год</span>
-                                </div>
-                                <p id="grid-car-annual" class="text-xl font-black text-slate-900 dark:text-white">0 ₽</p>
-                            </div>
-                            <div class="mt-3 pt-2 border-t border-emerald-100/50 dark:border-emerald-900/30 text-[10px] text-slate-500 dark:text-slate-400 space-y-1">
-                                <div class="flex justify-between"><span>Топливо:</span><span id="car-annual-fuel" class="font-bold">0 ₽</span></div>
-                                <div class="flex justify-between"><span>ТО + ОСАГО:</span><span id="car-annual-fixed" class="font-bold">0 ₽</span></div>
-                                <div class="flex justify-between"><span>Амортизация:</span><span id="car-annual-depr" class="font-bold">0 ₽</span></div>
-                            </div>
-                        </div>
-
-                        <!-- В ГОД: Такси -->
-                        <div class="bg-gradient-to-br from-amber-50 to-white dark:from-amber-950/20 dark:to-slate-900 border border-amber-100 dark:border-amber-900/50 p-4 rounded-xl shadow-sm flex flex-col justify-between">
-                            <div>
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="text-base">🚕</span>
-                                    <span class="text-[10px] font-black text-amber-700 dark:text-amber-400 uppercase tracking-wider">Такси / Год</span>
-                                </div>
-                                <p id="grid-taxi-annual" class="text-xl font-black text-slate-900 dark:text-white">0 ₽</p>
-                            </div>
-                            <div class="mt-3 pt-2 border-t border-amber-100/50 dark:border-amber-900/30 text-[10px] text-slate-500 dark:text-slate-400 space-y-1">
-                                <div class="flex justify-between"><span>Поездок в год:</span><span id="taxi-annual-trips" class="font-bold">0</span></div>
-                                <div class="flex justify-between"><span>Затраты:</span><span id="taxi-annual-total-detail" class="font-bold">0 ₽</span></div>
-                                <div class="flex justify-between"><span>Тарифы:</span><span class="font-bold">Оценка</span></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- БАЛАНС СИЛ / TUG OF WAR -->
-                    <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Баланс сил (в месяц)</span>
-                            <span id="tug-of-war-verdict" class="text-xs font-bold text-slate-700 dark:text-slate-300">...</span>
-                        </div>
-                        <div class="relative w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex">
-                            <div id="tug-car-bar" class="h-full bg-emerald-500 transition-all duration-500" style="width: 50%"></div>
-                            <div id="tug-taxi-bar" class="h-full bg-amber-500 transition-all duration-500" style="width: 50%"></div>
-                        </div>
-                        <div class="flex justify-between items-center text-[9px] font-bold text-slate-400 dark:text-slate-500">
-                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>Машина <span id="tug-car-pct">50%</span></span>
-                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span>Такси <span id="tug-taxi-pct">50%</span></span>
-                        </div>
-                    </div>
-
-                    <!-- СТОИМОСТЬ ВЛАДЕНИЯ АВТОМОБИЛЕМ (COMPACT VERSION) -->
-                    <div class="bg-gradient-to-br from-brand-600 to-emerald-800 text-white p-4 rounded-2xl shadow-md border border-brand-500 relative overflow-hidden transition-all duration-300">
-                        <!-- Abstract glow backgrounds -->
-                        <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
-                        <div class="absolute -left-10 -top-10 w-24 h-24 bg-brand-400/20 rounded-full blur-xl"></div>
-
-                        <div class="relative z-10 flex items-center justify-between">
-                            <div class="text-left">
-                                <span class="text-[9px] font-black uppercase tracking-widest text-brand-100 opacity-90 block">Стоимость владения: 1 км</span>
-                                <div class="flex items-baseline gap-1 mt-0.5">
-                                    <span id="km-cost-main" class="text-3xl font-black tracking-tight drop-shadow-md">...</span>
-                                    <span class="text-sm font-bold opacity-90">₽/км</span>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-[9px] font-black uppercase tracking-widest text-brand-100 opacity-90 block">Такси</span>
-                                <span class="text-base font-extrabold text-brand-200 mt-1 block">Одинаковый пробег</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Амортизация -->
-                    <div class="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100 p-4 rounded-2xl border border-indigo-950/80 shadow-md transition-all duration-300 relative overflow-hidden">
-                        <div class="absolute right-3 top-3 text-xl opacity-30">🌙</div>
-                        <div class="relative z-10 flex items-center gap-3">
-                            <span class="text-2xl shrink-0">💸</span>
-                            <div class="text-left">
-                                <h4 class="text-[10px] font-black uppercase tracking-widest text-indigo-400">Амортизация</h4>
-                                <p class="text-xs font-medium text-slate-300 leading-normal mt-0.5">
-                                    Расчётная потеря стоимости автомобиля в день: <span id="nightly-depreciation" class="font-black text-amber-400 text-sm">... ₽</span>.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
+                <div class="yn-field">
+                            <label for="car-price" class="yn-label">Цена автомобиля, ₽</label>
+                            <input class="yn-input ym-disable-keys" id="car-price" type="text" inputmode="decimal" autocomplete="off"
+                                   value="2 600 000" required aria-describedby="car-price-error">
+                            <p class="yn-error" id="car-price-error" aria-live="polite"></p>
+                        </div>
+                <details class="yn-methodology ct-inline-details" id="car-settings">
+                    <summary class="yn-methodology-summary">Настроить расходы на машину</summary>
+                    <div class="yn-methodology-body ct-fields">
+                        <div class="yn-field">
+                            <label for="fuel-consumption" class="yn-label">Расход топлива, л/100 км</label>
+                            <input class="yn-input ym-disable-keys" id="fuel-consumption" type="text" inputmode="decimal" autocomplete="off"
+                                   value="8,5" required aria-describedby="fuel-consumption-error">
+                            <p class="yn-error" id="fuel-consumption-error" aria-live="polite"></p>
+                        </div>
+                        <div class="yn-field">
+                            <label for="fuel-price" class="yn-label">Цена топлива, ₽/л</label>
+                            <input class="yn-input ym-disable-keys" id="fuel-price" type="text" inputmode="decimal" autocomplete="off"
+                                   value="58" required aria-describedby="fuel-price-error">
+                            <p class="yn-error" id="fuel-price-error" aria-live="polite"></p>
+                        </div>
+                        <div class="yn-field">
+                            <label for="insurance" class="yn-label">Страховка, ₽/год</label>
+                            <input class="yn-input ym-disable-keys" id="insurance" type="text" inputmode="decimal" autocomplete="off"
+                                   value="80 000" required aria-describedby="insurance-error">
+                            <p class="yn-error" id="insurance-error" aria-live="polite"></p>
+                        </div>
+                        <div class="yn-field">
+                            <label for="maintenance" class="yn-label">Обслуживание, ₽/год</label>
+                            <input class="yn-input ym-disable-keys" id="maintenance" type="text" inputmode="decimal" autocomplete="off"
+                                   value="35 000" required aria-describedby="maintenance-error">
+                            <p class="yn-error" id="maintenance-error" aria-live="polite"></p>
+                        </div>
+                        <div class="yn-field ct-full">
+                            <label for="other-expenses" class="yn-label">Прочие расходы на автомобиль, ₽/год</label>
+                            <input class="yn-input ym-disable-keys" id="other-expenses" type="text" inputmode="decimal" autocomplete="off"
+                                   value="" aria-describedby="other-expenses-hint other-expenses-error">
+                            <p class="yn-hint" id="other-expenses-hint">Необязательно. Например, парковка, налог и шины, если вы ещё не учли их в обслуживании.</p>
+                            <p class="yn-error" id="other-expenses-error" aria-live="polite"></p>
+                        </div>
+                        <div class="yn-field ct-full">
+                            <label class="yn-label" for="depreciation-range">Потеря стоимости за первый год</label>
+                            <input id="depreciation-range" class="ym-disable-keys ym-disable-clickmap" type="range" min="0" max="30" step="1" value="11"
+                                   aria-describedby="depreciation-display depreciation-range-error">
+                            <span class="ct-depreciation yn-number" id="depreciation-display"></span>
+                            <p id="depreciation-range-error" class="yn-error" aria-live="polite"></p>
+                        </div>
+                    </div>
+                </details>
+            </section>
+        </div>
 
-                <div class="yn-scope">
-                    <details id="capital-scenario" class="yn-methodology">
-                        <summary class="yn-methodology-summary">Если оставить деньги на покупку</summary>
-                        <div class="yn-methodology-body ym-hide-content space-y-3 text-sm">
-                            <p>Сценарий для покупки за собственные средства. Возможный доход за первый год считаем от цены автомобиля.</p>
-                            <div class="yn-field">
-                                <label for="opportunity-rate" class="yn-label">Ваша ожидаемая доходность за год, %</label>
+        <div class="ct-extras">
+            <details id="capital-scenario" class="yn-methodology ct-capital">
+                <summary class="yn-methodology-summary ct-extra-summary">
+                    <h2 class="ct-extra-heading">
+                        <span>
+                            <span class="ct-kicker">Дополнительный сценарий · по желанию</span>
+                            <span class="ct-extra-title">А если не покупать машину?</span>
+                            <span class="ct-muted">Если оставить сумму покупки, доход от неё может изменить разницу между машиной и такси.</span>
+                        </span>
+                        <span class="ct-extra-action"><span class="ct-action-closed">Указать доходность</span><span class="ct-action-open">Свернуть сценарий</span></span>
+                    </h2>
+                </summary>
+                <div class="yn-methodology-body ct-capital-grid ym-hide-content">
+                    <div class="ct-capital-input">
+                        <div class="yn-field">
+                            <label for="opportunity-rate" class="yn-label">Какую доходность вы ожидаете за год?</label>
+                            <div class="ct-capital-rate">
                                 <input id="opportunity-rate" class="yn-input ym-disable-keys" type="text" inputmode="decimal" autocomplete="off"
-                                       aria-describedby="opportunity-rate-hint opportunity-rate-error" oninput="calculate()">
-                                <p id="opportunity-rate-hint" class="yn-hint">Укажите ожидаемую доходность доступного вам варианта на 12 месяцев с учётом налогов и комиссий, если они применимы.</p>
+                                       aria-describedby="opportunity-rate-hint opportunity-rate-error">
+                                <span class="ct-muted" aria-hidden="true">%</span>
                             </div>
+                            <p id="opportunity-rate-hint" class="yn-hint">В процентах, после налогов и комиссий.</p>
                             <p id="opportunity-rate-error" class="yn-error" aria-live="polite"></p>
-                            <div role="status">
-                                <div id="opportunity-result" class="space-y-2" hidden>
-                                    <dl class="space-y-1">
-                                        <div>
-                                            <dt>Возможный доход за первый год</dt>
-                                            <dd id="opportunity-income" class="yn-number font-bold"></dd>
-                                        </div>
-                                        <div>
-                                            <dt>Сценарная стоимость авто за первый год</dt>
-                                            <dd id="opportunity-car-annual" class="yn-number font-bold"></dd>
-                                        </div>
-                                    </dl>
-                                    <p id="opportunity-comparison" class="yn-number font-bold"></p>
-                                    <p id="opportunity-winner-change"></p>
+                        </div>
+                        <p class="ct-muted ct-capital-note">Для покупки за свои деньги. Доходность не гарантирована, основной результат не меняется.</p>
+                    </div>
+                    <div role="status" aria-atomic="true">
+                        <div id="opportunity-result" class="ct-capital-result" hidden>
+                            <dl>
+                                <div>
+                                    <dt>Возможный доход от сохранённых денег</dt>
+                                    <dd><span id="opportunity-income" class="yn-number"></span> <small id="opportunity-basis" class="ct-muted"></small></dd>
                                 </div>
+                                <div class="ct-capital-difference">
+                                    <dt id="opportunity-comparison"></dt>
+                                    <dd><span id="opportunity-difference" class="yn-number"></span> <small class="ct-muted">за первый год</small></dd>
+                                    <dd><p id="opportunity-comparison-note" class="ct-muted"></p></dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <details id="lifestyle-widget" class="yn-methodology">
+                <summary class="yn-methodology-summary ct-extra-summary">
+                    <h2 class="ct-extra-heading">
+                        <span>
+                            <span class="ct-extra-title">Что учесть помимо расходов?</span>
+                            <span class="ct-muted">Отмечайте удобства и то, что мешает. Итог отражает ваши предпочтения.</span>
+                        </span>
+                        <span class="ct-extra-action"><span class="ct-action-closed">Открыть анкету</span><span class="ct-action-open">Свернуть анкету</span></span>
+                    </h2>
+                </summary>
+                <div class="yn-methodology-body">
+                    <div class="ct-quiz-options" id="lifestyle-options">
+                        <fieldset>
+                            <legend>Машина</legend>
+                            <div class="ct-factors">
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="car_freedom">
+                                    <span><strong>Поездки без плана</strong><small class="ct-muted">На дачу, природу и в другие города</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="car_kids">
+                                    <span><strong>Поездки с детьми</strong><small class="ct-muted">Свои кресла и место для вещей</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="car_privacy">
+                                    <span><strong>Личное пространство</strong><small class="ct-muted">Тишина или своя музыка</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="car_heavy_load">
+                                    <span><strong>Крупные покупки и груз</strong><small class="ct-muted">Тяжёлые вещи или питомцы</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="car_noparking">
+                                    <span><strong>Парковка усложняет поездки</strong><small class="ct-muted">Важны поиск места и расходы</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="car_maintenance_stress">
+                                    <span><strong>Утомляет уход за машиной</strong><small class="ct-muted">Мойка, ТО, шины и страховка</small></span>
+                                </label>
                             </div>
-                            <p class="yn-hint">Расчёт по вашему предположению. Доходность не гарантирована.</p>
-                        </div>
-                    </details>
-                </div>
-
-                <!-- Мобильная кнопка Share (только на мобилках) -->
-                <div class="lg:hidden mt-4">
-                    <button onclick="shareResult()" class="w-full flex items-center justify-center gap-2 py-4 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 transition-all shadow-sm active:scale-[0.98]">
-                        <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-2.684 3 3 0 000 2.684zm0 9.474a3 3 0 100 2.684 3 3 0 000-2.684z"></path></svg>
-                        Поделиться
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- МЯГКИЕ ФАКТОРЫ: ВЕСЫ СТИЛЯ ЖИЗНИ (PREMIUM OPTIONAL WIDGET) -->
-        <div class="mt-12 bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden transition-all duration-300">
-            <!-- Header/CTA trigger -->
-            <button onclick="toggleLifestyleWidget()" class="w-full flex flex-col md:flex-row justify-between items-center p-6 sm:p-8 bg-gradient-to-r from-emerald-50/40 via-slate-50/20 to-amber-50/40 dark:from-emerald-950/10 dark:via-slate-900 dark:to-amber-950/10 hover:opacity-95 transition text-left gap-4 active:scale-[0.995]">
-                <div class="flex items-start gap-4">
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-amber-500 text-white flex items-center justify-center text-2xl shadow-md shrink-0">⚖️</div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs font-black uppercase tracking-widest text-brand-600 dark:text-brand-400">Интерактивный тест</span>
-                            <span class="px-2 py-0.5 text-[9px] font-bold uppercase bg-amber-500 text-white rounded-full animate-pulse">Новинка</span>
-                        </div>
-                        <h3 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight mt-0.5">Что учесть помимо расходов?</h3>
-                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">Отметьте важные для вас условия, чтобы сопоставить их с выбранным сценарием.</p>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Такси</legend>
+                            <div class="ct-factors">
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="taxi_productivity">
+                                    <span><strong>Время для себя в дороге</strong><small class="ct-muted">Работа, чтение или переписка</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="taxi_no_worries">
+                                    <span><strong>Меньше забот о машине</strong><small class="ct-muted">Штрафы, налоги, уход и зимние хлопоты</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="taxi_rest">
+                                    <span><strong>Встречи без руля</strong><small class="ct-muted">Можно выпить и уехать пассажиром</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="taxi_always_clean">
+                                    <span><strong>Комфорт в такси</strong><small class="ct-muted">Чистота, вежливость, меньше конфликтов</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="taxi_surged">
+                                    <span><strong>Мешают ожидание и дорогие часы</strong><small class="ct-muted">Долгая подача и высокий спрос</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="taxi_human_factor">
+                                    <span><strong>Сложно с незнакомыми водителями</strong><small class="ct-muted">Стиль вождения, запахи, разговоры</small></span>
+                                </label>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="ct-quiz-result" role="status" aria-atomic="true">
+                        <strong id="lifestyle-verdict-title">Отметьте важные факторы выше</strong>
+                        <p class="ct-muted" id="lifestyle-verdict-desc">Здесь появится итог по вашим ответам.</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-2 shrink-0">
-                    <span id="lifestyle-toggle-btn" class="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-black uppercase rounded-xl shadow-sm text-slate-700 dark:text-slate-300 transition-all hover:bg-slate-50">Открыть тест</span>
-                </div>
-            </button>
+            </details>
 
-            <!-- Collapsible content -->
-            <div id="lifestyle-widget-content" class="hidden border-t border-slate-100 dark:border-slate-800 p-6 sm:p-8 space-y-6 bg-slate-50/30 dark:bg-slate-900/30">
-                <!-- Grid of checkboxes -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Плюсы и минусы Личного Авто -->
-                    <div class="bg-emerald-50/30 dark:bg-emerald-950/5 p-6 rounded-2xl border border-emerald-100/50 dark:border-emerald-900/30 space-y-4 shadow-sm">
-                        <h4 class="text-sm font-black text-emerald-800 dark:text-emerald-400 uppercase tracking-wider flex items-center gap-2">
-                            <span>🚗</span> Предпочтения по автомобилю
-                        </h4>
-                        <div class="space-y-3">
-                            <label class="flex items-start gap-3 cursor-pointer group">
-                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 dark:bg-slate-800 dark:border-slate-700" value="car_freedom" onchange="calculateLifestyle()">
-                                <span class="text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-medium">Спонтанность: поездки на дачу, природу или в другие города на выходных без долгого планирования</span>
-                            </label>
-                            <label class="flex items-start gap-3 cursor-pointer group">
-                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 dark:bg-slate-800 dark:border-slate-700" value="car_kids" onchange="calculateLifestyle()">
-                                <span class="text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-medium">Комфорт и безопасность детей: детские кресла всегда установлены, нет стресса с вещами в багажнике</span>
-                            </label>
-                            <label class="flex items-start gap-3 cursor-pointer group">
-                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 dark:bg-slate-800 dark:border-slate-700" value="car_privacy" onchange="calculateLifestyle()">
-                                <span class="text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-medium">Приватность и антистресс: личное пространство, где можно побыть в тишине или громко слушать любимую музыку</span>
-                            </label>
-                            <label class="flex items-start gap-3 cursor-pointer group">
-                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 dark:bg-slate-800 dark:border-slate-700" value="car_heavy_load" onchange="calculateLifestyle()">
-                                <span class="text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-medium">Крупные покупки: удобно возить тяжелые вещи, покупки из супермаркетов или домашних питомцев</span>
-                            </label>
-                            <label class="flex items-start gap-3 cursor-pointer group">
-                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 dark:bg-slate-800 dark:border-slate-700" value="car_noparking" onchange="calculateLifestyle()">
-                                <span class="text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition font-medium">Парковка и связанные с ней расходы для меня существенны (меньше подходит автомобиль)</span>
-                            </label>
-                            <label class="flex items-start gap-3 cursor-pointer group">
-                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 dark:bg-slate-800 dark:border-slate-700" value="car_maintenance_stress" onchange="calculateLifestyle()">
-                                <span class="text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition font-medium">Бытовая рутина: шиномонтаж, регулярные мойки, замена масла и страховка вызывают у меня стресс (минус авто)</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Плюсы и минусы Такси -->
-                    <div class="bg-amber-50/30 dark:bg-amber-950/5 p-6 rounded-2xl border border-amber-100/50 dark:border-amber-900/30 space-y-4 shadow-sm">
-                        <h4 class="text-sm font-black text-amber-800 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
-                            <span>🚕</span> Предпочтения по такси
-                        </h4>
-                        <div class="space-y-3">
-                            <label class="flex items-start gap-3 cursor-pointer group">
-                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-amber-300 text-amber-600 focus:ring-amber-500 dark:bg-slate-800 dark:border-slate-700" value="taxi_productivity" onchange="calculateLifestyle()">
-                                <span class="text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-medium">Время для себя: в поездке можно спокойно работать в ноутбуке, читать или отвечать на сообщения</span>
-                            </label>
-                            <label class="flex items-start gap-3 cursor-pointer group">
-                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-amber-300 text-amber-600 focus:ring-amber-500 dark:bg-slate-800 dark:border-slate-700" value="taxi_no_worries" onchange="calculateLifestyle()">
-                                <span class="text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-medium">Ноль забот: забыл про штрафы, налоги, КАСКО, ТО, зимнюю резину и чистку снега морозным утром</span>
-                            </label>
-                            <label class="flex items-start gap-3 cursor-pointer group">
-                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-amber-300 text-amber-600 focus:ring-amber-500 dark:bg-slate-800 dark:border-slate-700" value="taxi_rest" onchange="calculateLifestyle()">
-                                <span class="text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-medium">Вечеринки и встречи: приехал в гости, выпил бокал вина и не думаешь, как оставить машину у ресторана</span>
-                            </label>
-                            <label class="flex items-start gap-3 cursor-pointer group">
-                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-amber-300 text-amber-600 focus:ring-amber-500 dark:bg-slate-800 dark:border-slate-700" value="taxi_always_clean" onchange="calculateLifestyle()">
-                                <span class="text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition font-medium">Чистый салон каждый день, вежливый водитель и отсутствие стресса от дорожных конфликтов</span>
-                            </label>
-                            <label class="flex items-start gap-3 cursor-pointer group">
-                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-amber-300 text-amber-600 focus:ring-amber-500 dark:bg-slate-800 dark:border-slate-700" value="taxi_surged" onchange="calculateLifestyle()">
-                                <span class="text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition font-medium">Повышенный спрос и ожидание машины для меня существенны (меньше подходит такси)</span>
-                            </label>
-                            <label class="flex items-start gap-3 cursor-pointer group">
-                                <input type="checkbox" class="lifestyle-checkbox mt-1 rounded border-amber-300 text-amber-600 focus:ring-amber-500 dark:bg-slate-800 dark:border-slate-700" value="taxi_human_factor" onchange="calculateLifestyle()">
-                                <span class="text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition font-medium">Человеческий фактор: неприятные запахи, навязчивые разговоры или плохой стиль вождения водителей (минус такси)</span>
-                            </label>
-                        </div>
+            <details id="ct-methodology" class="yn-methodology ct-method">
+                <summary class="yn-methodology-summary ct-extra-summary">
+                    <h2 class="ct-extra-heading">
+                        <span class="ct-extra-title">Как мы считаем</span>
+                        <span class="ct-extra-action"><span class="ct-action-closed">Смотреть методику</span><span class="ct-action-open">Свернуть методику</span></span>
+                    </h2>
+                </summary>
+                <div class="yn-methodology-body">
+                    <p class="ct-method-formula">Машина за год = денежные расходы + потеря стоимости.<br>Такси за год = поездки за год × средняя цена поездки.</p>
+                    <div class="ct-method-topics">
+                        <section aria-labelledby="ct-method-costs">
+                            <h3 id="ct-method-costs">Состав расходов</h3>
+                            <p class="ct-muted"><strong>Пробег</strong> — одинаковое для обоих вариантов число поездок в месяц × 12 × длина поездки из блока «Условия поездок». По этому пробегу, расходу на 100 км и цене топлива считаем затраты на топливо.</p>
+                            <p class="ct-muted">Добавляем страховку, обслуживание и указанные прочие расходы, например парковку, налог и шины. Каждую статью учитывайте один раз.</p>
+                        </section>
+                        <section aria-labelledby="ct-method-loss">
+                            <h3 id="ct-method-loss">Потеря стоимости</h3>
+                            <p class="ct-muted"><strong>Оценка снижения цены</strong> = цена машины × заданный процент за первый год. Эта величина учитывает, насколько дешевле может стать машина, и не является платежом.</p>
+                            <p class="ct-muted">В дополнительном сценарии возможный доход равен цене машины × вашей ожидаемой чистой доходности за год. Чтобы получить разницу в пользу такси, складываем денежные расходы на машину, потерю её стоимости и возможный доход, затем вычитаем стоимость такси за год. Отрицательная разница означает преимущество машины. Сумма до вычитания отражает условные затраты, а не платежи.</p>
+                        </section>
+                        <section aria-labelledby="ct-method-limits">
+                            <h3 id="ct-method-limits">Границы оценки</h3>
+                            <p class="ct-muted"><strong>Сравниваем первый год</strong> при постоянных ценах и тарифах, по вашим условиям или иллюстративному пресету. Кредит и изменения цен отдельно не моделируются.</p>
+                            <p class="ct-muted">Месячный режим делит годовые суммы на 12 и округляет их при показе. Фактические платежи могут приходиться на разные месяцы. Анкета оценивает предпочтения отдельно от расходов.</p>
+                        </section>
                     </div>
                 </div>
-
-                <!-- ИНТЕРАКТИВНЫЙ МЕНТАЛЬНЫЙ ВЕРДИКТ -->
-                <div class="pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col items-center text-center space-y-3">
-                    <span class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block">Ваш ментальный выбор</span>
-                    <div id="lifestyle-verdict-box" class="px-6 py-4 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm rounded-2xl max-w-lg transition-all duration-300">
-                        <p id="lifestyle-verdict-title" class="text-sm font-black text-slate-900 dark:text-white">Отметьте важные факторы выше</p>
-                        <p id="lifestyle-verdict-desc" class="text-xs text-slate-500 dark:text-slate-400 mt-1">Отметьте факторы, чтобы увидеть, какой вариант лучше соответствует выбранным предпочтениям.</p>
-                    </div>
-                </div>
-            </div>
+            </details>
         </div>
     </main>
 
-    <section class="yn-scope max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8" data-webwisor="car-vs-taxi" data-webwisor-variant="compact"></section>
+    <aside class="ct-sticky yn-scope ym-hide-content" id="trip-sticky" aria-label="Краткий результат" hidden>
+        <div><span id="mobile-verdict-title"></span><strong id="mobile-difference" class="yn-number"></strong></div>
+        <a href="#verdict-title" id="jump-to-result" class="yn-button">К результату</a>
+    </aside>
 
-    <!-- Мобильная залипающая панель результатов -->
-    <div class="lg:hidden mobile-sticky-results ym-hide-content">
-        <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center gap-2">
-                <span id="mobile-verdict-icon" class="text-2xl">🚗</span>
-                <span id="mobile-verdict-title" class="font-black text-slate-900 dark:text-white">Выгоднее на машине</span>
-            </div>
-            <div class="text-right">
-                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-tighter">Разница</p>
-                <p id="mobile-monthly-diff" class="text-lg font-black text-brand-600">0 ₽</p>
-            </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2 text-slate-900 dark:text-white">
-            <div class="bg-slate-50 dark:bg-slate-800 p-2 rounded-xl text-center">
-                <p class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-tighter">Авто/мес</p>
-                <p id="mobile-car-total" class="text-sm font-black text-slate-900 dark:text-white">0 ₽</p>
-            </div>
-            <div class="bg-slate-50 dark:bg-slate-800 p-2 rounded-xl text-center">
-                <p class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-tighter">Такси/мес</p>
-                <p id="mobile-taxi-total" class="text-sm font-black text-slate-900 dark:text-white">0 ₽</p>
-            </div>
-        </div>
-        <button onclick="shareLinkCustom('Машина или такси — Ясномера', 'Я сравнил расходы на личный автомобиль и такси в Ясномере. Разница по выбранным параметрам: ' + document.getElementById('mobile-monthly-diff').innerText + ' в месяц. Результат зависит от введённых условий.')" class="w-full mt-3 py-3 bg-brand-600 text-white font-black rounded-xl text-sm shadow-lg active:scale-[0.98]">
-            📢 Поделиться расчетом
-        </button>
-    </div>
-
-    <footer class="max-w-7xl mx-auto px-4 py-12 text-center text-xs text-slate-400 pb-40 lg:pb-12">
-        <p>© 2026 Ясномера. Расчёты носят информационный характер.</p>
+    <footer class="ct-footer yn-scope">
+        <p class="ct-muted">© 2026 Ясномера. Расчёты носят информационный характер.</p>
     </footer>
 
-    <!-- Toast Notification -->
     <div id="toast" class="ym-hide-content fixed bottom-5 right-5 z-[100] bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
         <span class="text-brand-500 font-bold">✓</span>
-        <span id="toast-message" class="text-sm">Результат сохранен!</span>
+        <span id="toast-message" class="text-sm"></span>
     </div>
 
     <script>
-        const state = {
-            carPrice: 3000000,
-            fuelConsumption: 10,
-            fuelPrice: 55,
-            insurance: 80000,
-            maintenance: 40000,
-            depreciation: 10,
-            taxiTripDistance: 10,
-            tripsPerMonth: 30,
-            tripPrice: 500
+        const byId = (id) => document.getElementById(id);
+        const number = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 3 });
+        const kopecks = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 });
+        const tripPlural = new Intl.PluralRules('ru-RU');
+        const fields = {
+            'trips-per-month': { key: 'tripsPerMonth', max: 10000, integer: true },
+            'trip-price': { key: 'tripPrice', max: 1000000 },
+            'taxi-trip-distance': { key: 'taxiTripDistance', max: 10000, positive: true, precision: 3 },
+            'car-price': { key: 'carPrice', max: 1000000000 },
+            'fuel-consumption': { key: 'fuelConsumption', max: 1000, precision: 3 },
+            'fuel-price': { key: 'fuelPrice', max: 10000 },
+            insurance: { key: 'insurance', max: 1000000000 },
+            maintenance: { key: 'maintenance', max: 1000000000 },
+            'other-expenses': { key: 'otherExpenses', max: 1000000000, optional: true },
+            'depreciation-range': { key: 'depreciation', max: 30, integer: true }
         };
+        const presets = {
+            economy: { 'car-price': 1100000, insurance: 35000, maintenance: 20000, 'fuel-consumption': 7.2, 'fuel-price': 55, 'depreciation-range': 8 },
+            comfort: { 'car-price': 2600000, insurance: 80000, maintenance: 35000, 'fuel-consumption': 8.5, 'fuel-price': 58, 'depreciation-range': 11 },
+            premium: { 'car-price': 4700000, insurance: 180000, maintenance: 75000, 'fuel-consumption': 10.5, 'fuel-price': 64, 'depreciation-range': 14 }
+        };
+        let period = 'month';
+        let base = null;
+        let lastValidValues = null;
+        let trackedCalculation = false;
+        let verdictVisible = true;
+        const numericGroups = /[ \u00a0\u202f]/g;
+        const composingNumbers = new WeakMap();
+        const replacingNumbers = new WeakSet();
 
-        function toggleAccordion() {
-            const content = document.getElementById('accordion-content');
-            const chevron = document.getElementById('accordion-chevron');
-            if (content.classList.contains('hidden')) {
-                content.classList.remove('hidden');
-                chevron.classList.add('rotate-180');
-                document.getElementById('accordion-toggle').setAttribute('aria-expanded', 'true');
-            } else {
-                content.classList.add('hidden');
-                chevron.classList.remove('rotate-180');
-                document.getElementById('accordion-toggle').setAttribute('aria-expanded', 'false');
+        function parseField(raw, { max, integer, positive, optional, precision = 2 }) {
+            const input = raw.trim();
+            if (input === '') return optional ? 0 : null;
+            const decimal = integer ? '' : `(?:[.,]\\d{1,${precision}})?`;
+            const syntax = new RegExp(`^(?:\\d+|\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+)${decimal}$`);
+            if (!syntax.test(input)) return null;
+            const value = Number(input.replace(numericGroups, '').replace(',', '.'));
+            return value > max || (positive && value === 0) ? null : value;
+        }
+
+        function numericTextField(input) {
+            return input.type === 'text' && (Object.hasOwn(fields, input.id) || input.id === 'opportunity-rate');
+        }
+
+        function formatNumericDraft(text, integer, leadingDecimal) {
+            if (!text) return '';
+            const match = /^((?:\d+|\d{1,3}(?:[ \u00a0\u202f]\d{3})+)?)([.,]\d*)?$/.exec(text);
+            if (!match) return null;
+            const [, whole, fraction] = match;
+            if ((fraction && integer) || (!whole && !leadingDecimal)) return null;
+            return whole.replace(numericGroups, '').replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0') +
+                (fraction ? ',' + fraction.slice(1) : '');
+        }
+
+        function logicalPosition(text, offset) {
+            return text.slice(0, offset).replace(numericGroups, '').length;
+        }
+
+        function displayPosition(text, offset) {
+            let index = 0;
+            while (offset > 0 && index < text.length) {
+                if (!/[ \u00a0\u202f]/.test(text[index])) offset--;
+                index++;
+            }
+            return index;
+        }
+
+        function draftForEdit(input, inputType, inserted) {
+            const { value, selectionStart, selectionEnd } = input;
+            const integer = fields[input.id]?.integer;
+            const leadingDecimal = input.id === 'opportunity-rate';
+            if (formatNumericDraft(value, integer, leadingDecimal) === null ||
+                (inserted && /[ \u00a0\u202f]/.test(inserted) && formatNumericDraft(inserted, integer, leadingDecimal) === null)) return null;
+
+            const plain = value.replace(numericGroups, '');
+            let start = logicalPosition(value, selectionStart);
+            let end = logicalPosition(value, selectionEnd);
+            if (selectionStart === selectionEnd) {
+                if (inputType === 'deleteContentBackward') start = Math.max(0, start - 1);
+                if (inputType === 'deleteContentForward') end = Math.min(plain.length, end + 1);
+            }
+            const insertion = inserted.replace(numericGroups, '');
+            const draft = plain.slice(0, start) + insertion + plain.slice(end);
+            const formatted = formatNumericDraft(draft, integer, leadingDecimal);
+            return formatted === null ? null : { value: formatted, caret: displayPosition(formatted, start + insertion.length) };
+        }
+
+        function replaceNumericDraft(input, value, caret) {
+            // Apply the smallest replacement as a native edit so grouping is part of the same undo step.
+            const old = input.value;
+            if (old === value) {
+                input.setSelectionRange(caret, caret);
+                return true;
+            }
+            const selection = [input.selectionStart, input.selectionEnd, input.selectionDirection];
+            let start = 0;
+            while (start < selection[0] && start < caret && old[start] === value[start]) start++;
+            let oldEnd = old.length;
+            let newEnd = value.length;
+            while (oldEnd > selection[1] && newEnd > caret && old[oldEnd - 1] === value[newEnd - 1]) {
+                oldEnd--;
+                newEnd--;
+            }
+            const replacement = value.slice(start, newEnd);
+            input.setSelectionRange(start, oldEnd);
+            replacingNumbers.add(input);
+            try {
+                if (replacement) document.execCommand?.('insertText', false, replacement);
+                else document.execCommand?.('delete');
+            } finally {
+                replacingNumbers.delete(input);
+            }
+            if (input.value !== value) {
+                input.setSelectionRange(...selection);
+                return false;
+            }
+            input.setSelectionRange(caret, caret);
+            return true;
+        }
+
+        function onBeforeNumberInput(event) {
+            const input = event.target;
+            if (!event.isTrusted || !event.cancelable || !numericTextField(input) || event.isComposing ||
+                composingNumbers.has(input) || replacingNumbers.has(input)) return;
+
+            const { inputType } = event;
+            const deleting = inputType === 'deleteContentBackward' || inputType === 'deleteContentForward';
+            const inserting = /^(?:insertText|insertFromPaste|insertFromDrop)$/.test(inputType);
+            if (!deleting && !inserting) return;
+            const inserted = deleting ? '' : event.data ?? event.dataTransfer?.getData('text/plain');
+            if (inserted == null) return;
+            const edit = draftForEdit(input, inputType, inserted);
+            if (!edit) return;
+
+            const { value, selectionStart, selectionEnd } = input;
+            const start = deleting && inputType === 'deleteContentBackward' && selectionStart === selectionEnd
+                ? Math.max(0, selectionStart - 1) : selectionStart;
+            const end = deleting && inputType === 'deleteContentForward' && selectionStart === selectionEnd
+                ? selectionEnd + 1 : selectionEnd;
+            const nativeValue = value.slice(0, start) + inserted + value.slice(end);
+            if (edit.value === nativeValue && edit.caret === start + inserted.length) return;
+            if (replaceNumericDraft(input, edit.value, edit.caret)) {
+                event.preventDefault();
+                refreshNumericResult(input, true);
             }
         }
 
-        function handleInput(el, key) {
-            state[key] = formatInputField(el, el.value);
-            resetPresetHighlight();
-            calculate();
-        }
-
-        function handleRawInput(key, val) {
-            state[key] = parseFloat(val) || 0;
-            if (key === 'depreciation') {
-                document.getElementById('depreciation-display').innerText = val + '%';
+        function formatCurrentNumericDraft(input) {
+            const formatted = formatNumericDraft(input.value, fields[input.id]?.integer, input.id === 'opportunity-rate');
+            if (formatted === null || formatted === input.value) return;
+            const start = displayPosition(formatted, logicalPosition(input.value, input.selectionStart));
+            const end = displayPosition(formatted, logicalPosition(input.value, input.selectionEnd));
+            const direction = input.selectionDirection;
+            // IME and non-cancelable edits arrive after the browser has already applied the input.
+            // Prefer another native edit here too, so undo cannot replay offsets into a rewritten value.
+            if (input === document.activeElement && replaceNumericDraft(input, formatted, end)) {
+                input.setSelectionRange(start, end, direction);
+                return;
             }
-            if (key === 'depreciation' || key === 'fuelConsumption' || key === 'fuelPrice') {
-                resetPresetHighlight();
-            }
-            if (key === 'tripsPerMonth') {
-                resetTripsPresetHighlight();
-            }
-            calculate();
+            input.value = formatted;
+            input.setSelectionRange(start, end, direction);
         }
 
-        function resetTripsPresetHighlight() {
-            document.querySelectorAll('.preset-trips-btn').forEach(btn => {
-                btn.classList.remove('bg-brand-600', 'text-white', 'hover:bg-brand-700', 'dark:bg-brand-600');
-                btn.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
-            });
+        function fieldError(raw, { max, integer, positive, precision = 2 }) {
+            if (!raw.trim()) return 'Заполните поле.';
+            if (integer) return `Введите целое число от 0 до ${number.format(max)}.`;
+            const bounds = positive ? `больше 0 и до ${number.format(max)}` : `от 0 до ${number.format(max)}`;
+            return `Введите число ${bounds}, до ${precision} знаков после запятой.`;
         }
 
-        function setTripsPreset(trips) {
-            state.tripsPerMonth = trips;
-            document.getElementById('trips-per-month').value = trips;
-            resetTripsPresetHighlight();
-            const activeBtn = document.getElementById(`preset-trips-${trips}`);
-            if (activeBtn) {
-                activeBtn.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
-                activeBtn.classList.add('bg-brand-600', 'text-white', 'hover:bg-brand-700', 'dark:bg-brand-600');
-            }
-            calculate();
+        function calculateBase(values) {
+            const { tripsPerMonth, taxiTripDistance, tripPrice, fuelConsumption, fuelPrice,
+                carPrice, depreciation, insurance, maintenance, otherExpenses } = values;
+            const annualMileage = tripsPerMonth * 12 * taxiTripDistance;
+            const tripsPerYear = tripsPerMonth * 12;
+            const fuelCostAnnual = (annualMileage / 100) * fuelConsumption * fuelPrice;
+            const depreciationAnnual = carPrice * (depreciation / 100);
+            const carCashAnnual = fuelCostAnnual + insurance + maintenance + otherExpenses;
+            const totalCarAnnual = carCashAnnual + depreciationAnnual;
+            const totalTaxiAnnual = tripsPerYear * tripPrice;
+            return { ...values, annualMileage, fuelCostAnnual, depreciationAnnual, carCashAnnual, totalCarAnnual, totalTaxiAnnual };
         }
 
-        function resetPresetHighlight() {
-            document.querySelectorAll('.preset-car-btn').forEach(btn => {
-                btn.classList.remove('border-brand-500', 'bg-brand-50/50', 'text-brand-700', 'dark:bg-brand-900/20', 'dark:text-brand-300');
-                btn.classList.add('border-slate-200', 'dark:border-slate-700', 'text-slate-600', 'dark:text-slate-400');
-            });
-        }
-
-        function setCarPreset(type) {
-            const presets = {
-                economy: { price: 1100000, insurance: 35000, maintenance: 20000, fuel: 7.2, fuelPrice: 55, depreciation: 8 },
-                comfort: { price: 2600000, insurance: 80000, maintenance: 35000, fuel: 8.5, fuelPrice: 58, depreciation: 11 },
-                premium: { price: 4700000, insurance: 180000, maintenance: 75000, fuel: 10.5, fuelPrice: 64, depreciation: 14 }
-            };
-            const p = presets[type];
-            state.carPrice = p.price;
-            state.insurance = p.insurance;
-            state.maintenance = p.maintenance;
-            state.fuelConsumption = p.fuel;
-            state.fuelPrice = p.fuelPrice;
-            state.depreciation = p.depreciation;
-
-            document.getElementById('car-price').value = new Intl.NumberFormat('ru-RU').format(p.price);
-            document.getElementById('insurance').value = new Intl.NumberFormat('ru-RU').format(p.insurance);
-            document.getElementById('maintenance').value = new Intl.NumberFormat('ru-RU').format(p.maintenance);
-            document.getElementById('fuel-consumption').value = p.fuel;
-            document.getElementById('fuel-price').value = p.fuelPrice;
-            document.getElementById('depreciation-range').value = p.depreciation;
-            document.getElementById('depreciation-display').innerText = p.depreciation + '%';
-
-            // Visual feedback - highlight preset button
-            resetPresetHighlight();
-            const activeBtn = document.getElementById(`preset-${type}`);
-            if (activeBtn) {
-                activeBtn.classList.remove('border-slate-200', 'dark:border-slate-700', 'text-slate-600', 'dark:text-slate-400');
-                activeBtn.classList.add('border-brand-500', 'bg-brand-50/50', 'text-brand-700', 'dark:bg-brand-900/20', 'dark:text-brand-300');
+        function updateBase(userEdited = false) {
+            const values = {};
+            for (const [id, config] of Object.entries(fields)) {
+                const input = byId(id);
+                const value = parseField(input.value, config);
+                const error = value === null ? fieldError(input.value, config) : '';
+                if (error) input.setAttribute('aria-invalid', 'true');
+                else input.removeAttribute('aria-invalid');
+                byId(`${id}-error`).textContent = error;
+                values[config.key] = value;
             }
 
-            showToast(`Установлен пресет: ${type === 'economy' ? 'Эконом (Lada Granta)' : type === 'comfort' ? 'Комфорт (Geely Coolray)' : 'Премиум (EXEED RX)'}`);
-            calculate();
+            const { tripsPerMonth, taxiTripDistance, carPrice, depreciation, otherExpenses } = values;
+            const mileage = tripsPerMonth === null || taxiTripDistance === null ? null : tripsPerMonth * 12 * taxiTripDistance;
+            byId('annual-mileage-display').textContent = mileage === null ? 'Пробег появится после исправления полей.'
+                : `${formatTrips(tripsPerMonth)} × ${number.format(taxiTripDistance)} км × 12 = ${number.format(mileage)} км в год`;
+            byId('depreciation-display').textContent = `${depreciation ?? '—'}% · ${carPrice === null || depreciation === null
+                ? '—' : formatMoney(carPrice * (depreciation / 100))} за год`;
+            let carLabel = 'Свои параметры';
+            for (const [type, preset] of Object.entries(presets)) {
+                const active = otherExpenses === 0 && Object.entries(preset).every(([id, value]) => values[fields[id].key] === value);
+                byId(`preset-${type}`).setAttribute('aria-pressed', active);
+                if (active) carLabel = byId(`preset-${type}-name`).textContent;
+            }
+            let carContext = 'Уточните цену автомобиля';
+            if (carPrice !== null) {
+                const priceLabel = carPrice >= 1000000 && carPrice % 100000 === 0
+                    ? `${number.format(carPrice / 1000000)} млн ₽` : displayAmount(carPrice, true);
+                carContext = `${carLabel} · ${priceLabel}`;
+            }
+            byId('result-car-context').textContent = carContext;
+
+            base = Object.values(values).includes(null) ? null : calculateBase(values);
+            if (base) {
+                const changed = lastValidValues && Object.keys(values).some(key => values[key] !== lastValidValues[key]);
+                lastValidValues = values;
+                if (changed && userEdited && !trackedCalculation) {
+                    trackedCalculation = true;
+                    reachGoal('calculate_success');
+                }
+            }
+            renderResult();
+            renderCapitalScenario();
         }
 
-        function renderCapitalScenario(carPrice, baseCarAnnual, taxiAnnual) {
+        function applyCarPreset(type, userEdited) {
+            for (const [id, value] of Object.entries(presets[type])) {
+                byId(id).value = id === 'depreciation-range' ? String(value) : number.format(value);
+            }
+            updateBase(userEdited);
+        }
+
+        function refreshNumericResult(input, userEdited) {
+            if (input.id === 'opportunity-rate') renderCapitalScenario();
+            else updateBase(userEdited);
+        }
+
+        // Ignore autofill/replacement events and synthetic edits when recording a conversion.
+        function onBaseInput(event) {
+            const input = event.target;
+            if ((!Object.hasOwn(fields, input.id) && input.id !== 'opportunity-rate') || replacingNumbers.has(input)) return;
+            if (event.isComposing || composingNumbers.has(input)) {
+                if (event.isTrusted && event.type === 'input') composingNumbers.set(input, true);
+                return;
+            }
+            const typed = /^(?:insert(?:Text|FromPaste|FromDrop|CompositionText|FromComposition)|delete\w+|history(?:Undo|Redo))$/.test(event.inputType);
+            if (event.isTrusted && numericTextField(input) && (typed || event.inputType === 'insertReplacementText') &&
+                !event.inputType.startsWith('history')) formatCurrentNumericDraft(input);
+            refreshNumericResult(input, event.isTrusted && (typed || input.type === 'range'));
+        }
+
+        function getComparison(car, taxi) {
+            const difference = car - taxi;
+            const maximum = Math.max(car, taxi);
+            // Tolerate floating-point noise only, without rounding either annual amount.
+            if (Math.abs(difference) <= Number.EPSILON * maximum * 4) return { difference: 0, title: 'Расходы равны' };
+            if (Math.abs(difference) <= maximum * 0.01) return { difference, title: 'Расходы близки', close: true };
+            return { difference, title: difference > 0 ? 'Такси дешевле' : 'Машина дешевле' };
+        }
+
+        function comparisonReason({ totalTaxiAnnual, depreciationAnnual, carCashAnnual, fuelCostAnnual, insurance, maintenance, otherExpenses }, difference) {
+            if (difference === 0) return '';
+            if (totalTaxiAnnual === 0) return 'У машины сохраняются расходы при нулевой стоимости такси.';
+            if (difference < 0) return 'Поездки на такси обходятся дороже всех затрат на машину.';
+            if (depreciationAnnual > 0 && carCashAnnual <= totalTaxiAnnual) {
+                return 'Разницу определяет потеря стоимости машины.';
+            }
+            const largest = Math.max(depreciationAnnual, fuelCostAnnual, insurance + maintenance, otherExpenses);
+            if (largest === depreciationAnnual) return 'Больше всего в стоимости машины весит потеря её цены за первый год.';
+            if (largest === fuelCostAnnual) return 'Самая крупная статья расходов на машину — топливо.';
+            if (largest === otherExpenses) return 'Самая крупная статья расходов на машину — указанные вами прочие расходы.';
+            return 'Самая крупная статья расходов на машину — страховка и обслуживание.';
+        }
+
+        function displayAmount(amount, exact = false) {
+            return exact ? `${kopecks.format(amount)} ₽` : formatMoney(amount);
+        }
+
+        function formatTrips(trips) {
+            const forms = { one: 'поездка', few: 'поездки', many: 'поездок' };
+            return `${number.format(trips)} ${forms[tripPlural.select(trips)]}`;
+        }
+
+        function renderVerdict(title, detail, amount = '', unit = '', belowKopeck = false) {
+            byId('verdict-phrase').textContent = title;
+            byId('verdict-figure').hidden = !amount;
+            byId('verdict-join').textContent = amount ? (belowKopeck ? ' ' : ' на ') : '';
+            byId('verdict-prefix').textContent = belowKopeck ? 'менее чем на ' : '';
+            byId('verdict-amount').textContent = amount;
+            byId('verdict-unit').textContent = unit;
+            byId('verdict-detail').textContent = detail;
+        }
+
+        function renderResult() {
+            const month = period === 'month';
+            const unit = month ? '/мес.' : '/год';
+            const divisor = month ? 12 : 1;
+            const moneyForPeriod = (amount) => displayAmount(amount / divisor);
+            const valid = Boolean(base);
+            byId('print-period').textContent = month ? ' · в среднем за месяц' : '';
+            byId('period-month').setAttribute('aria-pressed', month);
+            byId('period-year').setAttribute('aria-pressed', !month);
+            byId('result-body').hidden = !valid;
+            byId('export-png').disabled = !valid;
+            byId('share-result').disabled = !valid;
+            if (!base) {
+                renderVerdict('Проверьте условия расчёта', 'Исправьте отмеченные поля, чтобы увидеть сравнение.');
+                updateSticky();
+                return;
+            }
+
+            const { tripsPerMonth, taxiTripDistance, totalCarAnnual, totalTaxiAnnual, annualMileage,
+                carCashAnnual, depreciationAnnual, fuelCostAnnual, insurance, maintenance, otherExpenses } = base;
+            const { difference, title, close } = getComparison(totalCarAnnual, totalTaxiAnnual);
+            const delta = Math.abs(difference) / divisor;
+            const belowKopeck = delta > 0 && delta < 0.01;
+            const amount = belowKopeck ? '0,01 ₽' : displayAmount(delta, close || (delta > 0 && delta < 0.5));
+            const hasWinner = !close && difference !== 0;
+            const trips = `${formatTrips(tripsPerMonth)} в месяц · ${number.format(taxiTripDistance)} км за поездку`;
+            const direction = difference > 0 ? 'машина дороже' : 'такси дороже';
+            const differenceLabel = `${belowKopeck ? 'менее ' : ''}${amount}${unit}`;
+            const detail = close ? `Разница ${differenceLabel}, ${direction}. ${trips}` : trips;
+            if (hasWinner) renderVerdict(title, detail, amount, unit, belowKopeck);
+            else renderVerdict(title, detail);
+            byId('mobile-verdict-title').textContent = title;
+            byId('mobile-difference').textContent = differenceLabel;
+            byId('car-total').textContent = moneyForPeriod(totalCarAnnual);
+            byId('taxi-total').textContent = moneyForPeriod(totalTaxiAnnual);
+            const maximum = Math.max(totalCarAnnual, totalTaxiAnnual);
+            byId('car-bar').style.width = `${maximum ? totalCarAnnual / maximum * 100 : 0}%`;
+            byId('taxi-bar').style.width = `${maximum ? totalTaxiAnnual / maximum * 100 : 0}%`;
+            byId('comparison-scale').textContent = `Общая шкала от 0 до ${moneyForPeriod(maximum)}${unit}`;
+            const reason = comparisonReason(base, difference);
+            byId('result-reason').textContent = reason;
+            byId('result-reason').hidden = !reason;
+            byId('car-cash').textContent = moneyForPeriod(carCashAnnual);
+            byId('car-loss').textContent = moneyForPeriod(depreciationAnnual);
+            byId('car-fuel').textContent = moneyForPeriod(fuelCostAnnual);
+            byId('car-fixed').textContent = moneyForPeriod(insurance + maintenance);
+            byId('car-other').textContent = moneyForPeriod(otherExpenses);
+            byId('car-per-km').textContent = annualMileage > 0 ? formatMoney(totalCarAnnual / annualMileage) : 'Нет пробега';
+            updateSticky();
+        }
+
+        function updateSticky() {
+            const viewport = window.visualViewport;
+            const keyboardOrZoom = viewport && (window.innerHeight - viewport.height > 120 || viewport.scale > 1.01);
+            const focused = document.activeElement;
+            const protectedFocus = focused?.matches('input, summary') ||
+                (focused?.matches(':focus-visible') && byId('calculator').contains(focused));
+            byId('trip-sticky').hidden = !base || verdictVisible || keyboardOrZoom || protectedFocus;
+        }
+
+        function calculatorUrl() {
+            return window.location.origin + window.location.pathname;
+        }
+
+        async function copyCalculatorLink() {
+            const url = calculatorUrl();
+            try {
+                await navigator.clipboard.writeText(url);
+                showToast('Ссылка скопирована.');
+            } catch (_) {
+                window.prompt('Скопируйте ссылку на калькулятор', url);
+            }
+        }
+
+        async function shareCalculation() {
+            if (!window.canExportCalculation()) return;
+            reachGoal('share_click');
+            try {
+                await navigator.share({
+                    title: 'Машина или такси — Ясномера',
+                    text: `${byId('verdict-title').textContent}. ${byId('verdict-detail').textContent}.`,
+                    url: calculatorUrl()
+                });
+            } catch (error) {
+                if (error.name !== 'AbortError') await copyCalculatorLink();
+            }
+        }
+
+        function renderCapitalScenario() {
             const input = document.getElementById('opportunity-rate');
             const rawRate = input.value.trim();
             const userRate = /^(?:\d+(?:[.,]\d{1,2})?|[.,]\d{1,2})$/.test(rawRate)
@@ -749,9 +1107,10 @@
             const invalid = rawRate !== '' && !valid;
             const result = document.getElementById('opportunity-result');
             const income = document.getElementById('opportunity-income');
-            const total = document.getElementById('opportunity-car-annual');
+            const basis = byId('opportunity-basis');
             const comparison = document.getElementById('opportunity-comparison');
-            const winnerChange = document.getElementById('opportunity-winner-change');
+            const differenceAmount = byId('opportunity-difference');
+            const comparisonNote = byId('opportunity-comparison-note');
 
             if (invalid) input.setAttribute('aria-invalid', 'true');
             else input.removeAttribute('aria-invalid');
@@ -759,268 +1118,130 @@
                 ? 'Введите число от 0 до 100, не более двух знаков после запятой или точки.'
                 : '';
 
-            result.hidden = !valid;
-            if (!valid) {
-                income.textContent = '';
-                total.textContent = '';
-                comparison.textContent = '';
-                winnerChange.textContent = '';
+            result.hidden = !valid || !base;
+            if (!valid || !base) {
+                for (const output of [income, basis, comparison, differenceAmount, comparisonNote]) output.textContent = '';
                 return;
             }
 
+            const { carPrice, totalCarAnnual: baseCarAnnual, totalTaxiAnnual: taxiAnnual } = base;
             const capitalOpportunity = carPrice * (userRate / 100);
             const scenarioCarAnnual = baseCarAnnual + capitalOpportunity;
             const difference = scenarioCarAnnual - taxiAnnual;
             const baseDifference = baseCarAnnual - taxiAnnual;
             income.textContent = formatMoney(capitalOpportunity);
-            total.textContent = formatMoney(scenarioCarAnnual);
+            basis.textContent = `при ${kopecks.format(userRate)} % от ${displayAmount(carPrice, true)}`;
             if (difference === 0) {
-                comparison.textContent = 'Стоимость авто и такси за первый год одинакова.';
+                comparison.textContent = 'При таком предположении машина и такси равны по затратам';
+                differenceAmount.textContent = `Разница ${formatMoney(0)}`;
             } else {
-                const cheaper = difference > 0 ? 'Такси дешевле' : 'Авто дешевле';
+                const cheaper = difference > 0 ? 'такси' : 'машина';
                 const absoluteDifference = Math.abs(difference);
-                const amount = absoluteDifference < 0.5 ? 'менее чем на 1 ₽' : `на ${formatMoney(absoluteDifference)}`;
-                comparison.textContent = `${cheaper} ${amount} за первый год.`;
+                comparison.textContent = `При таком предположении ${cheaper} выгоднее`;
+                differenceAmount.textContent = absoluteDifference < 0.5 ? 'менее чем на 1 ₽' : `на ${formatMoney(absoluteDifference)}`;
             }
-            winnerChange.textContent = Math.sign(difference) !== Math.sign(baseDifference)
-                ? 'Сравнение изменилось: если сохранить деньги на покупку, возможный доход увеличивает расчётную стоимость выбора автомобиля.'
-                : '';
+            if (userRate === 0) {
+                comparisonNote.textContent = 'При 0% разница совпадает с основным сравнением за год.';
+            } else if (baseDifference < 0) {
+                const advantage = -baseDifference;
+                const baseAmount = advantage < 0.5 ? 'менее чем на 1 ₽' : `на ${formatMoney(advantage)}`;
+                comparisonNote.textContent = `Без доходности машина выгоднее ${baseAmount}. Предполагаемый доход ${formatMoney(capitalOpportunity)} сдвигает разницу в пользу такси.`;
+            } else {
+                const baseAmount = baseDifference > 0 && baseDifference < 0.5 ? 'Менее 1 ₽' : formatMoney(baseDifference);
+                comparisonNote.textContent = `${baseAmount} — разница без доходности. +${formatMoney(capitalOpportunity)} — предполагаемый доход.`;
+            }
         }
 
-        function calculate() {
-            // Safe clamping of inputs to prevent negative/zero division bugs
-            const tripsPerMonth = Math.max(0, state.tripsPerMonth);
-            const taxiTripDistance = Math.max(0.1, state.taxiTripDistance);
-            const annualMileage = tripsPerMonth * 12 * taxiTripDistance;
-            const fuelConsumption = Math.max(0, state.fuelConsumption);
-            const fuelPrice = Math.max(0, state.fuelPrice);
-            const carPrice = Math.max(0, state.carPrice);
-            const depreciation = Math.max(0, state.depreciation);
-            const insurance = Math.max(0, state.insurance);
-            const maintenance = Math.max(0, state.maintenance);
-            const tripPrice = Math.max(0, state.tripPrice);
-
-            // Машина
-            const fuelCostAnnual = (annualMileage / 100) * fuelConsumption * fuelPrice;
-            const depreciationAnnual = carPrice * (depreciation / 100);
-            // Both scenarios serve the same number of trips. The car mileage
-            // is derived using the detailed typical-trip-length assumption.
-            const tripsPerYear = tripsPerMonth * 12;
-            const totalTaxiAnnual = tripsPerYear * tripPrice;
-            const totalTaxiMonthly = totalTaxiAnnual / 12;
-            const totalCarAnnual = fuelCostAnnual + insurance + maintenance + depreciationAnnual;
-            const totalCarMonthly = totalCarAnnual / 12;
-            const costPerKm = annualMileage > 0 ? (totalCarAnnual / annualMileage) : 0;
-
-            // Потеря стоимости за 1 ночь
-            const nightlyDeprVal = Math.round(depreciationAnnual / 365);
-
-            // Обновление UI
-            document.getElementById('km-cost-main').innerText = costPerKm.toLocaleString('ru-RU', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-            document.getElementById('annual-mileage-display').innerText = `${formatNumber(annualMileage)} км`;
-            document.getElementById('nightly-depreciation').innerText = nightlyDeprVal.toLocaleString('ru-RU') + ' ₽';
-
-            // Заполнение Grid-карточек
-            document.getElementById('grid-car-monthly').innerText = formatMoney(totalCarMonthly);
-            document.getElementById('grid-taxi-monthly').innerText = formatMoney(totalTaxiMonthly);
-            document.getElementById('grid-car-annual').innerText = formatMoney(totalCarAnnual);
-            document.getElementById('grid-taxi-annual').innerText = formatMoney(totalTaxiAnnual);
-
-            // Детализация в Месяц
-            document.getElementById('car-monthly-fuel').innerText = formatMoney(fuelCostAnnual / 12);
-            document.getElementById('car-monthly-fixed').innerText = formatMoney((insurance + maintenance) / 12);
-            document.getElementById('car-monthly-depr').innerText = formatMoney(depreciationAnnual / 12);
-
-            document.getElementById('taxi-monthly-trips').innerText = tripsPerMonth.toLocaleString('ru-RU', { maximumFractionDigits: 0 });
-            document.getElementById('taxi-monthly-rate').innerText = formatMoney(tripPrice);
-
-            // Детализация в Год
-            document.getElementById('car-annual-fuel').innerText = formatMoney(fuelCostAnnual);
-            document.getElementById('car-annual-fixed').innerText = formatMoney(insurance + maintenance);
-            document.getElementById('car-annual-depr').innerText = formatMoney(depreciationAnnual);
-
-            document.getElementById('taxi-annual-trips').innerText = tripsPerYear.toLocaleString('ru-RU', { maximumFractionDigits: 0 });
-            document.getElementById('taxi-annual-total-detail').innerText = formatMoney(totalTaxiAnnual);
-
-            // Баланс сил / Tug of War
-            const sumMonthly = totalCarMonthly + totalTaxiMonthly;
-            let carPct = 50;
-            let taxiPct = 50;
-            if (sumMonthly > 0) {
-                // Более выгодный вариант получает большую долю на шкале
-                // (если машина дешевле такси, шкала машины должна быть длиннее)
-                carPct = Math.round((totalTaxiMonthly / sumMonthly) * 100);
-                taxiPct = 100 - carPct;
-            }
-            
-            document.getElementById('tug-car-bar').style.width = carPct + '%';
-            document.getElementById('tug-taxi-bar').style.width = taxiPct + '%';
-            document.getElementById('tug-car-pct').innerText = carPct + '%';
-            document.getElementById('tug-taxi-pct').innerText = taxiPct + '%';
-
-            let tugVerdict = '';
-            if (totalCarMonthly < totalTaxiMonthly) {
-                const advantage = Math.round((totalTaxiMonthly - totalCarMonthly) / totalTaxiMonthly * 100);
-                tugVerdict = `Машина выгоднее на ${advantage}%`;
-            } else if (totalTaxiMonthly < totalCarMonthly) {
-                const advantage = Math.round((totalCarMonthly - totalTaxiMonthly) / totalCarMonthly * 100);
-                tugVerdict = `Такси выгоднее на ${advantage}%`;
-            } else {
-                tugVerdict = 'Расходы равны';
-            }
-            document.getElementById('tug-of-war-verdict').innerText = tugVerdict;
-
-            // Вердикт
-            const diff = Math.abs(totalCarMonthly - totalTaxiMonthly);
-            const verdictCard = document.getElementById('verdict-card');
-            const verdictIcon = document.getElementById('verdict-icon');
-            const verdictTitle = document.getElementById('verdict-title');
-            const verdictDesc = document.getElementById('verdict-description');
-            const monthlyDiffEl = document.getElementById('monthly-diff');
-
-            // Мобильный вердикт
-            const mobileIcon = document.getElementById('mobile-verdict-icon');
-            const mobileTitle = document.getElementById('mobile-verdict-title');
-            const mobileDiff = document.getElementById('mobile-monthly-diff');
-            const mobileCar = document.getElementById('mobile-car-total');
-            const mobileTaxi = document.getElementById('mobile-taxi-total');
-
-            if (totalCarMonthly < totalTaxiMonthly) {
-                // Машина выгоднее
-                verdictCard.className = "p-8 rounded-3xl transition-all duration-500 flex flex-col items-center text-center space-y-4 shadow-xl border bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/20 dark:to-slate-900 border-emerald-200 dark:border-emerald-900/50 text-slate-900 dark:text-white";
-                verdictIcon.innerText = "🚗";
-                verdictTitle.innerText = "Машина выгоднее";
-                verdictDesc.innerText = "При выбранных предположениях и одинаковой потребности в поездках автомобиль обходится дешевле такси. В расчёт включена потеря стоимости.";
-                monthlyDiffEl.innerText = formatMoney(diff);
-                monthlyDiffEl.className = "text-4xl font-black text-brand-600 dark:text-brand-400";
-
-                mobileIcon.innerText = "🚗";
-                mobileTitle.innerText = "Машина выгоднее";
-                mobileDiff.innerText = formatMoney(diff);
-                mobileDiff.className = "text-lg font-black text-brand-600 dark:text-brand-400";
-            } else if (totalTaxiMonthly < totalCarMonthly) {
-                // Такси выгоднее
-                verdictCard.className = "p-8 rounded-3xl transition-all duration-500 flex flex-col items-center text-center space-y-4 shadow-xl border bg-gradient-to-br from-yellow-50 to-white dark:from-yellow-950/20 dark:to-slate-900 border-yellow-200 dark:border-yellow-900/50 text-slate-900 dark:text-white";
-                verdictIcon.innerText = "🚕";
-                verdictTitle.innerText = "Такси выгоднее";
-                verdictDesc.innerText = "При выбранных предположениях и одинаковой потребности в поездках такси обходится дешевле автомобиля. В расчёт включена потеря стоимости.";
-                monthlyDiffEl.innerText = formatMoney(diff);
-                monthlyDiffEl.className = "text-4xl font-black text-yellow-600 dark:text-yellow-400";
-
-                mobileIcon.innerText = "🚕";
-                mobileTitle.innerText = "Такси выгоднее";
-                mobileDiff.innerText = formatMoney(diff);
-                mobileDiff.className = "text-lg font-black text-yellow-600 dark:text-yellow-400";
-            } else {
-                verdictIcon.innerText = "⚖️";
-                verdictTitle.innerText = "Расходы равны";
-                verdictDesc.innerText = "При выбранных предположениях и одинаковой потребности в поездках ежемесячные расходы совпадают.";
-                monthlyDiffEl.innerText = formatMoney(0);
-                mobileIcon.innerText = "⚖️";
-                mobileTitle.innerText = "Расходы равны";
-                mobileDiff.innerText = formatMoney(0);
-            }
-
-            mobileCar.innerText = formatMoney(totalCarMonthly);
-            mobileTaxi.innerText = formatMoney(totalTaxiMonthly);
-            renderCapitalScenario(carPrice, totalCarAnnual, totalTaxiAnnual);
-        }
-
-        window.onload = function() {
-            initTheme();
-            document.getElementById('car-price').value = formatNumber(state.carPrice);
-            document.getElementById('insurance').value = formatNumber(state.insurance);
-            document.getElementById('maintenance').value = formatNumber(state.maintenance);
-            document.getElementById('trip-price').value = formatNumber(state.tripPrice);
-
-            // Set Comfort Geely Coolray as pre-selected default layout
-            setCarPreset('comfort');
-            document.getElementById('taxi-trip-distance').value = state.taxiTripDistance;
-            setTripsPreset(state.tripsPerMonth);
+        const lifestyleWeights = {
+            car_freedom: 2, car_kids: 2, car_privacy: 1.5, car_heavy_load: 1.5, car_noparking: -2, car_maintenance_stress: -2,
+            taxi_productivity: 2, taxi_no_worries: 2, taxi_rest: 1.5, taxi_always_clean: 1.5, taxi_surged: -2, taxi_human_factor: -2
         };
 
-        function toggleLifestyleWidget() {
-            const content = document.getElementById('lifestyle-widget-content');
-            const btn = document.getElementById('lifestyle-toggle-btn');
-            if (content.classList.contains('hidden')) {
-                content.classList.remove('hidden');
-                btn.innerText = 'Свернуть тест';
-                btn.classList.add('bg-brand-600', 'text-white', 'border-brand-600', 'dark:bg-brand-600');
-            } else {
-                content.classList.add('hidden');
-                btn.innerText = 'Открыть тест';
-                btn.classList.remove('bg-brand-600', 'text-white', 'border-brand-600', 'dark:bg-brand-600');
-            }
-        }
-
         function calculateLifestyle() {
-            const checkboxes = document.querySelectorAll('.lifestyle-checkbox');
             let carPoints = 0;
             let taxiPoints = 0;
-
-            checkboxes.forEach(cb => {
-                if (cb.checked) {
-                    if (cb.value === 'car_freedom') carPoints += 2;
-                    if (cb.value === 'car_kids') carPoints += 2;
-                    if (cb.value === 'car_privacy') carPoints += 1.5;
-                    if (cb.value === 'car_heavy_load') carPoints += 1.5;
-                    if (cb.value === 'car_noparking') carPoints -= 2;
-                    if (cb.value === 'car_maintenance_stress') carPoints -= 2;
-
-                    if (cb.value === 'taxi_productivity') taxiPoints += 2;
-                    if (cb.value === 'taxi_no_worries') taxiPoints += 2;
-                    if (cb.value === 'taxi_rest') taxiPoints += 1.5;
-                    if (cb.value === 'taxi_always_clean') taxiPoints += 1.5;
-                    if (cb.value === 'taxi_surged') taxiPoints -= 2;
-                    if (cb.value === 'taxi_human_factor') taxiPoints -= 2;
+            const answers = byId('lifestyle-options').querySelectorAll('input:checked');
+            for (const { value } of answers) {
+                if (value.startsWith('car_')) carPoints += lifestyleWeights[value];
+                else taxiPoints += lifestyleWeights[value];
+            }
+            let title = 'Отметьте важные факторы выше';
+            let description = 'Здесь появится итог по вашим ответам.';
+            if (answers.length) {
+                if (carPoints > taxiPoints) {
+                    title = 'Машина лучше соответствует вашим приоритетам';
+                    description = 'При выборе учтите время на обслуживание и поиск парковки.';
+                } else if (taxiPoints > carPoints) {
+                    title = 'Такси лучше соответствует вашим приоритетам';
+                    description = 'При выборе учтите доступность такси и цену поездок в вашем городе.';
+                } else {
+                    title = 'По вашим ответам варианты равны';
+                    description = 'Можно выбирать транспорт под конкретную поездку.';
                 }
-            });
-
-            const verdictBox = document.getElementById('lifestyle-verdict-box');
-            const verdictTitle = document.getElementById('lifestyle-verdict-title');
-            const verdictDesc = document.getElementById('lifestyle-verdict-desc');
-
-            if (carPoints === 0 && taxiPoints === 0) {
-                verdictTitle.innerText = "Отметьте важные факторы выше";
-                verdictDesc.innerText = "Отметьте факторы, чтобы увидеть, какой вариант лучше соответствует выбранным предпочтениям.";
-                verdictBox.className = "px-6 py-4 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-750 rounded-2xl max-w-lg transition-all duration-300";
-                return;
             }
-
-            if (carPoints > taxiPoints) {
-                verdictTitle.innerText = "Автомобиль лучше соответствует выбранным приоритетам 🚗";
-                verdictDesc.innerText = "Для вас важны самостоятельность передвижения, поездки за город и личное пространство. Учтите время и расходы на обслуживание и парковку.";
-                verdictBox.className = "px-6 py-4 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/50 rounded-2xl max-w-lg transition-all duration-300 text-slate-900 dark:text-white";
-            } else if (taxiPoints > carPoints) {
-                verdictTitle.innerText = "Такси лучше соответствует выбранным приоритетам 🚕";
-                verdictDesc.innerText = "Для вас важны время, отсутствие забот об обслуживании и поездки без вождения. Учтите доступность такси и стоимость поездок в вашем городе.";
-                verdictBox.className = "px-6 py-4 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/50 rounded-2xl max-w-lg transition-all duration-300 text-slate-900 dark:text-white";
-            } else {
-                verdictTitle.innerText = "Вам подходят оба варианта! ⚖️";
-                verdictDesc.innerText = "При близких оценках можно сочетать такси, каршеринг и аренду автомобиля в зависимости от задачи.";
-                verdictBox.className = "px-6 py-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/50 rounded-2xl max-w-lg transition-all duration-300 text-slate-900 dark:text-white";
-            }
+            byId('lifestyle-verdict-title').textContent = title;
+            byId('lifestyle-verdict-desc').textContent = description;
         }
 
-        window.shareResult = shareLink;
-    </script>
-
-
-    <script>
-        (function() {
-            let tracked = false;
-            function trackFirstChange(event) {
-                if (!tracked && event.target.id !== 'opportunity-rate') {
-                    reachGoal('calculate_success');
-                    tracked = true;
-                    // Remove listeners after first trigger
-                    document.removeEventListener('input', trackFirstChange);
-                    document.removeEventListener('change', trackFirstChange);
+        function initCalculator() {
+            document.addEventListener('beforeinput', onBeforeNumberInput);
+            document.addEventListener('input', onBaseInput);
+            document.addEventListener('change', onBaseInput);
+            document.addEventListener('compositionstart', event => {
+                if (numericTextField(event.target)) composingNumbers.set(event.target, false);
+            });
+            document.addEventListener('compositionend', event => {
+                const userEdited = composingNumbers.get(event.target);
+                if (!composingNumbers.delete(event.target)) return;
+                formatCurrentNumericDraft(event.target);
+                refreshNumericResult(event.target, userEdited);
+            });
+            byId('car-presets').addEventListener('click', event => {
+                const preset = event.target.closest('[data-preset]');
+                if (preset) applyCarPreset(preset.dataset.preset, event.isTrusted);
+            });
+            byId('period-switch').addEventListener('click', event => {
+                const next = event.target.dataset.period;
+                if (next) {
+                    period = next;
+                    renderResult();
                 }
+            });
+            byId('lifestyle-options').addEventListener('change', calculateLifestyle);
+            byId('share-result').hidden = typeof navigator.share !== 'function';
+            byId('share-result').addEventListener('click', shareCalculation);
+            byId('copy-link').addEventListener('click', () => {
+                reachGoal('share_click');
+                copyCalculatorLink();
+            });
+
+            const verdictObserver = new IntersectionObserver(([entry]) => {
+                verdictVisible = entry.isIntersecting;
+                updateSticky();
+            });
+            verdictObserver.observe(byId('result-hero'));
+            document.addEventListener('focusin', updateSticky);
+            document.addEventListener('focusout', () => window.requestAnimationFrame(updateSticky));
+            window.visualViewport?.addEventListener('resize', updateSticky);
+            for (const id of ['jump-to-result', 'edit-car']) {
+                byId(id).addEventListener('click', event => {
+                    event.preventDefault();
+                    const heading = byId(event.currentTarget.hash.slice(1));
+                    heading.focus({ preventScroll: true });
+                    heading.scrollIntoView({ block: 'start' });
+                });
             }
-            document.addEventListener('input', trackFirstChange);
-            document.addEventListener('change', trackFirstChange);
-        })();
+            updateBase();
+        }
+
+        window.canExportCalculation = () => Boolean(base);
+        window.prepareCalculationScreenshot = stage => {
+            stage.classList.add('ym-hide-content');
+            const background = getComputedStyle(document.body).backgroundColor;
+            stage.style.background = background;
+            stage.dataset.screenshotBackground = background;
+        };
+        initCalculator();
     </script>
     <script>
         if ("serviceWorker" in navigator) {
