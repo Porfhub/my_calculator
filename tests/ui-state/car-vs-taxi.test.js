@@ -94,7 +94,7 @@ test('car/taxi starts from the base annual benchmark and a blank scenario', () =
 });
 
 for (const [input, amount] of [
-    ['0', 0], ['0,00', 0], ['12', 312000], ['12.34', 320840], ['12,34', 320840],
+    ['0', 0], ['0,00', 0], ['12', 312000], ['14', 364000], ['12.34', 320840], ['12,34', 320840],
     ['.5', 13000], [',01', 260], ['100', 2600000], ['100.00', 2600000]
 ]) {
     test(`car/taxi accepts ${input}% in the isolated scenario`, () => {
@@ -103,13 +103,25 @@ for (const [input, amount] of [
         app.rate(input);
         assert.equal(app.element('opportunity-rate').getAttribute('aria-invalid'), undefined);
         assert.equal(app.element('opportunity-result').hidden, false);
+        assert.equal(rubles(app.element('opportunity-base').textContent), 418748);
         assert.equal(rubles(app.element('opportunity-income').textContent), amount);
         assert.equal(rubles(app.element('opportunity-car-annual').textContent), 418748 + amount);
         assert.equal(rubles(app.element('opportunity-comparison').textContent), 238748 + amount);
-        assert.equal(app.element('opportunity-winner-change').textContent, '');
+        assert.match(app.element('opportunity-comparison').textContent, /^При таком предположении такси выгоднее/);
+        assert.equal(app.element('opportunity-comparison-note').textContent.startsWith('При 0%'), amount === 0);
         assert.deepEqual(baseSnapshot(app), before);
     });
 }
+
+test('car/taxi explains the founder review benchmark with cash expenses, depreciation and assumed income', () => {
+    const app = page();
+    app.rate('14');
+    assert.equal(app.element('opportunity-base-details').textContent, '132 748 ₽ денежных расходов + 286 000 ₽ потери стоимости');
+    assert.equal(app.element('opportunity-basis').textContent, '14 % от 2 600 000 ₽');
+    assert.equal(app.element('opportunity-car-annual').textContent, '782 748 ₽');
+    assert.equal(app.element('opportunity-comparison').textContent, 'При таком предположении такси выгоднее на 602 748 ₽ за первый год.');
+    assert.deepEqual(app.goals, []);
+});
 
 for (const input of ['-1', '+12', '100.01', '99999999999999999999', '12,345', '12.3.4', '12%', '1e2', 'NaN', '1 2', '12,']) {
     test(`car/taxi rejects ${input}% and clears a previous scenario`, () => {
@@ -119,9 +131,9 @@ for (const input of ['-1', '+12', '100.01', '99999999999999999999', '12,345', '1
         assert.equal(app.element('opportunity-rate').getAttribute('aria-invalid'), 'true');
         assert.match(app.element('opportunity-rate-error').textContent, /от 0 до 100/);
         assert.equal(app.element('opportunity-result').hidden, true);
-        assert.equal(app.element('opportunity-income').textContent, '');
-        assert.equal(app.element('opportunity-car-annual').textContent, '');
-        assert.equal(app.element('opportunity-comparison').textContent, '');
+        for (const id of ['base', 'base-details', 'income', 'basis', 'car-annual', 'comparison', 'comparison-note']) {
+            assert.equal(app.element(`opportunity-${id}`).textContent, '');
+        }
 
         app.rate('');
         assert.equal(app.element('opportunity-result').hidden, true);
@@ -139,6 +151,7 @@ test('car/taxi recalculates the retained scenario after the price changes with t
     app.element('capital-scenario').open = true;
     assert.equal(app.element('opportunity-rate').value, '12');
     assert.equal(rubles(app.element('car-total').textContent), 462748);
+    assert.equal(rubles(app.element('opportunity-base').textContent), 462748);
     assert.equal(rubles(app.element('opportunity-income').textContent), 360000);
     assert.equal(rubles(app.element('opportunity-car-annual').textContent), 822748);
 });
@@ -149,11 +162,12 @@ test('car/taxi compares the scenario separately when the base winner is the car'
     const before = baseSnapshot(app);
     assert.match(app.element('verdict-title').textContent, /^Машина дешевле/);
     app.rate('0');
-    assert.match(app.element('opportunity-comparison').textContent, /^Авто дешевле/);
+    assert.match(app.element('opportunity-comparison').textContent, /^При таком предположении машина выгоднее/);
+    assert.match(app.element('opportunity-comparison-note').textContent, /совпадает с базовым сравнением/);
     app.rate('12');
-    assert.match(app.element('opportunity-comparison').textContent, /^Такси дешевле/);
+    assert.match(app.element('opportunity-comparison').textContent, /^При таком предположении такси выгоднее/);
     assert.equal(rubles(app.element('opportunity-comparison').textContent), 190748);
-    assert.match(app.element('opportunity-winner-change').textContent, /Сравнение изменилось/);
+    assert.match(app.element('opportunity-comparison-note').textContent, /отличается от базового/);
     assert.deepEqual(baseSnapshot(app), before);
 });
 
@@ -161,12 +175,24 @@ test('car/taxi scenario handles equal expenses', () => {
     const app = page();
     for (const id of ['trips-per-month', 'insurance', 'maintenance', 'depreciation-range']) app.edit(id, '0');
     app.rate('0');
-    assert.equal(app.element('opportunity-comparison').textContent, 'Стоимость авто и такси за первый год одинакова.');
-    assert.equal(app.element('opportunity-winner-change').textContent, '');
+    assert.equal(app.element('opportunity-comparison').textContent, 'При таком предположении условные затраты на машину и расходы на такси за первый год равны.');
+    assert.match(app.element('opportunity-comparison-note').textContent, /совпадает с базовым сравнением/);
     app.rate('12');
-    assert.match(app.element('opportunity-comparison').textContent, /^Такси дешевле/);
-    assert.match(app.element('opportunity-winner-change').textContent, /Сравнение изменилось/);
+    assert.match(app.element('opportunity-comparison').textContent, /^При таком предположении такси выгоднее/);
+    assert.match(app.element('opportunity-comparison-note').textContent, /отличается от базового/);
     assert.equal(app.element('verdict-title').textContent, 'Расходы равны');
+});
+
+test('car/taxi shows an exact scenario tie at a positive rate without declaring a winner', () => {
+    const app = page();
+    for (const id of ['insurance', 'maintenance', 'depreciation-range', 'fuel-consumption']) app.edit(id, '0');
+    app.edit('trips-per-month', '1');
+    app.edit('trip-price', '1000');
+    app.edit('car-price', '100000');
+    app.rate('12');
+    assert.equal(rubles(app.element('opportunity-car-annual').textContent), 12000);
+    assert.match(app.element('opportunity-comparison').textContent, /за первый год равны\.$/);
+    assert.match(app.element('verdict-title').textContent, /^Машина дешевле/);
 });
 
 test('car/taxi results require no rates request in any dataset or network state', () => {

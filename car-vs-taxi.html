@@ -277,6 +277,8 @@
         .ct-capital-result { background: var(--yn-color-surface); border-radius: 0.75rem; padding: 0.9rem; }
         .ct-capital-result dl { display: grid; gap: 0.65rem; }
         .ct-capital-result dd { font-size: 1.3rem; font-weight: 750; overflow-wrap: anywhere; }
+        .ct-capital-result dd small { display: block; font-weight: 500; }
+        .ct-capital-result dl > div:last-child { border-top: var(--yn-border); padding-top: 0.65rem; }
         .ct-capital-result dl + p { margin-top: 0.7rem; padding-top: 0.65rem; border-top: var(--yn-border); font-weight: 700; }
         .ct-capital-result .ct-muted:not(:empty) { margin-top: 0.25rem; }
 
@@ -565,22 +567,26 @@
                             <p id="opportunity-rate-hint" class="yn-hint">Оценка на 12 месяцев после налогов и комиссий. Доход считаем от цены покупки за свои средства.</p>
                             <p id="opportunity-rate-error" class="yn-error" aria-live="polite"></p>
                         </div>
-                        <p class="ct-muted ct-capital-note">Доходность не гарантирована.</p>
+                        <p class="ct-muted ct-capital-note">Доход не гарантирован. Базовый результат сравнения не меняется.</p>
                     </div>
                     <div role="status" aria-atomic="true">
                         <div id="opportunity-result" class="ct-capital-result" hidden>
                             <dl>
                                 <div>
-                                    <dt class="ct-muted">Возможный доход за первый год</dt>
-                                    <dd id="opportunity-income" class="yn-number"></dd>
+                                    <dt class="ct-muted">Базовая стоимость владения за год</dt>
+                                    <dd><span id="opportunity-base" class="yn-number"></span><small id="opportunity-base-details" class="ct-muted"></small></dd>
                                 </div>
                                 <div>
-                                    <dt class="ct-muted">Стоимость машины в сценарии</dt>
-                                    <dd id="opportunity-car-annual" class="yn-number"></dd>
+                                    <dt class="ct-muted">Потенциальный упущенный доход за год</dt>
+                                    <dd><span id="opportunity-income" class="yn-number"></span><small id="opportunity-basis" class="ct-muted"></small></dd>
+                                </div>
+                                <div>
+                                    <dt>Расходы + упущенный доход</dt>
+                                    <dd><span id="opportunity-car-annual" class="yn-number"></span><small class="ct-muted">Условные экономические затраты за год, а не цена машины или сумма платежей.</small></dd>
                                 </div>
                             </dl>
                             <p id="opportunity-comparison" class="yn-number"></p>
-                            <p id="opportunity-winner-change" class="ct-muted"></p>
+                            <p id="opportunity-comparison-note" class="ct-muted"></p>
                         </div>
                     </div>
                 </div>
@@ -682,7 +688,7 @@
                         <section aria-labelledby="ct-method-loss">
                             <h3 id="ct-method-loss">Потеря стоимости</h3>
                             <p class="ct-muted"><strong>Оценка снижения цены</strong> = цена машины × заданный процент за первый год. Эта величина учитывает, насколько дешевле может стать машина, и не является платежом.</p>
-                            <p class="ct-muted">В отдельном сценарии покупки за свои средства возможный доход равен цене машины × вашей ожидаемой годовой доходности. Он прибавляется к стоимости машины только в этом сценарии.</p>
+                            <p class="ct-muted">При покупке за свои средства потенциальный упущенный доход равен цене машины × вашей ожидаемой чистой доходности за год. В сценарии прибавляем его к денежным расходам и потере стоимости. Это условные экономические затраты, а не платежи. Доход не гарантирован. Базовое сравнение остаётся прежним.</p>
                         </section>
                         <section aria-labelledby="ct-method-limits">
                             <h3 id="ct-method-limits">Границы оценки</h3>
@@ -1103,10 +1109,13 @@
             const valid = userRate >= 0 && userRate <= 100;
             const invalid = rawRate !== '' && !valid;
             const result = document.getElementById('opportunity-result');
+            const baseCost = byId('opportunity-base');
+            const baseDetails = byId('opportunity-base-details');
             const income = document.getElementById('opportunity-income');
+            const basis = byId('opportunity-basis');
             const total = document.getElementById('opportunity-car-annual');
             const comparison = document.getElementById('opportunity-comparison');
-            const winnerChange = document.getElementById('opportunity-winner-change');
+            const comparisonNote = byId('opportunity-comparison-note');
 
             if (invalid) input.setAttribute('aria-invalid', 'true');
             else input.removeAttribute('aria-invalid');
@@ -1116,31 +1125,34 @@
 
             result.hidden = !valid || !base;
             if (!valid || !base) {
-                income.textContent = '';
-                total.textContent = '';
-                comparison.textContent = '';
-                winnerChange.textContent = '';
+                for (const output of [baseCost, baseDetails, income, basis, total, comparison, comparisonNote]) output.textContent = '';
                 return;
             }
 
-            const { carPrice, totalCarAnnual: baseCarAnnual, totalTaxiAnnual: taxiAnnual } = base;
+            const { carPrice, carCashAnnual, depreciationAnnual, totalCarAnnual: baseCarAnnual, totalTaxiAnnual: taxiAnnual } = base;
             const capitalOpportunity = carPrice * (userRate / 100);
             const scenarioCarAnnual = baseCarAnnual + capitalOpportunity;
             const difference = scenarioCarAnnual - taxiAnnual;
             const baseDifference = baseCarAnnual - taxiAnnual;
+            baseCost.textContent = formatMoney(baseCarAnnual);
+            baseDetails.textContent = `${formatMoney(carCashAnnual)} денежных расходов + ${formatMoney(depreciationAnnual)} потери стоимости`;
             income.textContent = formatMoney(capitalOpportunity);
+            basis.textContent = `${kopecks.format(userRate)} % от ${displayAmount(carPrice, true)}`;
             total.textContent = formatMoney(scenarioCarAnnual);
             if (difference === 0) {
-                comparison.textContent = 'Стоимость авто и такси за первый год одинакова.';
+                comparison.textContent = 'При таком предположении условные затраты на машину и расходы на такси за первый год равны.';
             } else {
-                const cheaper = difference > 0 ? 'Такси дешевле' : 'Авто дешевле';
+                const cheaper = difference > 0 ? 'такси' : 'машина';
                 const absoluteDifference = Math.abs(difference);
                 const amount = absoluteDifference < 0.5 ? 'менее чем на 1 ₽' : `на ${formatMoney(absoluteDifference)}`;
-                comparison.textContent = `${cheaper} ${amount} за первый год.`;
+                comparison.textContent = `При таком предположении ${cheaper} выгоднее ${amount} за первый год.`;
             }
-            winnerChange.textContent = Math.sign(difference) !== Math.sign(baseDifference)
-                ? 'Сравнение изменилось: если сохранить деньги на покупку, возможный доход увеличивает расчётную стоимость выбора автомобиля.'
-                : '';
+            comparisonNote.textContent = '';
+            if (userRate === 0) {
+                comparisonNote.textContent = 'При 0% упущенный доход равен нулю, поэтому сценарий совпадает с базовым сравнением.';
+            } else if (Math.sign(difference) !== Math.sign(baseDifference)) {
+                comparisonNote.textContent = 'Вывод в сценарии отличается от базового из-за упущенного дохода.';
+            }
         }
 
         const lifestyleWeights = {
