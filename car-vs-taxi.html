@@ -78,7 +78,6 @@
     <script src="js/theme.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/ui-utils.js"></script>
-    <script src="js/trust-layer.js"></script>
     <link rel="stylesheet" href="css/product-polish.css">
     <link rel="stylesheet" href="css/design-system.css">
     <style>
@@ -120,6 +119,12 @@
         .ct-main :is(input, button, a, summary):focus-visible, .ct-sticky a:focus-visible, :is(#verdict-title, #car-heading):focus {
             outline: var(--yn-focus-ring);
             outline-offset: 2px;
+            box-shadow: none !important;
+        }
+        .ct-main .yn-input:focus {
+            border-color: transparent !important;
+            outline: 2px solid var(--yn-color-focus);
+            outline-offset: -2px;
             box-shadow: none !important;
         }
         .ct-distance, .ct-full { grid-column: 1 / -1; }
@@ -222,9 +227,9 @@
         .ct-breakdown dd { font-size: 0.875rem; font-weight: 700; text-align: right; }
         .ct-breakdown small { display: block; margin-top: 0.125rem; font-size: 0.8125rem; }
         .ct-result-body > details { margin-top: 0.45rem; }
-        .ct-main :is(.ct-actions, .ct-result-body > details, .ct-extras .yn-methodology) { background: transparent; border: 0; border-radius: 0; }
-        .ct-main :is(.ct-actions, .ct-result-body > details, .ct-extras .yn-methodology) > summary { padding-inline-start: 0; }
-        .ct-main :is(.ct-actions, .ct-result-body > details, .ct-extras .yn-methodology) > summary::after { right: 0.25rem; }
+        .ct-main :is(.ct-actions, .ct-result-body > details) { background: transparent; border: 0; border-radius: 0; }
+        .ct-main :is(.ct-actions, .ct-result-body > details) > summary { padding-inline-start: 0; }
+        .ct-main :is(.ct-actions, .ct-result-body > details) > summary::after { right: 0.25rem; }
         .ct-result-body > details > summary { color: var(--yn-color-accent); font-size: 0.875rem; }
         .ct-main .ct-actions { margin-inline: var(--ct-actions-gutter, 0.85rem); }
         .ct-actions > summary { color: var(--yn-color-muted); font-size: 0.875rem; }
@@ -240,16 +245,71 @@
             text-decoration: underline;
             text-underline-offset: 0.2em;
         }
-        .ct-extras { display: block; border-top: var(--yn-border); margin-top: 1.25rem; }
-        .ct-extras > * + *, .ct-main .ct-extras > .yn-methodology + .yn-methodology { border-top: var(--yn-border); }
-        .ct-extras .yn-methodology-body { padding-inline: 0; }
-        .ct-extras :is(summary, .yn-methodology-body) { font-size: 0.9375rem; }
-        .ct-quiz-heading { font-weight: 700; margin-bottom: 0.6rem; }
-        .ct-quiz-options { display: grid; gap: 1rem; margin-top: 0.75rem; }
-        .ct-quiz-options label { display: flex; align-items: flex-start; gap: 0.65rem; margin-top: 0.55rem; }
-        .ct-quiz-options input { flex: none; margin-top: 0.23rem; accent-color: var(--yn-color-accent); width: 1.125rem; height: 1.125rem; }
-        .ct-quiz-caption { display: block; margin-top: 0.2rem; font-weight: 500; }
-        .ct-quiz-result { border-top: var(--yn-border); margin-top: 1rem; padding-top: 0.75rem; }
+        .ct-extras { gap: 1rem; margin-top: clamp(1.35rem, 4vw, 2rem); }
+        .ct-extras > details { --ct-extra-pad: clamp(0.9rem, 3vw, 1.5rem); }
+        .ct-main .ct-extra-summary {
+            padding: 0.85rem 2.25rem 0.85rem var(--ct-extra-pad);
+        }
+        .ct-extra-heading {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.35rem 1rem;
+        }
+        .ct-main .ct-extra-summary::after { top: 50%; transform: translateY(-70%) rotate(45deg); }
+        .ct-main details[open] > .ct-extra-summary::after { top: 50%; transform: translateY(-35%) rotate(225deg); }
+        .ct-extra-summary .ct-muted { display: block; font-weight: 500; margin-top: 0.2rem; }
+        .ct-extra-title { display: block; font-size: clamp(1.15rem, 2.7vw, 1.55rem); font-weight: 750; line-height: 1.2; }
+        .ct-kicker, .ct-extra-action { color: var(--yn-color-accent); font-size: 0.875rem; font-weight: 700; }
+        .ct-kicker { display: block; margin-bottom: 0.35rem; }
+        .ct-extra-action { text-decoration: underline; text-underline-offset: 0.2em; }
+        .ct-action-open, .ct-extras details[open] > summary .ct-action-closed { display: none; }
+        .ct-extras details[open] > summary .ct-action-open { display: inline; }
+        .ct-extras .yn-methodology-body { padding: 0.85rem var(--ct-extra-pad) var(--ct-extra-pad); }
+
+        .ct-extras .ct-capital { background: var(--yn-color-success-surface); }
+        .ct-capital .ct-extra-summary { padding-block: var(--ct-extra-pad); }
+        .ct-capital-grid { display: grid; gap: 1rem; align-items: start; }
+        .ct-capital-input { max-width: 27rem; }
+        .ct-capital-input .yn-input { max-width: 10rem; }
+        .ct-capital-note { margin-top: 0.65rem; font-weight: 600; }
+        .ct-capital-result { background: var(--yn-color-surface); border-radius: 0.75rem; padding: 0.9rem; }
+        .ct-capital-result dl { display: grid; gap: 0.65rem; }
+        .ct-capital-result dd { font-size: 1.3rem; font-weight: 750; overflow-wrap: anywhere; }
+        .ct-capital-result dl + p { margin-top: 0.7rem; padding-top: 0.65rem; border-top: var(--yn-border); font-weight: 700; }
+        .ct-capital-result .ct-muted:not(:empty) { margin-top: 0.25rem; }
+
+        .ct-quiz-options { display: grid; gap: 1rem; }
+        .ct-quiz-options fieldset { min-width: 0; }
+        .ct-quiz-options legend { font-weight: 750; margin-bottom: 0.55rem; }
+        .ct-factors { display: grid; gap: 0.45rem; }
+        .ct-factor {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.55rem;
+            min-height: 44px;
+            padding: 0.55rem 0.6rem;
+            border: var(--yn-control-border);
+            border-radius: var(--yn-radius-control);
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+        .ct-factor:has(input:checked) { background: var(--yn-color-success-surface); border-color: var(--yn-color-accent); }
+        .ct-main .ct-factor:has(input:focus-visible) { outline: var(--yn-focus-ring); outline-offset: 2px; }
+        .ct-main .ct-factor input:focus-visible { outline: none; }
+        .ct-factor input { flex: none; margin-top: 0.2rem; accent-color: var(--yn-color-accent); width: 1rem; height: 1rem; }
+        .ct-factor small { display: block; margin-top: 0.1rem; font-size: 0.8125rem; }
+        .ct-quiz-result { margin-top: 0.9rem; padding: 0.75rem 0.85rem; border-inline-start: 3px solid var(--yn-color-accent); background: var(--yn-color-hover); border-radius: 0.4rem; }
+        .ct-quiz-result strong { display: block; margin-bottom: 0.2rem; }
+
+        .ct-extras .ct-method { background: transparent; }
+        .ct-method-formula { padding: 0.7rem 0.8rem; border-inline-start: 3px solid var(--yn-color-accent); background: var(--yn-color-surface); font-weight: 700; }
+        .ct-method-topics { display: grid; gap: 0.85rem; margin-top: 0.85rem; }
+        .ct-method-topics section { border-top: var(--yn-border); padding-top: 0.65rem; }
+        .ct-method-topics h3 { margin-bottom: 0.3rem; font-weight: 750; }
+        .ct-method-topics p + p { margin-top: 0.4rem; }
+        .ct-method-topics strong { color: var(--yn-color-text); }
         .ct-main [hidden], .ct-sticky[hidden], .ct-print-title { display: none !important; }
         [data-screenshot-stage] .ct-print-title { display: block !important; font-size: 0.875rem; font-weight: 750; margin-bottom: 0.35rem; }
         [data-screenshot-stage] .ct-print-period { display: inline; }
@@ -290,7 +350,11 @@
             .ct-layout { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-rows: auto 1fr; gap: 1rem 1.5rem; }
             .ct-result-stack { grid-column: 2; grid-row: 1 / span 2; }
             .ct-car { grid-column: 1; grid-row: 2; }
-            .ct-quiz-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .ct-capital-grid, .ct-quiz-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .ct-method-topics { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; }
+        }
+        @media (min-width: 980px) {
+            .ct-factors { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
     </style>
 </head>
@@ -481,71 +545,153 @@
         </div>
 
         <div class="ct-extras">
-            <details id="capital-scenario" class="yn-methodology">
-                <summary class="yn-methodology-summary">Если оставить деньги на покупку</summary>
-                <div class="yn-methodology-body ym-hide-content space-y-3 text-sm">
-                    <p>Сценарий для покупки за собственные средства. Возможный доход за первый год считаем от цены автомобиля.</p>
-                    <div class="yn-field">
-                        <label for="opportunity-rate" class="yn-label">Ваша ожидаемая доходность за год, %</label>
-                        <input id="opportunity-rate" class="yn-input ym-disable-keys" type="text" inputmode="decimal" autocomplete="off"
-                               aria-describedby="opportunity-rate-hint opportunity-rate-error">
-                        <p id="opportunity-rate-hint" class="yn-hint">Укажите ожидаемую доходность доступного вам варианта на 12 месяцев с учётом налогов и комиссий, если они применимы.</p>
+            <details id="capital-scenario" class="yn-methodology ct-capital">
+                <summary class="yn-methodology-summary ct-extra-summary">
+                    <h2 class="ct-extra-heading">
+                        <span>
+                            <span class="ct-kicker">Дополнительный сценарий · по желанию</span>
+                            <span class="ct-extra-title">А если деньги не тратить на машину?</span>
+                            <span class="ct-muted">Оцените, сколько могла бы принести за год сумма покупки.</span>
+                        </span>
+                        <span class="ct-extra-action"><span class="ct-action-closed">Указать доходность</span><span class="ct-action-open">Свернуть сценарий</span></span>
+                    </h2>
+                </summary>
+                <div class="yn-methodology-body ct-capital-grid ym-hide-content">
+                    <div class="ct-capital-input">
+                        <div class="yn-field">
+                            <label for="opportunity-rate" class="yn-label">Ваша доходность за год, %</label>
+                            <input id="opportunity-rate" class="yn-input ym-disable-keys" type="text" inputmode="decimal" autocomplete="off"
+                                   aria-describedby="opportunity-rate-hint opportunity-rate-error">
+                            <p id="opportunity-rate-hint" class="yn-hint">Оценка на 12 месяцев после налогов и комиссий. Доход считаем от цены покупки за свои средства.</p>
+                            <p id="opportunity-rate-error" class="yn-error" aria-live="polite"></p>
+                        </div>
+                        <p class="ct-muted ct-capital-note">Доходность не гарантирована.</p>
                     </div>
-                    <p id="opportunity-rate-error" class="yn-error" aria-live="polite"></p>
-                    <div role="status">
-                        <div id="opportunity-result" class="space-y-2" hidden>
-                            <dl class="space-y-1">
+                    <div role="status" aria-atomic="true">
+                        <div id="opportunity-result" class="ct-capital-result" hidden>
+                            <dl>
                                 <div>
-                                    <dt>Возможный доход за первый год</dt>
-                                    <dd id="opportunity-income" class="yn-number font-bold"></dd>
+                                    <dt class="ct-muted">Возможный доход за первый год</dt>
+                                    <dd id="opportunity-income" class="yn-number"></dd>
                                 </div>
                                 <div>
-                                    <dt>Сценарная стоимость авто за первый год</dt>
-                                    <dd id="opportunity-car-annual" class="yn-number font-bold"></dd>
+                                    <dt class="ct-muted">Стоимость машины в сценарии</dt>
+                                    <dd id="opportunity-car-annual" class="yn-number"></dd>
                                 </div>
                             </dl>
-                            <p id="opportunity-comparison" class="yn-number font-bold"></p>
-                            <p id="opportunity-winner-change"></p>
+                            <p id="opportunity-comparison" class="yn-number"></p>
+                            <p id="opportunity-winner-change" class="ct-muted"></p>
                         </div>
                     </div>
-                    <p class="yn-hint">Сценарий по вашему предположению. Доходность не гарантирована.</p>
                 </div>
             </details>
 
             <details id="lifestyle-widget" class="yn-methodology">
-                <summary class="yn-methodology-summary">
-                    <span>Что учесть помимо расходов?<small class="ct-muted ct-quiz-caption">Анкета о ваших поездках и привычках</small></span>
+                <summary class="yn-methodology-summary ct-extra-summary">
+                    <h2 class="ct-extra-heading">
+                        <span>
+                            <span class="ct-extra-title">Что учесть помимо расходов?</span>
+                            <span class="ct-muted">Отмечайте удобства и то, что мешает. Итог отражает ваши предпочтения.</span>
+                        </span>
+                        <span class="ct-extra-action"><span class="ct-action-closed">Открыть анкету</span><span class="ct-action-open">Свернуть анкету</span></span>
+                    </h2>
                 </summary>
                 <div class="yn-methodology-body">
-                    <p class="ct-muted">Отметьте важные для вас условия. Ответы влияют только на итог анкеты.</p>
                     <div class="ct-quiz-options" id="lifestyle-options">
                         <fieldset>
-                            <legend class="ct-quiz-heading">Машина</legend>
-                            <label><input type="checkbox" value="car_freedom"><span>Спонтанность: поездки на дачу, природу или в другие города на выходных без долгого планирования</span></label>
-                            <label><input type="checkbox" value="car_kids"><span>Комфорт и безопасность детей: детские кресла всегда установлены, нет стресса с вещами в багажнике</span></label>
-                            <label><input type="checkbox" value="car_privacy"><span>Приватность и антистресс: личное пространство, где можно побыть в тишине или громко слушать любимую музыку</span></label>
-                            <label><input type="checkbox" value="car_heavy_load"><span>Крупные покупки: удобно возить тяжелые вещи, покупки из супермаркетов или домашних питомцев</span></label>
-                            <label><input type="checkbox" value="car_noparking"><span>Парковка и связанные с ней расходы для меня существенны (меньше подходит автомобиль)</span></label>
-                            <label><input type="checkbox" value="car_maintenance_stress"><span>Бытовая рутина: шиномонтаж, регулярные мойки, замена масла и страховка вызывают у меня стресс (минус авто)</span></label>
+                            <legend>Машина</legend>
+                            <div class="ct-factors">
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="car_freedom">
+                                    <span><strong>Поездки без плана</strong><small class="ct-muted">На дачу, природу и в другие города</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="car_kids">
+                                    <span><strong>Поездки с детьми</strong><small class="ct-muted">Свои кресла и место для вещей</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="car_privacy">
+                                    <span><strong>Личное пространство</strong><small class="ct-muted">Тишина или своя музыка</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="car_heavy_load">
+                                    <span><strong>Крупные покупки и груз</strong><small class="ct-muted">Тяжёлые вещи или питомцы</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="car_noparking">
+                                    <span><strong>Парковка усложняет поездки</strong><small class="ct-muted">Важны поиск места и расходы</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="car_maintenance_stress">
+                                    <span><strong>Утомляет уход за машиной</strong><small class="ct-muted">Мойка, ТО, шины и страховка</small></span>
+                                </label>
+                            </div>
                         </fieldset>
                         <fieldset>
-                            <legend class="ct-quiz-heading">Такси</legend>
-                            <label><input type="checkbox" value="taxi_productivity"><span>Время для себя: в поездке можно спокойно работать в ноутбуке, читать или отвечать на сообщения</span></label>
-                            <label><input type="checkbox" value="taxi_no_worries"><span>Ноль забот: забыл про штрафы, налоги, КАСКО, ТО, зимнюю резину и чистку снега морозным утром</span></label>
-                            <label><input type="checkbox" value="taxi_rest"><span>Вечеринки и встречи: приехал в гости, выпил бокал вина и не думаешь, как оставить машину у ресторана</span></label>
-                            <label><input type="checkbox" value="taxi_always_clean"><span>Чистый салон каждый день, вежливый водитель и отсутствие стресса от дорожных конфликтов</span></label>
-                            <label><input type="checkbox" value="taxi_surged"><span>Повышенный спрос и ожидание машины для меня существенны (меньше подходит такси)</span></label>
-                            <label><input type="checkbox" value="taxi_human_factor"><span>Человеческий фактор: неприятные запахи, навязчивые разговоры или плохой стиль вождения водителей (минус такси)</span></label>
+                            <legend>Такси</legend>
+                            <div class="ct-factors">
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="taxi_productivity">
+                                    <span><strong>Время для себя в дороге</strong><small class="ct-muted">Работа, чтение или переписка</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="taxi_no_worries">
+                                    <span><strong>Меньше забот о машине</strong><small class="ct-muted">Штрафы, налоги, уход и зимние хлопоты</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="taxi_rest">
+                                    <span><strong>Встречи без руля</strong><small class="ct-muted">Можно выпить и уехать пассажиром</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="taxi_always_clean">
+                                    <span><strong>Комфорт в такси</strong><small class="ct-muted">Чистота, вежливость, меньше конфликтов</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="taxi_surged">
+                                    <span><strong>Мешают ожидание и дорогие часы</strong><small class="ct-muted">Долгая подача и высокий спрос</small></span>
+                                </label>
+                                <label class="ct-factor">
+                                    <input type="checkbox" value="taxi_human_factor">
+                                    <span><strong>Сложно с незнакомыми водителями</strong><small class="ct-muted">Стиль вождения, запахи, разговоры</small></span>
+                                </label>
+                            </div>
                         </fieldset>
                     </div>
-                    <div class="ct-quiz-result" role="status">
-                        <p class="ct-quiz-heading" id="lifestyle-verdict-title">Отметьте важные факторы выше</p>
-                        <p class="ct-muted" id="lifestyle-verdict-desc"></p>
+                    <div class="ct-quiz-result" role="status" aria-atomic="true">
+                        <strong id="lifestyle-verdict-title">Отметьте важные факторы выше</strong>
+                        <p class="ct-muted" id="lifestyle-verdict-desc">Здесь появится итог по вашим ответам.</p>
                     </div>
                 </div>
             </details>
 
-            <div class="yn-scope" data-webwisor="car-vs-taxi" data-webwisor-variant="compact"></div>
+            <details id="ct-methodology" class="yn-methodology ct-method">
+                <summary class="yn-methodology-summary ct-extra-summary">
+                    <h2 class="ct-extra-heading">
+                        <span class="ct-extra-title">Как мы считаем</span>
+                        <span class="ct-extra-action"><span class="ct-action-closed">Смотреть методику</span><span class="ct-action-open">Свернуть методику</span></span>
+                    </h2>
+                </summary>
+                <div class="yn-methodology-body">
+                    <p class="ct-method-formula">Машина за год = денежные расходы + потеря стоимости.<br>Такси за год = поездки за год × средняя цена поездки.</p>
+                    <div class="ct-method-topics">
+                        <section aria-labelledby="ct-method-costs">
+                            <h3 id="ct-method-costs">Состав расходов</h3>
+                            <p class="ct-muted"><strong>Пробег</strong> — одинаковое для обоих вариантов число поездок в месяц × 12 × длина поездки из блока «Условия поездок». По этому пробегу, расходу на 100 км и цене топлива считаем затраты на топливо.</p>
+                            <p class="ct-muted">Добавляем страховку, обслуживание и указанные прочие расходы, например парковку, налог и шины. Каждую статью учитывайте один раз.</p>
+                        </section>
+                        <section aria-labelledby="ct-method-loss">
+                            <h3 id="ct-method-loss">Потеря стоимости</h3>
+                            <p class="ct-muted"><strong>Оценка снижения цены</strong> = цена машины × заданный процент за первый год. Эта величина учитывает, насколько дешевле может стать машина, и не является платежом.</p>
+                            <p class="ct-muted">В отдельном сценарии покупки за свои средства возможный доход равен цене машины × вашей ожидаемой годовой доходности. Он прибавляется к стоимости машины только в этом сценарии.</p>
+                        </section>
+                        <section aria-labelledby="ct-method-limits">
+                            <h3 id="ct-method-limits">Границы оценки</h3>
+                            <p class="ct-muted"><strong>Сравниваем первый год</strong> при постоянных ценах и тарифах, по вашим условиям или иллюстративному пресету. Кредит и изменения цен отдельно не моделируются.</p>
+                            <p class="ct-muted">Месячный режим делит годовые суммы на 12 и округляет их при показе. Фактические платежи могут приходиться на разные месяцы. Анкета оценивает предпочтения отдельно от расходов.</p>
+                        </section>
+                    </div>
+                </div>
+            </details>
         </div>
     </main>
 
@@ -564,17 +710,6 @@
     </div>
 
     <script>
-        window.WebWisor = {
-            ...window.WebWisor,
-            'car-vs-taxi': {
-                purpose: 'Сравниваем первый год при одинаковом числе поездок. Для такси умножаем их число на среднюю цену. Для машины умножаем число поездок на типовую дистанцию, чтобы оценить пробег и расход топлива.',
-                official: 'Используем параметры примера или ваши значения.',
-                input: 'Денежные расходы на машину включают топливо, страховку, обслуживание и указанные вами прочие расходы. Потеря стоимости равна цене машины, умноженной на выбранный процент. Это оценка снижения цены за год.',
-                scenario: 'При покупке за собственные средства можно отдельно оценить возможный доход от суммы покупки. Доходность задаёте вы. Этот сценарий и ответы в анкете не меняют основное сравнение.',
-                result: 'Режим «Месяц» делит годовые суммы на 12. Это средние величины за первый год. Суммы и отдельные статьи округляются при показе.',
-                limitation: 'Тариф такси и цены считаем постоянными. Учитывайте реальные платежи в те месяцы, на которые они приходятся.'
-            }
-        };
         const byId = (id) => document.getElementById(id);
         const number = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 3 });
         const kopecks = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 });
@@ -601,6 +736,9 @@
         let lastValidValues = null;
         let trackedCalculation = false;
         let verdictVisible = true;
+        const numericGroups = /[ \u00a0\u202f]/g;
+        const composingNumbers = new WeakMap();
+        const replacingNumbers = new WeakSet();
 
         function parseField(raw, { max, integer, positive, optional, precision = 2 }) {
             const input = raw.trim();
@@ -608,8 +746,131 @@
             const decimal = integer ? '' : `(?:[.,]\\d{1,${precision}})?`;
             const syntax = new RegExp(`^(?:\\d+|\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+)${decimal}$`);
             if (!syntax.test(input)) return null;
-            const value = Number(input.replace(/[ \u00a0\u202f]/g, '').replace(',', '.'));
+            const value = Number(input.replace(numericGroups, '').replace(',', '.'));
             return value > max || (positive && value === 0) ? null : value;
+        }
+
+        function numericTextField(input) {
+            return input.type === 'text' && (Object.hasOwn(fields, input.id) || input.id === 'opportunity-rate');
+        }
+
+        function formatNumericDraft(text, integer, leadingDecimal) {
+            if (!text) return '';
+            const match = /^((?:\d+|\d{1,3}(?:[ \u00a0\u202f]\d{3})+)?)([.,]\d*)?$/.exec(text);
+            if (!match) return null;
+            const [, whole, fraction] = match;
+            if ((fraction && integer) || (!whole && !leadingDecimal)) return null;
+            return whole.replace(numericGroups, '').replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0') +
+                (fraction ? ',' + fraction.slice(1) : '');
+        }
+
+        function logicalPosition(text, offset) {
+            return text.slice(0, offset).replace(numericGroups, '').length;
+        }
+
+        function displayPosition(text, offset) {
+            let index = 0;
+            while (offset > 0 && index < text.length) {
+                if (!/[ \u00a0\u202f]/.test(text[index])) offset--;
+                index++;
+            }
+            return index;
+        }
+
+        function draftForEdit(input, inputType, inserted) {
+            const { value, selectionStart, selectionEnd } = input;
+            const integer = fields[input.id]?.integer;
+            const leadingDecimal = input.id === 'opportunity-rate';
+            if (formatNumericDraft(value, integer, leadingDecimal) === null ||
+                (inserted && /[ \u00a0\u202f]/.test(inserted) && formatNumericDraft(inserted, integer, leadingDecimal) === null)) return null;
+
+            const plain = value.replace(numericGroups, '');
+            let start = logicalPosition(value, selectionStart);
+            let end = logicalPosition(value, selectionEnd);
+            if (selectionStart === selectionEnd) {
+                if (inputType === 'deleteContentBackward') start = Math.max(0, start - 1);
+                if (inputType === 'deleteContentForward') end = Math.min(plain.length, end + 1);
+            }
+            const insertion = inserted.replace(numericGroups, '');
+            const draft = plain.slice(0, start) + insertion + plain.slice(end);
+            const formatted = formatNumericDraft(draft, integer, leadingDecimal);
+            return formatted === null ? null : { value: formatted, caret: displayPosition(formatted, start + insertion.length) };
+        }
+
+        function replaceNumericDraft(input, value, caret) {
+            // Apply the smallest replacement as a native edit so grouping is part of the same undo step.
+            const old = input.value;
+            if (old === value) {
+                input.setSelectionRange(caret, caret);
+                return true;
+            }
+            const selection = [input.selectionStart, input.selectionEnd, input.selectionDirection];
+            let start = 0;
+            while (start < selection[0] && start < caret && old[start] === value[start]) start++;
+            let oldEnd = old.length;
+            let newEnd = value.length;
+            while (oldEnd > selection[1] && newEnd > caret && old[oldEnd - 1] === value[newEnd - 1]) {
+                oldEnd--;
+                newEnd--;
+            }
+            const replacement = value.slice(start, newEnd);
+            input.setSelectionRange(start, oldEnd);
+            replacingNumbers.add(input);
+            try {
+                if (replacement) document.execCommand?.('insertText', false, replacement);
+                else document.execCommand?.('delete');
+            } finally {
+                replacingNumbers.delete(input);
+            }
+            if (input.value !== value) {
+                input.setSelectionRange(...selection);
+                return false;
+            }
+            input.setSelectionRange(caret, caret);
+            return true;
+        }
+
+        function onBeforeNumberInput(event) {
+            const input = event.target;
+            if (!event.isTrusted || !event.cancelable || !numericTextField(input) || event.isComposing ||
+                composingNumbers.has(input) || replacingNumbers.has(input)) return;
+
+            const { inputType } = event;
+            const deleting = inputType === 'deleteContentBackward' || inputType === 'deleteContentForward';
+            const inserting = /^(?:insertText|insertFromPaste|insertFromDrop)$/.test(inputType);
+            if (!deleting && !inserting) return;
+            const inserted = deleting ? '' : event.data ?? event.dataTransfer?.getData('text/plain');
+            if (inserted == null) return;
+            const edit = draftForEdit(input, inputType, inserted);
+            if (!edit) return;
+
+            const { value, selectionStart, selectionEnd } = input;
+            const start = deleting && inputType === 'deleteContentBackward' && selectionStart === selectionEnd
+                ? Math.max(0, selectionStart - 1) : selectionStart;
+            const end = deleting && inputType === 'deleteContentForward' && selectionStart === selectionEnd
+                ? selectionEnd + 1 : selectionEnd;
+            const nativeValue = value.slice(0, start) + inserted + value.slice(end);
+            if (edit.value === nativeValue && edit.caret === start + inserted.length) return;
+            if (replaceNumericDraft(input, edit.value, edit.caret)) {
+                event.preventDefault();
+                refreshNumericResult(input, true);
+            }
+        }
+
+        function formatCurrentNumericDraft(input) {
+            const formatted = formatNumericDraft(input.value, fields[input.id]?.integer, input.id === 'opportunity-rate');
+            if (formatted === null || formatted === input.value) return;
+            const start = displayPosition(formatted, logicalPosition(input.value, input.selectionStart));
+            const end = displayPosition(formatted, logicalPosition(input.value, input.selectionEnd));
+            const direction = input.selectionDirection;
+            // IME and non-cancelable edits arrive after the browser has already applied the input.
+            // Prefer another native edit here too, so undo cannot replay offsets into a rewritten value.
+            if (input === document.activeElement && replaceNumericDraft(input, formatted, end)) {
+                input.setSelectionRange(start, end, direction);
+                return;
+            }
+            input.value = formatted;
+            input.setSelectionRange(start, end, direction);
         }
 
         function fieldError(raw, { max, integer, positive, precision = 2 }) {
@@ -684,12 +945,23 @@
             updateBase(userEdited);
         }
 
+        function refreshNumericResult(input, userEdited) {
+            if (input.id === 'opportunity-rate') renderCapitalScenario();
+            else updateBase(userEdited);
+        }
+
         // Ignore autofill/replacement events and synthetic edits when recording a conversion.
         function onBaseInput(event) {
             const input = event.target;
-            if (!Object.hasOwn(fields, input.id)) return;
+            if ((!Object.hasOwn(fields, input.id) && input.id !== 'opportunity-rate') || replacingNumbers.has(input)) return;
+            if (event.isComposing || composingNumbers.has(input)) {
+                if (event.isTrusted && event.type === 'input') composingNumbers.set(input, true);
+                return;
+            }
             const typed = /^(?:insert(?:Text|FromPaste|FromDrop|CompositionText|FromComposition)|delete\w+|history(?:Undo|Redo))$/.test(event.inputType);
-            updateBase(event.isTrusted && (typed || input.type === 'range'));
+            if (event.isTrusted && numericTextField(input) && (typed || event.inputType === 'insertReplacementText') &&
+                !event.inputType.startsWith('history')) formatCurrentNumericDraft(input);
+            refreshNumericResult(input, event.isTrusted && (typed || input.type === 'range'));
         }
 
         function getComparison(car, taxi) {
@@ -885,7 +1157,7 @@
                 else taxiPoints += lifestyleWeights[value];
             }
             let title = 'Отметьте важные факторы выше';
-            let description = '';
+            let description = 'Здесь появится итог по вашим ответам.';
             if (answers.length) {
                 if (carPoints > taxiPoints) {
                     title = 'Машина лучше соответствует вашим приоритетам';
@@ -903,8 +1175,18 @@
         }
 
         function initCalculator() {
+            document.addEventListener('beforeinput', onBeforeNumberInput);
             document.addEventListener('input', onBaseInput);
             document.addEventListener('change', onBaseInput);
+            document.addEventListener('compositionstart', event => {
+                if (numericTextField(event.target)) composingNumbers.set(event.target, false);
+            });
+            document.addEventListener('compositionend', event => {
+                const userEdited = composingNumbers.get(event.target);
+                if (!composingNumbers.delete(event.target)) return;
+                formatCurrentNumericDraft(event.target);
+                refreshNumericResult(event.target, userEdited);
+            });
             byId('car-presets').addEventListener('click', event => {
                 const preset = event.target.closest('[data-preset]');
                 if (preset) applyCarPreset(preset.dataset.preset, event.isTrusted);
@@ -916,7 +1198,6 @@
                     renderResult();
                 }
             });
-            byId('opportunity-rate').addEventListener('input', renderCapitalScenario);
             byId('lifestyle-options').addEventListener('change', calculateLifestyle);
             byId('share-result').hidden = typeof navigator.share !== 'function';
             byId('share-result').addEventListener('click', shareCalculation);
@@ -931,14 +1212,7 @@
             });
             verdictObserver.observe(byId('result-hero'));
             document.addEventListener('focusin', updateSticky);
-            document.addEventListener('focusout', event => {
-                const id = event.target.id;
-                if (Object.hasOwn(fields, id) && event.target.type === 'text') {
-                    const value = parseField(event.target.value, fields[id]);
-                    if (value !== null && event.target.value.trim()) event.target.value = number.format(value);
-                }
-                window.requestAnimationFrame(updateSticky);
-            });
+            document.addEventListener('focusout', () => window.requestAnimationFrame(updateSticky));
             window.visualViewport?.addEventListener('resize', updateSticky);
             for (const id of ['jump-to-result', 'edit-car']) {
                 byId(id).addEventListener('click', event => {

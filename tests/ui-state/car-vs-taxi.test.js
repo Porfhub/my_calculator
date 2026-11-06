@@ -7,7 +7,7 @@ const vm = require('node:vm');
 const root = path.join(__dirname, '..', '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 const html = read('car-vs-taxi.html');
-const script = html.match(/<script>\s*(window\.WebWisor = [\s\S]*?)<\/script>/)[1];
+const script = html.match(/<script>\s*(const byId = [\s\S]*?)<\/script>/)[1];
 
 function page(dataResponse) {
     const nodes = new Map();
@@ -26,6 +26,9 @@ function page(dataResponse) {
                 setAttribute: (name, value) => attributes.set(name, String(value)),
                 removeAttribute: (name) => attributes.delete(name),
                 getAttribute: (name) => attributes.get(name),
+                setSelectionRange(start, end, direction) {
+                    Object.assign(this, { selectionStart: start, selectionEnd: end, selectionDirection: direction });
+                },
                 addEventListener() {}
             });
             if (id === 'verdict-title') {
@@ -56,7 +59,7 @@ function page(dataResponse) {
         },
         edit(id, value, { trusted = true, inputType = 'insertText' } = {}) {
             const target = element(id);
-            Object.assign(target, { value, id });
+            Object.assign(target, { value, id, selectionStart: value.length, selectionEnd: value.length });
             env.editEvent = { target, isTrusted: trusted, inputType };
             run('onBaseInput(editEvent)');
         },
@@ -209,7 +212,7 @@ test('car/taxi adds only entered annual expenses, preserving zero and omitted va
     }
     assert.equal(app.element('preset-comfort').getAttribute('aria-pressed'), 'false');
     app.run("applyCarPreset('economy', true)");
-    assert.equal(app.element('other-expenses').value, '12 000');
+    assert.equal(app.element('other-expenses').value, '12 000');
     assert.equal(rubles(app.element('car-other').textContent), 12000);
 });
 
@@ -265,6 +268,21 @@ test('car/taxi reflects the matching preset and current price without a stale la
     app.edit('car-price', '');
     assert.equal(context.textContent, 'Уточните цену автомобиля');
     assert.equal(app.element('verdict-figure').hidden, true);
+});
+
+test('car/taxi formats numeric drafts without changing precision or accepting malformed groups', () => {
+    const app = page();
+    for (const [id, raw, expected] of [
+        ['car-price', '200000', '200 000'], ['car-price', '12500.50', '12 500,50'],
+        ['car-price', '2 600 000,00', '2 600 000,00'], ['car-price', '0,', '0,'],
+        ['taxi-trip-distance', '1.250', '1,250'], ['car-price', '1 00', '1 00'],
+        ['trips-per-month', '1.5', '1.5'], ['opportunity-rate', '.50', ',50']
+    ]) {
+        app.edit(id, raw);
+        assert.equal(app.element(id).value, expected);
+    }
+    assert.equal(app.element('trips-per-month').getAttribute('aria-invalid'), 'true');
+    assert.equal(app.element('opportunity-rate').getAttribute('aria-invalid'), undefined);
 });
 
 test('car/taxi tracks a real valid change once and skips autofill, setup, equivalent edits and scenarios', () => {

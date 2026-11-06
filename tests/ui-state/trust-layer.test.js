@@ -43,6 +43,13 @@ test('every production calculator has one methodology block', () => {
 
     for (const file of calculators) {
         const html = read(file);
+        if (file === 'car-vs-taxi.html') {
+            assert.equal((html.match(/<details id="ct-methodology"[^>]*>/g) || []).length, 1);
+            assert.doesNotMatch(html, /data-webwisor=|js\/trust-layer\.js/);
+            assert.match(html, /длина поездки из блока «Условия поездок»/);
+            assert.match(html, /например парковку, налог и шины/);
+            continue;
+        }
         if (file === 'honest-credit.html') {
             assert.equal((html.match(/<summary>Как посчитано<\/summary>/g) || []).length, 1);
             assert.match(html, /https:\/\/www\.cbr\.ru\/explan\/359-fz\//);
@@ -68,8 +75,8 @@ test('every production calculator has one methodology block', () => {
     assert.doesNotMatch(trustLayer, /<summary>[^\n]*WebWisor/);
 });
 
-test('shared trust layer uses the compact disclosure only on the five opted-in pages', () => {
-    const compact = new Set(['car-vs-taxi', 'financial-freedom', 'genetic-wealth', 'inflation-shredder', 'wealth']);
+test('shared trust layer uses the compact disclosure only on the opted-in pages', () => {
+    const compact = new Set(['financial-freedom', 'genetic-wealth', 'inflation-shredder', 'wealth']);
     const script = read('js/trust-layer.js');
     const rendered = new Map();
 
